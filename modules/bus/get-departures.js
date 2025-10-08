@@ -339,7 +339,7 @@ async function getDepartures(stop, db, time, discardUnmatched) {
       let busTrips = db.getCollection('bus trips')
       let smartrakIDs = db.getCollection('smartrak ids')
 
-      return await async.map(departures, async departure => {
+      return (await async.map(departures, async departure => {
         let {trip} = departure
 
         if (!departure.vehicle) {
@@ -379,6 +379,8 @@ async function getDepartures(stop, db, time, discardUnmatched) {
           return hasSeenStop
         })
 
+        if (upcomingStops.length <= 1) return
+        
         let stopDepartures = upcomingStops.slice(0, -1).filter(tripStop => stopGTFSIDs.includes(tripStop.stopGTFSID))
         let preferredStop = stopDepartures.sort((a, b) => {
           let aBay = busBays[a.stopGTFSID], bBay = busBays[b.stopGTFSID]
@@ -422,7 +424,7 @@ async function getDepartures(stop, db, time, discardUnmatched) {
         }
 
         return departure
-      })
+      })).filter(Boolean)
     }, 1000 * 30)
   } catch (e) {
     throw e
