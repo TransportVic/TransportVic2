@@ -5,6 +5,7 @@ import { PTVAPI, PTVAPIInterface } from '@transportme/ptv-api'
 import { fetchTrips } from './metro-ptv-departures.mjs'
 import { updateRelatedTrips } from './check-new-updates.mjs'
 import _ from '../../../init-loggers.mjs'
+import fs from 'fs/promises'
 
 async function fetchStop(name, db, ptvAPI, maxResults, backwards, tdnsSeen, updatedTrips) {
   let newlyUpdatedTrips = await fetchTrips(db, ptvAPI, { stationName: name, skipTDN: tdnsSeen, maxResults, backwards })
@@ -30,7 +31,7 @@ export async function fetchCBDTrips(db, ptvAPI) {
   await updateRelatedTrips(db, Object.values(updatedTrips), ptvAPI)
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 

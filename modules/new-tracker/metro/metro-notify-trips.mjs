@@ -6,6 +6,7 @@ import { PTVAPI, PTVAPIInterface } from '@transportme/ptv-api'
 import { updateTDNFromPTV } from './metro-ptv-trips.mjs'
 import { updateRelatedTrips } from './check-new-updates.mjs'
 import _ from '../../../init-loggers.mjs'
+import fs from 'fs/promises'
 
 export async function getUpdatedTDNs(db) {
   return (await db.getCollection('metro notify').findDocuments({
@@ -27,7 +28,7 @@ export async function fetchNotifyTrips(db, ptvAPI) {
   return updatedTrips
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 

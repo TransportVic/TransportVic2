@@ -8,6 +8,7 @@ import VLineTripUpdater from '../../vline/trip-updater.mjs'
 import _ from '../../../init-loggers.mjs'
 import { getPlatformUsage } from '../../metro-trains/platform-usage.mjs'
 import utils from '../../../utils.js'
+import fs from 'fs/promises'
 
 let EPH = 'East Pakenham Railway Station'
 
@@ -106,7 +107,7 @@ export async function fetchTrips(db, gtfsrAPI) {
   return relevantTrips
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
   

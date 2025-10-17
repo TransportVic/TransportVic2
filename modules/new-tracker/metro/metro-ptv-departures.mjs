@@ -5,8 +5,8 @@ import config from '../../../config.json' with { type: 'json' }
 import MetroTripUpdater from '../../metro-trains/trip-updater.mjs'
 import { PTVAPI, PTVAPIInterface } from '@transportme/ptv-api'
 import getTripUpdateData from '../../metro-trains/get-ptv-departures.js'
-import { updateRelatedTrips } from './check-new-updates.mjs'
 import _ from '../../../init-loggers.mjs'
+import fs from 'fs/promises'
 
 const MTP_STOPS = [
   'Anzac', 'Town Hall', 'State Library', 'Parkville', 'Arden'
@@ -45,7 +45,7 @@ export async function fetchTrips(db, ptvAPI, { stationName = null, skipTDN = [],
   return updatedTrips
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 

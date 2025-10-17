@@ -6,6 +6,7 @@ import { GetPlatformServicesAPI, PTVAPI, PTVAPIInterface, VLineAPIInterface } fr
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 import VLineTripUpdater from '../../vline/trip-updater.mjs'
 import _ from '../../../init-loggers.mjs'
+import fs from 'fs/promises'
 
 export async function getPlatformUpdates(operationDay, database, ptvAPI) {
   let stops = await database.getCollection('stops')
@@ -56,7 +57,7 @@ export async function fetchTrips(operationDay, database, ptvAPI) {
   return tripUpdates
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 

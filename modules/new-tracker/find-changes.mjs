@@ -3,6 +3,7 @@ import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../config.json' with { type: 'json' }
 import utils from '../../utils.js'
 import stationCodesMap from '../../additional-data/station-codes.json' with { type: 'json' }
+import fs from 'fs/promises'
 
 let codes = Object.keys(stationCodesMap).reduce((acc, e) => {
   acc[stationCodesMap[e]] = e
@@ -48,7 +49,7 @@ async function findChanges(timetables, cutoff) {
   }).filter(Boolean)
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
   let timetables = await mongoDB.getCollection('live timetables')

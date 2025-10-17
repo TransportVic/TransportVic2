@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url'
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../../config.json' with { type: 'json' }
 import _ from '../../../init-loggers.mjs'
+import fs from 'fs/promises'
 
 export async function fetchNotifyAlerts(db, ptvAPI) {
   let metroNotify = await db.getCollection('metro notify')
@@ -45,7 +46,7 @@ export async function fetchNotifyAlerts(db, ptvAPI) {
   })
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 

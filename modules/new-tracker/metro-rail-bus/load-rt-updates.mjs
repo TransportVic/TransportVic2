@@ -8,6 +8,7 @@ import utils from '../../../utils.js'
 
 import config from '../../../config.json' with { type: 'json' }
 import _ from '../../../init-loggers.mjs'
+import fs from 'fs/promises'
 
 export async function getRailBusUpdates(db, ptvAPI) {
   let tripUpdates = await ptvAPI.metroSite.getRailBusUpdates()
@@ -81,7 +82,7 @@ export async function fetchTrips(db, ptvAPI) {
   return updatedTrips
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 

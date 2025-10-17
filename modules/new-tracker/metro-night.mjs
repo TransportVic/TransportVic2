@@ -14,9 +14,9 @@ import { fetchNotifySuspensions } from './metro/metro-notify-suspensions.mjs'
 import { fetchOutdatedTrips } from './metro/metro-outdated-trips.mjs'
 import { fetchGTFSRTrips } from './metro/metro-gtfsr-trips.mjs'
 import { updateRelatedTrips } from './metro/check-new-updates.mjs'
+import fs from 'fs/promises'
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {  let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 
   let ptvAPI = new PTVAPI(new PTVAPIInterface(config.ptvKeys[0].devID, config.ptvKeys[0].key))

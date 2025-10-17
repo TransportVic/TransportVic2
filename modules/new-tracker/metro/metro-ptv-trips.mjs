@@ -9,6 +9,7 @@ import getTripUpdateData from '../../metro-trains/get-stopping-pattern.js'
 import utils from '../../../utils.js'
 import { updateRelatedTrips } from './check-new-updates.mjs'
 import _ from '../../../init-loggers.mjs'
+import fs from 'fs/promises'
 
 const PTV_BAD_STOPS = [
   'Anzac', 'Town Hall', 'State Library', 'Parkville', 'Arden',
@@ -68,7 +69,7 @@ export async function fetchTrips(db, ptvAPI) {
   await updateRelatedTrips(db, updatedTrips, ptvAPI)
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 

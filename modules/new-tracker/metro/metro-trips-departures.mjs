@@ -8,6 +8,7 @@ import rawLineRanges from '../../../additional-data/metro-tracker/line-ranges.js
 import utils from '../../../utils.js'
 import MetroTripUpdater from '../../metro-trains/trip-updater.mjs'
 import _ from '../../../init-loggers.mjs'
+import fs from 'fs/promises'
 
 const tdnToLine = {}
 Object.keys(rawLineRanges).forEach(line => {
@@ -69,7 +70,7 @@ export async function fetchMetroSiteDepartures(db, ptvAPI) {
   }
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 

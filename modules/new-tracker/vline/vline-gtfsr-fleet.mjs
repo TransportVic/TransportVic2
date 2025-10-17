@@ -7,6 +7,7 @@ import { RailGTFSRTrip } from '../gtfsr/GTFSRTrip.mjs'
 import parseConsist from '../../vline/fleet-parser.mjs'
 import _ from '../../../init-loggers.mjs'
 import VLineTripUpdater from '../../vline/trip-updater.mjs'
+import fs from 'fs/promises'
 
 export async function getFleetData(gtfsrAPI) {
   let tripData = await gtfsrAPI('vline/vehicle-positions')
@@ -38,7 +39,7 @@ export async function fetchGTFSRFleet(db) {
   }
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 

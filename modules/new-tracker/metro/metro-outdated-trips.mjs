@@ -7,6 +7,7 @@ import { updateTDNFromPTV } from './metro-ptv-trips.mjs'
 import utils from '../../../utils.js'
 import _ from '../../../init-loggers.mjs'
 import { updateRelatedTrips } from './check-new-updates.mjs'
+import fs from 'fs/promises'
 
 export async function getOutdatedTrips(database) {
   let liveTimetables = await database.getCollection('live timetables')
@@ -56,7 +57,7 @@ export async function fetchOutdatedTrips(db, ptvAPI) {
   return updatedTrips
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 

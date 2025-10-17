@@ -8,6 +8,7 @@ import MetroTripUpdater from '../../metro-trains/trip-updater.mjs'
 import { parseConsist } from '../../metro-trains/fleet-parser.js'
 import metroConsists from '../../../additional-data/metro-tracker/metro-consists.json' with { type: 'json' }
 import _ from '../../../init-loggers.mjs'
+import fs from 'fs/promises'
 
 export async function getFleetData(gtfsrAPI) {
   let tripData = await gtfsrAPI('metro/vehicle-positions')
@@ -39,7 +40,7 @@ export async function fetchGTFSRFleet(db) {
   }
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 

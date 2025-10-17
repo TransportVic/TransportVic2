@@ -6,6 +6,7 @@ import config from '../../../config.json' with { type: 'json' }
 import { getGPSPositions } from './get-positions.mjs'
 import VLineTripUpdater from '../../vline/trip-updater.mjs'
 import _ from '../../../init-loggers.mjs'
+import fs from 'fs/promises'
 
 export async function updateTrips(getPositions = () => [], keepOperators = () => [], db) {
   const trips = await getRelevantTrips(getPositions, keepOperators)
@@ -86,7 +87,7 @@ export function getEstimatedArrivalTime(position, { nextStop, prevStop, distance
   }
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   const mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 
