@@ -7,7 +7,7 @@ import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 
 import uniqueStops from '../transportvic-data/excel/stops/unique-stops.json' with { type: 'json' }
 import nameOverrides from '../transportvic-data/excel/stops/name-overrides.json' with { type: 'json' }
-import { createRouteProcessor } from '../transportvic-data/gtfs/process.mjs'
+import { createRouteProcessor, createStopProcessor } from '../transportvic-data/gtfs/process.mjs'
 import config from '../config.json' with { type: 'json' }
 import ptvStops from './ptv-stops.json' with { type: 'json' }
 import turf from '@turf/turf'
@@ -65,6 +65,7 @@ let uniqueNamesCounter = uniqueStops.reduce((acc, e) => {
 }, {})
 
 let routeProcessors = await createRouteProcessor()
+let stopProcessors = await createStopProcessor()
 
 for (let i of selectedModes) {
   let mode = GTFS_MODES[i]
@@ -73,7 +74,8 @@ for (let i of selectedModes) {
     let suburbFile
     if (['2', '3', '4'].includes(i)) suburbFile = suburbsVIC
     else suburbFile = suburbs
-
+    
+    let stopProcessor = stopProcessors[i]
     let stopLoader = new StopsLoader(stopsFile.replace('{0}', i), suburbFile, mode, database, stop => {
       let ptvStop = ptvStops[stop.originalName]
       if (ptvStop && ptvStop.length === 1) {
@@ -106,7 +108,7 @@ for (let i of selectedModes) {
           stop.fullStopName = updatedName
         }
 
-        return stop
+        return stopProcessor ? stopProcessor(stop) : stop
       }
     })
 
