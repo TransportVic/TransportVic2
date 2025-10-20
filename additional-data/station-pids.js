@@ -81,7 +81,7 @@ module.exports = {
   "Canterbury": [...platr(2, [], 'half-platform'), plat(3, 'pre-platform-vertical')],
   "Auburn": [...platr(3, [], 'half-platform-bold')],
   "Moreland": [...platr(2, [], 'platform'), conc('up-down')],
-  "Northcote": [...platr(2, [], 'half-platform-bold')],
+  "Northcote": [plat(1, 'half-platform-bold'), plat(2, '2-line-led')],
   "Merri": [],
   "Anstey": [],
   "Bell": [],
