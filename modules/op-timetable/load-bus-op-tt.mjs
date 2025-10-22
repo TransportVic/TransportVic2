@@ -22,23 +22,28 @@ async function loadOperationalTT(operationDay) {
 
   console.log('Fetched', rawActiveTrips.length, 'trips to process')
 
-  // TODO: Implement block data with refactored method
-  let activeTrips = rawActiveTrips.map(trip => convertToLive(trip, operationDay)).map(trip => {
-    trip.operationDays = opDayFormat
-    trip.runID = trip.tripID
+  for (let i = 0; i < rawActiveTrips.length / 1000; i++) {
+    let start = i * 1000
+    let end = (i + 1) * 1000
 
-    return trip
-  })
+    // TODO: Implement block data with refactored method
+    let activeTrips = rawActiveTrips.slice(start, end).map(trip => convertToLive(trip, operationDay)).map(trip => {
+      trip.operationDays = opDayFormat
+      trip.runID = trip.tripID
 
-  let bulkUpdate = activeTrips.map(trip => ({
-    replaceOne: {
-      filter: { mode: trip.mode, operationDays: trip.operationDays, runID: trip.runID },
-      replacement: trip,
-      upsert: true
-    }
-  }))
+      return trip
+    })
 
-  await liveTimetables.bulkWrite(bulkUpdate)
+    let bulkUpdate = activeTrips.map(trip => ({
+      replaceOne: {
+        filter: { mode: trip.mode, operationDays: trip.operationDays, runID: trip.runID },
+        replacement: trip,
+        upsert: true
+      }
+    }))
+
+    await liveTimetables.bulkWrite(bulkUpdate)
+  }
 }
 
 await loadOperationalTT(utils.now())
