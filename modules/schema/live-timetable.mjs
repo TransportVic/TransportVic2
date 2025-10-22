@@ -344,6 +344,11 @@ export class LiveTimetable {
   get additional() { return this.#additional }
 
   static fromDatabase(timetable) {
+    let parsers = [ BusLiveTimetable, LiveTimetable ]
+    for (let parser of parsers) if (parser.canProcessDBTrip(timetable)) return parser._fromDatabase(timetable)
+  }
+
+  static _fromDatabase(timetable) {
     let timetableInstance = new LiveTimetable(
       timetable.mode,
       timetable.operationDays,
@@ -614,6 +619,16 @@ export class LiveTimetable {
       })
       this.#stops.push(stop)
     }
+  }
+
+  static canProcessDBTrip (timetable) { return true }
+
+}
+
+export class BusLiveTimetable {
+
+  static canProcessDBTrip(timetable) {
+    return timetable.mode === 'bus'
   }
 
 }
