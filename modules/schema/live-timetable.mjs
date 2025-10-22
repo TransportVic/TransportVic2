@@ -349,7 +349,7 @@ export class LiveTimetable {
   }
 
   static _fromDatabase(timetable) {
-    let timetableInstance = new LiveTimetable(
+    let timetableInstance = new this(
       timetable.mode,
       timetable.operationDays,
       timetable.routeName,
@@ -455,12 +455,17 @@ export class LiveTimetable {
     }
   }
 
+  _getUpdatedOriginDest() {
+    return {
+      origin: this.stops.find(stop => !stop.cancelled),
+      destination: this.stops.findLast(stop => !stop.cancelled)
+    }
+  }
+
   toTrackerDatabase() {
     if (!this.#vehicle) return null
 
-    let origin = this.stops.find(stop => !stop.cancelled)
-    let destination = this.stops.findLast(stop => !stop.cancelled)
-
+    let { origin, destination } = this._getUpdatedOriginDest()
     let originStop, departureTime, destinationStop, arrivalTime
 
     if (!origin || !destination || (origin === destination)) {
@@ -485,14 +490,6 @@ export class LiveTimetable {
       departureTime: departureTime,
       destinationArrivalTime: arrivalTime,
       consist: this.#vehicle.consist
-    }
-
-    if (this.#mode === 'bus') {
-      returnData.origin = originStop
-      returnData.destination = destinationStop
-    }
-    if (this.#routeNumber) {
-      returnData.routeNumber = this.#routeNumber
     }
 
     if (this.#vehicleForced) {
@@ -625,10 +622,24 @@ export class LiveTimetable {
 
 }
 
-export class BusLiveTimetable {
+export class BusLiveTimetable extends LiveTimetable {
 
   static canProcessDBTrip(timetable) {
     return timetable.mode === 'bus'
+  }
+
+  toTrackerDatabase() {
+    const parentData = super.toTrackerDatabase()
+    const { origin, destination } = this._getUpdatedOriginDest()
+
+    parentData.origin = origin.stopName
+    parentData.destination = destination.stopName
+
+    if (this.routeNumber) {
+      parentData.routeNumber = this.routeNumber
+    }
+
+    return parentData
   }
 
 }

@@ -3,15 +3,16 @@ import mdd1000 from './sample-data/mdd-1000.json' with { type: 'json' }
 import ccl0735 from './sample-data/ccl-0735.json' with { type: 'json' }
 import pkmC143 from './sample-data/pkm-C143.json' with { type: 'json' }
 import cbe4201 from './sample-data/cbe-4201.json' with { type: 'json' }
-import { LiveTimetable } from '../../modules/schema/live-timetable.mjs'
+import { BusLiveTimetable, LiveTimetable } from '../../modules/schema/live-timetable.mjs'
 import chaiExclude from 'chai-exclude'
 import utils from '../../utils.js'
 import beg3152 from './sample-data/beg-3152.mjs'
+import bus200Data from './sample-data/bus-200-data.mjs'
 use(chaiExclude)
 
 let clone = o => JSON.parse(JSON.stringify(o))
 
-describe('The LiveTimetable schema', () => {
+describe('The LiveTimetable class', () => {
   it('Should allow object creation from a database object', () => {
     let timetable = LiveTimetable.fromDatabase(mdd1000)
 
@@ -826,5 +827,28 @@ describe('The LiveTimetable schema', () => {
     expect(dbObj.destination).to.equal('Ringwood Railway Station')
     expect(dbObj.destinationArrivalTime).to.equal('26:04')
     expect(dbObj.stopTimings[dbObj.stopTimings.length - 1].departureTime).to.equal('03:04')
+  })
+
+  it('Picks the BusLiveTimetable class for bus trips', () => {
+    let timetable = LiveTimetable.fromDatabase(bus200Data)
+    expect(timetable).to.be.instanceOf(BusLiveTimetable)
+  })
+})
+
+describe('The BusLiveTimetable class', () => {
+  it('Exports the full stop name to the tracker database', () => {
+    let timetable = LiveTimetable.fromDatabase(bus200Data)
+    expect(timetable.toTrackerDatabase()).to.deep.equal({
+      date: '20251022',
+      routeGTFSID: '4-200',
+      routeName: 'Bulleen - City (Queen St)',
+      runID: '14-200--1-MF18-200904',
+      origin: 'Little Collins Street/Queen Street',
+      destination: 'Bulleen Terminus/Thompsons Road',
+      departureTime: '21:50',
+      destinationArrivalTime: '22:37',
+      consist: [ 'BS05CQ' ],
+      routeNumber: '200'
+    })
   })
 })
