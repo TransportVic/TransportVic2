@@ -1386,7 +1386,7 @@ describe('The trip updater module', () => {
     }
   })
 
-  describe('The isNonStopUpdate method', () => {
+  describe('Updating non-stop time properties', () => {
     it('Checks if a trip update does not update stop times data', () => {
       expect(TripUpdater.isNonStopUpdate({
         operationDays: '20240224',
@@ -1409,6 +1409,41 @@ describe('The trip updater module', () => {
           scheduledDepartureTime: new Date('2025-07-12T12:49:00.000Z')
         }]
       })).to.be.false
+    })
+
+    it('Continues to set the trip data as usual', async () => {
+      let database = new LokiDatabaseConnection('test-db')
+      let stops = await database.createCollection('stops')
+      let routes = await database.createCollection('routes')
+      let liveTimetables = await database.createCollection('live timetables')
+
+      await routes.createDocument({
+        "mode" : "metro train",
+        "routeName" : "Flemington Racecourse",
+        "cleanName" : "flemington-racecourse",
+        "routeNumber" : null,
+        "routeGTFSID" : "2-RCE",
+        "operators" : [
+          "Metro"
+        ],
+        "cleanName" : "flemington-racecourse"
+      })
+      await liveTimetables.createDocument(clone(tdR205))
+      let tripUdate = {
+        operationDays: '20240224',
+        runID: 'R205',
+        routeGTFSID: '2-RCE',
+        stops: [],
+        cancelled: false,
+        consist: ['9001', '9101', '9201', '9301', '9701', '9801', '9901']
+      }
+
+      await MetroTripUpdater.updateTrip(database, tripUdate)
+
+      let trip = await liveTimetables.findDocument({})
+      expect(trip.origin).to.equal('Southern Cross Railway Station')
+      expect(trip.destination).to.equal('Showgrounds Railway Station')
+      expect(trip.stopTimings[0].stopName).to.equal('Southern Cross Railway Station')
     })
   })
 })

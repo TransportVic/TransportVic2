@@ -378,7 +378,7 @@ export class LiveTimetable {
     }
     if (typeof timetable.gtfsDirection !== 'undefined') timetableInstance.#gtfsDirection = timetable.gtfsDirection
 
-    for (let stopData of timetable.stopTimings) {
+    for (let stopData of timetable.stopTimings || []) {
       let stop = new TimetableStop(
         timetableInstance.operationDayMoment,
         stopData.stopName,

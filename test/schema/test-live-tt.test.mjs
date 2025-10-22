@@ -852,6 +852,17 @@ describe('The LiveTimetable class', () => {
     expect(dbTrip.changes.length).to.equal(1)
     expect(dbTrip.changes[0].type).to.equal('veh-change')
   })
+
+  it('Does not recalculate origin and dest for skeleton trips', () => {
+    const timetable = LiveTimetable.fromDatabase(bus200DataNoStops)
+    timetable.consist = ['BS04FL']
+
+    const dbTrip = timetable.toTrackerDatabase()
+    expect(dbTrip.origin).to.equal(bus200Data.origin)
+    expect(dbTrip.destination).to.equal(bus200Data.destination)
+    expect(dbTrip.departureTime).to.equal(bus200Data.departureTime)
+    expect(dbTrip.destinationArrivalTime).to.equal(bus200Data.destinationArrivalTime)
+  })
 })
 
 describe('The BusLiveTimetable class', () => {

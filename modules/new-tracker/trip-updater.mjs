@@ -34,6 +34,15 @@ export default class TripUpdater {
     })
   }
 
+  static async getTripSkeleton(db, runID, date) {
+    let liveTimetables = db.getCollection('live timetables')
+    return await liveTimetables.findDocument({
+      mode: this.getMode(),
+      runID,
+      operationDays: date
+    }, { stopTimings: 0 })
+  }
+
   static async getStop(db, stopID) {
     let mode = this.getMode()
     if (stopIDCache[stopID]) return stopCache[stopIDCache[stopID]].bays.find(bay => bay.stopGTFSID == stopID && bay.mode === mode)
@@ -225,6 +234,26 @@ export default class TripUpdater {
     return !(trip.stops && trip.stops.length > 0)
   }
 
+  static async updateNonStopData(db, trip, { dataSource, updateTime }) {
+    let dbTrip = await this.getTripSkeleton(db, trip.runID, trip.operationDays)
+    let liveTimetables = db.getCollection('live timetables')
+    console.log(dbTrip)
+
+    let timetable = LiveTimetable.fromDatabase(dbTrip)
+    if (updateTime) timetable.lastUpdated = updateTime
+
+    timetable.setModificationSource(dataSource)
+    this.setUpTimetable(timetable, trip)
+
+    await liveTimetables.updateDocument(timetable.getDBKey(), {
+      $set: timetable.toDatabase()
+    })
+
+    await this.updateTrackerData(db, timetable)
+
+    return timetable
+  }
+
   static async updateTrip(db, trip, {
     skipWrite = false,
     skipStopCancellation = false,
@@ -232,6 +261,10 @@ export default class TripUpdater {
     ignoreMissingStops = [],
     updateTime = null
   } = {}) {
+    if (this.isNonStopUpdate(trip) && !skipWrite) {
+      return await this.updateNonStopData(db, trip, { dataSource, updateTime })
+    }
+
     let dbTrip = await this.getTrip(db, trip.runID, trip.operationDays)
     let liveTimetables = db.getCollection('live timetables')
 
