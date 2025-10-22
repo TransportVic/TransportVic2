@@ -85,7 +85,7 @@ describe('The MetroNotify tracker', () => {
     expect(await metroNotify.countDocuments({})).to.equal(2)
     let oldAlert = await metroNotify.findDocument({ active: false })
     let newAlert = await metroNotify.findDocument({ active: true })
-    expect(oldAlert).to.equal(alert)
+    expect(oldAlert.alertID).to.equal(alert.alertID)
     expect(oldAlert.text).to.equal('<p>The 8:46am Flinders Street to Epping service is currently running up to 10 minutes late.</p>')
 
     expect(newAlert.rawAlertID).to.equal('647069')

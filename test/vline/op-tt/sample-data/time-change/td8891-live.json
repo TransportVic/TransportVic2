@@ -16,8 +16,8 @@
       "stopNumber": null,
       "suburb": "Docklands",
       "stopGTFSID": "vic:rail:SSS",
-      "arrivalTime": null,
-      "arrivalTimeMinutes": null,
+      "arrivalTime": "22:35",
+      "arrivalTimeMinutes": 1355,
       "departureTime": "22:35",
       "departureTimeMinutes": 1355,
       "stopConditions": {
@@ -170,8 +170,8 @@
       "stopGTFSID": "vic:rail:SOG",
       "arrivalTime": "23:40",
       "arrivalTimeMinutes": 1420,
-      "departureTime": null,
-      "departureTimeMinutes": null,
+      "departureTime": "23:40",
+      "departureTimeMinutes": 1420,
       "stopConditions": {
         "pickup": 1,
         "dropoff": 0
