@@ -216,6 +216,15 @@ export default class TripUpdater {
     }
   }
 
+  /**
+   * If a trip does not update the stop times
+   * It can use the $update operator to set just the required fields
+   * Instead of downloading the entire trip body just to discard it
+   */
+  static isNonStopUpdate(trip) {
+    return !(trip.stops && trip.stops.length > 0)
+  }
+
   static async updateTrip(db, trip, {
     skipWrite = false,
     skipStopCancellation = false,

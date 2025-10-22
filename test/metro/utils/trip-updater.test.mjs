@@ -17,6 +17,7 @@ import td0735_0737 from '../tracker/sample-data/ccl-0735-0737-sch.json' with { t
 import cclDepartures from '../tracker/sample-data/ccl-departures.json' with { type: 'json' }
 
 import td7509 from './sample-data/tdn-7509-math.json' with { type: 'json' }
+import TripUpdater from '../../../modules/new-tracker/trip-updater.mjs'
 
 let clone = o => JSON.parse(JSON.stringify(o))
 
@@ -1383,5 +1384,31 @@ describe('The trip updater module', () => {
       expect(tripData.stops[syrIndex + 4].stopName).to.equal('Malvern Railway Station')
       expect(tripData.stops[syrIndex + 5].stopName).to.equal('Caulfield Railway Station')
     }
+  })
+
+  describe('The isNonStopUpdate method', () => {
+    it('Checks if a trip update does not update stop times data', () => {
+      expect(TripUpdater.isNonStopUpdate({
+        operationDays: '20240224',
+        runID: 'R205',
+        routeGTFSID: '2-RCE',
+        stops: [],
+        cancelled: false,
+        consist: ['9001', '9101', '9201', '9301', '9701', '9801', '9901']
+      })).to.be.true
+
+      expect(TripUpdater.isNonStopUpdate({
+        operationDays: '20250712',
+        routeGTFSID: '2-PKM',
+        runID: '7509',
+        stops: [{
+          stopName: 'South Yarra Railway Station',
+          scheduledDepartureTime: new Date('2025-07-12T12:26:00.000Z')
+        }, {
+          stopName: 'Hawksburn Railway Station',
+          scheduledDepartureTime: new Date('2025-07-12T12:49:00.000Z')
+        }]
+      })).to.be.false
+    })
   })
 })
