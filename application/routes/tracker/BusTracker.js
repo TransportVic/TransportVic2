@@ -131,7 +131,7 @@ router.get('/fleet', async (req, res) => {
     rego = bus.rego
     fleet = `#${fleet}`
   } else {
-    rego = parseInt(fleet) || '?'
+    rego = fleet
     bus = await getBusFromRego(busRegos, rego)
     if (bus) {
       fleet = `#${bus.fleetNumber}`
