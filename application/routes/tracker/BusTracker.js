@@ -64,9 +64,9 @@ async function findCrossDepotTrips(busTrips, smartrakIDs, date) {
   return crossDepotTrips
 }
 
-async function getBusFromSmartrak(smartrakIDs, smartrakID) {
-  return await utils.getData('smartrak-id', smartrakID, async () => {
-    return await smartrakIDs.findDocument({ smartrakID })
+async function getBusFromRego(busRegos, rego) {
+  return await utils.getData('smartrak-id', rego, async () => {
+    return await busRegos.findDocument({ rego })
   }, 1000 * 5)
 }
 
@@ -101,7 +101,7 @@ function adjustTrip(trip, date, today, minutesPastMidnightNow) {
 router.get('/fleet', async (req, res) => {
   let {db} = res
   let busTrips = db.getCollection('bus trips')
-  let smartrakIDs = db.getCollection('smartrak ids')
+  let busRegos = db.getCollection('bus regos')
 
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
 
@@ -122,34 +122,34 @@ router.get('/fleet', async (req, res) => {
     })
   }
 
-  let bus = await smartrakIDs.findDocument({ fleetNumber: fleet })
+  let bus = await busRegos.findDocument({ fleetNumber: fleet })
   let query = { date }
 
-  let smartrakID
+  let rego
 
   if (bus) {
-    smartrakID = bus.smartrakID
+    rego = bus.rego
     fleet = `#${fleet}`
   } else {
-    smartrakID = parseInt(fleet) || '?'
-    bus = await getBusFromSmartrak(smartrakIDs, smartrakID)
+    rego = parseInt(fleet) || '?'
+    bus = await getBusFromRego(busRegos, rego)
     if (bus) {
       fleet = `#${bus.fleetNumber}`
     }
   }
 
-  query.smartrakID = smartrakID
+  query.consist = rego
   let tripsToday = await busTrips.findDocuments(query)
     .sort({departureTime: 1}).toArray()
 
   tripsToday = tripsToday.map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
 
-  let allDates = (await busTrips.distinct('date', { smartrakID })).reverse()
+  let allDates = (await busTrips.distinct('date', { consist: rego })).reverse()
 
   let servicesByDay = await async.map(allDates, async date => {
     let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
 
-    let services = await busTrips.distinct('routeNumber', { smartrakID, date })
+    let services = await busTrips.distinct('routeNumber', { consist: rego, date })
 
     return {
       date,
@@ -163,7 +163,7 @@ router.get('/fleet', async (req, res) => {
     servicesByDay,
     bus,
     fleet,
-    smartrakID,
+    rego: rego,
     date: utils.parseTime(date, 'YYYYMMDD')
   })
 })
@@ -171,7 +171,7 @@ router.get('/fleet', async (req, res) => {
 router.get('/service', async (req, res) => {
   let {db} = res
   let busTrips = db.getCollection('bus trips')
-  let smartrakIDs = db.getCollection('smartrak ids')
+  let busRegos = db.getCollection('bus regos')
 
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
 
@@ -206,10 +206,14 @@ router.get('/service', async (req, res) => {
     routeNumber: routeQuery
   }).sort({departureTime: 1, origin: 1}).toArray()
 
-  let tripsToday = (await async.map(rawTripsToday, async trip => {
-    let {fleetNumber} = await getBusFromSmartrak(smartrakIDs, trip.smartrakID) || {}
+  const d = async r => {
+    let {fleetNumber} = await getBusFromRego(busRegos, r) || {}
 
-    trip.fleetNumber = fleetNumber ? '#' + fleetNumber : '@' + trip.smartrakID
+    return fleetNumber ? '#' + fleetNumber : r
+  }
+
+  let tripsToday = (await async.map(rawTripsToday, async trip => {
+    trip.fleetNumber = d(trip.consist[0])
 
     return trip
   })).map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
@@ -218,7 +222,7 @@ router.get('/service', async (req, res) => {
     routeNumber: routeQuery
   })
 
-  let smartrakIDCache = await smartrakIDs.findDocuments({
+  let smartrakIDCache = await busRegos.findDocuments({
     smartrakID: {
       $in: allSmartraks
     }
@@ -229,15 +233,12 @@ router.get('/service', async (req, res) => {
   let busesByDay = await async.map(allDates, async date => {
     let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
 
-    let buses = await busTrips.distinct('smartrakID', { routeNumber: routeQuery, date })
+    let buses = await busTrips.distinct('rego', { routeNumber: routeQuery, date })
 
     return {
       date,
       humanDate,
-      buses: buses.map(smartrak => {
-        let lookup = smartrakIDCache.find(bus => bus.smartrakID === smartrak)
-        return lookup ? '#' + lookup.fleetNumber : '@' + smartrak
-      }).sort((a, b) => a.replace(/[^\d]/g, '') - b.replace(/[^\d]/g, ''))
+      buses: await async.map(buses, d).sort((a, b) => a.replace(/[^\d]/g, '') - b.replace(/[^\d]/g, ''))
     }
   })
 
@@ -343,7 +344,7 @@ router.get('/highlights', async (req, res) => {
       .sort({departureTime: 1, origin: 1}).toArray()
 
     let trips = (await async.map(matchedTrips, async trip => {
-      let {fleetNumber} = await getBusFromSmartrak(smartrakIDs, trip.smartrakID) || {}
+      let {fleetNumber} = await getBusFromRego(smartrakIDs, trip.smartrakID) || {}
 
       trip.fleetNumber = fleetNumber ? '#' + fleetNumber : '@' + trip.smartrakID
 
@@ -395,7 +396,7 @@ router.get('/cross-depot', async (req, res) => {
   let crossDepotTrips = await findCrossDepotTrips(busTrips, smartrakIDs, date)
 
   let tripsToday = (await async.map(crossDepotTrips, async trip => {
-    let {fleetNumber} = await getBusFromSmartrak(smartrakIDs, trip.smartrakID) || {}
+    let {fleetNumber} = await getBusFromRego(smartrakIDs, trip.smartrakID) || {}
 
     trip.fleetNumber = fleetNumber ? '#' + fleetNumber : '@' + trip.smartrakID
 
@@ -445,7 +446,7 @@ router.get('/bot', async (req, res) => {
     }).sort({departureTime: 1, origin: 1}).toArray()
 
     let tripsToday = (await async.map(rawTripsToday, async rawTrip => {
-      let {fleetNumber} = await getBusFromSmartrak(smartrakIDs, smartrakID) || {}
+      let {fleetNumber} = await getBusFromRego(smartrakIDs, smartrakID) || {}
 
       let {origin, destination, departureTime} = rawTrip
 

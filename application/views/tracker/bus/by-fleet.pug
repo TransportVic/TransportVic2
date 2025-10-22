@@ -3,7 +3,7 @@ extends ../../layout
 block head
   -
     title = 'TransportVic - Tracker/Bus - By Fleet'
-    description = `Tracking Bus ${fleet} (${smartrakID})`
+    description = `Tracking Bus ${fleet} (${rego})`
   title #{title}
   link(rel='preload' as='style' href=`${staticBase}/static/css/tracker/results.css`)
 
@@ -14,12 +14,12 @@ block style
   link(rel='stylesheet' href=`${staticBase}/static/css/tracker/results.css`)
 
 block content
-  h1.title Tracking Bus #{fleet} (#{smartrakID}) on #{date.format('dddd, MMMM Do YYYY')}
+  h1.title Tracking Bus #{fleet} (#{rego}) on #{date.format('dddd, MMMM Do YYYY')}
   for trip in tripsToday
     div(class=`trip ${trip.active ? '' : 'inactive'}`)
       a(href=trip.url) #{trip.departureTime} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]} #{trip.routeNumber}
 
   h1.title Past deployments:
   for day in servicesByDay
-    a(href=`/bus/tracker/fleet?fleet=${bus ? fleet.slice(1) : smartrakID}&date=${day.date}`).pastDeployment #{day.humanDate} - #{day.services.join(', ')}
+    a(href=`/bus/tracker/fleet?fleet=${bus ? fleet.slice(1) : rego}&date=${day.date}`).pastDeployment #{day.humanDate} - #{day.services.join(', ')}
     br
