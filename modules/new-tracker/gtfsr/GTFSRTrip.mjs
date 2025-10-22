@@ -1,9 +1,10 @@
-export class RailGTFSRTrip {
+export class GTFSRTrip {
 
   #operationDay
   #startTime
   #scheduleRelationship
   #routeID
+  #tripID
 
   static SR_SCHEDULED = 0;
   static SR_ADDED = 1;
@@ -14,6 +15,7 @@ export class RailGTFSRTrip {
     this.#operationDay = trip.start_date
     this.#scheduleRelationship = trip.schedule_relationship
     this.#routeID = trip.route_id.slice(-6, -1)
+    this.#tripID = trip.trip_id
 
     let [_, startHour, startMinute] = trip.start_time.match(/^(\d\d):(\d\d)/)
     let finalStartHour = parseInt(startHour)
@@ -25,17 +27,18 @@ export class RailGTFSRTrip {
   getStartTime() { return this.#startTime }
   getScheduleRelationship() { return this.#scheduleRelationship }
   getRouteID() { return this.#routeID }
+  getTripID() { return this.#tripID }
 
   static canProcess() { return false }
 
   static parse(trip) {
-    let parsers = [ ScheduledRailGTFSRTrip, UnscheduledRailGTFSRTrip, GenericRailGTFSRTrip ]
+    let parsers = [ ScheduledRailGTFSRTrip, BusGTFSRTrip, UnscheduledRailGTFSRTrip, GenericRailGTFSRTrip ]
     for (let parser of parsers) if (parser.canProcess(trip)) return new parser(trip)
   }
 
 }
 
-export class ScheduledRailGTFSRTrip extends RailGTFSRTrip {
+export class ScheduledRailGTFSRTrip extends GTFSRTrip {
 
   #tdn
 
@@ -52,7 +55,7 @@ export class ScheduledRailGTFSRTrip extends RailGTFSRTrip {
 
 }
 
-export class UnscheduledRailGTFSRTrip extends RailGTFSRTrip {
+export class UnscheduledRailGTFSRTrip extends GTFSRTrip {
 
   #tdn
 
@@ -69,7 +72,7 @@ export class UnscheduledRailGTFSRTrip extends RailGTFSRTrip {
 
 }
 
-export class GenericRailGTFSRTrip extends RailGTFSRTrip {
+export class GenericRailGTFSRTrip extends GTFSRTrip {
 
   #routeID
 
@@ -81,5 +84,20 @@ export class GenericRailGTFSRTrip extends RailGTFSRTrip {
   static canProcess() { return true }
 
   getRouteID() { return this.#routeID }
+
+}
+
+export class BusGTFSRTrip extends GTFSRTrip {
+
+  constructor(trip) {
+    super(trip)
+  }
+
+  static canProcess(trip) {
+    return !!trip.trip_id.match(/^\d+-\w+-\w?-1-\w+-\d+$/)
+  }
+
+  getTDN() { return this.getTripID() }
+  getRouteID() { return this.getTripID().split('-')[1] }
 
 }

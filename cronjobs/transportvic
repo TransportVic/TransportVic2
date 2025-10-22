@@ -47,6 +47,18 @@
   # And then 0000-0200
   *   0-1   *     *     *     /home/transportvic/TransportVic/modules/new-tracker/vline.sh
 
+  # Bus Tracker
+  # Regular trips everyday 0400 - 2359
+  *     4-23  *     *     *     node /home/transportvic/TransportVic/modules/new-tracker/bus.mjs
+  # Regular weeknights until 2530 (1.30am). This is effectively Tuesday 12-1.30am - Friday 12-1.30am
+  *     0     *     *     2-5   node /home/transportvic/TransportVic/modules/new-tracker/bus.mjs
+  0-30  1     *     *     2-5   node /home/transportvic/TransportVic/modules/new-tracker/bus.mjs
+  # Fri and Sat all night, noting that it is on the next day so Saturday and Sunday 12am - 4am
+  *     0-2   *     *     6-7   node /home/transportvic/TransportVic/modules/new-tracker/bus.mjs
+  *     3     *     *     6-7   node /home/transportvic/TransportVic/modules/new-tracker/bus.mjs
+  # Sun up to 2am (Monday 12am-2am)
+  *     0-2   *     *     1     node /home/transportvic/TransportVic/modules/new-tracker/bus.mjs
+
   # Other maintenance scripts
   5     0     *     *     *     /home/transportvic/TransportVic/scripts/check-gtfs-updates.sh
   0     4     *     *     *     node /home/transportvic/TransportVic/scripts/update-consists.mjs

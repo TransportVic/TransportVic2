@@ -258,6 +258,20 @@ async function createSmartrakIndex(smartrakIDs) {
   }, {name: 'operator index'})
 }
 
+async function createBusRegoIndex(busRegos) {
+  await busRegos.createIndex({
+    busRegeo: 1
+  }, {name: 'bus rego index', unique: true})
+
+  await busRegos.createIndex({
+    fleetNumber: 1
+  }, {name: 'fleet number index', unique: true})
+
+  await busRegos.createIndex({
+    operator: 1
+  }, {name: 'operator index'})
+}
+
 async function createMetroNotifyIndex(metroNotify) {
   await metroNotify.createIndex({
     alertID: 1
@@ -353,6 +367,7 @@ await createVLineTripIndex(await mainDB.getCollection('vline trips'))
 await createTramTripIndex(await mainDB.getCollection('tram trips'))
 await createBusTripIndex(await mainDB.getCollection('bus trips'))
 await createSmartrakIndex(await mainDB.getCollection('smartrak ids'))
+await createBusRegoIndex(await mainDB.getCollection('bus regos'))
 await createMetroNotifyIndex(await mainDB.getCollection('metro notify'))
 await createMetroLocationsIndex(await mainDB.getCollection('metro locations'))
 

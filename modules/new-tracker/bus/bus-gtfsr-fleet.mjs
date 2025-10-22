@@ -4,24 +4,22 @@ import { fileURLToPath } from 'url'
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../../config.json' with { type: 'json' }
 import { GTFSRTrip } from '../gtfsr/GTFSRTrip.mjs'
-import parseConsist from '../../vline/fleet-parser.mjs'
 import _ from '../../../init-loggers.mjs'
-import VLineTripUpdater from '../../vline/trip-updater.mjs'
 import fs from 'fs/promises'
+import BusTripUpdater from '../../bus/trip-updater.mjs'
 
 export async function getFleetData(gtfsrAPI) {
-  let tripData = await gtfsrAPI('vline/vehicle-positions')
+  let tripData = await gtfsrAPI('bus/vehicle-positions')
 
   let trips = {}
 
-  for (let trip of tripData.entity.filter(trip => trip.vehicle && trip.vehicle.vehicle)) {
+  for (let trip of tripData.entity) {
     let gtfsrTripData = GTFSRTrip.parse(trip.vehicle.trip)
-
     let tripData = {
       operationDays: gtfsrTripData.getOperationDay(),
       runID: gtfsrTripData.getTDN(),
       routeGTFSID: gtfsrTripData.getRouteID(),
-      consist: [ parseConsist(trip.vehicle.vehicle.id) ]
+      consist: [ trip.vehicle.vehicle.id ]
     }
 
     trips[tripData.runID] = tripData
@@ -32,10 +30,10 @@ export async function getFleetData(gtfsrAPI) {
 
 export async function fetchGTFSRFleet(db) {
   let relevantTrips = await getFleetData(makePBRequest)
-  global.loggers.trackers.metro.log('GTFSR Fleet Updater: Fetched', relevantTrips.length, 'trips')
+  global.loggers.trackers.metro.log('GTFSR Updater: Fetched', relevantTrips.length, 'trips')
 
   for (let tripData of relevantTrips) {
-    await VLineTripUpdater.updateTrip(db, tripData, { dataSource: 'gtfsr-vehicle-update' })
+    await BusTripUpdater.updateTrip(db, tripData, { dataSource: 'gtfsr-vehicle-update' })
   }
 }
 
