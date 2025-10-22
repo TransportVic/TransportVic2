@@ -260,7 +260,7 @@ async function createSmartrakIndex(smartrakIDs) {
 
 async function createBusRegoIndex(busRegos) {
   await busRegos.createIndex({
-    busRegeo: 1
+    rego: 1
   }, {name: 'bus rego index', unique: true})
 
   await busRegos.createIndex({

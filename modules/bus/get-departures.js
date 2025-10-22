@@ -36,37 +36,6 @@ async function getRoutes(db, cacheKey, query) {
   })
 }
 
-async function updateBusTrips(db, departures) {
-  let busTrips = db.getCollection('bus trips')
-
-  let timestamp = +new Date()
-
-  let viableDepartures = departures.filter(d => d.vehicle)
-
-  await async.forEach(viableDepartures, async departure => {
-    let { routeGTFSID, origin, destination, departureTime, destinationArrivalTime } = departure.trip
-    let smartrakID = parseInt(departure.vehicle.smartrakID)
-    let busRego = departure.vehicle.name
-
-    let {routeNumber, vehicle} = departure
-
-    let date = utils.getYYYYMMDD(departure.originDepartureTime)
-    let data = {
-      date,
-      timestamp,
-      routeGTFSID,
-      smartrakID, routeNumber,
-      origin, destination, departureTime, destinationArrivalTime
-    }
-
-    await busTrips.replaceDocument({
-      date, routeGTFSID, origin, destination, departureTime, destinationArrivalTime
-    }, data, {
-      upsert: true
-    })
-  })
-}
-
 async function getDeparturesFromPTV(stop, db, time, discardUnmatched) {
   let gtfsTimetables = db.getCollection('gtfs timetables')
   let smartrakIDs = db.getCollection('smartrak ids')
@@ -197,10 +166,6 @@ async function getDeparturesFromPTV(stop, db, time, discardUnmatched) {
         estimatedDepartureTime,
         actualDepartureTime,
         destination: trip.destination,
-        vehicle: trip.vehicle ? {
-          name: trip.vehicle.consist[0],
-          smartrakID: 0
-        } : null,
         routeNumber,
         sortNumber,
         operator,
@@ -319,10 +284,28 @@ async function getDepartures(stop, db, time, discardUnmatched) {
       let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
 
       let busTrips = db.getCollection('bus trips')
-      let smartrakIDs = db.getCollection('smartrak ids')
+      let busRegos = db.getCollection('bus regos')
 
       return (await async.map(departures, async departure => {
         let {trip} = departure
+
+        if (trip.vehicle) {
+          const rego = trip.vehicle.consist[0]
+          const busData = await busRegos.findDocument({
+            rego
+          })
+          if (busData) {
+            departure.vehicle = {
+              name: busData.fleetNumber,
+              rego
+            }
+          } else {
+            departure.vehicle = {
+              name: rego,
+              rego
+            }
+          }
+        }
 
         let hasSeenStop = false
         let upcomingStops = trip.stopTimings.filter(tripStop => {
