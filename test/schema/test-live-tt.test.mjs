@@ -25,6 +25,7 @@ describe('The LiveTimetable schema', () => {
     expect(timetable.shapeID).to.equal('2-MDD-vpt-23.1.R')
     expect(timetable.runID).to.equal('1000')
     expect(timetable.direction).to.equal('Up')
+    expect(timetable.gtfsDirection).to.equal(1)
     expect(timetable.isRRB).to.be.false
     expect(timetable.additional).to.be.true
 

@@ -134,6 +134,7 @@ module.exports = class LiveTimetable {
   #tripID
   #shapeID
   #block
+  #gtfsDirection
   
   #isRRB
   #runID
@@ -184,6 +185,7 @@ module.exports = class LiveTimetable {
   get circular() { return this.#circular }
   get headsign() { return this.#headsign }
   get lastUpdated() { return new Date(this.#lastUpdated) }
+  get gtfsDirection() { return this.#gtfsDirection }
 
   get vehicle() {
     if (this.#vehicle) {
@@ -364,6 +366,7 @@ module.exports = class LiveTimetable {
       timetableInstance.#vehicle = timetable.vehicle
       timetableInstance.#vehicleForced = timetable.vehicle.forced || false
     }
+    if (timetable.gtfsDirection) timetableInstance.#gtfsDirection = timetable.gtfsDirection
 
     for (let stopData of timetable.stopTimings) {
       let stop = new TimetableStop(
@@ -413,7 +416,7 @@ module.exports = class LiveTimetable {
       tripID: this.#tripID,
       shapeID: this.#shapeID,
       block: this.#block,
-      gtfsDirection: undefined,
+      gtfsDirection: this.#gtfsDirection,
       runID: this.#runID,
       isRailReplacementBus: this.#isRRB,
       vehicle: this.#vehicle,

@@ -175,22 +175,7 @@ async function getDeparturesFromPTV(stop, db, time, discardUnmatched) {
       let hasVehicleData = run.vehicle_descriptor && run.vehicle_descriptor.id
       let vehicleDescriptor = hasVehicleData ? run.vehicle_descriptor : {}
 
-      let busRego
-      let smartrakID = vehicleDescriptor.id
-      if (vehicleDescriptor.supplier === 'Smartrak') {
-        busRego = (await smartrakIDs.findDocument({
-          smartrakID: parseInt(smartrakID)
-        }) || {}).fleetNumber
-      }
-
       let operator = busRoute.operators.sort((a, b) => a.length - b.length)[0] || ''
-
-      if (busRoute.operationDate) {
-        let cutoff = time.clone().startOf('day')
-        if (busRoute.operationDate.type === 'until' && busRoute.operationDate.operationDate < cutoff) {
-          return
-        }
-      }
 
       let { routeNumber } = trip
       let sortNumber = routeNumber || ''
@@ -212,10 +197,9 @@ async function getDeparturesFromPTV(stop, db, time, discardUnmatched) {
         estimatedDepartureTime,
         actualDepartureTime,
         destination: trip.destination,
-        vehicle: smartrakID ? {
-          name: busRego || smartrakID,
-          smartrakID,
-          attributes: null
+        vehicle: trip.vehicle ? {
+          name: trip.vehicle.consist[0],
+          smartrakID: 0
         } : null,
         routeNumber,
         sortNumber,
@@ -259,8 +243,6 @@ async function getDeparturesFromPTV(stop, db, time, discardUnmatched) {
   let filteredDepartures = filteredLiveDepartures.concat(scheduledTrips.filter(d => {
     return !tripIDs.includes(d.tripID)
   }))
-
-  await updateBusTrips(db, filteredDepartures)
 
   return filteredDepartures
 }
@@ -342,35 +324,6 @@ async function getDepartures(stop, db, time, discardUnmatched) {
       return (await async.map(departures, async departure => {
         let {trip} = departure
 
-        if (!departure.vehicle) {
-          let trip = departure.trip
-          let { routeGTFSID } = trip
-          let shouldCheck = routeGTFSID.startsWith('4-') || regionalGTFSIDs[routeGTFSID]
-
-          if (shouldCheck) {
-            let query = {
-              date: utils.getYYYYMMDD(departure.originDepartureTime),
-              routeGTFSID,
-              origin: trip.origin,
-              destination: trip.destination,
-              departureTime: trip.departureTime,
-              destinationArrivalTime: trip.destinationArrivalTime
-            }
-
-            let vehicle = await busTrips.findDocument(query)
-
-            if (vehicle) {
-              let { smartrakID } = vehicle
-              let smartrak = await smartrakIDs.findDocument({ smartrakID })
-              departure.vehicle = {
-                name: smartrak ? smartrak.fleetNumber : smartrakID,
-                smartrakID,
-                attributes: null
-              }
-            }
-          }
-        }
-
         let hasSeenStop = false
         let upcomingStops = trip.stopTimings.filter(tripStop => {
           if (stopGTFSIDs.includes(tripStop.stopGTFSID)) {
@@ -380,7 +333,7 @@ async function getDepartures(stop, db, time, discardUnmatched) {
         })
 
         if (upcomingStops.length <= 1) return
-        
+
         let stopDepartures = upcomingStops.slice(0, -1).filter(tripStop => stopGTFSIDs.includes(tripStop.stopGTFSID))
         let preferredStop = stopDepartures.sort((a, b) => {
           let aBay = busBays[a.stopGTFSID], bBay = busBays[b.stopGTFSID]

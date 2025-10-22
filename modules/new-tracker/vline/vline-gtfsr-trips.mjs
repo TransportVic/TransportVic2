@@ -3,7 +3,7 @@ import { fileURLToPath } from 'url'
 
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../../config.json' with { type: 'json' }
-import { RailGTFSRTrip } from '../gtfsr/GTFSRTrip.mjs'
+import { GTFSRTrip } from '../gtfsr/GTFSRTrip.mjs'
 import VLineTripUpdater from '../../vline/trip-updater.mjs'
 import _ from '../../../init-loggers.mjs'
 import { getPlatformUsage } from '../../metro-trains/platform-usage.mjs'
@@ -19,15 +19,15 @@ export async function getUpcomingTrips(db, gtfsrAPI) {
   let trips = {}
 
   for (let trip of tripData.entity) {
-    let gtfsrTripData = RailGTFSRTrip.parse(trip.trip_update.trip)
+    let gtfsrTripData = GTFSRTrip.parse(trip.trip_update.trip)
 
     let tripData = {
       operationDays: gtfsrTripData.getOperationDay(),
       runID: gtfsrTripData.getTDN(),
       routeGTFSID: gtfsrTripData.getRouteID(),
       stops: [],
-      cancelled: gtfsrTripData.getScheduleRelationship() === RailGTFSRTrip.SR_CANCELLED,
-      additional: gtfsrTripData.getScheduleRelationship() === RailGTFSRTrip.SR_ADDED,
+      cancelled: gtfsrTripData.getScheduleRelationship() === GTFSRTrip.SR_CANCELLED,
+      additional: gtfsrTripData.getScheduleRelationship() === GTFSRTrip.SR_ADDED,
       scheduledStartTime: gtfsrTripData.getStartTime()
     }
 

@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { RailGTFSRTrip, ScheduledRailGTFSRTrip, UnscheduledRailGTFSRTrip } from '../../modules/new-tracker/gtfsr/GTFSRTrip.mjs'
+import { GTFSRTrip, ScheduledRailGTFSRTrip, UnscheduledRailGTFSRTrip } from '../../modules/new-tracker/gtfsr/GTFSRTrip.mjs'
 
 describe('The GTFSRTrip class', () => {
   describe('The Scheduled trip class', () => {
@@ -49,7 +49,7 @@ describe('The GTFSRTrip class', () => {
         start_time: '14:38:00',
         start_date: '20250603',
         schedule_relationship: 0
-      }).getScheduleRelationship()).to.equal(RailGTFSRTrip.SR_SCHEDULED)
+      }).getScheduleRelationship()).to.equal(GTFSRTrip.SR_SCHEDULED)
     })
   })
 
@@ -83,12 +83,12 @@ describe('The GTFSRTrip class', () => {
         start_time: '15:37:00',
         start_date: '20250603',
         schedule_relationship: 1
-      }).getScheduleRelationship()).to.equal(RailGTFSRTrip.SR_ADDED)
+      }).getScheduleRelationship()).to.equal(GTFSRTrip.SR_ADDED)
     })
   })
 
   it('Should automatically generate the correct parser', () => {
-    expect(RailGTFSRTrip.parse({
+    expect(GTFSRTrip.parse({
       trip_id: 'vic:02SUY:_:R:vpt._Sunbury_6112_20250603',
       route_id: 'aus:vic:vic-02-SUY:',
       direction_id: 0,
@@ -97,7 +97,7 @@ describe('The GTFSRTrip class', () => {
       schedule_relationship: 1
     }).getTDN()).to.equal('6112')
 
-    expect(RailGTFSRTrip.parse({
+    expect(GTFSRTrip.parse({
       trip_id: 'vic:02GWY:_:H:vpt._Glen Waverley_2083_20250719',
       route_id: 'aus:vic:vic-02-GWY:',
       direction_id: 0,
@@ -106,7 +106,7 @@ describe('The GTFSRTrip class', () => {
       schedule_relationship: 1
     }).getTDN()).to.equal('2083')
 
-    expect(RailGTFSRTrip.parse({
+    expect(GTFSRTrip.parse({
       trip_id: '02-STY--52-T5-8514',
       route_id: 'aus:vic:vic-02-STY:',
       direction_id: 0,
@@ -115,7 +115,7 @@ describe('The GTFSRTrip class', () => {
       schedule_relationship: 0
     }).getTDN()).to.equal('8514')
     
-    expect(RailGTFSRTrip.parse({
+    expect(GTFSRTrip.parse({
       trip_id: '02-STY--52-T5-8514',
       route_id: 'aus:vic:vic-02-STY:',
       direction_id: 0,
@@ -124,7 +124,7 @@ describe('The GTFSRTrip class', () => {
       schedule_relationship: 0
     }).getRouteID()).to.equal('2-STY')
     
-    expect(RailGTFSRTrip.parse({
+    expect(GTFSRTrip.parse({
       trip_id: '01-BAT--8-T2-8107',
       route_id: 'aus:vic:vic-01-BAT:',
       direction_id: 0,
@@ -135,7 +135,7 @@ describe('The GTFSRTrip class', () => {
   })
 
   it('Should provide the start time', () => {
-    expect(RailGTFSRTrip.parse({
+    expect(GTFSRTrip.parse({
       trip_id: '02-STY--52-T5-8514',
       route_id: 'aus:vic:vic-02-STY:',
       direction_id: 0,
@@ -144,7 +144,7 @@ describe('The GTFSRTrip class', () => {
       schedule_relationship: 0
     }).getStartTime()).to.equal('15:29')
 
-    expect(RailGTFSRTrip.parse({
+    expect(GTFSRTrip.parse({
       trip_id: '02-STY--52-T5-8514',
       route_id: 'aus:vic:vic-02-STY:',
       direction_id: 0,
@@ -153,7 +153,7 @@ describe('The GTFSRTrip class', () => {
       schedule_relationship: 0
     }).getStartTime()).to.equal('01:29')
 
-    expect(RailGTFSRTrip.parse({
+    expect(GTFSRTrip.parse({
       trip_id: '02-STY--52-T5-8514',
       route_id: 'aus:vic:vic-02-STY:',
       direction_id: 0,
@@ -164,7 +164,7 @@ describe('The GTFSRTrip class', () => {
   })
 
   it('Extracts just the basic data for unknown trips', () => {
-    let data = RailGTFSRTrip.parse({
+    let data = GTFSRTrip.parse({
       trip_id: '1.T0.1-WBL-mjp-7.1.H',
       route_id: '1-WBL-mjp-7',
       direction_id: 0,

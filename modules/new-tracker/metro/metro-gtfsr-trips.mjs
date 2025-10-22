@@ -3,7 +3,7 @@ import { fileURLToPath } from 'url'
 
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../../config.json' with { type: 'json' }
-import { RailGTFSRTrip, UnscheduledRailGTFSRTrip } from '../gtfsr/GTFSRTrip.mjs'
+import { GTFSRTrip, UnscheduledRailGTFSRTrip } from '../gtfsr/GTFSRTrip.mjs'
 import MetroTripUpdater from '../../metro-trains/trip-updater.mjs'
 import _ from '../../../init-loggers.mjs'
 import fs from 'fs/promises'
@@ -14,16 +14,16 @@ export async function getUpcomingTrips(db, gtfsrAPI, routeFilter = '') {
   let trips = {}
 
   for (let trip of tripData.entity) {
-    let gtfsrTripData = RailGTFSRTrip.parse(trip.trip_update.trip)
-    if (!gtfsrTripData.getRouteID().includes(routeFilter) && gtfsrTripData.getScheduleRelationship() !== RailGTFSRTrip.SR_CANCELLED) continue
+    let gtfsrTripData = GTFSRTrip.parse(trip.trip_update.trip)
+    if (!gtfsrTripData.getRouteID().includes(routeFilter) && gtfsrTripData.getScheduleRelationship() !== GTFSRTrip.SR_CANCELLED) continue
 
     let tripData = {
       operationDays: gtfsrTripData.getOperationDay(),
       runID: gtfsrTripData.getTDN(),
       routeGTFSID: gtfsrTripData.getRouteID(),
       stops: [],
-      cancelled: gtfsrTripData.getScheduleRelationship() === RailGTFSRTrip.SR_CANCELLED,
-      additional: gtfsrTripData.getScheduleRelationship() === RailGTFSRTrip.SR_ADDED,
+      cancelled: gtfsrTripData.getScheduleRelationship() === GTFSRTrip.SR_CANCELLED,
+      additional: gtfsrTripData.getScheduleRelationship() === GTFSRTrip.SR_ADDED,
       scheduledStartTime: gtfsrTripData.getStartTime()
     }
 
