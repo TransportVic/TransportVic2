@@ -14,6 +14,8 @@ let clone = o => JSON.parse(JSON.stringify(o))
 
 const bus200DataNoStops = Object.keys(bus200Data).reduce(
   (acc, key) => key === 'stopTimings' ? ({ ...acc, stopTimings: [] })
+  : key === 'vehicle' ? acc
+  : key === 'changes' ? acc
   : ({ ...acc, [key]: bus200Data[key]}),
 {})
 
@@ -839,7 +841,7 @@ describe('The LiveTimetable class', () => {
     expect(timetable).to.be.instanceOf(BusLiveTimetable)
   })
 
-  it.only('Does not set stop cancellation data for a skeleton trip with no stop times', () => {
+  it('Does not set stop cancellation data for a skeleton trip with no stop times', () => {
     const timetable = LiveTimetable.fromDatabase(bus200DataNoStops)
     timetable.consist = ['BS04FL']
 

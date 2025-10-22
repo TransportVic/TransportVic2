@@ -160,6 +160,11 @@ export class LiveTimetable {
   #headsign
   #lastUpdated
 
+  #originalOrigin
+  #originalDestination
+  #originalDepTime
+  #originalArrTime
+
   constructor(mode, operationDays, routeName, routeNumber, routeGTFSID, tripID, block, lastUpdated) {
     this.#mode = mode
     this.#operationDay = utils.parseDate(operationDays).startOf('day')
@@ -402,6 +407,11 @@ export class LiveTimetable {
     if (typeof timetable.isRailReplacementBus !== 'undefined') timetableInstance.#isRRB = timetable.isRailReplacementBus
     if (timetable.changes) timetableInstance.changes = timetable.changes
 
+    timetableInstance.#originalOrigin = timetable.origin
+    timetableInstance.#originalDestination = timetable.destination
+    timetableInstance.#originalDepTime = timetable.departureTime
+    timetableInstance.#originalArrTime = timetable.destinationArrivalTime
+
     return timetableInstance
   }
 
@@ -414,6 +424,12 @@ export class LiveTimetable {
   }
 
   toDatabase() {
+    // TODO: Create a skeleton trip subclass?
+    const origin = this.#stops.length ? this.origin : this.#originalOrigin
+    const destination = this.#stops.length ? this.destination : this.#originalDestination
+    const departureTime = this.#stops.length ? this.departureTime : this.#originalDepTime
+    const destinationArrivalTime = this.#stops.length ? this.destinationArrivalTime : this.#originalArrTime
+
     let returnData = {
       mode: this.#mode,
       routeGTFSID: this.#routeGTFSID,
@@ -428,11 +444,10 @@ export class LiveTimetable {
       direction: this.#direction,
       routeName: this.#routeName,
       routeNumber: this.#routeNumber,
-      origin: this.origin,
-      destination: this.destination,
-      departureTime: this.departureTime,
-      destinationArrivalTime: this.destinationArrivalTime,
-      stopTimings: this.#stops.map(stop => stop.toDatabase()),
+      origin,
+      destination,
+      departureTime,
+      destinationArrivalTime,
       formedBy: this.#formedBy,
       forming: this.#forming,
       changes: this.changes,
@@ -440,6 +455,8 @@ export class LiveTimetable {
       additional: this.#additional,
       lastUpdated: this.#lastUpdated
     }
+
+    if (this.#stops.length) returnData.stopTimings = this.#stops.map(stop => stop.toDatabase())
 
     if (typeof this.#circular !== 'undefined') returnData.circular = this.#circular
     if (typeof this.#headsign !== 'undefined') returnData.headsign = this.#headsign
