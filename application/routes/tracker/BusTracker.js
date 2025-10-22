@@ -213,32 +213,22 @@ router.get('/service', async (req, res) => {
   }
 
   let tripsToday = (await async.map(rawTripsToday, async trip => {
-    trip.fleetNumber = d(trip.consist[0])
+    trip.fleetNumber = await d(trip.consist[0])
 
     return trip
   })).map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
-
-  let allSmartraks = await busTrips.distinct('smartrakID', {
-    routeNumber: routeQuery
-  })
-
-  let smartrakIDCache = await busRegos.findDocuments({
-    smartrakID: {
-      $in: allSmartraks
-    }
-  }).toArray()
 
   let allDates = (await busTrips.distinct('date', { routeNumber: routeQuery })).reverse()
 
   let busesByDay = await async.map(allDates, async date => {
     let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
 
-    let buses = await busTrips.distinct('rego', { routeNumber: routeQuery, date })
+    let buses = await busTrips.distinct('consist', { routeNumber: routeQuery, date })
 
     return {
       date,
       humanDate,
-      buses: await async.map(buses, d).sort((a, b) => a.replace(/[^\d]/g, '') - b.replace(/[^\d]/g, ''))
+      buses: (await async.map(buses, d)).sort((a, b) => a.replace(/[^\d]/g, '') - b.replace(/[^\d]/g, ''))
     }
   })
 

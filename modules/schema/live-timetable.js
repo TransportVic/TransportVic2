@@ -482,6 +482,14 @@ module.exports = class LiveTimetable {
       consist: this.#vehicle.consist
     }
 
+    if (this.#mode === 'bus') {
+      returnData.origin = originStop
+      returnData.destination = destinationStop
+    }
+    if (this.#routeNumber) {
+      returnData.routeNumber = this.#routeNumber
+    }
+
     if (this.#vehicleForced) {
       returnData.forced = true
       if (this.#vehicle.icon) returnData.icon = this.#vehicle.icon
