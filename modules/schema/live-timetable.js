@@ -366,7 +366,7 @@ module.exports = class LiveTimetable {
       timetableInstance.#vehicle = timetable.vehicle
       timetableInstance.#vehicleForced = timetable.vehicle.forced || false
     }
-    if (timetable.gtfsDirection) timetableInstance.#gtfsDirection = timetable.gtfsDirection
+    if (typeof timetable.gtfsDirection !== 'undefined') timetableInstance.#gtfsDirection = timetable.gtfsDirection
 
     for (let stopData of timetable.stopTimings) {
       let stop = new TimetableStop(
