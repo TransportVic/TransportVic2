@@ -1,4 +1,4 @@
-import LiveTimetable from '../schema/live-timetable.js'
+import { LiveTimetable } from '../schema/live-timetable.mjs'
 
 const err = global.loggers ? global.loggers.trackers.generic.err : console.error
 

@@ -5,7 +5,7 @@ import { convertToLive } from '../departures/sch-to-live.js'
 import config from '../../config.json' with { type: 'json' }
 import { GetPlatformServicesAPI, PTVAPI, PTVAPIInterface, VLineAPIInterface } from '@transportme/ptv-api'
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
-import LiveTimetable from '../schema/live-timetable.js'
+import { LiveTimetable } from '../schema/live-timetable.mjs'
 import VLineUtils from '../vline/vline-utils.mjs'
 import VLineTripUpdater from '../vline/trip-updater.mjs'
 import discordIntegration from '../discord-integration.js'

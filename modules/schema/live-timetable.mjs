@@ -1,8 +1,8 @@
-const utils = require('../../utils')
-const allRouteStops = require('../../additional-data/metro-data/metro-routes.json')
-const metroTypes = require('../../additional-data/metro-tracker/metro-types.json')
+import utils from '../../utils.js'
+import allRouteStops from '../../additional-data/metro-data/metro-routes.json' with { type: 'json' }
+import metroTypes from '../../additional-data/metro-tracker/metro-types.json' with { type: 'json' }
 
-class TimetableStop {
+export class TimetableStop {
 
   #operationDay
 
@@ -124,7 +124,7 @@ class TimetableStop {
 
 }
 
-module.exports = class LiveTimetable {
+export class LiveTimetable {
 
   #mode
   #operationDay

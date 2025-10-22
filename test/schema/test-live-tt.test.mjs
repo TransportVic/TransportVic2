@@ -3,7 +3,7 @@ import mdd1000 from './sample-data/mdd-1000.json' with { type: 'json' }
 import ccl0735 from './sample-data/ccl-0735.json' with { type: 'json' }
 import pkmC143 from './sample-data/pkm-C143.json' with { type: 'json' }
 import cbe4201 from './sample-data/cbe-4201.json' with { type: 'json' }
-import LiveTimetable from '../../modules/schema/live-timetable.js'
+import { LiveTimetable } from '../../modules/schema/live-timetable.mjs'
 import chaiExclude from 'chai-exclude'
 import utils from '../../utils.js'
 import beg3152 from './sample-data/beg-3152.mjs'
