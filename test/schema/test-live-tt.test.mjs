@@ -12,6 +12,11 @@ use(chaiExclude)
 
 let clone = o => JSON.parse(JSON.stringify(o))
 
+const bus200DataNoStops = Object.keys(bus200Data).reduce(
+  (acc, key) => key === 'stopTimings' ? ({ ...acc, stopTimings: [] })
+  : ({ ...acc, [key]: bus200Data[key]}),
+{})
+
 describe('The LiveTimetable class', () => {
   it('Should allow object creation from a database object', () => {
     let timetable = LiveTimetable.fromDatabase(mdd1000)
@@ -832,6 +837,18 @@ describe('The LiveTimetable class', () => {
   it('Picks the BusLiveTimetable class for bus trips', () => {
     let timetable = LiveTimetable.fromDatabase(bus200Data)
     expect(timetable).to.be.instanceOf(BusLiveTimetable)
+  })
+
+  it.only('Does not set stop cancellation data for a skeleton trip with no stop times', () => {
+    const timetable = LiveTimetable.fromDatabase(bus200DataNoStops)
+    timetable.consist = ['BS04FL']
+
+    const dbTrip = timetable.toDatabase()
+    expect(dbTrip).to.not.have.property('stopTimings')
+    expect(dbTrip.origin).to.equal(bus200Data.origin)
+    expect(dbTrip.destination).to.equal(bus200Data.destination)
+    expect(dbTrip.changes.length).to.equal(1)
+    expect(dbTrip.changes[0].type).to.equal('veh-change')
   })
 })
 
