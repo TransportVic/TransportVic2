@@ -242,6 +242,17 @@ async function createBusTripIndex(busTrips) {
     date: 1,
     smartrakID: 1
   }, {name: 'route gtfs id operating days + smartrak id query index'})
+
+  await busTrips.createIndex({
+    consist: 1,
+    date: 1
+  })
+
+  await busTrips.createIndex({
+    routeNumber: 1,
+    date: 1,
+    consist: 1
+  })
 }
 
 async function createSmartrakIndex(smartrakIDs) {
