@@ -473,39 +473,58 @@ export class LiveTimetable {
   }
 
   _getUpdatedOriginDest() {
+    if (!this.stops.length) {
+      const origin = this.#originalOrigin
+      const destination = this.#originalDestination
+      const departureTime = this.#originalDepTime
+      const destinationArrivalTime = this.#originalArrTime
+      return { origin, destination, departureTime, destinationArrivalTime }
+    }
+
+    const origin = this.stops.find(stop => !stop.cancelled)
+    const destination = this.stops.findLast(stop => !stop.cancelled)
+
+    let originStop, departureTime, destinationStop, destinationArrivalTime
+
+    if (!origin || !destination || (origin === destination)) {
+      originStop = this.origin
+      departureTime = this.departureTime
+      destinationStop = this.destination
+      destinationArrivalTime = this.destinationArrivalTime
+    } else {
+      originStop = origin.stopName
+      departureTime = origin.departureTime
+      destinationStop = destination.stopName
+      destinationArrivalTime = destination.arrivalTime
+    }
+
     return {
-      origin: this.stops.find(stop => !stop.cancelled),
-      destination: this.stops.findLast(stop => !stop.cancelled)
+      origin: originStop,
+      destination: destinationStop,
+      departureTime,
+      destinationArrivalTime
     }
   }
 
   toTrackerDatabase() {
     if (!this.#vehicle) return null
 
-    let { origin, destination } = this._getUpdatedOriginDest()
-    let originStop, departureTime, destinationStop, arrivalTime
-
-    if (!origin || !destination || (origin === destination)) {
-      originStop = this.origin
-      departureTime = this.departureTime
-      destinationStop = this.destination
-      arrivalTime = this.destinationArrivalTime
-    } else {
-      originStop = origin.stopName
-      departureTime = origin.departureTime
-      destinationStop = destination.stopName
-      arrivalTime = destination.arrivalTime
-    }
+    let {
+      origin,
+      destination,
+      departureTime,
+      destinationArrivalTime
+    } = this._getUpdatedOriginDest()
 
     let returnData = {
       date: this.operationDay,
       routeGTFSID: this.routeGTFSID,
       routeName: this.routeName,
       runID: this.#runID,
-      origin: originStop.slice(0, -16),
-      destination: destinationStop.slice(0, -16),
-      departureTime: departureTime,
-      destinationArrivalTime: arrivalTime,
+      origin: origin.slice(0, -16),
+      destination: destination.slice(0, -16),
+      departureTime,
+      destinationArrivalTime,
       consist: this.#vehicle.consist
     }
 
@@ -649,8 +668,8 @@ export class BusLiveTimetable extends LiveTimetable {
     const parentData = super.toTrackerDatabase()
     const { origin, destination } = this._getUpdatedOriginDest()
 
-    parentData.origin = origin.stopName
-    parentData.destination = destination.stopName
+    parentData.origin = origin
+    parentData.destination = destination
 
     if (this.routeNumber) {
       parentData.routeNumber = this.routeNumber
