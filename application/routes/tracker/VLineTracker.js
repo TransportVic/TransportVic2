@@ -119,7 +119,7 @@ router.get('/consist', async (req, res) => {
     .map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
     .sort((a, b) => a.departureTimeMinutes - b.departureTimeMinutes)
 
-  let operationDays = await vlineTrips.distinct('date', { consist })
+  let operationDays = (await vlineTrips.distinct('date', { consist })).slice(-60)
   let servicesByDay = {}
 
   let allDays = []
