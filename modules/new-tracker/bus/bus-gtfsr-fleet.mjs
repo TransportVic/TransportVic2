@@ -7,6 +7,7 @@ import { GTFSRTrip } from '../gtfsr/GTFSRTrip.mjs'
 import _ from '../../../init-loggers.mjs'
 import fs from 'fs/promises'
 import BusTripUpdater from '../../bus/trip-updater.mjs'
+import async from 'async'
 
 export async function getFleetData(gtfsrAPI) {
   let tripData = await gtfsrAPI('bus/vehicle-positions')
@@ -30,11 +31,13 @@ export async function getFleetData(gtfsrAPI) {
 
 export async function fetchGTFSRFleet(db) {
   let relevantTrips = await getFleetData(makePBRequest)
-  global.loggers.trackers.metro.log('GTFSR Updater: Fetched', relevantTrips.length, 'trips')
+  global.loggers.trackers.bus.log('GTFSR Updater: Fetched', relevantTrips.length, 'trips')
 
-  for (let tripData of relevantTrips) {
+  await async.forEachLimit(relevantTrips, 400, async tripData => {
     await BusTripUpdater.updateTrip(db, tripData, { dataSource: 'gtfsr-vehicle-update' })
-  }
+  })
+
+  global.loggers.trackers.bus.log('GTFSR Updater: Updated', relevantTrips.length, 'trips')
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {

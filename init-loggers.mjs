@@ -30,6 +30,7 @@ async function createLoggers() {
     trackers: {
       generic: await createLogger('trackers/generic', 'GENERIC'),
       metro: await createLogger('trackers/metro', 'METRO'),
+      bus: await createLogger('trackers/bus', 'BUS'),
       metroRRB: await createLogger('trackers/metro-rail-bus', 'METRO-RRB'),
       vline: await createLogger('trackers/vline', 'VLINE'),
     },

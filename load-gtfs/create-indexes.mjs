@@ -223,7 +223,7 @@ async function createBusTripIndex(busTrips) {
     destination: 1,
     departureTime: 1,
     destinationArrivalTime: 1
-  }, {name: 'trip index', unique: true})
+  }, {name: 'trip index'})
 
   await busTrips.createIndex({
     smartrakID: 1,
