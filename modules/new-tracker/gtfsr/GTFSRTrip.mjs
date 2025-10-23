@@ -98,6 +98,6 @@ export class BusGTFSRTrip extends GTFSRTrip {
   }
 
   getTDN() { return this.getTripID() }
-  getRouteID() { return this.getTripID().split('-')[1] }
+  getRouteID() { return '4-' + this.getTripID().split('-')[1] }
 
 }

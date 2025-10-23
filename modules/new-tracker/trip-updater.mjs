@@ -236,6 +236,7 @@ export default class TripUpdater {
 
   static async updateNonStopData(db, trip, { dataSource, updateTime }) {
     let dbTrip = await this.getTripSkeleton(db, trip.runID, trip.operationDays)
+    if (!dbTrip) return null
     let liveTimetables = db.getCollection('live timetables')
 
     let timetable = LiveTimetable.fromDatabase(dbTrip)
