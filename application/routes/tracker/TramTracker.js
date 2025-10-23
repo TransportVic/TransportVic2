@@ -120,7 +120,7 @@ router.get('/fleet', async (req, res) => {
 
   tripsToday = tripsToday.map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
 
-  let allDates = (await tramTrips.distinct('date', { tram: tramNumber })).reverse()
+  let allDates = (await tramTrips.distinct('date', { tram: tramNumber })).reverse().slice(0, 60)
 
   let servicesByDay = await async.map(allDates, async date => {
     let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
@@ -180,7 +180,7 @@ router.get('/service', async (req, res) => {
 
   let tripsToday = rawTripsToday.map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
 
-  let allDates = (await tramTrips.distinct('date', { routeNumber: service })).reverse()
+  let allDates = (await tramTrips.distinct('date', { routeNumber: service })).reverse().slice(0, 60)
 
   let tramsByDay = await async.map(allDates, async date => {
     let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
@@ -239,7 +239,7 @@ router.get('/shift', async (req, res) => {
 
   tripsToday = tripsToday.map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
 
-  let allDates = (await tramTrips.distinct('date', { shift })).reverse()
+  let allDates = (await tramTrips.distinct('date', { shift })).reverse().slice(0, 60)
 
   let tramsByDay = await async.map(allDates, async date => {
     let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)

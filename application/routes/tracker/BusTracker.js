@@ -144,7 +144,7 @@ router.get('/fleet', async (req, res) => {
 
   tripsToday = tripsToday.map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
 
-  let allDates = (await busTrips.distinct('date', { consist: rego })).reverse()
+  let allDates = (await busTrips.distinct('date', { consist: rego })).reverse().slice(0, 60)
 
   let servicesByDay = await async.map(allDates, async date => {
     let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
@@ -218,7 +218,7 @@ router.get('/service', async (req, res) => {
     return trip
   })).map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
 
-  let allDates = (await busTrips.distinct('date', { routeNumber: routeQuery })).reverse()
+  let allDates = (await busTrips.distinct('date', { routeNumber: routeQuery })).reverse().slice(0, 60)
 
   let busesByDay = await async.map(allDates, async date => {
     let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
