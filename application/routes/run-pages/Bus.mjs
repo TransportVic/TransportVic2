@@ -264,47 +264,48 @@ async function getTripData(req, res) {
 
   let routeNumber = trip.routeNumber
   let routeNumberClass = utils.encodeName(operator)
-  let trackerData
   let busTrips = res.db.getCollection('bus trips')
 
-  trackerData = await busTrips.findDocument({
-    date: req.params.operationDays,
-    departureTime: trip.departureTime,
-    origin: trip.origin,
-    destination: trip.destination
+  let trackerData = await busTrips.findDocument({
+    date: trip.operationDays,
+    runID: trip.runID
   })
 
-  if (trip.vehicle && !trackerData) {
-    let {routeGTFSID, origin, destination, departureTime, destinationArrivalTime} = trip
-    let smartrakID = parseInt(trip.vehicle)
+  // if (trip.vehicle && !trackerData) {
+  //   let {routeGTFSID, origin, destination, departureTime, destinationArrivalTime} = trip
+  //   let smartrakID = parseInt(trip.vehicle)
 
-    trackerData = {
-      date: req.params.operationDays,
-      timestamp: +new Date(),
-      routeGTFSID,
-      smartrakID,
-      routeNumber,
-      origin, destination, departureTime, destinationArrivalTime
-    }
+  //   trackerData = {
+  //     date: req.params.operationDays,
+  //     timestamp: +new Date(),
+  //     routeGTFSID,
+  //     smartrakID,
+  //     routeNumber,
+  //     origin, destination, departureTime, destinationArrivalTime
+  //   }
 
-    await busTrips.replaceDocument({
-      date: req.params.operationDays,
-      routeGTFSID, origin, destination, departureTime, destinationArrivalTime
-    }, trackerData, {
-      upsert: true
-    })
-  }
+  //   await busTrips.replaceDocument({
+  //     date: req.params.operationDays,
+  //     routeGTFSID, origin, destination, departureTime, destinationArrivalTime
+  //   }, trackerData, {
+  //     upsert: true
+  //   })
+  // }
 
   if (trackerData) {
-    let smartrakIDs = res.db.getCollection('smartrak ids')
+    let busRegos = res.db.getCollection('bus regos')
 
-    let busRego = (await smartrakIDs.findDocument({
-      smartrakID: trackerData.smartrakID
+    let fleetNumber = (await busRegos.findDocument({
+      rego: trackerData.consist[0]
     }) || {}).fleetNumber
 
-    if (busRego) {
+    if (fleetNumber) {
       trip.vehicleData = {
-        name: 'Bus #' + busRego
+        name: 'Bus #' + fleetNumber
+      }
+    } else {
+      trip.vehicleData = {
+        name: 'Bus Rego: ' + trackerData.consist[0]
       }
     }
   }
