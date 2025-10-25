@@ -296,7 +296,7 @@ router.get('/operator-list', async (req, res) => {
 router.get('/highlights', async (req, res) => {
   let {db} = res
   let busTrips = db.getCollection('bus trips')
-  let smartrakIDs = db.getCollection('smartrak ids')
+  let busRegos = db.getCollection('bus regos')
   let routes = db.getCollection('routes')
   let today = utils.getYYYYMMDDNow()
 
@@ -307,7 +307,7 @@ router.get('/highlights', async (req, res) => {
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
 
   async function getBuses(fleets) {
-    return await smartrakIDs.distinct('smartrakID', { fleetNumber: { $in: fleets } })
+    return await busRegos.distinct('rego', { fleetNumber: { $in: fleets } })
   }
 
   let highlights = await async.map(highlightData, async section => {
@@ -319,7 +319,7 @@ router.get('/highlights', async (req, res) => {
     let matchedBuses = await getBuses(trackBuses)
     let query = {
       date,
-      smartrakID: { $in: matchedBuses },
+      consist: { $in: matchedBuses },
       routeNumber: { $not: { $in: routes} }
     }
 
@@ -327,16 +327,16 @@ router.get('/highlights', async (req, res) => {
       query.routeNumber = { $in: routes }
     }
     if (buses === 'exclude') {
-      query.smartrakID = { $not: { $in: matchedBuses } }
+      query.consist = { $not: { $in: matchedBuses } }
     }
 
     let matchedTrips = await busTrips.findDocuments(query)
       .sort({departureTime: 1, origin: 1}).toArray()
 
     let trips = (await async.map(matchedTrips, async trip => {
-      let {fleetNumber} = await getBusFromRego(smartrakIDs, trip.smartrakID) || {}
+      let {fleetNumber} = await getBusFromRego(busRegos, trip.consist[0]) || {}
 
-      trip.fleetNumber = fleetNumber ? '#' + fleetNumber : '@' + trip.smartrakID
+      trip.fleetNumber = fleetNumber ? '#' + fleetNumber : trip.consist[0]
 
       return trip
     })).map(trip => adjustTrip(trip, date, date, minutesPastMidnightNow))
@@ -347,26 +347,17 @@ router.get('/highlights', async (req, res) => {
     }
   })
 
-  let allBuses = await smartrakIDs.distinct('smartrakID')
+  let allBuses = await busRegos.distinct('rego')
 
-  let unknownMetroBuses = (await busTrips.findDocuments({
+  let unknownBuses = (await busTrips.findDocuments({
     date,
-    routeGTFSID: /^4-/,
-    smartrakID: { $not: { $in: allBuses } }
-  }).sort({departureTime: 1, origin: 1}).toArray())
-    .map(trip => adjustTrip(trip, date, date, minutesPastMidnightNow))
-
-  let unknownRegionalBuses = (await busTrips.findDocuments({
-    date,
-    routeGTFSID: /^6-/,
-    smartrakID: { $not: { $in: allBuses } }
+    consist: { $not: { $in: allBuses } }
   }).sort({departureTime: 1, origin: 1}).toArray())
     .map(trip => adjustTrip(trip, date, date, minutesPastMidnightNow))
 
   res.render('tracker/bus/highlights', {
     highlights,
-    unknownMetroBuses,
-    unknownRegionalBuses
+    unknownBuses
   })
 })
 
