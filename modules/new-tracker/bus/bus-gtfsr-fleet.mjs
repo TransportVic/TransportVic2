@@ -9,7 +9,7 @@ import fs from 'fs/promises'
 import BusTripUpdater from '../../bus/trip-updater.mjs'
 import async from 'async'
 
-export async function getFleetData(gtfsrAPI) {
+export async function getFleetData(db, gtfsrAPI) {
   let tripData = await gtfsrAPI('bus/vehicle-positions')
 
   let trips = {}
@@ -30,7 +30,7 @@ export async function getFleetData(gtfsrAPI) {
 }
 
 export async function fetchGTFSRFleet(db) {
-  let relevantTrips = await getFleetData(makePBRequest)
+  let relevantTrips = await getFleetData(db, makePBRequest)
   global.loggers.trackers.bus.log('GTFSR Updater: Fetched', relevantTrips.length, 'trips')
 
   await async.forEachLimit(relevantTrips, 400, async tripData => {
