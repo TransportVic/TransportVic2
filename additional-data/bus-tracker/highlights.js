@@ -45,7 +45,7 @@ module.exports = [{
   routes: ['605'],
   type: 'include'
 }, {
-  name: 'CDC Tulla ine Specials',
+  name: 'CDC Tullamarine Specials',
   track: ['CT53'],
   routes: [],
   type: 'exclude'
@@ -66,7 +66,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'Sunbury Specials',
-  track: ['S16', 'S35', 'S36'],
+  track: ['S35', 'S36'],
   routes: [],
   type: 'exclude'
 }, {
