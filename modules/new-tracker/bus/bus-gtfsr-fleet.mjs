@@ -11,16 +11,33 @@ import async from 'async'
 
 export async function getFleetData(db, gtfsrAPI) {
   let tripData = await gtfsrAPI('bus/vehicle-positions')
+  let busRegos = db.getCollection('bus regos')
 
   let trips = {}
 
+  let regosSeen = {}
+  let goodRegos = new Set()
+
   for (let trip of tripData.entity) {
     let gtfsrTripData = GTFSRTrip.parse(trip.vehicle.trip)
+    const trackedRego = trip.vehicle.vehicle.id
+    let trueRego = trackedRego
+
+    if (!goodRegos.has(trackedRego)) {
+      const busData = regosSeen[trackedRego] || await busRegos.findDocument({ trackedRego })
+      if (busData) {
+        regosSeen[trackedRego] = busData
+        trueRego = busData.rego
+      } else {
+        goodRegos.add(trackedRego)
+      }
+    }
+
     let tripData = {
       operationDays: gtfsrTripData.getOperationDay(),
       runID: gtfsrTripData.getTDN(),
       routeGTFSID: gtfsrTripData.getRouteID(),
-      consist: [ trip.vehicle.vehicle.id ]
+      consist: [ trueRego ]
     }
 
     trips[tripData.runID] = tripData
