@@ -1,16 +1,16 @@
 module.exports = [{
   name: 'Ventura Minibuses',
-  track: ['V376', 'V377', 'V1268', 'V1269', 'V1270', 'V1310', 'V1311', 'V1377', 'V1408'],
-  routes: ['526', '527', '548', '549', '550', '551', '671', '672', '673', '675', '676', '677', '680', '786', '787', '886', '887', 'TB1', 'TB2', 'TB3', 'TB4', 'TB7', 'TB8', 'TB9'],
+  track: ['V376', 'V377', 'V1268', 'V1269', 'V1270', 'V1310', 'V1311', 'V1377', 'V1408', 'V1546', 'V1547', 'V1548', 'V1549', 'V1550', 'V1551', 'V1552', 'V1553', 'V1554', 'V1555'],
+  routes: ['786', '787'],
   type: 'exclude'
 }, {
   name: 'Ventura Artics',
-  track: ['V100', 'V102', 'V136', 'V143', 'V190', 'V292', 'V293', 'V294', 'V730', 'V732', 'V733', 'V734', 'V735', 'V842', 'V1271', 'V1374', 'V1378', 'V1379', 'V1380', 'V1422', 'V1423', 'V1424', 'V1426', 'V1427', 'V1463', 'V1464', 'V1466', 'V1470', 'V1478', 'V1479'],
+  track: ['V292', 'V293', 'V294', 'V1271', 'V1374', 'V1378', 'V1379', 'V1380', 'V1422', 'V1423', 'V1424', 'V1426', 'V1427', 'V1463', 'V1464', 'V1466', 'V1470', 'V1478', 'V1479', 'V1628'],
   routes: ['811', '812', '813', '664', '670', '679', '788', '887'],
   type: 'exclude'
 }, {
   name: 'Ventura Specials',
-  track: ['V143', 'V292', 'V294', 'V343', 'V895', 'V1380', 'V1445', 'V8239'],
+  track: ['V292', 'V293', 'V895', 'V8239'],
   routes: [],
   type: 'exclude'
 }, {
@@ -21,7 +21,7 @@ module.exports = [{
 }, {
   name: 'Kinetic Minibuses',
   track: ['K119', 'K120', 'K129', 'K130', 'K131', 'K132', 'K133', 'K183'],
-  routes: ['280', '282', '370', '509'],
+  routes: ['280', '282', '509'],
   type: 'exclude'
 }, {
   name: 'Uni Shuttle Buses',
@@ -36,12 +36,12 @@ module.exports = [{
   buses: 'exclude'
 }, {
   name: 'CDC Oakleigh Specials',
-  track: ['CO7', 'CO8', 'CO11', 'CO12', 'CO13', 'CO34', 'CO100', 'CO103', 'CO104', 'CO105', 'CO109'],
+  track: ['CO13', 'CO31', 'CO34', 'CO35'],
   routes: [],
   type: 'exclude'
 }, {
   name: 'CDC Oakleigh Ex-Drivers',
-  track: ['CO10', 'CO13', 'CO14', 'CO15', 'CO23', 'CO24', 'CO29', 'CO31', 'CO32', 'CO33', 'CO34', 'CO35', 'CO41', 'CO44', 'CO48', 'CO56', 'CO60', 'CO66', 'CO69', 'CO71', 'CO72', 'CO83', 'CO84', 'CO85', 'CO88', 'CO89', 'CO90', 'CO91'],
+  track: ['CO13', 'CO14', 'CO15', 'CO23', 'CO31', 'CO33', 'CO34', 'CO35', 'CO44', 'CO56', 'CO60', 'CO88', 'CO89', 'CO90', 'CO91'],
   routes: ['605'],
   type: 'include'
 }, {
@@ -56,12 +56,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'CDC Ballarat Specials',
-  track: ['CB146', 'CB147', 'CB152', 'CB153', 'CB155', 'CB156', 'CB162', 'CB171', 'CB174', 'CB175', 'CB176'],
-  routes: [],
-  type: 'exclude'
-}, {
-  name: 'CDC Geelong Specials',
-  track: ['CG92', 'CG93', 'CG94', 'CG95', 'CG97', 'CG98', 'CG99', 'CG100', 'CG101', 'CG102'],
+  track: ['CB146', 'CB152', 'CB153', 'CB155', 'CB156', 'CB159', 'CB170', 'CB171', 'CB172', 'CB174', 'CB175', 'CB176', 'CB177', 'CB178', 'CB191', 'CB192', 'CB226', 'CB227'],
   routes: [],
   type: 'exclude'
 }, {
@@ -76,7 +71,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'Dysons Specials',
-  track: ['D184', 'D185', 'D186', 'D189', 'D259', 'D260', 'D281', 'D282', 'D426', 'D427', 'D428', 'D429', 'D430', 'D431', 'D432', 'D433', 'D434', 'D435', 'D754', 'D755', 'D756', 'D757', 'D758', 'D759', 'D760', 'D761', 'D762', 'D763', 'D764', 'D768'],
+  track: ['D760', 'D761', 'D762'],
   routes: [],
   type: 'exclude'
 }, {
@@ -112,7 +107,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'Martyr\'s Specials',
-  track: ['MT24', 'MT25'],
+  track: ['MT24', 'MT50'],
   routes: [],
   type: 'exclude'
 }]
