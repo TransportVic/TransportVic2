@@ -25,6 +25,6 @@ let commands = [
   ['move-database.mjs']
 ]
 
-await runCommands(commands)
-
+let returnCode = await runCommands(commands)
 console.log('\nLoading GTFS took', (new Date() - start) / 1000 / 60, 'minutes overall')
+process.exit(returnCode)

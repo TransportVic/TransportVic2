@@ -45,9 +45,7 @@ function spawnProcess(cmd, args) {
       for (let line of lines) LOGGER.err(line)
     })
 
-    childProcess.on('close', code => {
-      resolve()
-    })
+    childProcess.on('close', resolve)
   })
 }
 
@@ -67,10 +65,12 @@ async function updateTimetables() {
 
   let fileName = 'load-all'
   if (config.railOnly) fileName += '-rail-only'
-  await spawnProcess('node', [ path.join(__dirname, `../load-gtfs/${fileName}.mjs`) ])
+  let returnCode = await spawnProcess('node', [ path.join(__dirname, `../load-gtfs/${fileName}.mjs`) ])
 
   await discordUpdate(`[Updater]: GTFS Timetables finished loading, took ${Math.round(utils.uptime() / 1000 / 60)}min`)
   LOGGER.log('Done!')
+
+  return returnCode
 }
 
 LOGGER.log('Checking for updates...')
@@ -97,8 +97,10 @@ if (lastModified.toISOString() !== lastLastModified) {
     process.exit(0)
   }
 
-  await updateTimetables()
-  await fs.writeFile(LAST_MODIFIED_FILE, lastModified.toISOString())
+  let maxReturnCode = await updateTimetables()
+  if (maxReturnCode === 0) {
+    await fs.writeFile(LAST_MODIFIED_FILE, lastModified.toISOString())
+  }
 } else {
   LOGGER.log('Timetables all good')
   await discordUpdate('[Updater]: Timetables up to date, not updating')

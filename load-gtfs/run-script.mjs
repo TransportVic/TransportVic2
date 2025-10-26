@@ -1,6 +1,7 @@
 import { spawn } from 'child_process'
 import path from 'path'
 import url from 'url'
+import async from 'async'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -19,7 +20,7 @@ export default async function runCommands(commands) {
     return promise
   }
 
-  for (let command of commands) {
-    await runNode(command[0], command.slice(1))
-  }
+  return await async.reduce(commands, 0, async (prev, command) => {
+    return Math.max(prev, await runNode(command[0], command.slice(1)))
+  })
 }

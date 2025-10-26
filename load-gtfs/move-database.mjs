@@ -44,9 +44,9 @@ if (hasCriticalFailure) {
     await discordIntegration('gtfsHealthCheck', outputText)
   }
 } else {
-  await Promise.all(collections.map(coll => moveCollection(coll)))
+  await Promise.all(collections.map(moveCollection))
   await discordIntegration('gtfsHealthCheck', outputText)
   console.log('\nLoading all collections took', (new Date() - start) / 1000, 'seconds overall')
 }
 
-process.exit(0)
+process.exit(hasCriticalFailure ? 1 : 0)
