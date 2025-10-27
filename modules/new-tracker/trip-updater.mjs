@@ -34,6 +34,12 @@ export default class TripUpdater {
     })
   }
 
+  static async getTimetable(db, runID, date) {
+    const trip = await this.getTrip(db, runID, date)
+    if (trip) return LiveTimetable.fromDatabase(trip)
+    return null
+  } 
+
   static async getTripSkeleton(db, runID, date) {
     let liveTimetables = db.getCollection('live timetables')
     return await liveTimetables.findDocument({
@@ -259,20 +265,19 @@ export default class TripUpdater {
     skipStopCancellation = false,
     dataSource = 'unknown',
     ignoreMissingStops = [],
-    updateTime = null
+    updateTime = null,
+    existingTrips = {}
   } = {}) {
     if (this.isNonStopUpdate(trip) && !skipWrite) {
       return await this.updateNonStopData(db, trip, { dataSource, updateTime })
     }
 
-    let dbTrip = await this.getTrip(db, trip.runID, trip.operationDays)
+    let timetable = existingTrips[trip.runID] || await this.getTimetable(db, trip.runID, trip.operationDays)
     let liveTimetables = db.getCollection('live timetables')
 
-    let timetable
     let stopVisits = {}
 
-    if (dbTrip) {
-      timetable = LiveTimetable.fromDatabase(dbTrip)
+    if (timetable) {
       if (updateTime) timetable.lastUpdated = updateTime
 
       timetable.setModificationSource(dataSource)
