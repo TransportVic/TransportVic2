@@ -18,6 +18,7 @@ import cclDepartures from '../tracker/sample-data/ccl-departures.json' with { ty
 
 import td7509 from './sample-data/tdn-7509-math.json' with { type: 'json' }
 import TripUpdater from '../../../modules/new-tracker/trip-updater.mjs'
+import { LiveTimetable } from '../../../modules/schema/live-timetable.mjs'
 
 let clone = o => JSON.parse(JSON.stringify(o))
 
@@ -1384,6 +1385,72 @@ describe('The trip updater module', () => {
       expect(tripData.stops[syrIndex + 4].stopName).to.equal('Malvern Railway Station')
       expect(tripData.stops[syrIndex + 5].stopName).to.equal('Caulfield Railway Station')
     }
+  })
+
+  it('Does not write to the database if told to skip writing', async() => {
+    let database = new LokiDatabaseConnection('test-db')
+    let stops = await database.createCollection('stops')
+    let routes = await database.createCollection('routes')
+    let liveTimetables = await database.createCollection('live timetables')
+
+    await stops.createDocuments(clone(pkmStops))
+    await routes.createDocument({
+      "mode" : "metro train",
+      "routeName" : "Pakenham",
+      "cleanName" : "pakenham",
+      "routeNumber" : null,
+      "routeGTFSID" : "2-PKM",
+      "operators" : [
+        "Metro"
+      ],
+      "cleanName" : "pakenham"
+    })
+
+    expect(await liveTimetables.countDocuments({})).to.equal(0)
+    let gtfsrTrips = await getUpcomingTrips(database, () => clone(gtfsr_EPH))
+    let tripData = await MetroTripUpdater.updateTrip(database, gtfsrTrips[0], {
+      skipWrite: true
+    })
+    expect(await liveTimetables.countDocuments({})).to.equal(0)
+    expect(tripData.runID).to.equal('C036')
+  })
+
+  it('Uses an existing LiveTimetable from the cache if available', async() => {
+    let database = new LokiDatabaseConnection('test-db')
+    let stops = await database.createCollection('stops')
+    let routes = await database.createCollection('routes')
+    let liveTimetables = await database.createCollection('live timetables')
+
+    await stops.createDocuments(clone(pkmStops))
+    await routes.createDocument({
+      "mode" : "metro train",
+      "routeName" : "Pakenham",
+      "cleanName" : "pakenham",
+      "routeNumber" : null,
+      "routeGTFSID" : "2-PKM",
+      "operators" : [
+        "Metro"
+      ],
+      "cleanName" : "pakenham"
+    })
+    await liveTimetables.createDocument(clone(pkmSchTrip))
+
+    const tripTimetableData = clone(pkmSchTrip)
+    tripTimetableData.stopTimings = [
+      tripTimetableData.stopTimings[0],
+      tripTimetableData.stopTimings[tripTimetableData.stopTimings.length - 1]
+    ]
+
+    const tripTimetable = LiveTimetable.fromDatabase(tripTimetableData)
+
+    const gtfsrTrips = await getUpcomingTrips(database, () => clone(gtfsr_EPH))
+    const tripData = await MetroTripUpdater.updateTrip(database, gtfsrTrips[0], {
+      existingTrips: { 'C036': tripTimetable }
+    })
+    const addedStops = tripData.toDatabase().stopTimings.filter(stop => stop.additional)
+
+    expect(tripData.runID).to.equal('C036')
+    expect(addedStops.length).to.be.greaterThan(5)
   })
 
   describe('Updating non-stop time properties', () => {

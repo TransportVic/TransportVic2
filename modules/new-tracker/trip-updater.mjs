@@ -304,11 +304,13 @@ export default class TripUpdater {
     timetable.stops[0].allowDropoff = false
     timetable.stops[timetable.stops.length - 1].allowPickup = false
 
-    if (!skipWrite) await liveTimetables.replaceDocument(timetable.getDBKey(), timetable.toDatabase(), {
-      upsert: true
-    })
+    if (!skipWrite) {
+      await liveTimetables.replaceDocument(timetable.getDBKey(), timetable.toDatabase(), {
+        upsert: true
+      })
 
-    await this.updateTrackerData(db, timetable)
+      await this.updateTrackerData(db, timetable)
+    }
 
     return timetable
   }
