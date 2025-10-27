@@ -34,8 +34,8 @@ async function writeUpdatedTrips(db, updatedTrips) {
     }
   })).filter(op => !!op.replaceOne.filter)
 
-  await db.getCollection('live timetables').bulkWrite(tripBulkOperations)
-  await db.getCollection(MetroTripUpdater.getTrackerDB()).bulkWrite(consistBulkOperations)
+  if (tripBulkOperations.length) await db.getCollection('live timetables').bulkWrite(tripBulkOperations)
+  if (consistBulkOperations.length) await db.getCollection(MetroTripUpdater.getTrackerDB()).bulkWrite(consistBulkOperations)
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {

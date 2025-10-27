@@ -10,7 +10,9 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 
-  await fetchGTFSRFleet(mongoDB)
+  let existingTrips = {}
+
+  await fetchGTFSRFleet(mongoDB, existingTrips)
 
   process.exit(0)
 }

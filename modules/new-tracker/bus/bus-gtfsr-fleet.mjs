@@ -9,6 +9,27 @@ import fs from 'fs/promises'
 import BusTripUpdater from '../../bus/trip-updater.mjs'
 import async from 'async'
 
+async function writeUpdatedTrips(db, updatedTrips) {
+  const tripBulkOperations = updatedTrips.map(timetable => ({
+    replaceOne: {
+      filter: timetable.getDBKey(),
+      replacement: timetable.toDatabase(),
+      upsert: true
+    }
+  }))
+
+  const consistBulkOperations = updatedTrips.map(timetable => ({
+    replaceOne: {
+      filter: timetable.getTrackerDatabaseKey(),
+      replacement: timetable.toTrackerDatabase(),
+      upsert: true
+    }
+  })).filter(op => !!op.replaceOne.filter)
+
+  if (tripBulkOperations.length) await db.getCollection('live timetables').bulkWrite(tripBulkOperations)
+  if (consistBulkOperations.length) await db.getCollection(BusTripUpdater.getTrackerDB()).bulkWrite(consistBulkOperations)
+}
+
 export async function getFleetData(db, gtfsrAPI) {
   let tripData = await gtfsrAPI('bus/vehicle-positions')
   let busRegos = db.getCollection('bus regos')
@@ -46,13 +67,19 @@ export async function getFleetData(db, gtfsrAPI) {
   return Object.values(trips)
 }
 
-export async function fetchGTFSRFleet(db) {
+export async function fetchGTFSRFleet(db, existingTrips) {
   let relevantTrips = await getFleetData(db, makePBRequest)
   global.loggers.trackers.bus.log('GTFSR Updater: Fetched', relevantTrips.length, 'trips')
 
   await async.forEachLimit(relevantTrips, 400, async tripData => {
-    await BusTripUpdater.updateTrip(db, tripData, { dataSource: 'gtfsr-vehicle-update' })
+    await BusTripUpdater.updateTrip(db, tripData, {
+      dataSource: 'gtfsr-vehicle-update',
+      existingTrips,
+      skipWrite: true
+    })
   })
+
+  await writeUpdatedTrips(db, Object.values(existingTrips))
 
   global.loggers.trackers.bus.log('GTFSR Updater: Updated', relevantTrips.length, 'trips')
 }
