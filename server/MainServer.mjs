@@ -1,4 +1,5 @@
 import createServer from '@transportme/server-template'
+import os from 'os'
 import url from 'url'
 import path from 'path'
 import _loggers from '../init-loggers.mjs'
@@ -11,9 +12,7 @@ import { MongoDatabaseConnection } from '@transportme/database'
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-if (modules.tracker && modules.tracker.bus) await import('../modules/trackers/bus.js')
-
-if (modules.tracker && modules.tracker.busMinder) await import('../modules/trackers/busminder.js')
+const hostname = os.hostname()
 
 if (modules.tracker && modules.tracker.tram) await import('../modules/trackers/tram.js')
 
@@ -53,6 +52,7 @@ export default class MainServer {
     let staticBase = config.staticBase || ''
     app.use((req, res, next) => {
       res.locals.staticBase = staticBase
+      res.setHeader('served-by', hostname)
       if (req.url.includes('tracker') && req.ip.includes('::ffff:47.79')) return req.status(400).end('Blocked')
       if (filter('vic.', req, next)) res.redirect(301, `https://transportvic.me${req.url}`)
     })
