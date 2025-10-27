@@ -19,7 +19,13 @@ function shuffleArray(array) {
   }
 }
 
-export async function fetchTrips(db, ptvAPI, { stationName = null, skipTDN = [], maxResults = 5, backwards = false } = {}) {
+export async function fetchTrips(db, ptvAPI, {
+  stationName = null,
+  skipTDN = [],
+  maxResults = 5,
+  backwards = false,
+  existingTrips = {}
+} = {}) {
   let query = { 'bays.mode': 'metro train' }
   if (stationName) query.stopName = stationName
   let allStations = await db.getCollection('stops').findDocuments(query).toArray()
@@ -33,13 +39,14 @@ export async function fetchTrips(db, ptvAPI, { stationName = null, skipTDN = [],
 
   for (let tripData of relevantTrips) {
     let { type, data } = tripData
-    let options = {
+    updatedTrips.push(await MetroTripUpdater.updateTrip(db, data, {
       skipStopCancellation: type === 'stop',
       updatedTime: type === 'trip' ? new Date() : null,
       dataSource: 'ptv-departure',
       ignoreMissingStops: MTP_STOPS,
-    }
-    updatedTrips.push(await MetroTripUpdater.updateTrip(db, data, options))
+      skipWrite: true,
+      existingTrips
+    }))
   }
 
   return updatedTrips

@@ -61,12 +61,18 @@ export async function getDepartures(db, ptvAPI) {
   return output
 }
 
-export async function fetchMetroSiteDepartures(db, ptvAPI) {
+export async function fetchMetroSiteDepartures(db, ptvAPI, existingTrips) {
   let trips = await getDepartures(db, ptvAPI)
   global.loggers.trackers.metro.log('MTM Departures: Fetched', trips.length, 'trips')
 
   for (let tripData of trips) {
-    await MetroTripUpdater.updateTrip(db, tripData, { skipStopCancellation: true, dataSource: 'mtm-departures', updateTime: new Date() })
+    await MetroTripUpdater.updateTrip(db, tripData, {
+      skipStopCancellation: true,
+      dataSource: 'mtm-departures',
+      updateTime: new Date(),
+      existingTrips,
+      skipWrite: true
+    })
   }
 }
 

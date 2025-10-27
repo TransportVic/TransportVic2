@@ -15,6 +15,28 @@ import { fetchNotifySuspensions } from './metro/metro-notify-suspensions.mjs'
 import { fetchOutdatedTrips } from './metro/metro-outdated-trips.mjs'
 import { updateRelatedTrips } from './metro/check-new-updates.mjs'
 import fs from 'fs/promises'
+import MetroTripUpdater from '../metro-trains/trip-updater.mjs'
+
+async function writeUpdatedTrips(db, updatedTrips) {
+  const tripBulkOperations = updatedTrips.map(timetable => ({
+    replaceOne: {
+      filter: timetable.getDBKey(),
+      replacement: timetable.toDatabase(),
+      upsert: true
+    }
+  }))
+
+  const consistBulkOperations = updatedTrips.map(timetable => ({
+    replaceOne: {
+      filter: timetable.getTrackerDatabaseKey(),
+      replacement: timetable.toTrackerDatabase(),
+      upsert: true
+    }
+  })).filter(op => !!op.replaceOne.filter)
+
+  await db.getCollection('live timetables').bulkWrite(tripBulkOperations)
+  await db.getCollection(MetroTripUpdater.getTrackerDB()).bulkWrite(consistBulkOperations)
+}
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
@@ -23,20 +45,24 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let ptvAPI = new PTVAPI(new PTVAPIInterface(config.ptvKeys[0].devID, config.ptvKeys[0].key))
   ptvAPI.addMetroSite(new MetroSiteAPIInterface())
 
+  let existingTrips = {}
   // await fetchGTFSRTrips(mongoDB)
-  await fetchGTFSRFleet(mongoDB)
+  await fetchGTFSRFleet(mongoDB, existingTrips)
   await fetchNotifyAlerts(mongoDB, ptvAPI)
-  await fetchMetroSiteDepartures(mongoDB, ptvAPI)
+  await fetchMetroSiteDepartures(mongoDB, ptvAPI, existingTrips)
 
-  let updatedTrips = await fetchPTVDepartures(mongoDB, ptvAPI)
+  let updatedTrips = await fetchPTVDepartures(mongoDB, ptvAPI, { existingTrips })
   global.loggers.trackers.metro.log('> PTV Departures: Updating TDNs: ' + updatedTrips.map(trip => trip.runID).join(', '))
-  await updateRelatedTrips(mongoDB, updatedTrips, ptvAPI)
 
-  await fetchPTVTrips(mongoDB, ptvAPI)
-  await fetchNotifyTrips(mongoDB, ptvAPI)
-  await fetchCBDTrips(mongoDB, ptvAPI)
-  await fetchNotifySuspensions(mongoDB, ptvAPI)
-  await fetchOutdatedTrips(mongoDB, ptvAPI)
+  await fetchPTVTrips(mongoDB, ptvAPI, existingTrips)
+  await fetchNotifyTrips(mongoDB, ptvAPI, existingTrips)
+  await fetchCBDTrips(mongoDB, ptvAPI, existingTrips)
+  await fetchNotifySuspensions(mongoDB, ptvAPI, existingTrips)
+  await fetchOutdatedTrips(mongoDB, ptvAPI, existingTrips)
+
+  await writeUpdatedTrips(mongoDB, Object.values(existingTrips))
+
+  await updateRelatedTrips(mongoDB, Object.values(existingTrips), ptvAPI)
 
   process.exit(0)
 }

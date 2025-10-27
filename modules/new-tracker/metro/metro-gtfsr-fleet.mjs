@@ -31,12 +31,16 @@ export async function getFleetData(gtfsrAPI) {
   return Object.values(trips)
 }
 
-export async function fetchGTFSRFleet(db) {
+export async function fetchGTFSRFleet(db, existingTrips = {}) {
   let relevantTrips = await getFleetData(makePBRequest)
   global.loggers.trackers.metro.log('GTFSR Updater: Fetched', relevantTrips.length, 'trips')
 
   for (let tripData of relevantTrips) {
-    await MetroTripUpdater.updateTrip(db, tripData, { dataSource: 'gtfsr-vehicle-update' })
+    await MetroTripUpdater.updateTrip(db, tripData, {
+      dataSource: 'gtfsr-vehicle-update',
+      existingTrips,
+      skipWrite: true
+    })
   }
 }
 

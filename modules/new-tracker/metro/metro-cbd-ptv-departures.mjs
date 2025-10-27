@@ -7,8 +7,15 @@ import { updateRelatedTrips } from './check-new-updates.mjs'
 import _ from '../../../init-loggers.mjs'
 import fs from 'fs/promises'
 
-async function fetchStop(name, db, ptvAPI, maxResults, backwards, tdnsSeen, updatedTrips) {
-  let newlyUpdatedTrips = await fetchTrips(db, ptvAPI, { stationName: name, skipTDN: tdnsSeen, maxResults, backwards })
+async function fetchStop(name, db, ptvAPI, maxResults, backwards, tdnsSeen, updatedTrips, existingTrips) {
+  let newlyUpdatedTrips = await fetchTrips(db, ptvAPI, {
+    stationName: name,
+    skipTDN: tdnsSeen,
+    maxResults,
+    backwards,
+    existingTrips
+  })
+
   let newTDNs = newlyUpdatedTrips.map(trip => trip.runID)
   tdnsSeen.push(...newTDNs)
 
@@ -16,19 +23,17 @@ async function fetchStop(name, db, ptvAPI, maxResults, backwards, tdnsSeen, upda
   global.loggers.trackers.metro.log('> CBD Departures: Updating TDNs: ' + newTDNs.join(', '))
 }
 
-export async function fetchCBDTrips(db, ptvAPI) {
+export async function fetchCBDTrips(db, ptvAPI, existingTrips = {}) {
   let tdnsSeen = []
   let updatedTrips = {}
-  await fetchStop('Flinders Street Railway Station', db, ptvAPI, 10, false, tdnsSeen, updatedTrips)
-  await fetchStop('Richmond Railway Station', db, ptvAPI, 10, false, tdnsSeen, updatedTrips)
-  await fetchStop('Jolimont Railway Station', db, ptvAPI, 10, false, tdnsSeen, updatedTrips)
-  await fetchStop('North Melbourne Railway Station', db, ptvAPI, 10, false, tdnsSeen, updatedTrips)
+  await fetchStop('Flinders Street Railway Station', db, ptvAPI, 10, false, tdnsSeen, updatedTrips, existingTrips)
+  await fetchStop('Richmond Railway Station', db, ptvAPI, 10, false, tdnsSeen, updatedTrips, existingTrips)
+  await fetchStop('Jolimont Railway Station', db, ptvAPI, 10, false, tdnsSeen, updatedTrips, existingTrips)
+  await fetchStop('North Melbourne Railway Station', db, ptvAPI, 10, false, tdnsSeen, updatedTrips, existingTrips)
 
-  await fetchStop('Richmond Railway Station', db, ptvAPI, 5, true, tdnsSeen, updatedTrips)
-  await fetchStop('Jolimont Railway Station', db, ptvAPI, 5, true, tdnsSeen, updatedTrips)
-  await fetchStop('North Melbourne Railway Station', db, ptvAPI, 5, true, tdnsSeen, updatedTrips)
-
-  await updateRelatedTrips(db, Object.values(updatedTrips), ptvAPI)
+  await fetchStop('Richmond Railway Station', db, ptvAPI, 5, true, tdnsSeen, updatedTrips, existingTrips)
+  await fetchStop('Jolimont Railway Station', db, ptvAPI, 5, true, tdnsSeen, updatedTrips, existingTrips)
+  await fetchStop('North Melbourne Railway Station', db, ptvAPI, 5, true, tdnsSeen, updatedTrips, existingTrips)
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {

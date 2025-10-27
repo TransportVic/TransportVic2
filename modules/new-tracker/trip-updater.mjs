@@ -317,6 +317,8 @@ export default class TripUpdater {
       await this.updateTrackerData(db, timetable)
     }
 
+    existingTrips[timetable.runID] = timetable
+
     return timetable
   }
 

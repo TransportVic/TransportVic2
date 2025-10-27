@@ -17,12 +17,12 @@ export async function getUpdatedTDNs(db) {
   }).toArray()).map(alert => alert.runID)
 }
 
-export async function fetchNotifyTrips(db, ptvAPI) {
+export async function fetchNotifyTrips(db, ptvAPI, existingTrips = {}) {
   let updatedTDNs = await getUpdatedTDNs(db)
   let updatedTrips = []
 
   for (let updatedTDN of updatedTDNs) {
-    updatedTrips.push(await updateTDNFromPTV(db, updatedTDN, ptvAPI, {}, 'notify-trip-from-ptv'))
+    updatedTrips.push(await updateTDNFromPTV(db, updatedTDN, ptvAPI, {}, 'notify-trip-from-ptv', true, existingTrips))
   }
 
   return updatedTrips
@@ -36,7 +36,6 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
 
   let updatedTrips = await fetchNotifyTrips(mongoDB, ptvAPI)
   if (updatedTrips.length) global.loggers.trackers.metro.log('> Notify Trips: Updating TDNs: ' + updatedTrips.map(trip => trip.runID).join(', '))
-  await updateRelatedTrips(mongoDB, updatedTrips, ptvAPI)
 
   process.exit(0)
 }

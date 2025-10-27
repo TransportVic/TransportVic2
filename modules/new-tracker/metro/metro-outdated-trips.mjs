@@ -43,17 +43,16 @@ export async function getOutdatedTrips(database) {
   }).map(trip => trip.runID)
 }
 
-export async function fetchOutdatedTrips(db, ptvAPI) {
+export async function fetchOutdatedTrips(db, ptvAPI, existingTrips = {}) {
   let outdatedTDNs = await getOutdatedTrips(db)
   let updatedTrips = []
 
   for (let outdatedTDN of outdatedTDNs) {
-    let tripData = await updateTDNFromPTV(db, outdatedTDN, ptvAPI, {}, 'outdated-trip-from-ptv')
+    let tripData = await updateTDNFromPTV(db, outdatedTDN, ptvAPI, {}, 'outdated-trip-from-ptv', true, existingTrips)
     if (tripData) updatedTrips.push(tripData)
   }
 
   if (updatedTrips.length) global.loggers.trackers.metro.log('> Outdated Trips: Updating TDNs: ' + updatedTrips.map(trip => trip.runID).join(', '))
-  await updateRelatedTrips(db, updatedTrips, ptvAPI)
   return updatedTrips
 }
 

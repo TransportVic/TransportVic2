@@ -51,7 +51,7 @@ export async function getStationsOnRoute(db, routeName) {
   })).directions[0].stops.map(stop => stop.stopName).filter(stop => !CBD_EXCLUDE.includes(stop))
 }
 
-export async function fetchNotifySuspensions(db, ptvAPI) {
+export async function fetchNotifySuspensions(db, ptvAPI, existingTrips) {
   let affectedLines = await getActiveSuspensions(db)
   let stopsToUse = []
 
@@ -74,8 +74,8 @@ export async function fetchNotifySuspensions(db, ptvAPI) {
   let tdnsSeen = []
   for (let stop of stopsToUse) {
     let newTDNs = []
-    newTDNs.push(...await fetchStop(stop, db, ptvAPI, 5, false, tdnsSeen, updatedTrips))
-    newTDNs.push(...await fetchStop(stop, db, ptvAPI, 5, true, tdnsSeen, updatedTrips))
+    newTDNs.push(...await fetchStop(stop, db, ptvAPI, 5, false, tdnsSeen, updatedTrips, existingTrips))
+    newTDNs.push(...await fetchStop(stop, db, ptvAPI, 5, true, tdnsSeen, updatedTrips, existingTrips))
     global.loggers.trackers.metro.log('> Notify Suspensions: Updating TDNs: ' + newTDNs.join(', '))
 
     let station = await db.getCollection('stops').findDocument({
@@ -85,8 +85,6 @@ export async function fetchNotifySuspensions(db, ptvAPI) {
     tdnsSeen.push(...missingTDNs)
     global.loggers.trackers.metro.log('> Notify Suspensions: Updating Missing TDNs: ' + missingTDNs.join(', '))
   }
-
-  await updateRelatedTrips(db, updatedTrips, ptvAPI)
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {

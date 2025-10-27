@@ -3,8 +3,6 @@ import config from '../config.json' with { type: 'json' }
 import os from 'os'
 import utils from '../utils.js'
 
-config.databaseURL = 'mongodb://s1.transportvic.me,s2.transportvic.me,s3.transportvic.me/TransportVic?replicaSet=transportvic&readPreference=primaryPreferred'
-
 function randomSleepTime() {
   return Math.random() * 3 + 0.2
 }
