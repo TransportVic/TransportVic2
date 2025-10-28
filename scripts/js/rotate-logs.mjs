@@ -3,12 +3,17 @@ import { MongoDatabaseConnection } from '@transportme/database'
 import fs from 'fs/promises'
 import path from 'path'
 import url from 'url'
+import os from 'os'
 import utils from '../../utils.js'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+const databaseURL = new URL(config.databaseURL)
+databaseURL.host = os.hostname()
+databaseURL.searchParams.set('directConnection', 'true')
+
+const database = new MongoDatabaseConnection(databaseURL.toString(), 'admin')
 await database.connect({})
 await database.adminCommand({ logRotate: 'server' })
 
