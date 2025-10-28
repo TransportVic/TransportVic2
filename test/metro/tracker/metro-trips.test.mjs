@@ -73,7 +73,7 @@ describe('The getUpcomingTrips function', () => {
 
     let ptvAPI = createAPI(stubSTYOpData)
 
-    await fetchTrips(ptvAPI, db, ptvAPI.metroSite.lines.STONY_POINT)
+    await fetchTrips(ptvAPI, db, db, ptvAPI.metroSite.lines.STONY_POINT)
 
     let td8500 = await liveTimetables.findDocument({ runID: '8500' })
     expect(td8500.formedBy).to.equal('8501')
@@ -112,7 +112,7 @@ describe('The getUpcomingTrips function', () => {
 
     let ptvAPI = createAPI(stubSTYOpData)
 
-    await fetchTrips(ptvAPI, db, ptvAPI.metroSite.lines.STONY_POINT)
+    await fetchTrips(ptvAPI, db, db, ptvAPI.metroSite.lines.STONY_POINT)
 
     let td8506 = await liveTimetables.findDocument({ runID: '8506' })
     expect(td8506.origin).to.equal('Stony Point Railway Station')
@@ -140,7 +140,7 @@ describe('The getUpcomingTrips function', () => {
 
     let ptvAPI = createAPI(td3154DST)
 
-    await fetchTrips(ptvAPI, db, ptvAPI.metroSite.lines.BELGRAVE)
+    await fetchTrips(ptvAPI, db, db, ptvAPI.metroSite.lines.BELGRAVE)
 
     let td3154 = await liveTimetables.findDocument({ runID: '3154' })
     expect(td3154.origin).to.equal('Belgrave Railway Station')

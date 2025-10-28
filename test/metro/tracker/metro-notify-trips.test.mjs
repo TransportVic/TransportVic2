@@ -67,7 +67,7 @@ describe('The MetroNotify trip tracker', () => {
     })
 
     try {
-      await fetchNotifyTrips(database, ptvAPI)
+      await fetchNotifyTrips(database, database, ptvAPI)
     } catch (e) {}
 
     expect(stubAPI.getCalls()[0]).to.exist

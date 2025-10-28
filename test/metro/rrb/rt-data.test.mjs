@@ -59,7 +59,7 @@ describe('The MTM Rail Bus Tracker', () => {
     await stops.createDocument(clone(asp))
     await timetables.createDocument(clone(dbTrip2))
 
-    let tripData = await fetchTrips(database, createAPI(updates2))
+    let tripData = await fetchTrips(database, database, createAPI(updates2))
     expect(tripData[0].runID).to.equal(getTripID('Sun_kgmfdtw'))
     expect(tripData[0].routeGTFSID).to.equal('2-RRB')
     expect(tripData[0].direction).to.equal('Up')

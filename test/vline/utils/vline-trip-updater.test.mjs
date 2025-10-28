@@ -19,7 +19,7 @@ describe('The V/Line Trip Updater', () => {
       await routes.createDocuments(clone(allRoutes))
       await timetables.createDocument(clone(td8741))
 
-      let trip = await VLineTripUpdater.updateTripOriginDestination(database, '20250718', '8741', 'Southern Cross Railway Station', 'Waurn Ponds Railway Station')
+      let trip = await VLineTripUpdater.updateTripOriginDestination(database, database, '20250718', '8741', 'Southern Cross Railway Station', 'Waurn Ponds Railway Station')
       expect(trip.runID).to.equal('8741')
 
       for (let i = 0; i < trip.stops.length; i++) expect(trip.stops[i].cancelled, `Expected ${trip.stops[i].stopName} to not be cancelled`).to.be.false
@@ -35,7 +35,7 @@ describe('The V/Line Trip Updater', () => {
       await routes.createDocuments(clone(allRoutes))
       await timetables.createDocument(clone(td8741))
 
-      let trip = await VLineTripUpdater.updateTripOriginDestination(database, '20250718', '8741', 'Southern Cross Railway Station', 'Tarneit Railway Station')
+      let trip = await VLineTripUpdater.updateTripOriginDestination(database, database, '20250718', '8741', 'Southern Cross Railway Station', 'Tarneit Railway Station')
       expect(trip.runID).to.equal('8741')
 
       for (let i = 0; i <= 4; i++) expect(trip.stops[i].cancelled, `Expected ${trip.stops[i].stopName} to not be cancelled`).to.be.false
@@ -52,13 +52,13 @@ describe('The V/Line Trip Updater', () => {
       await routes.createDocuments(clone(allRoutes))
       await timetables.createDocument(clone(td8741))
 
-      let trip = await VLineTripUpdater.updateTripOriginDestination(database, '20250718', '8741', 'Southern Cross Railway Station', 'Tarneit Railway Station')
+      let trip = await VLineTripUpdater.updateTripOriginDestination(database, database, '20250718', '8741', 'Southern Cross Railway Station', 'Tarneit Railway Station')
       expect(trip.runID).to.equal('8741')
 
       for (let i = 0; i <= 4; i++) expect(trip.stops[i].cancelled, `Expected ${trip.stops[i].stopName} to not be cancelled`).to.be.false
       for (let i = 5; i < trip.stops.length; i++) expect(trip.stops[i].cancelled, `Expected ${trip.stops[i].stopName} to be cancelled`).to.be.true
 
-      trip = await VLineTripUpdater.updateTripOriginDestination(database, '20250718', '8741', 'Southern Cross Railway Station', 'South Geelong Railway Station')
+      trip = await VLineTripUpdater.updateTripOriginDestination(database, database, '20250718', '8741', 'Southern Cross Railway Station', 'South Geelong Railway Station')
       expect(trip.runID).to.equal('8741')
 
       for (let i = 0; i <= 11; i++) expect(trip.stops[i].cancelled, `Expected ${trip.stops[i].stopName} to not be cancelled`).to.be.false
@@ -75,7 +75,7 @@ describe('The V/Line Trip Updater', () => {
       await routes.createDocuments(clone(allRoutes))
       await timetables.createDocument(clone(td8741))
 
-      let trip = await VLineTripUpdater.updateTripOriginDestination(database, '20250718', '8741', 'Wyndham Vale Railway Station', 'Waurn Ponds Railway Station')
+      let trip = await VLineTripUpdater.updateTripOriginDestination(database, database, '20250718', '8741', 'Wyndham Vale Railway Station', 'Waurn Ponds Railway Station')
       expect(trip.runID).to.equal('8741')
 
       for (let i = 0; i <= 4; i++) expect(trip.stops[i].cancelled, `Expected ${trip.stops[i].stopName} to be cancelled`).to.be.true
@@ -92,13 +92,13 @@ describe('The V/Line Trip Updater', () => {
       await routes.createDocuments(clone(allRoutes))
       await timetables.createDocument(clone(td8741))
 
-      let trip = await VLineTripUpdater.updateTripOriginDestination(database, '20250718', '8741', 'Wyndham Vale Railway Station', 'Waurn Ponds Railway Station')
+      let trip = await VLineTripUpdater.updateTripOriginDestination(database, database, '20250718', '8741', 'Wyndham Vale Railway Station', 'Waurn Ponds Railway Station')
       expect(trip.runID).to.equal('8741')
 
       for (let i = 0; i <= 4; i++) expect(trip.stops[i].cancelled, `Expected ${trip.stops[i].stopName} to be cancelled`).to.be.true
       for (let i = 5; i < trip.stops.length; i++) expect(trip.stops[i].cancelled, `Expected ${trip.stops[i].stopName} to not be cancelled`).to.be.false
 
-      trip = await VLineTripUpdater.updateTripOriginDestination(database, '20250718', '8741', 'Southern Cross Railway Station', 'Waurn Ponds Railway Station')
+      trip = await VLineTripUpdater.updateTripOriginDestination(database, database, '20250718', '8741', 'Southern Cross Railway Station', 'Waurn Ponds Railway Station')
       expect(trip.runID).to.equal('8741')
 
       for (let i = 0; i < trip.stops.length; i++) expect(trip.stops[i].cancelled, `Expected ${trip.stops[i].stopName} to not be cancelled`).to.be.false
@@ -114,7 +114,7 @@ describe('The V/Line Trip Updater', () => {
       await routes.createDocuments(clone(allRoutes))
       await timetables.createDocument(clone(td8741))
 
-      let trip = await VLineTripUpdater.updateTripOriginDestination(database, '20250718', '8741', 'Wyndham Vale Railway Station', 'Geelong Railway Station')
+      let trip = await VLineTripUpdater.updateTripOriginDestination(database, database, '20250718', '8741', 'Wyndham Vale Railway Station', 'Geelong Railway Station')
       expect(trip.runID).to.equal('8741')
 
       for (let i = 0; i <= 4; i++) expect(trip.stops[i].cancelled, `Expected ${trip.stops[i].stopName} to be cancelled`).to.be.true

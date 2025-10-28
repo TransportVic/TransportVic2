@@ -53,7 +53,7 @@ export async function getTripsRequiringUpdates(liveTimetables, updatedTrips, exc
   })
 }
 
-export async function updateRelatedTrips(db, updatedTrips, ptvAPI) {
+export async function updateRelatedTrips(db, tripDB, updatedTrips, ptvAPI) {
   let liveTimetables = await db.getCollection('live timetables')
   let tripsNeedingUpdate = []
 
@@ -66,7 +66,7 @@ export async function updateRelatedTrips(db, updatedTrips, ptvAPI) {
     tripsNeedingUpdate = await getTripsRequiringUpdates(liveTimetables, updatedTrips, tdnsSeen)
     let newlyUpdatedTrips = []
     for (let trip of tripsNeedingUpdate) {
-      let updatedData = await updateTDNFromPTV(db, trip.runID, ptvAPI, {}, 'ptv-pattern-transposal', true)
+      let updatedData = await updateTDNFromPTV(db, tripDB, trip.runID, ptvAPI, {}, 'ptv-pattern-transposal', true)
       if (trip.setNull && updatedData[trip.setNull] === trip.badVal) updatedData[trip.setNull] = null
       else if (trip.enforceField) updatedData[trip.enforceField] = trip.enforceValue
 

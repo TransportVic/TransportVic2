@@ -118,7 +118,7 @@ describe('The GPS tracker', () => {
       runID: '8507',
       operator: 'Metro Trains Melbourne'
     }
-    await updateTrips(() => [positionData], () => ['Metro Trains Melbourne'], database)
+    await updateTrips(() => [positionData], () => ['Metro Trains Melbourne'], database, database)
 
     const td8507 = await timetables.findDocument({ runID: '8507' })
     expect(td8507.stopTimings[3].stopName).to.equal('Somerville Railway Station')
@@ -159,7 +159,7 @@ describe('The GPS tracker', () => {
       runID: '8507',
       operator: 'Metro Trains Melbourne'
     }
-    await updateTrips(() => [positionData], () => ['Metro Trains Melbourne'], database)
+    await updateTrips(() => [positionData], () => ['Metro Trains Melbourne'], database, database)
 
     const td8507 = await timetables.findDocument({ runID: '8507' })
     expect(td8507.vehicle.consist).to.deep.equal(['S7001'])

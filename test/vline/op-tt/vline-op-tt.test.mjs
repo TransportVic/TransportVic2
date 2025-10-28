@@ -194,7 +194,7 @@ describe('The loadOperationalTT function', () => {
     let ptvAPI = new PTVAPI(stubAPI)
     ptvAPI.addVLine(stubAPI)
 
-    await loadOperationalTT(database, utils.parseDate('20250718'), ptvAPI)
+    await loadOperationalTT(database, database, utils.parseDate('20250718'), ptvAPI)
     let trip = await timetables.findDocument({})
 
     expect(trip.runID).to.equal('8741')
@@ -219,8 +219,8 @@ describe('The loadOperationalTT function', () => {
     ptvAPI.addVLine(stubAPI)
 
     // Call twice, should only fetch from API once
-    await loadOperationalTT(database, utils.parseDate('20250718'), ptvAPI)
-    await loadOperationalTT(database, utils.parseDate('20250718'), ptvAPI)
+    await loadOperationalTT(database, database, utils.parseDate('20250718'), ptvAPI)
+    await loadOperationalTT(database, database, utils.parseDate('20250718'), ptvAPI)
     let trip = await timetables.findDocument({})
 
     expect(trip.runID).to.equal('8741')
@@ -244,8 +244,8 @@ describe('The loadOperationalTT function', () => {
     let ptvAPI = new PTVAPI(stubAPI)
     ptvAPI.addVLine(stubAPI)
 
-    await loadOperationalTT(database, utils.parseDate('20250718'), ptvAPI)
-    await loadOperationalTT(database, utils.parseDate('20250718'), ptvAPI)
+    await loadOperationalTT(database, database, utils.parseDate('20250718'), ptvAPI)
+    await loadOperationalTT(database, database, utils.parseDate('20250718'), ptvAPI)
     let trip = await timetables.findDocument({})
 
     expect(trip.runID).to.equal('8741')
@@ -277,7 +277,7 @@ describe('The loadOperationalTT function', () => {
     let ptvAPI = new PTVAPI(stubAPI)
     ptvAPI.addVLine(stubAPI)
 
-    await loadOperationalTT(database, utils.parseDate('20250719'), ptvAPI)
+    await loadOperationalTT(database, database, utils.parseDate('20250719'), ptvAPI)
     let trip = await timetables.findDocument({})
 
     expect(trip.runID).to.equal('8891')
@@ -288,7 +288,7 @@ describe('The loadOperationalTT function', () => {
     expect(trip.stopTimings[8].stopName).to.equal('South Geelong Railway Station')
     expect(trip.stopTimings[8].departureTime).to.equal('23:40')
 
-    await loadOperationalTT(database, utils.parseDate('20250719'), ptvAPI)
+    await loadOperationalTT(database, database, utils.parseDate('20250719'), ptvAPI)
     let updatedTrip = await timetables.findDocument({})
 
     expect(updatedTrip.runID).to.equal('8891')
@@ -300,7 +300,7 @@ describe('The loadOperationalTT function', () => {
     expect(updatedTrip.stopTimings[8].departureTime).to.equal('23:55')
 
     // Further updates should not change the time any more
-    await loadOperationalTT(database, utils.parseDate('20250719'), ptvAPI)
+    await loadOperationalTT(database, database, utils.parseDate('20250719'), ptvAPI)
     let update2Trip = await timetables.findDocument({})
 
     expect(update2Trip.runID).to.equal('8891')
@@ -328,7 +328,7 @@ describe('The loadOperationalTT function', () => {
     let ptvAPI = new PTVAPI(stubAPI)
     ptvAPI.addVLine(stubAPI)
 
-    await loadOperationalTT(database, utils.parseDate('20250718'), ptvAPI)
+    await loadOperationalTT(database, database, utils.parseDate('20250718'), ptvAPI)
     let trip = await timetables.findDocument({})
 
     expect(trip.runID).to.equal('8741')
@@ -361,7 +361,7 @@ describe('The loadOperationalTT function', () => {
     let ptvAPI = new PTVAPI(stubAPI)
     ptvAPI.addVLine(stubAPI)
 
-    await loadOperationalTT(database, utils.parseDate('20250905'), ptvAPI)
+    await loadOperationalTT(database, database, utils.parseDate('20250905'), ptvAPI)
     let trip = await timetables.findDocument({})
 
     expect(trip.runID).to.equal('8457')
@@ -385,7 +385,7 @@ describe('The loadOperationalTT function', () => {
     let ptvAPI = new PTVAPI(stubAPI)
     ptvAPI.addVLine(stubAPI)
 
-    await loadOperationalTT(database, utils.parseDate('20251004'), ptvAPI)
+    await loadOperationalTT(database, database, utils.parseDate('20251004'), ptvAPI)
     let trip = await timetables.findDocument({})
 
     expect(trip.runID).to.equal('8821')
@@ -414,7 +414,7 @@ describe('The loadOperationalTT function', () => {
     let ptvAPI = new PTVAPI(stubAPI)
     ptvAPI.addVLine(stubAPI)
 
-    await loadOperationalTT(database, utils.parseDate('20251005'), ptvAPI)
+    await loadOperationalTT(database, database, utils.parseDate('20251005'), ptvAPI)
     let trip = await timetables.findDocument({})
 
     expect(trip.runID).to.equal('8800')
@@ -443,7 +443,7 @@ describe('The loadOperationalTT function', () => {
     let ptvAPI = new PTVAPI(stubAPI)
     ptvAPI.addVLine(stubAPI)
 
-    await loadOperationalTT(database, utils.parseDate('20251005'), ptvAPI)
+    await loadOperationalTT(database, database, utils.parseDate('20251005'), ptvAPI)
     let trip = await timetables.findDocument({})
 
     expect(trip.runID).to.equal('8469')

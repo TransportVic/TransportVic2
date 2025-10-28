@@ -73,7 +73,7 @@ describe('The SSS Platform updater', () => {
     let ptvAPI = new PTVAPI(stubAPI)
     ptvAPI.addVLine(stubAPI)
 
-    await fetchSSSPlatforms('20250718', database, ptvAPI)
+    await fetchSSSPlatforms('20250718', database, database, ptvAPI)
 
     let td8866Trip = await liveTimetables.findDocument({ runID: '8866' })
     expect(td8866Trip.stopTimings[0].cancelled).to.be.false
@@ -106,7 +106,7 @@ describe('The SSS Platform updater', () => {
     let ptvAPI = new PTVAPI(stubAPI)
     ptvAPI.addVLine(stubAPI)
 
-    await fetchSSSPlatforms('20250914', database, ptvAPI)
+    await fetchSSSPlatforms('20250914', database, database, ptvAPI)
 
     let td8431Trip = await liveTimetables.findDocument({ runID: '8431' })
     expect(td8431Trip.stopTimings[0].stopName).to.equal('Southern Cross Railway Station')

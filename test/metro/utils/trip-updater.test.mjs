@@ -44,7 +44,7 @@ describe('The trip updater module', () => {
 
     expect(await liveTimetables.countDocuments({})).to.equal(0)
     let gtfsrTrips = await getUpcomingTrips(database, () => clone(gtfsr_EPH))
-    let tripData = await MetroTripUpdater.updateTrip(database, gtfsrTrips[0])
+    let tripData = await MetroTripUpdater.updateTrip(database, database, gtfsrTrips[0])
     expect(await liveTimetables.countDocuments({})).to.equal(1)
 
     expect(tripData.mode).to.equal('metro train')
@@ -104,7 +104,7 @@ describe('The trip updater module', () => {
     let gtfsrTrips = await getUpcomingTrips(database, () => clone(gtfsr_EPH))
     gtfsrTrips[0].stops[14].scheduledDepartureTime = gtfsrTrips[0].stops[14].estimatedDepartureTime
 
-    let tripData = await MetroTripUpdater.updateTrip(database, gtfsrTrips[0])
+    let tripData = await MetroTripUpdater.updateTrip(database, database, gtfsrTrips[0])
     expect(await liveTimetables.countDocuments({})).to.equal(1)
 
     expect(tripData.mode).to.equal('metro train')
@@ -169,7 +169,7 @@ describe('The trip updater module', () => {
     let gtfsrTrips = await getUpcomingTrips(database, () => clone(gtfsr_EPH))
     gtfsrTrips[0].stops[14].scheduledDepartureTime = gtfsrTrips[0].stops[14].estimatedDepartureTime
 
-    let tripData = await MetroTripUpdater.updateTrip(database, gtfsrTrips[0])
+    let tripData = await MetroTripUpdater.updateTrip(database, database, gtfsrTrips[0])
     expect(await liveTimetables.countDocuments({})).to.equal(1)
 
     expect(tripData.stops[14].stopGTFSID).to.equal('vic:rail:OAK')
@@ -211,7 +211,7 @@ describe('The trip updater module', () => {
     expect(await liveTimetables.countDocuments({})).to.equal(1)
     let gtfsrTrips = await getUpcomingTrips(database, () => clone(gtfsr_EPH))
 
-    let tripData = await MetroTripUpdater.updateTrip(database, gtfsrTrips[0])
+    let tripData = await MetroTripUpdater.updateTrip(database, database, gtfsrTrips[0])
     expect(await liveTimetables.countDocuments({})).to.equal(1)
 
     expect(tripData.stops[14].stopGTFSID).to.equal('vic:rail:OAK')
@@ -265,7 +265,7 @@ describe('The trip updater module', () => {
       ]
     }
 
-    let tripData = await MetroTripUpdater.updateTrip(database, updateData)
+    let tripData = await MetroTripUpdater.updateTrip(database, database, updateData)
     expect(await liveTimetables.countDocuments({})).to.equal(1)
 
     for (let stop of tripData.stops.slice(2)) {
@@ -324,7 +324,7 @@ describe('The trip updater module', () => {
       ]
     }
 
-    let tripData = await MetroTripUpdater.updateTrip(database, updateData, { skipStopCancellation: true })
+    let tripData = await MetroTripUpdater.updateTrip(database, database, updateData, { skipStopCancellation: true })
     expect(await liveTimetables.countDocuments({})).to.equal(1)
 
     for (let stop of tripData.stops.slice(2)) {
@@ -383,7 +383,7 @@ describe('The trip updater module', () => {
       'Cardinia Road Railway Station',
       'Officer Railway Station'
     ]
-    let tripData = await MetroTripUpdater.updateTrip(database, updateData, { ignoreMissingStops })
+    let tripData = await MetroTripUpdater.updateTrip(database, database, updateData, { ignoreMissingStops })
 
     for (let stop of tripData.stops.slice(0, 4)) expect(stop.cancelled, `Expected ${stop.stopName} to not be cancelled`).to.be.false
     for (let stop of tripData.stops.slice(4)) expect(stop.cancelled).to.be.true
@@ -433,7 +433,7 @@ describe('The trip updater module', () => {
       ]
     }
 
-    let tripData = await MetroTripUpdater.updateTrip(database, updateData)
+    let tripData = await MetroTripUpdater.updateTrip(database, database, updateData)
     expect(await liveTimetables.countDocuments({})).to.equal(1)
 
     for (let stop of tripData.stops.slice(2)) {
@@ -448,7 +448,7 @@ describe('The trip updater module', () => {
     expect(cdaChange.timestamp).to.exist
 
     let gtfsrTrips = await getUpcomingTrips(database, () => clone(gtfsr_EPH))
-    tripData = await MetroTripUpdater.updateTrip(database, gtfsrTrips[0])    
+    tripData = await MetroTripUpdater.updateTrip(database, database, gtfsrTrips[0])    
 
     for (let stop of tripData.stops.slice(2)) {
       expect(stop.cancelled).to.be.false
@@ -506,7 +506,7 @@ describe('The trip updater module', () => {
       ]
     }
 
-    let tripData = await MetroTripUpdater.updateTrip(database, updateData)
+    let tripData = await MetroTripUpdater.updateTrip(database, database, updateData)
     expect(await liveTimetables.countDocuments({})).to.equal(1)
 
     for (let stop of tripData.stops.slice(2)) {
@@ -527,7 +527,7 @@ describe('The trip updater module', () => {
     let gtfsrTrips = await getUpcomingTrips(database, () => gtfsrResponse)
     gtfsrTrips[0].stops.forEach(stop => { delete stop.cancelled })
 
-    tripData = await MetroTripUpdater.updateTrip(database, gtfsrTrips[0], { skipStopCancellation: true })
+    tripData = await MetroTripUpdater.updateTrip(database, database, gtfsrTrips[0], { skipStopCancellation: true })
 
     for (let stop of tripData.stops.slice(2)) {
       expect(stop.cancelled).to.be.true
@@ -563,7 +563,7 @@ describe('The trip updater module', () => {
     gtfsrUpdate.entity[0].trip_update.stop_time_update = []
 
     let gtfsrTrips = await getUpcomingTrips(database, () => gtfsrUpdate)
-    let tripData = await MetroTripUpdater.updateTrip(database, gtfsrTrips[0])
+    let tripData = await MetroTripUpdater.updateTrip(database, database, gtfsrTrips[0])
     expect(await liveTimetables.countDocuments({})).to.equal(1)
 
     expect(tripData.cancelled).to.be.true
@@ -600,8 +600,8 @@ describe('The trip updater module', () => {
     let gtfsrTrips = await getUpcomingTrips(database, () => clone(gtfsr_EPH))
     gtfsrTrips[0].stops[14].scheduledDepartureTime = gtfsrTrips[0].stops[14].estimatedDepartureTime
 
-    await MetroTripUpdater.updateTrip(database, gtfsrTrips[0])
-    await MetroTripUpdater.updateTrip(database, gtfsrTrips[0]) // Run the update twice - should only have 1 set of changes
+    await MetroTripUpdater.updateTrip(database, database, gtfsrTrips[0])
+    await MetroTripUpdater.updateTrip(database, database, gtfsrTrips[0]) // Run the update twice - should only have 1 set of changes
 
     let timetable = await liveTimetables.findDocument({})
     expect(timetable.changes.length).to.equal(2)
@@ -614,7 +614,7 @@ describe('The trip updater module', () => {
     expect(ephChange.timestamp).to.exist
 
     gtfsrTrips[0].stops[8].platform = '3'
-    await MetroTripUpdater.updateTrip(database, gtfsrTrips[0])
+    await MetroTripUpdater.updateTrip(database, database, gtfsrTrips[0])
     timetable = await liveTimetables.findDocument({})
     expect(timetable.changes.length).to.equal(3)
 
@@ -681,7 +681,7 @@ describe('The trip updater module', () => {
       cancelled: false
     }
 
-    let trip = await MetroTripUpdater.updateTrip(database, tripUdate)
+    let trip = await MetroTripUpdater.updateTrip(database, database, tripUdate)
     expect(trip.stops[0].stopName).to.equal('Showgrounds Railway Station')
     expect(trip.stops[0].additional).to.be.false
     expect(trip.stops[0].cancelled).to.be.false
@@ -763,7 +763,7 @@ describe('The trip updater module', () => {
       cancelled: false
     }
 
-    let trip = await MetroTripUpdater.updateTrip(database, tripUdate)
+    let trip = await MetroTripUpdater.updateTrip(database, database, tripUdate)
     expect(trip.stops[0].stopName).to.equal('Flinders Street Railway Station')
     expect(trip.stops[0].additional).to.be.true
     expect(trip.stops[0].cancelled).to.be.false
@@ -823,7 +823,7 @@ describe('The trip updater module', () => {
       cancelled: false
     }
 
-    let trip = await MetroTripUpdater.updateTrip(database, tripUdate)
+    let trip = await MetroTripUpdater.updateTrip(database, database, tripUdate)
 
     expect(trip.stops[2].stopName).to.equal('Showgrounds Railway Station')
     expect(trip.stops[2].platform).to.equal('2')
@@ -853,8 +853,8 @@ describe('The trip updater module', () => {
     let gtfsrTrips = await getUpcomingTrips(database, () => clone(gtfsr_EPH))
     gtfsrTrips[0].stops[14].scheduledDepartureTime = gtfsrTrips[0].stops[14].estimatedDepartureTime
 
-    await MetroTripUpdater.updateTrip(database, gtfsrTrips[0])
-    await MetroTripUpdater.updateTrip(database, gtfsrTrips[0]) // Run the update twice - should only have 1 set of changes
+    await MetroTripUpdater.updateTrip(database, database, gtfsrTrips[0])
+    await MetroTripUpdater.updateTrip(database, database, gtfsrTrips[0]) // Run the update twice - should only have 1 set of changes
 
     let timetable = await liveTimetables.findDocument({})
     expect(timetable.changes.length).to.equal(2)
@@ -867,7 +867,7 @@ describe('The trip updater module', () => {
     expect(ephChange.timestamp).to.exist
 
     gtfsrTrips[0].stops[8].platform = '3'
-    await MetroTripUpdater.updateTrip(database, gtfsrTrips[0])
+    await MetroTripUpdater.updateTrip(database, database, gtfsrTrips[0])
     timetable = await liveTimetables.findDocument({})
     expect(timetable.changes.length).to.equal(3)
 
@@ -923,7 +923,7 @@ describe('The trip updater module', () => {
       cancelled: false
     }
 
-    let trip = await MetroTripUpdater.updateTrip(database, tripUdate)
+    let trip = await MetroTripUpdater.updateTrip(database, database, tripUdate)
 
     expect(trip.stops[1].stopName).to.equal('Flinders Street Railway Station')
     expect(trip.stops[1].scheduledDepartureTime.toISOString()).to.equal('2024-02-23T22:39:00.000Z')
@@ -963,7 +963,7 @@ describe('The trip updater module', () => {
       consist: ['9001', '9101', '9201', '9301', '9701', '9801', '9901']
     }
 
-    let trip = await MetroTripUpdater.updateTrip(database, tripUdate)
+    let trip = await MetroTripUpdater.updateTrip(database, database, tripUdate)
     expect(trip.vehicle.type).to.equal('HCMT')
 
     let trackerEntry = await metroTrips.findDocument({})
@@ -1004,7 +1004,7 @@ describe('The trip updater module', () => {
     ptvAPI.addMetroSite(stubAPI)
 
     let tripData = await getDepartures(database, ptvAPI)
-    let td0735 = await MetroTripUpdater.updateTrip(database, tripData[0])
+    let td0735 = await MetroTripUpdater.updateTrip(database, database, tripData[0])
 
     expect(td0735.stops[0].stopGTFSID).to.equal('vic:rail:FSS')
     expect(td0735.stops[0].departureTime).to.equal('10:53')
@@ -1019,7 +1019,7 @@ describe('The trip updater module', () => {
     // Note that estimated departure for last stop has delay -2L copied from second last stop (PAR)
     expect(td0735.stops[5].estimatedDepartureTime.toISOString()).to.equal('2025-06-14T01:07:00.000Z')
 
-    let td0737 = await MetroTripUpdater.updateTrip(database, tripData[1])
+    let td0737 = await MetroTripUpdater.updateTrip(database, database, tripData[1])
 
     expect(td0737.stops[0].stopGTFSID).to.equal('vic:rail:FSS')
     expect(td0737.stops[0].departureTime).to.equal('11:13')
@@ -1059,7 +1059,7 @@ describe('The trip updater module', () => {
     gtfsrUpdate.entity[0].trip_update.trip.start_time = '15:55:00'
 
     let gtfsrTrips = await getUpcomingTrips(database, () => gtfsrUpdate)
-    let tripData = await MetroTripUpdater.updateTrip(database, gtfsrTrips[0])
+    let tripData = await MetroTripUpdater.updateTrip(database, database, gtfsrTrips[0])
 
     expect(tripData).to.be.null
   })
@@ -1101,7 +1101,7 @@ describe('The trip updater module', () => {
     gtfsrUpdate.entity[0].trip_update.trip.start_time = '24:29:00'
 
     let gtfsrTrips = await getUpcomingTrips(database, () => gtfsrUpdate)
-    let tripData = await MetroTripUpdater.updateTrip(database, gtfsrTrips[0])
+    let tripData = await MetroTripUpdater.updateTrip(database, database, gtfsrTrips[0])
 
     expect(tripData).to.exist
   })
@@ -1130,7 +1130,7 @@ describe('The trip updater module', () => {
 
     let updateTime = new Date('2025-04-09T18:37:00.000Z')
     let gtfsrTrips = await getUpcomingTrips(database, () => gtfsrUpdate)
-    let tripData = await MetroTripUpdater.updateTrip(database, gtfsrTrips[0], { updateTime })
+    let tripData = await MetroTripUpdater.updateTrip(database, database, gtfsrTrips[0], { updateTime })
 
     expect(tripData).to.exist
     expect(tripData.lastUpdated.toISOString()).to.equal(updateTime.toISOString())
@@ -1159,7 +1159,7 @@ describe('The trip updater module', () => {
 
     let updateTime = new Date('2025-04-09T18:37:00.000Z')
     let gtfsrTrips = await getUpcomingTrips(database, () => gtfsrUpdate)
-    let tripData = await MetroTripUpdater.updateTrip(database, gtfsrTrips[0], { updateTime })
+    let tripData = await MetroTripUpdater.updateTrip(database, database, gtfsrTrips[0], { updateTime })
 
     expect(tripData).to.exist
     expect(tripData.lastUpdated.toISOString()).to.equal(updateTime.toISOString())
@@ -1192,7 +1192,7 @@ describe('The trip updater module', () => {
     let gtfsrUpdate = clone(gtfsr_EPH)
     
     let gtfsrTrips = await getUpcomingTrips(database, () => gtfsrUpdate)
-    let tripData = await MetroTripUpdater.updateTrip(database, gtfsrTrips[0])
+    let tripData = await MetroTripUpdater.updateTrip(database, database, gtfsrTrips[0])
 
     expect(tripData).to.exist
     expect(tripData.lastUpdated.toISOString()).to.equal(updateTime.toISOString())
@@ -1220,7 +1220,7 @@ describe('The trip updater module', () => {
 
     let gtfsrTrips = await getUpcomingTrips(database, () => clone(gtfsr_EPH))
     gtfsrTrips[0].stops.splice(-1, 1) // Note that train is 1min late out of SSS
-    let tripData = await MetroTripUpdater.updateTrip(database, gtfsrTrips[0], { skipStopCancellation: true })
+    let tripData = await MetroTripUpdater.updateTrip(database, database, gtfsrTrips[0], { skipStopCancellation: true })
 
     let fss = tripData.stops[tripData.stops.length - 1]
     expect(fss.stopName).to.equal('Flinders Street Railway Station')
@@ -1258,7 +1258,7 @@ describe('The trip updater module', () => {
 
     let gtfsrTrips = await getUpcomingTrips(database, () => clone(gtfsr_EPH))
     gtfsrTrips[0].stops.splice(8, 20) // Cut up to HLM, DNG has no data
-    let tripData = await MetroTripUpdater.updateTrip(database, gtfsrTrips[0], { skipStopCancellation: true })
+    let tripData = await MetroTripUpdater.updateTrip(database, database, gtfsrTrips[0], { skipStopCancellation: true })
 
     let dng = tripData.stops[8]
     expect(dng.stopName).to.equal('Dandenong Railway Station')
@@ -1300,7 +1300,7 @@ describe('The trip updater module', () => {
     gtfsrTrips[0].stops[20].estimatedArrivalTime = new Date(+gtfsrTrips[0].stops[20].estimatedArrivalTime + 1000 * 60 * 7) // Make the train 7min late at RMD
     gtfsrTrips[0].stops[20].estimatedDepartureTime = new Date(+gtfsrTrips[0].stops[20].estimatedDepartureTime + 1000 * 60 * 7)
 
-    let tripData = await MetroTripUpdater.updateTrip(database, gtfsrTrips[0], { skipStopCancellation: true })
+    let tripData = await MetroTripUpdater.updateTrip(database, database, gtfsrTrips[0], { skipStopCancellation: true })
 
     let fss = tripData.stops[tripData.stops.length - 1]
     expect(fss.stopName).to.equal('Flinders Street Railway Station')
@@ -1371,8 +1371,8 @@ describe('The trip updater module', () => {
     }
 
     let updatedTrips = [
-      await MetroTripUpdater.updateTrip(database, tripUpdate, { skipStopCancellation: true }),
-      await MetroTripUpdater.updateTrip(database, tripUpdate2, { skipStopCancellation: true })
+      await MetroTripUpdater.updateTrip(database, database, tripUpdate, { skipStopCancellation: true }),
+      await MetroTripUpdater.updateTrip(database, database, tripUpdate2, { skipStopCancellation: true })
     ]
 
     for (let tripData of updatedTrips) {
@@ -1408,7 +1408,7 @@ describe('The trip updater module', () => {
 
     expect(await liveTimetables.countDocuments({})).to.equal(0)
     let gtfsrTrips = await getUpcomingTrips(database, () => clone(gtfsr_EPH))
-    let tripData = await MetroTripUpdater.updateTrip(database, gtfsrTrips[0], {
+    let tripData = await MetroTripUpdater.updateTrip(database, database, gtfsrTrips[0], {
       skipWrite: true
     })
     expect(await liveTimetables.countDocuments({})).to.equal(0)
@@ -1444,7 +1444,7 @@ describe('The trip updater module', () => {
     const tripTimetable = LiveTimetable.fromDatabase(tripTimetableData)
 
     const gtfsrTrips = await getUpcomingTrips(database, () => clone(gtfsr_EPH))
-    const tripData = await MetroTripUpdater.updateTrip(database, gtfsrTrips[0], {
+    const tripData = await MetroTripUpdater.updateTrip(database, database, gtfsrTrips[0], {
       existingTrips: { 'C036': tripTimetable }
     })
     const addedStops = tripData.toDatabase().stopTimings.filter(stop => stop.additional)
@@ -1505,7 +1505,7 @@ describe('The trip updater module', () => {
         consist: ['9001', '9101', '9201', '9301', '9701', '9801', '9901']
       }
 
-      await MetroTripUpdater.updateTrip(database, tripUdate)
+      await MetroTripUpdater.updateTrip(database, database, tripUdate)
 
       let trip = await liveTimetables.findDocument({})
       expect(trip.origin).to.equal('Southern Cross Railway Station')

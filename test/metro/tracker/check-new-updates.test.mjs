@@ -26,7 +26,7 @@ describe('The changelog tracker', () => {
       forming: "X103"
     }]
 
-    let updatedTrips = [await MetroTripUpdater.updateTrip(db, changes[0])]
+    let updatedTrips = [await MetroTripUpdater.updateTrip(db, db, changes[0])]
     let tripsNeedingUpdate = await getTripsRequiringUpdates(timetables, updatedTrips)
     expect(tripsNeedingUpdate.map(trip => trip.runID)).to.have.members([
       'X101', 'X103'
@@ -46,7 +46,7 @@ describe('The changelog tracker', () => {
       formedBy: "X100"
     }]
 
-    let updatedTrips = [await MetroTripUpdater.updateTrip(db, changes[0])]
+    let updatedTrips = [await MetroTripUpdater.updateTrip(db, db, changes[0])]
     let tripsNeedingUpdate = await getTripsRequiringUpdates(timetables, updatedTrips)
     expect(tripsNeedingUpdate.map(trip => trip.runID)).to.have.members([
       'X100', 'X102'
@@ -68,7 +68,7 @@ describe('The changelog tracker', () => {
       forming: "X103"
     }]
 
-    let updatedTrips = [await MetroTripUpdater.updateTrip(db, changes[0])]
+    let updatedTrips = [await MetroTripUpdater.updateTrip(db, db, changes[0])]
     let tripsNeedingUpdate = await getTripsRequiringUpdates(timetables, updatedTrips)
     expect(tripsNeedingUpdate.map(trip => trip.runID)).to.have.members([])
   })
@@ -83,7 +83,7 @@ describe('The changelog tracker', () => {
       formedBy: "X100"
     }]
 
-    let updatedTrips = [await MetroTripUpdater.updateTrip(db, changes[0])]
+    let updatedTrips = [await MetroTripUpdater.updateTrip(db, db, changes[0])]
     let tripsNeedingUpdate = await getTripsRequiringUpdates(timetables, updatedTrips, ['X100', 'X102'])
     expect(tripsNeedingUpdate.map(trip => trip.runID)).to.have.members([])
   })
@@ -105,7 +105,7 @@ describe('The changelog tracker', () => {
       formedBy: "X999"
     }]
 
-    let updatedTrips = [await MetroTripUpdater.updateTrip(db, changes[0]), await MetroTripUpdater.updateTrip(db, changes[1])]
+    let updatedTrips = [await MetroTripUpdater.updateTrip(db, db, changes[0]), await MetroTripUpdater.updateTrip(db, db, changes[1])]
     let tripsNeedingUpdate = await getTripsRequiringUpdates(timetables, updatedTrips)
     expect(tripsNeedingUpdate.map(trip => trip.runID)).to.have.deep.equal([
       'X101',
@@ -144,7 +144,7 @@ describe('The changelog tracker', () => {
       }]
     }]
 
-    let updatedTrips = [await MetroTripUpdater.updateTrip(db, changes[0]), await MetroTripUpdater.updateTrip(db, changes[1]), await MetroTripUpdater.updateTrip(db, changes[2])]
+    let updatedTrips = [await MetroTripUpdater.updateTrip(db, db, changes[0]), await MetroTripUpdater.updateTrip(db, db, changes[1]), await MetroTripUpdater.updateTrip(db, db, changes[2])]
     let tripsNeedingUpdate = await getTripsRequiringUpdates(timetables, updatedTrips)
     expect(tripsNeedingUpdate).to.deep.equal([{
       operationDays: '20250716',
@@ -153,7 +153,7 @@ describe('The changelog tracker', () => {
       badVal: '3437'
     }])
 
-    await updateRelatedTrips(db, updatedTrips, ptvAPI)
+    await updateRelatedTrips(db, db, updatedTrips, ptvAPI)
     let new3638 = await timetables.findDocument({ runID: "3638" })
     expect(new3638.forming).to.be.null
   })
@@ -177,7 +177,7 @@ describe('The changelog tracker', () => {
       formedBy: "1951"
     }]
 
-    let updatedTrips = [await MetroTripUpdater.updateTrip(db, changes[0])]
+    let updatedTrips = [await MetroTripUpdater.updateTrip(db, db, changes[0])]
     let tripsNeedingUpdate = await getTripsRequiringUpdates(timetables, updatedTrips)
     expect(tripsNeedingUpdate).to.deep.equal([{
       operationDays: '20250718',
@@ -186,7 +186,7 @@ describe('The changelog tracker', () => {
       enforceValue: '7138'
     }])
 
-    await updateRelatedTrips(db, updatedTrips, ptvAPI)
+    await updateRelatedTrips(db, db, updatedTrips, ptvAPI)
     let new1951 = await timetables.findDocument({ runID: "1951" })
     expect(new1951.forming).to.equal('7138')
   })

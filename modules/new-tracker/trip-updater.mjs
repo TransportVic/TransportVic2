@@ -240,7 +240,7 @@ export default class TripUpdater {
     return !(trip.stops && trip.stops.length > 0)
   }
 
-  static async updateNonStopData(db, trip, { dataSource, updateTime }) {
+  static async updateNonStopData(db, tripDB, trip, { dataSource, updateTime }) {
     let dbTrip = await this.getTripSkeleton(db, trip.runID, trip.operationDays)
     if (!dbTrip) return null
     let liveTimetables = db.getCollection('live timetables')
@@ -255,7 +255,7 @@ export default class TripUpdater {
       $set: timetable.toDatabase()
     })
 
-    await this.updateTrackerData(db, timetable)
+    await this.updateTrackerData(tripDB, timetable)
 
     return timetable
   }
@@ -269,7 +269,7 @@ export default class TripUpdater {
     existingTrips = {}
   } = {}) {
     if (this.isNonStopUpdate(trip) && !skipWrite) {
-      return await this.updateNonStopData(db, trip, { dataSource, updateTime })
+      return await this.updateNonStopData(db, tripDB, trip, { dataSource, updateTime })
     }
 
     let timetable = existingTrips[trip.runID] || await this.getTimetable(db, trip.runID, trip.operationDays)
