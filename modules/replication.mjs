@@ -8,7 +8,7 @@ function randomSleepTime() {
 }
 
 export async function getReplicaSetStatus() {
-  const adminConnection = new MongoDatabaseConnection(config.databaseURL, 'admin')
+  const adminConnection = new MongoDatabaseConnection(config.tripDatabaseURL, 'admin')
   await adminConnection.connect()
 
   try {
@@ -32,7 +32,7 @@ export async function getAvailableServers() {
 }
 
 export async function isActive(taskName) {
-  const db = new MongoDatabaseConnection(config.databaseURL, `${config.databaseName}-control`)
+  const db = new MongoDatabaseConnection(config.databaseURL, `${config.tripDatabaseURL}-control`)
   const hostname = os.hostname()
 
   await db.connect()

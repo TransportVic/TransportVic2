@@ -4,7 +4,6 @@ import utils from '../../utils.js'
 import { convertToLive } from '../departures/sch-to-live.js'
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 import fs from 'fs/promises'
-import { isPrimary } from '../replication.mjs'
 import { fileURLToPath } from 'url'
 import discordIntegration from '../discord-integration.js'
 import { hostname } from 'os'
@@ -48,7 +47,7 @@ async function loadOperationalTT(db, operationDay) {
   }
 }
 
-if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && await isPrimary()) {
+if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   await discordIntegration('taskLogging', `Bus Op TT: ${hostname()} loading`)
 
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)

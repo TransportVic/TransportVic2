@@ -3,7 +3,6 @@ import config from '../../config.json' with { type: 'json' }
 import utils from '../../utils.js'
 import { convertToLive } from '../departures/sch-to-live.js'
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
-import { isPrimary } from '../replication.mjs'
 import fs from 'fs/promises'
 import { fileURLToPath } from 'url'
 import discordIntegration from '../discord-integration.js'
@@ -46,7 +45,7 @@ async function loadOperationalTT(db, operationDay) {
   }
 }
 
-if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && await isPrimary()) {
+if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   await discordIntegration('taskLogging', `Overland Op TT: ${hostname()} loading`)
 
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)

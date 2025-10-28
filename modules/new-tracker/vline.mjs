@@ -36,7 +36,7 @@ async function writeUpdatedTrips(db, updatedTrips) {
   if (consistBulkOperations.length) await db.getCollection(VLineTripUpdater.getTrackerDB()).bulkWrite(consistBulkOperations)
 }
 
-if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && await isPrimary()) {
+if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   await discordIntegration('taskLogging', `V/Line Trip Updater: ${hostname()} loading`)
 
   let database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)

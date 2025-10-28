@@ -10,30 +10,6 @@ import BusTripUpdater from '../../bus/trip-updater.mjs'
 import async from 'async'
 import { LiveTimetable } from '../../schema/live-timetable.mjs'
 
-async function writeUpdatedTrips(db, tripDB, updatedTrips) {
-  const tripBulkOperations = updatedTrips.map(timetable => ({
-    replaceOne: {
-      filter: timetable.getDBKey(),
-      replacement: timetable.toDatabase(),
-      upsert: true
-    }
-  }))
-
-  const consistBulkOperations = updatedTrips.map(timetable => ({
-    replaceOne: {
-      filter: timetable.getTrackerDatabaseKey(),
-      replacement: timetable.toTrackerDatabase(),
-      upsert: true
-    }
-  })).filter(op => !!op.replaceOne.filter)
-
-  let promises = []
-  if (tripBulkOperations.length) promises.push(db.getCollection('live timetables').bulkWrite(tripBulkOperations, { ordered: false }))
-  if (consistBulkOperations.length) promises.push(tripDB.getCollection(BusTripUpdater.getTrackerDB()).bulkWrite(consistBulkOperations, { ordered: false }))
-
-  await Promise.all(promises)
-}
-
 export async function getFleetData(tripDB, gtfsrAPI) {
   let tripData = await gtfsrAPI('bus/vehicle-positions')
   let busRegos = tripDB.getCollection('bus regos')
@@ -96,9 +72,7 @@ export async function fetchGTFSRFleet(db, tripDB, existingTrips) {
     })
   })
 
-  await writeUpdatedTrips(db, tripDB, Object.values(existingTrips))
-
-  global.loggers.trackers.bus.log('GTFSR Updater: Updated', relevantTrips.length, 'trips')
+  return relevantTrips
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
@@ -108,7 +82,7 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let tripDatabase = new MongoDatabaseConnection(config.tripDatabaseURL, config.databaseName)
   await tripDatabase.connect()
 
-  await fetchGTFSRFleet(database, tripDatabase)
+  await fetchGTFSRFleet(database, tripDatabase, {})
 
   process.exit(0)
 }

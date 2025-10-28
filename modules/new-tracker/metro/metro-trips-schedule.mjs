@@ -8,7 +8,6 @@ import config from '../../../config.json' with { type: 'json' }
 import MetroTripUpdater from '../../metro-trains/trip-updater.mjs'
 import _ from '../../../init-loggers.mjs'
 import fs from 'fs/promises'
-import { isPrimary } from '../../replication.mjs'
 import discordIntegration from '../../discord-integration.js'
 import { hostname } from 'os'
 
@@ -133,7 +132,7 @@ export async function fetchTrips(ptvAPI, db, tripDB, lines=Object.values(ptvAPI.
   return relevantTrips.length
 }
 
-if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && !await isPrimary()) {
+if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   await discordIntegration('taskLogging', `Metro Trips Schedule: ${hostname()} loading`)
 
   let database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
