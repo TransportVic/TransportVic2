@@ -99,9 +99,9 @@ function adjustTrip(trip, date, today, minutesPastMidnightNow) {
 }
 
 router.get('/fleet', async (req, res) => {
-  let {db} = res
-  let busTrips = db.getCollection('bus trips')
-  let busRegos = db.getCollection('bus regos')
+  let { tripDB } = res
+  let busTrips = tripDB.getCollection('bus trips')
+  let busRegos = tripDB.getCollection('bus regos')
 
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
 
@@ -169,9 +169,9 @@ router.get('/fleet', async (req, res) => {
 })
 
 router.get('/service', async (req, res) => {
-  let {db} = res
-  let busTrips = db.getCollection('bus trips')
-  let busRegos = db.getCollection('bus regos')
+  let { tripDB } = res
+  let busTrips = tripDB.getCollection('bus trips')
+  let busRegos = tripDB.getCollection('bus regos')
 
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
 
@@ -241,9 +241,9 @@ router.get('/service', async (req, res) => {
 })
 
 router.get('/operator-list', async (req, res) => {
-  let {db} = res
-  let busTrips = db.getCollection('bus trips')
-  let smartrakIDs = db.getCollection('smartrak ids')
+  let { tripDB } = res
+  let busTrips = tripDB.getCollection('bus trips')
+  let smartrakIDs = tripDB.getCollection('smartrak ids')
 
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
 
@@ -294,10 +294,10 @@ router.get('/operator-list', async (req, res) => {
 })
 
 router.get('/highlights', async (req, res) => {
-  let {db} = res
-  let busTrips = db.getCollection('bus trips')
-  let busRegos = db.getCollection('bus regos')
-  let routes = db.getCollection('routes')
+  let { tripDB } = res
+  let busTrips = tripDB.getCollection('bus trips')
+  let busRegos = tripDB.getCollection('bus regos')
+
   let today = utils.getYYYYMMDDNow()
 
   let {operator, date} = querystring.parse(url.parse(req.url).query)
@@ -362,9 +362,9 @@ router.get('/highlights', async (req, res) => {
 })
 
 router.get('/cross-depot', async (req, res) => {
-  let {db} = res
-  let busTrips = db.getCollection('bus trips')
-  let smartrakIDs = db.getCollection('smartrak ids')
+  let { tripDB } = res
+  let busTrips = tripDB.getCollection('bus trips')
+  let smartrakIDs = tripDB.getCollection('smartrak ids')
 
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
 
@@ -399,9 +399,9 @@ router.get('/cross-depot', async (req, res) => {
 })
 
 router.get('/bot', async (req, res) => {
-  let {db} = res
-  let busTrips = db.getCollection('bus trips')
-  let smartrakIDs = db.getCollection('smartrak ids')
+  let { tripDB } = res
+  let busTrips = tripDB.getCollection('bus trips')
+  let smartrakIDs = tripDB.getCollection('smartrak ids')
   let date = utils.getYYYYMMDDNow()
 
   let {fleet, service} = querystring.parse(url.parse(req.url).query)
@@ -442,9 +442,9 @@ router.get('/bot', async (req, res) => {
 })
 
 router.get('/operator-unknown', async (req, res) => {
-  let {db} = res
-  let busTrips = db.getCollection('bus trips')
-  let smartrakIDs = db.getCollection('smartrak ids')
+  let { db, tripDB } = res
+  let busTrips = tripDB.getCollection('bus trips')
+  let smartrakIDs = tripDB.getCollection('smartrak ids')
   let routes = db.getCollection('routes')
 
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()

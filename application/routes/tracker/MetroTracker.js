@@ -50,8 +50,8 @@ function adjustTrip(trip, date, today, minutesPastMidnightNow) {
 }
 
 router.get('/date', async (req, res) => {
-  let {db} = res
-  let metroTrips = db.getCollection('metro trips')
+  let { tripDB } = res
+  let metroTrips = tripDB.getCollection('metro trips')
 
   let today = utils.getYYYYMMDDNow()
   let {date} = querystring.parse(url.parse(req.url).query)
@@ -72,8 +72,8 @@ router.get('/date', async (req, res) => {
 })
 
 router.get('/line', async (req, res) => {
-  let {db} = res
-  let metroTrips = db.getCollection('metro trips')
+  let { db, tripDB } = res
+  let metroTrips = tripDB.getCollection('metro trips')
   let liveTimetables = db.getCollection('live timetables')
 
   let today = utils.getYYYYMMDDNow()
@@ -107,8 +107,8 @@ router.get('/line', async (req, res) => {
 })
 
 router.get('/consist', async (req, res) => {
-  let {db} = res
-  let metroTrips = db.getCollection('metro trips')
+  let {tripDB} = res
+  let metroTrips = tripDB.getCollection('metro trips')
   let today = utils.getYYYYMMDDNow()
   let {consist, date} = querystring.parse(url.parse(req.url).query)
   if (date) date = utils.getYYYYMMDD(utils.parseDate(date))

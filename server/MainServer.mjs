@@ -30,12 +30,17 @@ export default class MainServer {
 
   async connectToDatabase() {
     this.database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+    this.tripDatabase = new MongoDatabaseConnection(config.tripDatabaseURL, config.databaseName)
     // this.database.enableDebugging(o => console.log(o))
     // this.database.enableDebugging((o, _, s) => !utils.inspect(o) && console.log(s))
 
     await this.database.connect({})
+    await this.tripDatabase.connect({})
+
     this.app.use((req, res, next) => {
       res.db = this.database
+      res.tripDB = this.tripDatabase
+
       next()
     })
   }

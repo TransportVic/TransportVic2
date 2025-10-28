@@ -24,8 +24,8 @@ Object.keys(stationCodes).forEach(stationCode => {
 
 router.post('/', async (req, res) => {
   let liveTimetables = res.db.getCollection('live timetables')
-  let metroLocations = res.db.getCollection('metro locations')
-  let metroTrips = res.db.getCollection('metro trips')
+  let metroLocations = res.tripDB.getCollection('metro locations')
+  let metroTrips = res.tripDB.getCollection('metro trips')
 
   let msNow = +new Date()
   let days = {

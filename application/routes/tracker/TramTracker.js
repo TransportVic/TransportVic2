@@ -88,8 +88,8 @@ router.get('/', (req, res) => {
 })
 
 router.get('/fleet', async (req, res) => {
-  let {db} = res
-  let tramTrips = db.getCollection('tram trips')
+  let { tripDB } = res
+  let tramTrips = tripDB.getCollection('tram trips')
 
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
 
@@ -147,8 +147,8 @@ router.get('/fleet', async (req, res) => {
 
 
 router.get('/service', async (req, res) => {
-  let {db} = res
-  let tramTrips = db.getCollection('tram trips')
+  let { tripDB } = res
+  let tramTrips = tripDB.getCollection('tram trips')
 
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
 
@@ -207,8 +207,8 @@ router.get('/service', async (req, res) => {
 
 
 router.get('/shift', async (req, res) => {
-  let {db} = res
-  let tramTrips = db.getCollection('tram trips')
+  let { tripDB } = res
+  let tramTrips = tripDB.getCollection('tram trips')
 
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
 
@@ -265,8 +265,8 @@ router.get('/shift', async (req, res) => {
 })
 
 router.get('/cross-depot', async (req, res) => {
-  let {db} = res
-  let tramTrips = db.getCollection('tram trips')
+  let { tripDB } = res
+  let tramTrips = tripDB.getCollection('tram trips')
 
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
 
@@ -287,8 +287,8 @@ router.get('/cross-depot', async (req, res) => {
 })
 
 router.get('/highlights', async (req, res) => {
-  let {db} = res
-  let tramTrips = db.getCollection('tram trips')
+  let { tripDB } = res
+  let tramTrips = tripDB.getCollection('tram trips')
 
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
 
@@ -315,8 +315,8 @@ router.get('/highlights', async (req, res) => {
 })
 
 router.get('/full-list', async (req, res) => {
-  let {db} = res
-  let tramTrips = db.getCollection('tram trips')
+  let { tripDB } = res
+  let tramTrips = tripDB.getCollection('tram trips')
 
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
 

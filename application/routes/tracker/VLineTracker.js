@@ -54,8 +54,8 @@ function adjustTrip(trip, date, today, minutesPastMidnightNow) {
 }
 
 router.get('/date', async (req, res) => {
-  let {db} = res
-  let vlineTrips = db.getCollection('vline trips')
+  let { tripDB } = res
+  let vlineTrips = tripDB.getCollection('vline trips')
 
   let today = utils.getYYYYMMDDNow()
   let {date} = querystring.parse(url.parse(req.url).query)
@@ -76,8 +76,8 @@ router.get('/date', async (req, res) => {
 })
 
 router.get('/line', async (req, res) => {
-  let {db} = res
-  let vlineTrips = db.getCollection('vline trips')
+  let { tripDB } = res
+  let vlineTrips = tripDB.getCollection('vline trips')
 
   let today = utils.getYYYYMMDDNow()
   let {date, line} = querystring.parse(url.parse(req.url).query)
@@ -105,8 +105,8 @@ router.get('/line', async (req, res) => {
 })
 
 router.get('/consist', async (req, res) => {
-  let {db} = res
-  let vlineTrips = db.getCollection('vline trips')
+  let { tripDB } = res
+  let vlineTrips = tripDB.getCollection('vline trips')
   let today = utils.getYYYYMMDDNow()
   let {consist, date} = querystring.parse(url.parse(req.url).query)
   if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
@@ -254,8 +254,8 @@ async function filterHighlights(date, allTrips, db) {
 }
 
 router.get('/highlights', async (req, res) => {
-  let {db} = res
-  let vlineTrips = db.getCollection('vline trips')
+  let { tripDB } = res
+  let vlineTrips = tripDB.getCollection('vline trips')
   let today = utils.getYYYYMMDDNow()
   let {consist, date} = querystring.parse(url.parse(req.url).query)
 

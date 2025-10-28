@@ -7,7 +7,7 @@ import urls from '../../../urls.json' with { type: 'json' }
 
 const router = new express.Router()
 
-async function pickBestTrip(data, db) {
+async function pickBestTrip(data, db, tripDB) {
   let tripDay = utils.parseTime(data.operationDays, 'YYYYMMDD')
   let tripStartTime = utils.parseTime(`${data.operationDays} ${data.departureTime}`, 'YYYYMMDD HH:mm')
   let tripStartMinutes = utils.getPTMinutesPastMidnight(tripStartTime)
@@ -56,7 +56,7 @@ async function pickBestTrip(data, db) {
 
   if (!referenceTrip) return null
 
-  let tramTrips = db.getCollection('tram trips')
+  let tramTrips = tripDB.getCollection('tram trips')
   let tripData = await tramTrips.findDocument({
     date: data.operationDays,
     departureTime: referenceTrip.departureTime,
@@ -161,7 +161,7 @@ async function pickBestTrip(data, db) {
 }
 
 async function getTripData(req, res) {
-  let tripData = await pickBestTrip(req.params, res.db)
+  let tripData = await pickBestTrip(req.params, res.db, res.tripDB)
   if (!tripData) return null
 
   let { trip, tripStartTime, isLive, shift } = tripData

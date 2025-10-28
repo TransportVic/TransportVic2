@@ -264,7 +264,7 @@ async function getTripData(req, res) {
 
   let routeNumber = trip.routeNumber
   let routeNumberClass = utils.encodeName(operator)
-  let busTrips = res.db.getCollection('bus trips')
+  let busTrips = res.tripDB.getCollection('bus trips')
 
   let trackerData = await busTrips.findDocument({
     date: trip.operationDays,
