@@ -2,17 +2,20 @@ import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../config.json' with { type: 'json' }
 import utils from '../../utils.js'
 import { convertToLive } from '../departures/sch-to-live.js'
+import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
+import fs from 'fs/promises'
+import { isPrimary } from '../replication.mjs'
+import { fileURLToPath } from 'url'
 
-let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
-await mongoDB.connect()
+const { TRANSIT_MODES } = GTFS_CONSTANTS
 
-let gtfsTimetables = mongoDB.getCollection('gtfs timetables')
-let liveTimetables = mongoDB.getCollection('live timetables')
+async function loadOperationalTT(db, operationDay) {
+  let gtfsTimetables = db.getCollection('gtfs timetables')
+  let liveTimetables = db.getCollection('live timetables')
 
-async function loadOperationalTT(operationDay) {
   let opDayFormat = utils.getYYYYMMDD(operationDay)
   let rawActiveTrips = await gtfsTimetables.findDocuments({
-    mode: 'metro train',
+    mode: TRANSIT_MODES.metroTrain,
     operationDays: opDayFormat,
     routeGTFSID: {
       $ne: '2-RRB'
@@ -48,14 +51,14 @@ async function loadOperationalTT(operationDay) {
   }
 
   let circularTDNs = await liveTimetables.distinct('runID', {
-    mode: 'metro train',
+    mode: TRANSIT_MODES.metroTrain,
     operationDays: opDayFormat,
     circular: { $exists: true }
   })
 
   let bulkUpdate = Object.values(trips).filter(trip => !circularTDNs.includes(trip.runID)).map(trip => ({
     replaceOne: {
-      filter: { mode: 'metro train', operationDays: trip.operationDays, runID: trip.runID },
+      filter: { mode: TRANSIT_MODES.metroTrain, operationDays: trip.operationDays, runID: trip.runID },
       replacement: trip,
       upsert: true
     }
@@ -64,7 +67,12 @@ async function loadOperationalTT(operationDay) {
   await liveTimetables.bulkWrite(bulkUpdate)
 }
 
-await loadOperationalTT(utils.now())
-await loadOperationalTT(utils.now().add(1, 'day'))
+if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && await isPrimary()) {
+  let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+  await mongoDB.connect()
 
-await mongoDB.close()
+  await loadOperationalTT(mongoDB, utils.now())
+  await loadOperationalTT(mongoDB, utils.now().add(1, 'day'))
+
+  await mongoDB.close()
+}

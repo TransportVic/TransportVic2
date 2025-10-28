@@ -11,6 +11,7 @@ import VLineTripUpdater from '../vline/trip-updater.mjs'
 import discordIntegration from '../discord-integration.js'
 import { getDSTMinutesPastMidnight, getNonDSTMinutesPastMidnight, isDSTChange } from '../dst/dst.js'
 import fs from 'fs/promises'
+import { isPrimary } from '../replication.mjs'
 
 let existingVNetStops = {}
 
@@ -276,7 +277,7 @@ export default async function loadOperationalTT(db, operationDay, ptvAPI) {
   return missingTrips
 }
 
-if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && await isPrimary()) {
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 

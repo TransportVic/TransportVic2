@@ -3,16 +3,16 @@ import config from '../../config.json' with { type: 'json' }
 import utils from '../../utils.js'
 import { convertToLive } from '../departures/sch-to-live.js'
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
+import fs from 'fs/promises'
+import { isPrimary } from '../replication.mjs'
+import { fileURLToPath } from 'url'
 
 const { TRANSIT_MODES } = GTFS_CONSTANTS
 
-let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
-await mongoDB.connect()
+async function loadOperationalTT(db, operationDay) {
+  let gtfsTimetables = db.getCollection('gtfs timetables')
+  let liveTimetables = db.getCollection('live timetables')
 
-let gtfsTimetables = mongoDB.getCollection('gtfs timetables')
-let liveTimetables = mongoDB.getCollection('live timetables')
-
-async function loadOperationalTT(operationDay) {
   let opDayFormat = utils.getYYYYMMDD(operationDay)
   let rawActiveTrips = await gtfsTimetables.findDocuments({
     mode: TRANSIT_MODES.regionalCoach,
@@ -37,7 +37,12 @@ async function loadOperationalTT(operationDay) {
   await liveTimetables.bulkWrite(bulkUpdate)
 }
 
-await loadOperationalTT(utils.now())
-await loadOperationalTT(utils.now().add(1, 'day'))
+if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && await isPrimary()) {
+  let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+  await mongoDB.connect()
 
-await mongoDB.close()
+  await loadOperationalTT(mongoDB, utils.now())
+  await loadOperationalTT(mongoDB, utils.now().add(1, 'day'))
+
+  await mongoDB.close()
+}

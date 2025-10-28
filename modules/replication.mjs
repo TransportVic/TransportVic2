@@ -11,13 +11,17 @@ export async function getReplicaSetStatus() {
   const adminConnection = new MongoDatabaseConnection(config.databaseURL, 'admin')
   await adminConnection.connect()
 
-  const replicaStatus = await adminConnection.runCommand({
-    replSetGetStatus: 1
-  })
+  try {
+    const replicaStatus = await adminConnection.runCommand({
+      replSetGetStatus: 1
+    })
 
-  await adminConnection.close()
-
-  return replicaStatus
+    await adminConnection.close()
+    return replicaStatus
+  } catch (e) {
+    await adminConnection.close()
+    throw e
+  }
 }
 
 export async function getAvailableServers() {
@@ -64,11 +68,16 @@ export async function isActive(taskName) {
 }
 
 export async function isPrimary() {
-  const hostname = os.hostname()
-  const replicaStatus = await getReplicaSetStatus()
+  try {
+    const hostname = os.hostname()
+    const replicaStatus = await getReplicaSetStatus()
 
-  const primary = replicaStatus.members
-    .find(m => m.stateStr === 'PRIMARY')
-  
-  return primary && primary.name.split(':')[0] === hostname
+    const primary = replicaStatus.members
+      .find(m => m.stateStr === 'PRIMARY')
+    
+    return primary && primary.name.split(':')[0] === hostname
+  } catch (e) {
+    if (e.toString().includes('not running with --replSet')) return true
+    throw e
+  }
 }
