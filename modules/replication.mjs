@@ -38,33 +38,40 @@ export async function isActive(taskName) {
   await db.connect()
   const controlColl = db.getCollection('control')
 
-  await utils.sleep(randomSleepTime())
+  try {
+    await utils.sleep(randomSleepTime())
 
-  const initialTaskAssignment = await controlColl.findDocument({
-    taskName,
-    active: {
-      $gte: +new Date() - 1000 * 5
+    const initialTaskAssignment = await controlColl.findDocument({
+      taskName,
+      active: {
+        $gte: +new Date() - 1000 * 5
+      }
+    }, {}, { level: 'majority' })
+
+    if (!initialTaskAssignment) {
+      const availableServers = await getAvailableServers()
+      const targetServer = availableServers[Math.floor(Math.random() * availableServers.length)]
+      await controlColl.createDocument({
+        taskName, active: +new Date(), targetServer
+      })
     }
-  }, {}, { level: 'majority' })
 
-  if (!initialTaskAssignment) {
-    const availableServers = await getAvailableServers()
-    const targetServer = availableServers[Math.floor(Math.random() * availableServers.length)]
-    await controlColl.createDocument({
-      taskName, active: +new Date(), targetServer
-    })
+    const finalTaskAssignment = await controlColl.findDocuments({
+      taskName,
+      active: {
+        $gte: +new Date() - 1000 * 5
+      }
+    }, {}, { level: 'majority' }).sort({ active: 1 }).next()
+
+    await db.close()
+
+    return finalTaskAssignment.targetServer === hostname
+  } catch (e) {
+    await db.close()
+
+    if (e.toString().includes('not running with --replSet')) return true
+    throw e
   }
-
-  const finalTaskAssignment = await controlColl.findDocuments({
-    taskName,
-    active: {
-      $gte: +new Date() - 1000 * 5
-    }
-  }, {}, { level: 'majority' }).sort({ active: 1 }).next()
-
-  await db.close()
-
-  return finalTaskAssignment.targetServer === hostname
 }
 
 export async function isPrimary() {

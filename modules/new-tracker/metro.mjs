@@ -16,6 +16,9 @@ import { fetchOutdatedTrips } from './metro/metro-outdated-trips.mjs'
 import { updateRelatedTrips } from './metro/check-new-updates.mjs'
 import fs from 'fs/promises'
 import MetroTripUpdater from '../metro-trains/trip-updater.mjs'
+import { isActive } from '../replication.mjs'
+import discordIntegration from '../discord-integration.js'
+import { hostname } from 'os'
 
 async function writeUpdatedTrips(db, updatedTrips) {
   const tripBulkOperations = updatedTrips.map(timetable => ({
@@ -39,6 +42,13 @@ async function writeUpdatedTrips(db, updatedTrips) {
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  if (!await isActive('metro-trip-update')) {
+    await discordIntegration('taskLogging', `Metro Trip Updater: ${hostname()} not performing task`)
+    process.exit(0)
+  }
+
+  await discordIntegration('taskLogging', `Metro Trip Updater: ${hostname()} loading`)
+
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 
@@ -63,6 +73,8 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   await writeUpdatedTrips(mongoDB, Object.values(existingTrips))
 
   await updateRelatedTrips(mongoDB, Object.values(existingTrips), ptvAPI)
+
+  await discordIntegration('taskLogging', `Metro Trip Updater: ${hostname()} completed loading`)
 
   process.exit(0)
 }

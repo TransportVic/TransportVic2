@@ -8,6 +8,9 @@ import config from '../../../config.json' with { type: 'json' }
 import MetroTripUpdater from '../../metro-trains/trip-updater.mjs'
 import _ from '../../../init-loggers.mjs'
 import fs from 'fs/promises'
+import { isPrimary } from '../../replication.mjs'
+import discordIntegration from '../../discord-integration.js'
+import { hostname } from 'os'
 
 export async function getUpcomingTrips(ptvAPI, lines) {
   let trips = await ptvAPI.metroSite.getOperationalTimetable(lines)
@@ -127,6 +130,13 @@ export async function fetchTrips(ptvAPI, db, lines=Object.values(ptvAPI.metroSit
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  if (!await isPrimary()) {
+    await discordIntegration('taskLogging', `Metro Trips Schedule: ${hostname()} not performing task`)
+    process.exit(0)
+  }
+
+  await discordIntegration('taskLogging', `Metro Trips Schedule: ${hostname()} loading`)
+
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 
@@ -135,6 +145,8 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
 
   let tripCount = await fetchTrips(ptvAPI, mongoDB)
   global.loggers.trackers.metro.log('Metro Trips: Updated forming data of', tripCount, 'trips')
+
+  await discordIntegration('taskLogging', `Metro Trips Schedule: ${hostname()} completed loading`)
 
   process.exit(0)
 }
