@@ -55,22 +55,22 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && awa
 
   let existingTrips = {}
   // await fetchGTFSRTrips(mongoDB)
-  await fetchGTFSRFleet(database, existingTrips)
+  await fetchGTFSRFleet(database, tripDatabase, existingTrips)
   await fetchNotifyAlerts(database, ptvAPI)
-  await fetchMetroSiteDepartures(database, ptvAPI, existingTrips)
+  await fetchMetroSiteDepartures(database, tripDatabase, ptvAPI, existingTrips)
 
-  let updatedTrips = await fetchPTVDepartures(database, ptvAPI, { existingTrips })
+  let updatedTrips = await fetchPTVDepartures(database, tripDatabase, ptvAPI, { existingTrips })
   global.loggers.trackers.metro.log('> PTV Departures: Updating TDNs: ' + updatedTrips.map(trip => trip.runID).join(', '))
 
-  await fetchPTVTrips(database, ptvAPI, existingTrips)
-  await fetchNotifyTrips(database, ptvAPI, existingTrips)
-  await fetchCBDTrips(database, ptvAPI, existingTrips)
-  await fetchNotifySuspensions(database, ptvAPI, existingTrips)
-  await fetchOutdatedTrips(database, ptvAPI, existingTrips)
+  await fetchPTVTrips(database, tripDatabase, ptvAPI, existingTrips)
+  await fetchNotifyTrips(database, tripDatabase, ptvAPI, existingTrips)
+  await fetchCBDTrips(database, tripDatabase, ptvAPI, existingTrips)
+  await fetchNotifySuspensions(database, tripDatabase, ptvAPI, existingTrips)
+  await fetchOutdatedTrips(database, tripDatabase, ptvAPI, existingTrips)
 
   await writeUpdatedTrips(database, tripDatabase, Object.values(existingTrips))
 
-  await updateRelatedTrips(database, Object.values(existingTrips), ptvAPI)
+  await updateRelatedTrips(database, tripDatabase, Object.values(existingTrips), ptvAPI)
 
   await discordIntegration('taskLogging', `Metro Trip Updater: ${hostname()} completed loading`)
 

@@ -45,14 +45,14 @@ export async function getOutdatedTrips(database) {
   }).map(trip => trip.runID)
 }
 
-export async function fetchOutdatedTrips(db, ptvAPI, existingTrips = {}) {
+export async function fetchOutdatedTrips(db, tripDB, ptvAPI, existingTrips = {}) {
   let outdatedTDNs = await getOutdatedTrips(db)
   let updatedTrips = []
 
   for (let outdatedTDN of outdatedTDNs) {
     if (existingTrips[outdatedTDN]) continue
 
-    let tripData = await updateTDNFromPTV(db, outdatedTDN, ptvAPI, {}, 'outdated-trip-from-ptv', true, existingTrips)
+    let tripData = await updateTDNFromPTV(db, tripDB, outdatedTDN, ptvAPI, {}, 'outdated-trip-from-ptv', true, existingTrips)
     if (tripData) updatedTrips.push(tripData)
   }
 
@@ -61,12 +61,15 @@ export async function fetchOutdatedTrips(db, ptvAPI, existingTrips = {}) {
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
-  await mongoDB.connect()
+  let database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+  await database.connect()
+
+  let tripDatabase = new MongoDatabaseConnection(config.tripDatabaseURL, config.databaseName)
+  await tripDatabase.connect()
 
   let ptvAPI = new PTVAPI(new PTVAPIInterface(config.ptvKeys[0].devID, config.ptvKeys[0].key))
 
-  await fetchOutdatedTrips(mongoDB, ptvAPI)
+  await fetchOutdatedTrips(database, tripDatabase, ptvAPI)
 
   process.exit(0)
 }

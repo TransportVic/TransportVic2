@@ -39,22 +39,25 @@ async function writeUpdatedTrips(db, updatedTrips) {
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && await isPrimary()) {
   await discordIntegration('taskLogging', `V/Line Trip Updater: ${hostname()} loading`)
 
-  let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
-  await mongoDB.connect()
+  let database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+  await database.connect()
+
+  let tripDatabase = new MongoDatabaseConnection(config.tripDatabaseURL, config.databaseName)
+  await tripDatabase.connect()
 
   let ptvAPI = new PTVAPI(new PTVAPIInterface(config.ptvKeys[0].devID, config.ptvKeys[0].key))
   let vlineAPIInterface = new VLineAPIInterface(config.vlineCallerID, config.vlineSignature)
   ptvAPI.addVLine(vlineAPIInterface)
 
-  let sssTrips = await fetchSSSPlatforms(utils.getPTYYYYMMDD(utils.now()), mongoDB, ptvAPI)
+  let sssTrips = await fetchSSSPlatforms(utils.getPTYYYYMMDD(utils.now()), database, tripDatabase, ptvAPI)
   global.loggers.trackers.vline.log('> SSS Platforms: Updated TDNs:', sssTrips.map(trip => trip.runID).join(', '))
 
   global.loggers.trackers.vline.log('V/Line GTFSR Updater: Loading trips')
-  let gtfsTripTrips = await fetchGTFSRTrips(mongoDB, makePBRequest)
+  let gtfsTripTrips = await fetchGTFSRTrips(database, tripDatabase, makePBRequest)
   global.loggers.trackers.vline.log('V/Line GTFSR Updater: Updated TDNs:', gtfsTripTrips.map(trip => trip.runID).join(', '))
 
   global.loggers.trackers.metro.log('GTFSR Fleet Updater: Loading trips')
-  let gtfsFleeTtrips = await fetchGTFSRFleet(mongoDB, makePBRequest)
+  let gtfsFleeTtrips = await fetchGTFSRFleet(database, tripDatabase, makePBRequest)
   global.loggers.trackers.metro.log('GTFSR Fleet Updater: Fetched', gtfsFleeTtrips.length, 'trips')
 
   await discordIntegration('taskLogging', `V/Line Trip Updater: ${hostname()} completed loading`)

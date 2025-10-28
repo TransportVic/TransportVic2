@@ -12,12 +12,15 @@ import { hostname } from 'os'
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && await isPrimary()) {
   await discordIntegration('taskLogging', `Bus Trip Updater: ${hostname()} loading`)
 
-  let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
-  await mongoDB.connect()
+  let database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+  await database.connect()
+
+  let tripDatabase = new MongoDatabaseConnection(config.tripDatabaseURL, config.databaseName)
+  await tripDatabase.connect()
 
   let existingTrips = {}
 
-  await fetchGTFSRFleet(mongoDB, existingTrips)
+  await fetchGTFSRFleet(database, tripDatabase, existingTrips)
 
   await discordIntegration('taskLogging', `Bus Trip Updater: ${hostname()} completed loading`)
 
