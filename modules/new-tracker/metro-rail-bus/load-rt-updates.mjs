@@ -9,6 +9,9 @@ import utils from '../../../utils.js'
 import config from '../../../config.json' with { type: 'json' }
 import _ from '../../../init-loggers.mjs'
 import fs from 'fs/promises'
+import { isActive } from '../../replication.mjs'
+import discordIntegration from '../../discord-integration.js'
+import { hostname } from 'os'
 
 export async function getRailBusUpdates(db, ptvAPI) {
   let tripUpdates = await ptvAPI.metroSite.getRailBusUpdates()
@@ -83,6 +86,13 @@ export async function fetchTrips(db, ptvAPI) {
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  if (!await isActive('metro-rrb-trip-update')) {
+    await discordIntegration('taskLogging', `Metro RRB Trip Updater: ${hostname()} not performing task`)
+    process.exit(0)
+  }
+
+  await discordIntegration('taskLogging', `Metro RRB Trip Updater: ${hostname()} loading`)
+
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 
@@ -91,6 +101,8 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
 
   let updatedTrips = await fetchTrips(mongoDB, ptvAPI)
   global.loggers.trackers.metroRRB.log('MTM Rail Bus: Fetched', updatedTrips.length, 'trips')
+
+  await discordIntegration('taskLogging', `Metro RRB Trip Updater: ${hostname()} completed loading`)
 
   process.exit(0)
 }
