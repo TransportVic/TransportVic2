@@ -12,6 +12,7 @@ import discordIntegration from '../discord-integration.js'
 import { getDSTMinutesPastMidnight, getNonDSTMinutesPastMidnight, isDSTChange } from '../dst/dst.js'
 import fs from 'fs/promises'
 import { isPrimary } from '../replication.mjs'
+import { hostname } from 'os'
 
 let existingVNetStops = {}
 
@@ -277,7 +278,14 @@ export default async function loadOperationalTT(db, operationDay, ptvAPI) {
   return missingTrips
 }
 
-if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && await isPrimary()) {
+if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  if (!await isPrimary()) {
+    await discordIntegration('taskLogging', `V/Line Op TT: ${hostname()} not performing task`)
+    process.exit(0)
+  }
+
+  await discordIntegration('taskLogging', `V/Line Op TT: ${hostname()} loading`)
+
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 
@@ -297,6 +305,8 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && awa
 
     await discordIntegration('vlineOpTT', tripData)
   }
+
+  await discordIntegration('taskLogging', `V/Line Op TT: ${hostname()} completed loading`)
 
   await mongoDB.close()
 }

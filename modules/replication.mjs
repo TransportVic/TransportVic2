@@ -74,7 +74,7 @@ export async function isPrimary() {
 
     const primary = replicaStatus.members
       .find(m => m.stateStr === 'PRIMARY')
-    
+
     return primary && primary.name.split(':')[0] === hostname
   } catch (e) {
     if (e.toString().includes('not running with --replSet')) return true
