@@ -48,7 +48,9 @@ export async function loadStopsRoutes(mongoDB) {
       console.log('ERROR: Failed to load stops and routes for', operator)
       console.log(e)
     }
+
   }
 
   await fs.writeFile(path.join(__dirname, 'routes.json'), JSON.stringify(routeIDMap))
+  return routeIDMap
 }

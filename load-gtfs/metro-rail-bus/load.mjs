@@ -21,8 +21,8 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && awa
   await mongoDB.connect()
   
   await downloadData()
-  await loadStopsRoutes(mongoDB)
-  await loadTrips(mongoDB)
+  const routeIDMap = await loadStopsRoutes(mongoDB)
+  await loadTrips(mongoDB, routeIDMap)
   await loadHeadsigns(mongoDB)
 
   await loadOperationalTT(mongoDB, utils.now())

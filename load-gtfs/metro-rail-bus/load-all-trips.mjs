@@ -2,7 +2,7 @@ import path from 'path'
 import url from 'url'
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 
-import routeIDMap from './routes.json' with { type: 'json' }
+// import routeIDMap from './routes.json' with { type: 'json' }
 import operators from './operators.mjs'
 
 import fs from 'fs/promises'
@@ -14,9 +14,8 @@ const __dirname = path.dirname(__filename)
 
 const gtfsFolder = path.join(__dirname, '..', '..', 'gtfs', 'mtm-rail')
 
-export async function loadTrips(mongoDB) {
+export async function loadTrips(mongoDB, routeIDMap) {
   let mongoStops = await mongoDB.getCollection('stops')
-  let mongoTimetables = await mongoDB.getCollection('gtfs timetables')
 
   let start = new Date()
   console.log('Start', start)
@@ -80,7 +79,7 @@ export async function loadTrips(mongoDB) {
     }
   }
 
-  await fs.writeFile(path.join(__dirname, 'directions.json'), JSON.stringify(directionIDMap))
+  // await fs.writeFile(path.join(__dirname, 'directions.json'), JSON.stringify(directionIDMap))
 
   console.log('Loading trips done, took', (new Date() - tripsStart) / 1000, 'seconds')
 
@@ -100,4 +99,5 @@ export async function loadTrips(mongoDB) {
   console.log('Loading shapes took', (new Date() - shapeStart) / 1000, 'seconds')
 
   console.log('\nLoading both trips and shapes took', (new Date() - start) / 1000, 'seconds overall')
+  return directionIDMap
 }
