@@ -7,7 +7,7 @@ function randomSleepTime() {
   return Math.random() * 3 + 0.2
 }
 
-async function getReplicaSetStatus() {
+export async function getReplicaSetStatus() {
   const adminConnection = new MongoDatabaseConnection(config.databaseURL, 'admin')
   await adminConnection.connect()
 
@@ -20,14 +20,14 @@ async function getReplicaSetStatus() {
   return replicaStatus
 }
 
-async function getAvailableServers() {
+export async function getAvailableServers() {
   const replicaStatus = await getReplicaSetStatus()
   return replicaStatus.members
     .filter(m => m.stateStr === 'PRIMARY' || m.stateStr === 'SECONDARY')
     .map(m => m.name.split(':')[0])
 }
 
-async function isActive(taskName) {
+export async function isActive(taskName) {
   const db = new MongoDatabaseConnection(config.databaseURL, `${config.databaseName}-control`)
   const hostname = os.hostname()
 
@@ -63,5 +63,12 @@ async function isActive(taskName) {
   return finalTaskAssignment.targetServer === hostname
 }
 
+export async function isPrimary() {
+  const hostname = os.hostname()
+  const replicaStatus = await getReplicaSetStatus()
 
-console.log(await isActive('metro-update'))
+  const primary = replicaStatus.members
+    .find(m => m.stateStr === 'PRIMARY')
+  
+  return primary && primary.name.split(':')[0] === hostname
+}
