@@ -1,5 +1,3 @@
-import { MongoDatabaseConnection } from '@transportme/database'
-import config from '../../config.json' with { type: 'json' }
 import utils from '../../utils.js'
 import { convertToLive } from '../../modules/departures/sch-to-live.js'
 import routeGroups from './route-groups.json' with { type: 'json' }
@@ -9,13 +7,10 @@ const routeGroupings = Object.keys(routeGroups).reduce((acc, e) => ({
   [routeGroups[e]]: acc[routeGroups[e]] ? acc[routeGroups[e]].concat(e) : [e]
 }), {})
 
-let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
-await mongoDB.connect()
+export async function loadOperationalTT(mongoDB, operationDay) {  
+  let gtfsTimetables = await mongoDB.getCollection('gtfs timetables')
+  let liveTimetables = await mongoDB.getCollection('live timetables')
 
-let gtfsTimetables = mongoDB.getCollection('gtfs timetables')
-let liveTimetables = mongoDB.getCollection('live timetables')
-
-async function loadOperationalTT(operationDay) {
   let opDayFormat = utils.getYYYYMMDD(operationDay)
   let rawActiveTrips = await gtfsTimetables.findDocuments({
     mode: 'metro train',
@@ -86,8 +81,3 @@ async function loadOperationalTT(operationDay) {
     await liveTimetables.bulkWrite(bulkWrite)
   }
 }
-
-await loadOperationalTT(utils.now())
-await loadOperationalTT(utils.now().add(1, 'day'))
-
-await mongoDB.close()

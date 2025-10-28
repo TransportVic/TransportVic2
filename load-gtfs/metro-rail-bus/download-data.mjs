@@ -4,6 +4,7 @@ import AdmZip from 'adm-zip'
 import fs from 'fs/promises'
 import path from 'path'
 import url from 'url'
+import async from 'async'
 import operators from './operators.mjs'
 
 const __filename = url.fileURLToPath(import.meta.url)
@@ -38,6 +39,6 @@ async function downloadGTFS(operator) {
   zip.extractAllTo(operatorFolder, true)
 }
 
-for (let operator of operators) {
-  await downloadGTFS(operator)
+export async function downloadData() {
+  await async.forEach(operators, downloadGTFS)
 }
