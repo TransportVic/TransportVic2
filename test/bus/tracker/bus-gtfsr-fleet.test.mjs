@@ -8,7 +8,7 @@ const clone = o => JSON.parse(JSON.stringify(o))
 describe('The bus fleet tracker', () => {
   it('Creates trip updates from the GTFSR data', async () => {
     let database = new LokiDatabaseConnection()
-    const trips = await getFleetData(database, () => gtfsr733Positions)
+    const trips = Object.values(await getFleetData(database, () => gtfsr733Positions))
     expect(trips[0].operationDays).to.equal('20251025')
     expect(trips[0].runID).to.equal('20-733--1-Sat2-31')
     expect(trips[0].routeGTFSID).to.equal('4-733')
@@ -25,7 +25,7 @@ describe('The bus fleet tracker', () => {
       trackedRego: "BS12YD"
     })
 
-    const trips = await getFleetData(database, () => gtfsr733Positions)
+    const trips = Object.values(await getFleetData(database, () => gtfsr733Positions))
     expect(trips[0].operationDays).to.equal('20251025')
     expect(trips[0].runID).to.equal('20-733--1-Sat2-31')
     expect(trips[0].routeGTFSID).to.equal('4-733')

@@ -8,6 +8,7 @@ import _ from '../../../init-loggers.mjs'
 import fs from 'fs/promises'
 import BusTripUpdater from '../../bus/trip-updater.mjs'
 import async from 'async'
+import { LiveTimetable } from '../../schema/live-timetable.mjs'
 
 async function writeUpdatedTrips(db, updatedTrips) {
   const tripBulkOperations = updatedTrips.map(timetable => ({
@@ -26,8 +27,11 @@ async function writeUpdatedTrips(db, updatedTrips) {
     }
   })).filter(op => !!op.replaceOne.filter)
 
-  if (tripBulkOperations.length) await db.getCollection('live timetables').bulkWrite(tripBulkOperations)
-  if (consistBulkOperations.length) await db.getCollection(BusTripUpdater.getTrackerDB()).bulkWrite(consistBulkOperations)
+  let promises = []
+  if (tripBulkOperations.length) promises.push(db.getCollection('live timetables').bulkWrite(tripBulkOperations, { ordered: false }))
+  if (consistBulkOperations.length) promises.push(db.getCollection(BusTripUpdater.getTrackerDB()).bulkWrite(consistBulkOperations, { ordered: false }))
+
+  await Promise.all(promises)
 }
 
 export async function getFleetData(db, gtfsrAPI) {
@@ -64,11 +68,24 @@ export async function getFleetData(db, gtfsrAPI) {
     trips[tripData.runID] = tripData
   }
 
-  return Object.values(trips)
+  return trips
 }
 
 export async function fetchGTFSRFleet(db, existingTrips) {
-  let relevantTrips = await getFleetData(db, makePBRequest)
+  const trips = await getFleetData(db, makePBRequest)
+  const relevantTrips = Object.values(trips)
+
+  const newRunIDs = Object.keys(trips).filter(runID => !existingTrips[runID])
+  const tripData = await db.getCollection('live timetables').findDocuments({
+    mode: 'bus',
+    $or: newRunIDs.map(runID => ({
+      operationDays: trips[runID].operationDays,
+      runID
+    }))
+  }).toArray()
+
+  for (let trip of tripData) existingTrips[trip.runID] = LiveTimetable.fromDatabase(trip)
+
   global.loggers.trackers.bus.log('GTFSR Updater: Fetched', relevantTrips.length, 'trips')
 
   await async.forEachLimit(relevantTrips, 400, async tripData => {
