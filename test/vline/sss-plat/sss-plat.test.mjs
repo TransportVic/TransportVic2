@@ -7,7 +7,7 @@ import { LokiDatabaseConnection } from '@transportme/database'
 import allStops from '../op-tt/sample-data/stops.json' with { type: 'json' }
 import td8866 from './sample-data/td8866.json' with { type: 'json' }
 import td8741GTFS from '../op-tt/sample-data/td8741-gtfs.json' with { type: 'json' }
-import { fetchTrips, getPlatformUpdates } from '../../../modules/new-tracker/vline/southern-cross-platform.mjs'
+import { fetchSSSPlatforms, getPlatformUpdates } from '../../../modules/new-tracker/vline/southern-cross-platform.mjs'
 import { convertToLive } from '../../../modules/departures/sch-to-live.js'
 import td8431Live from '../gtfsr/sample-data/td8431-live.mjs'
 import trnStops from '../gtfsr/sample-data/trn-stops.mjs'
@@ -73,7 +73,7 @@ describe('The SSS Platform updater', () => {
     let ptvAPI = new PTVAPI(stubAPI)
     ptvAPI.addVLine(stubAPI)
 
-    await fetchTrips('20250718', database, ptvAPI)
+    await fetchSSSPlatforms('20250718', database, ptvAPI)
 
     let td8866Trip = await liveTimetables.findDocument({ runID: '8866' })
     expect(td8866Trip.stopTimings[0].cancelled).to.be.false
@@ -106,7 +106,7 @@ describe('The SSS Platform updater', () => {
     let ptvAPI = new PTVAPI(stubAPI)
     ptvAPI.addVLine(stubAPI)
 
-    await fetchTrips('20250914', database, ptvAPI)
+    await fetchSSSPlatforms('20250914', database, ptvAPI)
 
     let td8431Trip = await liveTimetables.findDocument({ runID: '8431' })
     expect(td8431Trip.stopTimings[0].stopName).to.equal('Southern Cross Railway Station')

@@ -41,12 +41,7 @@ async function writeUpdatedTrips(db, updatedTrips) {
   if (consistBulkOperations.length) await db.getCollection(MetroTripUpdater.getTrackerDB()).bulkWrite(consistBulkOperations)
 }
 
-if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  if (!await isActive('metro-trip-update')) {
-    await discordIntegration('taskLogging', `Metro Trip Updater: ${hostname()} not performing task`)
-    process.exit(0)
-  }
-
+if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && await isActive('metro-trip-update')) {
   await discordIntegration('taskLogging', `Metro Trip Updater: ${hostname()} loading`)
 
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)

@@ -85,12 +85,7 @@ export async function fetchTrips(db, ptvAPI) {
   return updatedTrips
 }
 
-if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  if (!await isActive('metro-rrb-trip-update')) {
-    await discordIntegration('taskLogging', `Metro RRB Trip Updater: ${hostname()} not performing task`)
-    process.exit(0)
-  }
-
+if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && await isActive('metro-rrb-trip-update')) {
   await discordIntegration('taskLogging', `Metro RRB Trip Updater: ${hostname()} loading`)
 
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)

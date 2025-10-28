@@ -9,12 +9,7 @@ import { isActive } from '../replication.mjs'
 import discordIntegration from '../discord-integration.js'
 import { hostname } from 'os'
 
-if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  if (!await isActive('bus-trip-update')) {
-    await discordIntegration('taskLogging', `Bus Trip Updater: ${hostname()} not performing task`)
-    process.exit(0)
-  }
-
+if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && await isActive('bus-trip-update')) {
   await discordIntegration('taskLogging', `Bus Trip Updater: ${hostname()} loading`)
 
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)

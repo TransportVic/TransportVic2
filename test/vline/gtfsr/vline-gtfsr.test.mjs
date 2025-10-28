@@ -1,5 +1,5 @@
 import { LokiDatabaseConnection } from '@transportme/database'
-import { fetchTrips, getUpcomingTrips } from '../../../modules/new-tracker/vline/vline-gtfsr-trips.mjs'
+import { fetchGTFSRTrips, getUpcomingTrips } from '../../../modules/new-tracker/vline/vline-gtfsr-trips.mjs'
 import trnStops from './sample-data/trn-stops.mjs'
 import td8403GTFSR from './sample-data/td8403-gtfsr.mjs'
 import pkmStopsDB from '../../metro/tracker/sample-data/pkm-stops-db.json' with { type: 'json' }
@@ -44,7 +44,7 @@ describe('The V/Line GTFS-R updater', () => {
     await stops.createDocuments(clone(trnStops))
     await timetables.createDocument(clone(td8403Live_NNG_TYN))
 
-    await fetchTrips(database, () => td8403GTFSR_NNG_TYN)
+    await fetchGTFSRTrips(database, () => td8403GTFSR_NNG_TYN)
 
     let trip = await timetables.findDocument({})
     expect(trip.stopTimings[0].stopName).to.equal('Nar Nar Goon Railway Station')

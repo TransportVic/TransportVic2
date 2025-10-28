@@ -129,12 +129,7 @@ export async function fetchTrips(ptvAPI, db, lines=Object.values(ptvAPI.metroSit
   return relevantTrips.length
 }
 
-if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  if (!await isPrimary()) {
-    await discordIntegration('taskLogging', `Metro Trips Schedule: ${hostname()} not performing task`)
-    process.exit(0)
-  }
-
+if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && !await isPrimary()) {
   await discordIntegration('taskLogging', `Metro Trips Schedule: ${hostname()} loading`)
 
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)

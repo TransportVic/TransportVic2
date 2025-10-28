@@ -278,12 +278,7 @@ export default async function loadOperationalTT(db, operationDay, ptvAPI) {
   return missingTrips
 }
 
-if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  if (!await isPrimary()) {
-    await discordIntegration('taskLogging', `V/Line Op TT: ${hostname()} not performing task`)
-    process.exit(0)
-  }
-
+if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && await isPrimary()) {
   await discordIntegration('taskLogging', `V/Line Op TT: ${hostname()} loading`)
 
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
