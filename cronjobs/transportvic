@@ -67,9 +67,9 @@
 
   # V/Line Tracker
   # Regular trips everyday 0400 - 2359
-  *     4-23  *     *     *     /home/transportvic/TransportVic/Server/modules/new-tracker/vline.mjs
+  *     4-23  *     *     *     node /home/transportvic/TransportVic/Server/modules/new-tracker/vline.mjs
   # And then 0000-0200
-  *     0-1   *     *     *     /home/transportvic/TransportVic/Server/modules/new-tracker/vline.mjs
+  *     0-1   *     *     *     node /home/transportvic/TransportVic/Server/modules/new-tracker/vline.mjs
 
   # Bus Tracker
   # Regular trips everyday 0400 - 2359

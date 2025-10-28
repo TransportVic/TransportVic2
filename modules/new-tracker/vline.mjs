@@ -4,7 +4,7 @@ import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../config.json' with { type: 'json' }
 import _ from '../../init-loggers.mjs'
 import fs from 'fs/promises'
-import { isActive } from '../replication.mjs'
+import { isPrimary } from '../replication.mjs'
 import discordIntegration from '../discord-integration.js'
 import { hostname } from 'os'
 import VLineTripUpdater from '../vline/trip-updater.mjs'
@@ -36,7 +36,7 @@ async function writeUpdatedTrips(db, updatedTrips) {
   if (consistBulkOperations.length) await db.getCollection(VLineTripUpdater.getTrackerDB()).bulkWrite(consistBulkOperations)
 }
 
-if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && await isActive('vline-trip-update')) {
+if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && await isPrimary()) {
   await discordIntegration('taskLogging', `V/Line Trip Updater: ${hostname()} loading`)
 
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)

@@ -16,7 +16,7 @@ import { fetchOutdatedTrips } from './metro/metro-outdated-trips.mjs'
 import { updateRelatedTrips } from './metro/check-new-updates.mjs'
 import fs from 'fs/promises'
 import MetroTripUpdater from '../metro-trains/trip-updater.mjs'
-import { isActive } from '../replication.mjs'
+import { isPrimary } from '../replication.mjs'
 import discordIntegration from '../discord-integration.js'
 import { hostname } from 'os'
 
@@ -41,7 +41,7 @@ async function writeUpdatedTrips(db, updatedTrips) {
   if (consistBulkOperations.length) await db.getCollection(MetroTripUpdater.getTrackerDB()).bulkWrite(consistBulkOperations)
 }
 
-if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && await isActive('metro-trip-update')) {
+if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && await isPrimary()) {
   await discordIntegration('taskLogging', `Metro Trip Updater: ${hostname()} loading`)
 
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)

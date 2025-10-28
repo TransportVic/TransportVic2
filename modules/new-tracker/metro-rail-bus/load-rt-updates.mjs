@@ -9,7 +9,7 @@ import utils from '../../../utils.js'
 import config from '../../../config.json' with { type: 'json' }
 import _ from '../../../init-loggers.mjs'
 import fs from 'fs/promises'
-import { isActive } from '../../replication.mjs'
+import { isPrimary } from '../../replication.mjs'
 import discordIntegration from '../../discord-integration.js'
 import { hostname } from 'os'
 
@@ -85,7 +85,7 @@ export async function fetchTrips(db, ptvAPI) {
   return updatedTrips
 }
 
-if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && await isActive('metro-rrb-trip-update')) {
+if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && await isPrimary()) {
   await discordIntegration('taskLogging', `Metro RRB Trip Updater: ${hostname()} loading`)
 
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)

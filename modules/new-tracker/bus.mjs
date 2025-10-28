@@ -5,11 +5,11 @@ import config from '../../config.json' with { type: 'json' }
 import _ from '../../init-loggers.mjs'
 import fs from 'fs/promises'
 import { fetchGTFSRFleet } from './bus/bus-gtfsr-fleet.mjs'
-import { isActive } from '../replication.mjs'
+import { isPrimary } from '../replication.mjs'
 import discordIntegration from '../discord-integration.js'
 import { hostname } from 'os'
 
-if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && await isActive('bus-trip-update')) {
+if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && await isPrimary()) {
   await discordIntegration('taskLogging', `Bus Trip Updater: ${hostname()} loading`)
 
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
