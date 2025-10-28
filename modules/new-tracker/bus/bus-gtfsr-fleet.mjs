@@ -34,9 +34,9 @@ async function writeUpdatedTrips(db, tripDB, updatedTrips) {
   await Promise.all(promises)
 }
 
-export async function getFleetData(db, gtfsrAPI) {
+export async function getFleetData(tripDB, gtfsrAPI) {
   let tripData = await gtfsrAPI('bus/vehicle-positions')
-  let busRegos = db.getCollection('bus regos')
+  let busRegos = tripDB.getCollection('bus regos')
 
   let trips = {}
 
@@ -72,7 +72,7 @@ export async function getFleetData(db, gtfsrAPI) {
 }
 
 export async function fetchGTFSRFleet(db, tripDB, existingTrips) {
-  const trips = await getFleetData(db, makePBRequest)
+  const trips = await getFleetData(tripDB, makePBRequest)
   const relevantTrips = Object.values(trips)
 
   const newRunIDs = Object.keys(trips).filter(runID => !existingTrips[runID])

@@ -293,7 +293,7 @@ async function getTripData(req, res) {
   // }
 
   if (trackerData) {
-    let busRegos = res.db.getCollection('bus regos')
+    let busRegos = res.tripDB.getCollection('bus regos')
 
     let fleetNumber = (await busRegos.findDocument({
       rego: trackerData.consist[0]
