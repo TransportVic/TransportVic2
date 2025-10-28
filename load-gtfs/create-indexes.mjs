@@ -4,6 +4,9 @@ import config from '../config.json' with { type: 'json' }
 let mainDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
 await mainDB.connect()
 
+let tripDB = new MongoDatabaseConnection(config.tripDatabaseURL, config.databaseName)
+await tripDB.connect()
+
 async function createStopIndex(mongoStops) {
   await mongoStops.createIndex({
     'location': '2dsphere',
@@ -375,12 +378,12 @@ await createTimetableIndex(await mainDB.getCollection('timetables'))
 
 await createTimetableIndex(await mainDB.getCollection('live timetables'))
 await createLiveTimetableIndex(await mainDB.getCollection('live timetables'))
-await createMetroTripIndex(await mainDB.getCollection('metro trips'))
-await createVLineTripIndex(await mainDB.getCollection('vline trips'))
-await createTramTripIndex(await mainDB.getCollection('tram trips'))
-await createBusTripIndex(await mainDB.getCollection('bus trips'))
-await createSmartrakIndex(await mainDB.getCollection('smartrak ids'))
-await createBusRegoIndex(await mainDB.getCollection('bus regos'))
+await createMetroTripIndex(await tripDB.getCollection('metro trips'))
+await createVLineTripIndex(await tripDB.getCollection('vline trips'))
+await createTramTripIndex(await tripDB.getCollection('tram trips'))
+await createBusTripIndex(await tripDB.getCollection('bus trips'))
+await createSmartrakIndex(await tripDB.getCollection('smartrak ids'))
+await createBusRegoIndex(await tripDB.getCollection('bus regos'))
 await createMetroNotifyIndex(await mainDB.getCollection('metro notify'))
 await createMetroLocationsIndex(await mainDB.getCollection('metro locations'))
 
