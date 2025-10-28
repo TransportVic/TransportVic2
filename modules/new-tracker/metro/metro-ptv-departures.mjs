@@ -19,7 +19,7 @@ function shuffleArray(array) {
   }
 }
 
-export async function fetchTrips(db, ptvAPI, {
+export async function fetchTrips(db, tripDB, ptvAPI, {
   stationName = null,
   skipTDN = [],
   maxResults = 5,
@@ -39,7 +39,7 @@ export async function fetchTrips(db, ptvAPI, {
 
   for (let tripData of relevantTrips) {
     let { type, data } = tripData
-    updatedTrips.push(await MetroTripUpdater.updateTrip(db, data, {
+    updatedTrips.push(await MetroTripUpdater.updateTrip(db, tripDB, data, {
       skipStopCancellation: type === 'stop',
       updatedTime: type === 'trip' ? new Date() : null,
       dataSource: 'ptv-departure',
@@ -53,12 +53,15 @@ export async function fetchTrips(db, ptvAPI, {
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
-  await mongoDB.connect()
+  let database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+  await database.connect()
+
+  let tripDatabase = new MongoDatabaseConnection(config.tripDatabaseURL, config.databaseName)
+  await tripDatabase.connect()
 
   let ptvAPI = new PTVAPI(new PTVAPIInterface(config.ptvKeys[0].devID, config.ptvKeys[0].key))
 
-  await fetchTrips(mongoDB, ptvAPI)
+  await fetchTrips(database, tripDatabase, ptvAPI)
 
   process.exit(0)
 }

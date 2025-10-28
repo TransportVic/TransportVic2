@@ -10,7 +10,7 @@ import BusTripUpdater from '../../bus/trip-updater.mjs'
 import async from 'async'
 import { LiveTimetable } from '../../schema/live-timetable.mjs'
 
-async function writeUpdatedTrips(db, updatedTrips) {
+async function writeUpdatedTrips(db, tripDB, updatedTrips) {
   const tripBulkOperations = updatedTrips.map(timetable => ({
     replaceOne: {
       filter: timetable.getDBKey(),
@@ -29,7 +29,7 @@ async function writeUpdatedTrips(db, updatedTrips) {
 
   let promises = []
   if (tripBulkOperations.length) promises.push(db.getCollection('live timetables').bulkWrite(tripBulkOperations, { ordered: false }))
-  if (consistBulkOperations.length) promises.push(db.getCollection(BusTripUpdater.getTrackerDB()).bulkWrite(consistBulkOperations, { ordered: false }))
+  if (consistBulkOperations.length) promises.push(tripDB.getCollection(BusTripUpdater.getTrackerDB()).bulkWrite(consistBulkOperations, { ordered: false }))
 
   await Promise.all(promises)
 }
@@ -71,7 +71,7 @@ export async function getFleetData(db, gtfsrAPI) {
   return trips
 }
 
-export async function fetchGTFSRFleet(db, existingTrips) {
+export async function fetchGTFSRFleet(db, tripDB, existingTrips) {
   const trips = await getFleetData(db, makePBRequest)
   const relevantTrips = Object.values(trips)
 
@@ -89,23 +89,26 @@ export async function fetchGTFSRFleet(db, existingTrips) {
   global.loggers.trackers.bus.log('GTFSR Updater: Fetched', relevantTrips.length, 'trips')
 
   await async.forEachLimit(relevantTrips, 400, async tripData => {
-    await BusTripUpdater.updateTrip(db, tripData, {
+    await BusTripUpdater.updateTrip(db, tripDB, tripData, {
       dataSource: 'gtfsr-vehicle-update',
       existingTrips,
       skipWrite: true
     })
   })
 
-  await writeUpdatedTrips(db, Object.values(existingTrips))
+  await writeUpdatedTrips(db, tripDB, Object.values(existingTrips))
 
   global.loggers.trackers.bus.log('GTFSR Updater: Updated', relevantTrips.length, 'trips')
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
-  await mongoDB.connect()
+  let database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+  await database.connect()
 
-  await fetchGTFSRFleet(mongoDB)
+  let tripDatabase = new MongoDatabaseConnection(config.tripDatabaseURL, config.databaseName)
+  await tripDatabase.connect()
+
+  await fetchGTFSRFleet(database, tripDatabase)
 
   process.exit(0)
 }

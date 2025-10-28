@@ -30,21 +30,24 @@ export async function getFleetData(gtfsrAPI) {
   return Object.values(trips)
 }
 
-export async function fetchGTFSRFleet(db, gtfsrAPI) {
+export async function fetchGTFSRFleet(db, tripDB, gtfsrAPI) {
   let relevantTrips = await getFleetData(gtfsrAPI)
 
   for (let tripData of relevantTrips) {
-    await VLineTripUpdater.updateTrip(db, tripData, { dataSource: 'gtfsr-vehicle-update' })
+    await VLineTripUpdater.updateTrip(db, tripDB, tripData, { dataSource: 'gtfsr-vehicle-update' })
   }
 
   return relevantTrips
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
-  await mongoDB.connect()
+  let database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+  await database.connect()
 
-  await fetchGTFSRFleet(mongoDB, makePBRequest)
+  let tripDatabase = new MongoDatabaseConnection(config.tripDatabaseURL, config.databaseName)
+  await tripDatabase.connect()
+
+  await fetchGTFSRFleet(database, tripDatabase, makePBRequest)
 
   process.exit(0)
 }

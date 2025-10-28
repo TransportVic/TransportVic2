@@ -8,7 +8,7 @@ import VLineTripUpdater from '../../vline/trip-updater.mjs'
 import _ from '../../../init-loggers.mjs'
 import fs from 'fs/promises'
 
-export async function updateTrips(getPositions = () => [], keepOperators = () => [], db) {
+export async function updateTrips(getPositions = () => [], keepOperators = () => [], db, tripDB) {
   const trips = await getRelevantTrips(getPositions, keepOperators)
   const skippedTrips = []
   const updatedTrips = []
@@ -35,7 +35,7 @@ export async function updateTrips(getPositions = () => [], keepOperators = () =>
       }
     }
 
-    updatedTrips.push(await VLineTripUpdater.updateTrip(db, tripUpdate, { skipStopCancellation: true, dataSource: 'gps-tracking' }))
+    updatedTrips.push(await VLineTripUpdater.updateTrip(db, tripDB, tripUpdate, { skipStopCancellation: true, dataSource: 'gps-tracking' }))
   }
 
   return { skippedTrips, updatedTrips }
@@ -88,10 +88,13 @@ export function getEstimatedArrivalTime(position, { nextStop, prevStop, distance
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  const mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
-  await mongoDB.connect()
+  const database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+  await database.connect()
 
-  const { skippedTrips, updatedTrips } = await updateTrips(getGPSPositions, () => config.keepOperators, mongoDB)
+  const tripDatabase = new MongoDatabaseConnection(config.tripDatabaseURL, config.databaseName)
+  await database.connect()
+
+  const { skippedTrips, updatedTrips } = await updateTrips(getGPSPositions, () => config.keepOperators, database, tripDatabase)
   
   global.loggers.trackers.vline.log('> GPS Updater: Updated positions for', updatedTrips.map(trip => trip.runID))
   global.loggers.trackers.vline.log('> GPS Updater: Could not update positions for', skippedTrips.map(trip => trip.runID))

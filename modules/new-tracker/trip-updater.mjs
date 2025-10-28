@@ -260,7 +260,7 @@ export default class TripUpdater {
     return timetable
   }
 
-  static async updateTrip(db, trip, {
+  static async updateTrip(db, tripDB, trip, {
     skipWrite = false,
     skipStopCancellation = false,
     dataSource = 'unknown',
@@ -314,7 +314,7 @@ export default class TripUpdater {
         upsert: true
       })
 
-      await this.updateTrackerData(db, timetable)
+      await this.updateTrackerData(tripDB, timetable)
     }
 
     existingTrips[timetable.runID] = timetable

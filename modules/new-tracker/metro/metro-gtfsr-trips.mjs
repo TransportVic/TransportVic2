@@ -52,7 +52,7 @@ export async function getUpcomingTrips(db, gtfsrAPI, routeFilter = '') {
   return Object.values(trips)
 }
 
-export async function fetchGTFSRTrips(db, routeFilter = '') {
+export async function fetchGTFSRTrips(db, tripDB, routeFilter = '') {
   let relevantTrips = await getUpcomingTrips(db, makePBRequest, routeFilter)
   global.loggers.trackers.metro.log('GTFSR Updater: Fetched', relevantTrips.length, 'trips')
 
@@ -64,15 +64,19 @@ export async function fetchGTFSRTrips(db, routeFilter = '') {
     // GTFSR data currently does not support platform changes
     tripData.stops.forEach(stop => { delete stop.platform })
 
-    await MetroTripUpdater.updateTrip(db, tripData, { skipStopCancellation: true, dataSource: 'gtfsr-trip-update' })
+    await MetroTripUpdater.updateTrip(db, tripDB, tripData, { skipStopCancellation: true, dataSource: 'gtfsr-trip-update' })
   }
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
-  await mongoDB.connect()
+  let database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+  await database.connect()
 
-  await fetchGTFSRTrips(mongoDB, process.argv[2] || '')
+  let tripDatabase = new MongoDatabaseConnection(config.tripDatabaseURL, config.databaseName)
+  await tripDatabase.connect()
+
+
+  await fetchGTFSRTrips(database, tripDatabase, process.argv[2] || '')
 
   process.exit(0)
 }

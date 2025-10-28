@@ -187,7 +187,7 @@ export async function downloadTripPattern(operationDay, vlineTrip, nspTrip, db) 
   return timetable
 }
 
-async function updateExistingTrip(db, existingTrip, vlineTrip) {
+async function updateExistingTrip(db, tripDB, existingTrip, vlineTrip) {
   let stops = db.getCollection('stops')
   let originStop = await getStopFromVNetName(stops, vlineTrip.origin)
   let destinationStop = await getStopFromVNetName(stops, vlineTrip.destination)
@@ -195,7 +195,7 @@ async function updateExistingTrip(db, existingTrip, vlineTrip) {
   if (!originStop || !destinationStop) return null
 
   await VLineTripUpdater.updateTripOriginDestination(
-    db, existingTrip.operationDays, existingTrip.runID,
+    db, tripDB, existingTrip.operationDays, existingTrip.runID,
     originStop.stopName, destinationStop.stopName, 'vline-op-tt'
   )
 
@@ -203,13 +203,13 @@ async function updateExistingTrip(db, existingTrip, vlineTrip) {
   let destinationOffset = vlineTrip.arrivalTime - new Date(existingTrip.stopTimings[existingTrip.stopTimings.length - 1].scheduledDepartureTime)
   if (originOffset !== 0 && originOffset === destinationOffset) {
     await VLineTripUpdater.setTripTimeOffset(
-      db, existingTrip.operationDays, existingTrip.runID,
+      db, tripDB, existingTrip.operationDays, existingTrip.runID,
       originOffset, 'vline-op-tt'
     )
   }
 }
 
-export default async function loadOperationalTT(db, operationDay, ptvAPI) {
+export default async function loadOperationalTT(db, tripDB, operationDay, ptvAPI) {
   let opDayFormat = utils.getYYYYMMDD(operationDay)
   let dayOfWeek = utils.getDayOfWeek(operationDay) // Technically should use public holiday thing
   let liveTimetables = db.getCollection('live timetables')
@@ -225,7 +225,7 @@ export default async function loadOperationalTT(db, operationDay, ptvAPI) {
   for (let vlineTrip of departures.concat(arrivals).filter(trip => trip.origin && trip.destination)) {
     let existingTrip = await VLineTripUpdater.getTripByTDN(liveTimetables, vlineTrip.tdn, opDayFormat)
     if (existingTrip) {
-      await updateExistingTrip(db, existingTrip, vlineTrip)
+      await updateExistingTrip(db, tripDB, existingTrip, vlineTrip)
       continue
     }
 
@@ -273,7 +273,7 @@ export default async function loadOperationalTT(db, operationDay, ptvAPI) {
   }
 
   if (outputTrips.length) await liveTimetables.bulkWrite(outputTrips)
-  await Promise.all(newTrips.map(({ liveTrip, vlineTrip }) => updateExistingTrip(db, liveTrip, vlineTrip)))
+  await Promise.all(newTrips.map(({ liveTrip, vlineTrip }) => updateExistingTrip(db, tripDB, liveTrip, vlineTrip)))
 
   return missingTrips
 }
@@ -281,8 +281,11 @@ export default async function loadOperationalTT(db, operationDay, ptvAPI) {
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && await isPrimary()) {
   await discordIntegration('taskLogging', `V/Line Op TT: ${hostname()} loading`)
 
-  let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
-  await mongoDB.connect()
+  let database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+  await database.connect()
+
+  let tripDatabase = new MongoDatabaseConnection(config.tripDatabaseURL, config.databaseName)
+  await tripDatabase.connect()
 
   let ptvAPI = new PTVAPI(new PTVAPIInterface(config.ptvKeys[0].devID, config.ptvKeys[0].key))
   let vlineAPIInterface = new VLineAPIInterface(config.vlineCallerID, config.vlineSignature)
@@ -291,7 +294,7 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && awa
   let opDay = utils.now()
   if (opDay.get('hours') < 3) opDay.add(-1, 'day')
 
-  const missingTrips = await loadOperationalTT(mongoDB, opDay, ptvAPI)
+  const missingTrips = await loadOperationalTT(database, tripDatabase, opDay, ptvAPI)
   if (missingTrips.length) {
     const tripData = `Missing V/Line trips (${missingTrips.length}):\n` + missingTrips.map(
       ({ vlineTrip }) => `TD${vlineTrip.tdn}: ${vlineTrip.departureTime.toFormat('HH:mm')} ${vlineTrip.origin} - ${vlineTrip.destination}`
@@ -303,5 +306,5 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && awa
 
   await discordIntegration('taskLogging', `V/Line Op TT: ${hostname()} completed loading`)
 
-  await mongoDB.close()
+  await database.close()
 }

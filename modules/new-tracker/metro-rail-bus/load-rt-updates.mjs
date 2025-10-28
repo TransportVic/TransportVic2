@@ -74,12 +74,12 @@ export async function getRailBusUpdates(db, ptvAPI) {
   return output
 }
 
-export async function fetchTrips(db, ptvAPI) {
+export async function fetchTrips(db, tripDB, ptvAPI) {
   let relevantTrips = await getRailBusUpdates(db, ptvAPI)
 
   let updatedTrips = []
   for (let tripData of relevantTrips) {
-    updatedTrips.push(await MetroTripUpdater.updateTrip(db, tripData, { skipStopCancellation: true, dataSource: 'mtm-website-rail', updateTime: new Date() }))
+    updatedTrips.push(await MetroTripUpdater.updateTrip(db, tripDB, tripData, { skipStopCancellation: true, dataSource: 'mtm-website-rail', updateTime: new Date() }))
   }
 
   return updatedTrips
@@ -88,13 +88,16 @@ export async function fetchTrips(db, ptvAPI) {
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && await isPrimary()) {
   await discordIntegration('taskLogging', `Metro RRB Trip Updater: ${hostname()} loading`)
 
-  let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
-  await mongoDB.connect()
+  let database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+  await database.connect()
+
+  let tripDatabase = new MongoDatabaseConnection(config.tripDatabaseURL, config.databaseName)
+  await tripDatabase.connect()
 
   let ptvAPI = new PTVAPI()
   ptvAPI.addMetroSite(new MetroSiteAPIInterface())
 
-  let updatedTrips = await fetchTrips(mongoDB, ptvAPI)
+  let updatedTrips = await fetchTrips(database, tripDatabase, ptvAPI)
   global.loggers.trackers.metroRRB.log('MTM Rail Bus: Fetched', updatedTrips.length, 'trips')
 
   await discordIntegration('taskLogging', `Metro RRB Trip Updater: ${hostname()} completed loading`)

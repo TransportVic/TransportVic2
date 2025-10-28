@@ -61,12 +61,12 @@ export async function getDepartures(db, ptvAPI) {
   return output
 }
 
-export async function fetchMetroSiteDepartures(db, ptvAPI, existingTrips) {
+export async function fetchMetroSiteDepartures(db, tripDB, ptvAPI, existingTrips) {
   let trips = await getDepartures(db, ptvAPI)
   global.loggers.trackers.metro.log('MTM Departures: Fetched', trips.length, 'trips')
 
   for (let tripData of trips) {
-    await MetroTripUpdater.updateTrip(db, tripData, {
+    await MetroTripUpdater.updateTrip(db, tripDB, tripData, {
       skipStopCancellation: true,
       dataSource: 'mtm-departures',
       updateTime: new Date(),
@@ -77,13 +77,16 @@ export async function fetchMetroSiteDepartures(db, ptvAPI, existingTrips) {
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
-  await mongoDB.connect()
+  let database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+  await database.connect()
+
+  let tripDatabase = new MongoDatabaseConnection(config.tripDatabaseURL, config.databaseName)
+  await tripDatabase.connect()
 
   let ptvAPI = new PTVAPI()
   ptvAPI.addMetroSite(new MetroSiteAPIInterface())
 
-  await fetchMetroSiteDepartures(mongoDB, ptvAPI)
+  await fetchMetroSiteDepartures(database, tripDatabase, ptvAPI)
 
   process.exit(0)
 }

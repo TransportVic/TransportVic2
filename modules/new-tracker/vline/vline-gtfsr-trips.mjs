@@ -92,12 +92,12 @@ export async function getUpcomingTrips(db, gtfsrAPI) {
   return Object.values(trips)
 }
 
-export async function fetchGTFSRTrips(db, gtfsrAPI) {
+export async function fetchGTFSRTrips(db, tripDB, gtfsrAPI) {
   let relevantTrips = await getUpcomingTrips(db, gtfsrAPI)
 
   for (let tripData of relevantTrips) {
     try {
-      await VLineTripUpdater.updateTrip(db, tripData, { skipStopCancellation: true, dataSource: 'gtfsr-trip-update' })
+      await VLineTripUpdater.updateTrip(db, tripDB, tripData, { skipStopCancellation: true, dataSource: 'gtfsr-trip-update' })
     } catch (e) {
       global.loggers.trackers.vline.err('Failed to update TDN', tripData.runID)
       global.loggers.trackers.vline.err(e)
@@ -108,11 +108,14 @@ export async function fetchGTFSRTrips(db, gtfsrAPI) {
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
-  await mongoDB.connect()
+  let database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+  await database.connect()
+
+  let tripDatabase = new MongoDatabaseConnection(config.tripDatabaseURL, config.databaseName)
+  await tripDatabase.connect()
 
   global.loggers.trackers.vline.log('V/Line GTFSR Updater: Loading trips')
-  let relevantTrips = await fetchGTFSRTrips(mongoDB, makePBRequest)
+  let relevantTrips = await fetchGTFSRTrips(database, tripDatabase, makePBRequest)
   global.loggers.trackers.vline.log('V/Line GTFSR Updater: Updated TDNs:', relevantTrips.map(trip => trip.runID).join(', '))
 
   process.exit(0)

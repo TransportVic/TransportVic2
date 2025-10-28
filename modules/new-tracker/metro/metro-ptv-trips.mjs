@@ -22,11 +22,11 @@ function shuffleArray(array) {
   }
 }
 
-export async function updateTDNFromPTV(db, runID, ptvAPI, ptvAPIOptions, dataSource, skipWrite = false, existingTrips = {}) {
+export async function updateTDNFromPTV(db, tripDB, runID, ptvAPI, ptvAPIOptions, dataSource, skipWrite = false, existingTrips = {}) {
   let tripUpdate = await getTripUpdateData(runID, ptvAPI, ptvAPIOptions)
   if (!tripUpdate) return null
 
-  return await MetroTripUpdater.updateTrip(db, tripUpdate, {
+  return await MetroTripUpdater.updateTrip(db, tripDB, tripUpdate, {
     dataSource,
     ignoreMissingStops: PTV_BAD_STOPS,
     updateTime: new Date(),
@@ -35,7 +35,7 @@ export async function updateTDNFromPTV(db, runID, ptvAPI, ptvAPIOptions, dataSou
   })
 }
 
-export async function getTrips(db, ptvAPI, station, skipTDN = [], existingTrips = {}) {
+export async function getTrips(db, tripDB, ptvAPI, station, skipTDN = [], existingTrips = {}) {
   let departures = await getMetroDepartures(station, db)
 
   let departureDay = utils.now().startOf('day')
@@ -47,7 +47,7 @@ export async function getTrips(db, ptvAPI, station, skipTDN = [], existingTrips 
   for (let departure of trains) {
     if (skipTDN.includes(departure.runID)) continue
 
-    let tripUpdate = await updateTDNFromPTV(db, departure.runID, ptvAPI, { date: new Date(departureDay.toISOString()) }, 'ptv-pattern', true, existingTrips)
+    let tripUpdate = await updateTDNFromPTV(db, tripDB, departure.runID, ptvAPI, { date: new Date(departureDay.toISOString()) }, 'ptv-pattern', true, existingTrips)
     if (tripUpdate) {
       updates.push(tripUpdate)
       if (++successfulDepartures === 5) break
@@ -59,7 +59,7 @@ export async function getTrips(db, ptvAPI, station, skipTDN = [], existingTrips 
   return updates
 }
 
-export async function fetchTrips(db, ptvAPI, existingTrips = {}) {
+export async function fetchTrips(db, tripDB, ptvAPI, existingTrips = {}) {
   let allStations = await db.getCollection('stops').findDocuments({
     'bays.mode': 'metro train'
   }).toArray()
@@ -68,17 +68,20 @@ export async function fetchTrips(db, ptvAPI, existingTrips = {}) {
   
   global.loggers.trackers.metro.log('Loading next 5 trips from', station.stopName)
 
-  let updatedTrips = await getTrips(db, ptvAPI, station, [], existingTrips)
+  let updatedTrips = await getTrips(db, tripDB, ptvAPI, station, [], existingTrips)
   global.loggers.trackers.metro.log('> PTV Trips: Updating TDNs: ' + updatedTrips.map(trip => trip.runID).join(', '))
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
-  await mongoDB.connect()
+  let database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+  await database.connect()
+
+  let tripDatabase = new MongoDatabaseConnection(config.tripDatabaseURL, config.databaseName)
+  await tripDatabase.connect()
 
   let ptvAPI = new PTVAPI(new PTVAPIInterface(config.ptvKeys[0].devID, config.ptvKeys[0].key))
 
-  await fetchTrips(mongoDB, ptvAPI)
+  await fetchTrips(database, tripDatabase, ptvAPI)
 
   process.exit(0)
 }

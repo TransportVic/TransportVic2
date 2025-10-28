@@ -4,9 +4,12 @@ import utils from '../../../utils.js'
 import urls from '../../../urls.json' with { type: 'json' }
 import VLineTripUpdater from '../../vline/trip-updater.mjs'
 
-let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
-await mongoDB.connect()
-const tt = mongoDB.getCollection('live timetables')
+let database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+await database.connect()
+const tt = database.getCollection('live timetables')
+
+let tripDatabase = new MongoDatabaseConnection(config.tripDatabaseURL, config.databaseName)
+await tripDatabase.connect()
 
 const tokP = await utils.request(urls.vlineToken)
 const tok = tokP.match(/jwtToken = '([^']+)'/)[1]
@@ -76,7 +79,7 @@ async function getStation(station, code) {
       }]
     }
 
-    await VLineTripUpdater.updateTrip(mongoDB, tripData, { skipStopCancellation: true, dataSource: 'vline-secret-page' })
+    await VLineTripUpdater.updateTrip(database, tripDatabase, tripData, { skipStopCancellation: true, dataSource: 'vline-secret-page' })
   }
 }
 
@@ -84,5 +87,5 @@ await getStation('Traralgon', 'TRN')
 await getStation('Ballarat', 'BAT')
 await getStation('Bacchus Marsh', 'BAH')
 
-mongoDB.close()
+database.close()
 process.exit(0)

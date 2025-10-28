@@ -44,11 +44,11 @@ export async function getPlatformUpdates(operationDay, database, ptvAPI) {
   return output
 }
 
-export async function fetchSSSPlatforms(operationDay, database, ptvAPI) {
-  let tripUpdates = await getPlatformUpdates(operationDay, database, ptvAPI)
+export async function fetchSSSPlatforms(operationDay, db, tripDB, ptvAPI) {
+  let tripUpdates = await getPlatformUpdates(operationDay, db, ptvAPI)
 
   for (let update of tripUpdates) {
-    await VLineTripUpdater.updateTrip(database, update, {
+    await VLineTripUpdater.updateTrip(db, tripDB, update, {
       skipStopCancellation: true,
       dataSource: 'vline-platform-arrivals-sss'
     })
@@ -58,16 +58,19 @@ export async function fetchSSSPlatforms(operationDay, database, ptvAPI) {
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
-  await mongoDB.connect()
+  let database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+  await database.connect()
+
+  let tripDatabase = new MongoDatabaseConnection(config.tripDatabaseURL, config.databaseName)
+  await tripDatabase.connect()
 
   let ptvAPI = new PTVAPI(new PTVAPIInterface(config.ptvKeys[0].devID, config.ptvKeys[0].key))
   let vlineAPIInterface = new VLineAPIInterface(config.vlineCallerID, config.vlineSignature)
   ptvAPI.addVLine(vlineAPIInterface)
 
-  let updatedTrips = await fetchSSSPlatforms(utils.getPTYYYYMMDD(utils.now()), mongoDB, ptvAPI)
+  let updatedTrips = await fetchSSSPlatforms(utils.getPTYYYYMMDD(utils.now()), database, tripDatabase, ptvAPI)
   global.loggers.trackers.vline.log('> SSS Platforms: Updated TDNs:', updatedTrips.map(trip => trip.runID).join(', '))
 
-  await mongoDB.close()
+  await database.close()
   process.exit(0)
 }

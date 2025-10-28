@@ -56,7 +56,7 @@ export default class VLineTripUpdater extends TripUpdater {
     return { cancelledStops, uncancelledStops }
   }
 
-  static async updateTripOriginDestination(db, operationDay, runID, newOrigin, newDestination, dataSource) {
+  static async updateTripOriginDestination(db, tripDB, operationDay, runID, newOrigin, newDestination, dataSource) {
     let timetables = db.getCollection('live timetables')
     let trip = await this.getTripByTDN(timetables, runID, operationDay)
     if (!trip) return null
@@ -66,7 +66,7 @@ export default class VLineTripUpdater extends TripUpdater {
     let { cancelledStops: originCancelledStops, uncancelledStops: originUncancelledStops } = this.#getCancelledFromLateOrigination(trip, tripStops, newOrigin)
     let { cancelledStops: destCancelledStops, uncancelledStops: destUncancelledStops } = this.#getCancelledFromEarlyTermination(trip, tripStops, newDestination)
 
-    return await this.updateTrip(db, {
+    return await this.updateTrip(db, tripDB, {
       operationDays: operationDay,
       runID,
       stops: [
@@ -85,12 +85,12 @@ export default class VLineTripUpdater extends TripUpdater {
     })
   }
 
-  static async setTripTimeOffset(db, operationDay, runID, timeOffset, dataSource) {
+  static async setTripTimeOffset(db, tripDB, operationDay, runID, timeOffset, dataSource) {
     let timetables = db.getCollection('live timetables')
     let trip = await this.getTripByTDN(timetables, runID, operationDay)
     if (!trip) return null
 
-    return await this.updateTrip(db, {
+    return await this.updateTrip(db, tripDB, {
       operationDays: operationDay,
       runID,
       stops: trip.stopTimings.map(stop => ({

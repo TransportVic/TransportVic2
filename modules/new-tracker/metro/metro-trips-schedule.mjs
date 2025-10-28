@@ -19,7 +19,7 @@ export async function getUpcomingTrips(ptvAPI, lines) {
   return trips.filter(trip => trip.operationalDateMoment >= today)
 }
 
-export async function fetchTrips(ptvAPI, db, lines=Object.values(ptvAPI.metroSite.lines)) {
+export async function fetchTrips(ptvAPI, db, tripDB, lines=Object.values(ptvAPI.metroSite.lines)) {
   let relevantTrips = await getUpcomingTrips(ptvAPI, lines)
   let liveTimetables = db.getCollection('live timetables')
 
@@ -50,7 +50,11 @@ export async function fetchTrips(ptvAPI, db, lines=Object.values(ptvAPI.metroSit
         tripData.stops.push(tripStop)
       }
 
-      tripObjects[trip.tdn] = await MetroTripUpdater.updateTrip(db, tripData, { skipWrite: true, skipStopCancellation: true, dataSource: 'mtm-op-timetable' })
+      tripObjects[trip.tdn] = await MetroTripUpdater.updateTrip(db, tripDB, tripData, {
+        skipWrite: true,
+        skipStopCancellation: true,
+        dataSource: 'mtm-op-timetable'
+      })
     }
 
     let forming = {}
@@ -132,13 +136,16 @@ export async function fetchTrips(ptvAPI, db, lines=Object.values(ptvAPI.metroSit
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && !await isPrimary()) {
   await discordIntegration('taskLogging', `Metro Trips Schedule: ${hostname()} loading`)
 
-  let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
-  await mongoDB.connect()
+  let database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+  await database.connect()
+
+  let tripDatabase = new MongoDatabaseConnection(config.tripDatabaseURL, config.databaseName)
+  await tripDatabase.connect()
 
   let ptvAPI = new PTVAPI()
   ptvAPI.addMetroSite(new MetroSiteAPIInterface())
 
-  let tripCount = await fetchTrips(ptvAPI, mongoDB)
+  let tripCount = await fetchTrips(ptvAPI, database, tripDatabase)
   global.loggers.trackers.metro.log('Metro Trips: Updated forming data of', tripCount, 'trips')
 
   await discordIntegration('taskLogging', `Metro Trips Schedule: ${hostname()} completed loading`)
