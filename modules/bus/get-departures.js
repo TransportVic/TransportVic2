@@ -218,7 +218,7 @@ async function getScheduledDepartures(stop, db, time) {
   return await departureUtils.getScheduledDepartures(gtfsIDs, db, 'bus', 90, false, time)
 }
 
-async function getDepartures(stop, db, time, discardUnmatched) {
+async function getDepartures(stop, db, tripDB, time, discardUnmatched) {
   let cacheKey = stop.cleanSuburbs[0] + stop.stopName
 
   try {
@@ -283,8 +283,8 @@ async function getDepartures(stop, db, time, discardUnmatched) {
 
       let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
 
-      let busTrips = db.getCollection('bus trips')
-      let busRegos = db.getCollection('bus regos')
+      let busTrips = tripDB.getCollection('bus trips')
+      let busRegos = tripDB.getCollection('bus regos')
 
       return (await async.map(departures, async departure => {
         let {trip} = departure

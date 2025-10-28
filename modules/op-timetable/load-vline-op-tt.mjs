@@ -307,4 +307,5 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && awa
   await discordIntegration('taskLogging', `V/Line Op TT: ${hostname()} completed loading`)
 
   await database.close()
+  await tripDatabase.close()
 }

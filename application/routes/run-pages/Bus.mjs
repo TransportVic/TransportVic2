@@ -38,7 +38,7 @@ function determineStopType(stop) {
   return { stopType, screenServices }
 }
 
-async function pickBestTrip(data, db) {
+async function pickBestTrip(data, db, tripDB) {
   let tripDay = utils.parseTime(data.operationDays, 'YYYYMMDD')
   let departureTimeParts = data.departureTime.split(':')
   if (parseInt(departureTimeParts[0]) > 23) {
@@ -152,7 +152,7 @@ async function pickBestTrip(data, db) {
         originStopToUse = originStop
       }
 
-      let originDepartures = await getDepartures(originStopToUse, db, tripStartTime.clone().add(-5, 'minutes'), true)
+      let originDepartures = await getDepartures(originStopToUse, db, tripDB, tripStartTime.clone().add(-5, 'minutes'), true)
 
       let matchingDeparture = originDepartures.find(departure => {
         let trip = departure.trip
@@ -193,7 +193,7 @@ async function pickBestTrip(data, db) {
 }
 
 async function getTripData(req, res) {
-  let tripData = await pickBestTrip(req.params, res.db)
+  let tripData = await pickBestTrip(req.params, res.db, res.tripDB)
   if (!tripData) return null
 
   let { trip, tripStartTime, isLive } = tripData

@@ -28,7 +28,7 @@ async function loadDepartures(req, res) {
     stop.bays.push(...oppositeStop.bays)
   }
 
-  let departures = await getDepartures(stop, res.db)
+  let departures = await getDepartures(stop, res.db, res.tripDB)
   let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
 
   departures = await async.map(departures, async departure => {

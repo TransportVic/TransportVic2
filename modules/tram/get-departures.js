@@ -103,9 +103,9 @@ async function trimTripIfNeeded(db, tramDeparture, trip, stopGTFSID, day) {
   return trip
 }
 
-async function getDeparturesFromYT(stop, db) {
+async function getDeparturesFromYT(stop, db, tripDB) {
   let gtfsTimetables = db.getCollection('gtfs timetables')
-  let tramTrips = db.getCollection('tram trips')
+  let tramTrips = tripDB.getCollection('tram trips')
   let tramStops = stop.bays.filter(b => b.mode === 'tram' && b.tramTrackerID)
   let tramTrackerIDs = tramStops.map(b => b.tramTrackerID)
 
@@ -218,11 +218,11 @@ async function getScheduledDepartures(stop, db) {
   return await departureUtils.getScheduledDepartures(gtfsIDs, db, 'tram', 90, false)
 }
 
-async function getDepartures(stop, db) {
+async function getDepartures(stop, db, tripDB) {
   try {
     return await utils.getData('tram-departures', stop.stopName, async () => {
       try {
-        return await getDeparturesFromYT(stop, db)
+        return await getDeparturesFromYT(stop, db, tripDB)
       } catch (e) {
         global.loggers.general.err('Failed to get tram trips', e)
         return (await getScheduledDepartures(stop, db, false)).map(departure => {

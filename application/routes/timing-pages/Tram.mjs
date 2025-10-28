@@ -27,7 +27,7 @@ async function loadDepartures(req, res) {
   let stopHeritageUseDates = await timingUtils.getStopHeritageUseDates(res.db, stop)
 
 
-  let departures = await getDepartures(stop, res.db)
+  let departures = await getDepartures(stop, res.db, res.tripDB)
 
   let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
 
