@@ -44,7 +44,7 @@ export async function getPlatformUpdates(operationDay, database, ptvAPI) {
   return output
 }
 
-export async function fetchTrips(operationDay, database, ptvAPI) {
+export async function fetchSSSPlatforms(operationDay, database, ptvAPI) {
   let tripUpdates = await getPlatformUpdates(operationDay, database, ptvAPI)
 
   for (let update of tripUpdates) {
@@ -65,7 +65,7 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let vlineAPIInterface = new VLineAPIInterface(config.vlineCallerID, config.vlineSignature)
   ptvAPI.addVLine(vlineAPIInterface)
 
-  let updatedTrips = await fetchTrips(utils.getPTYYYYMMDD(utils.now()), mongoDB, ptvAPI)
+  let updatedTrips = await fetchSSSPlatforms(utils.getPTYYYYMMDD(utils.now()), mongoDB, ptvAPI)
   global.loggers.trackers.vline.log('> SSS Platforms: Updated TDNs:', updatedTrips.map(trip => trip.runID).join(', '))
 
   await mongoDB.close()

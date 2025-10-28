@@ -92,7 +92,7 @@ export async function getUpcomingTrips(db, gtfsrAPI) {
   return Object.values(trips)
 }
 
-export async function fetchTrips(db, gtfsrAPI) {
+export async function fetchGTFSRTrips(db, gtfsrAPI) {
   let relevantTrips = await getUpcomingTrips(db, gtfsrAPI)
 
   for (let tripData of relevantTrips) {
@@ -110,9 +110,9 @@ export async function fetchTrips(db, gtfsrAPI) {
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
-  
+
   global.loggers.trackers.vline.log('V/Line GTFSR Updater: Loading trips')
-  let relevantTrips = await fetchTrips(mongoDB, makePBRequest)
+  let relevantTrips = await fetchGTFSRTrips(mongoDB, makePBRequest)
   global.loggers.trackers.vline.log('V/Line GTFSR Updater: Updated TDNs:', relevantTrips.map(trip => trip.runID).join(', '))
 
   process.exit(0)
