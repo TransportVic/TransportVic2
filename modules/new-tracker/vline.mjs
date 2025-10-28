@@ -15,7 +15,7 @@ import { fetchGTFSRTrips } from './vline/vline-gtfsr-trips.mjs'
 import { fetchGTFSRFleet } from './vline/vline-gtfsr-fleet.mjs'
 import utils from '../../utils.js'
 
-async function writeUpdatedTrips(db, updatedTrips) {
+async function writeUpdatedTrips(db, tripDB, updatedTrips) {
   const tripBulkOperations = updatedTrips.map(timetable => ({
     replaceOne: {
       filter: timetable.getDBKey(),
@@ -33,7 +33,7 @@ async function writeUpdatedTrips(db, updatedTrips) {
   })).filter(op => !!op.replaceOne.filter)
 
   if (tripBulkOperations.length) await db.getCollection('live timetables').bulkWrite(tripBulkOperations)
-  if (consistBulkOperations.length) await db.getCollection(VLineTripUpdater.getTrackerDB()).bulkWrite(consistBulkOperations)
+  if (consistBulkOperations.length && await isPrimary()) await tripDB.getCollection(VLineTripUpdater.getTrackerDB()).bulkWrite(consistBulkOperations)
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
@@ -49,16 +49,20 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let vlineAPIInterface = new VLineAPIInterface(config.vlineCallerID, config.vlineSignature)
   ptvAPI.addVLine(vlineAPIInterface)
 
-  let sssTrips = await fetchSSSPlatforms(utils.getPTYYYYMMDD(utils.now()), database, tripDatabase, ptvAPI)
+  let existingTrips = {}
+
+  let sssTrips = await fetchSSSPlatforms(utils.getPTYYYYMMDD(utils.now()), database, tripDatabase, ptvAPI, existingTrips)
   global.loggers.trackers.vline.log('> SSS Platforms: Updated TDNs:', sssTrips.map(trip => trip.runID).join(', '))
 
   global.loggers.trackers.vline.log('V/Line GTFSR Updater: Loading trips')
-  let gtfsTripTrips = await fetchGTFSRTrips(database, tripDatabase, makePBRequest)
+  let gtfsTripTrips = await fetchGTFSRTrips(database, tripDatabase, makePBRequest, existingTrips)
   global.loggers.trackers.vline.log('V/Line GTFSR Updater: Updated TDNs:', gtfsTripTrips.map(trip => trip.runID).join(', '))
 
   global.loggers.trackers.metro.log('GTFSR Fleet Updater: Loading trips')
-  let gtfsFleeTtrips = await fetchGTFSRFleet(database, tripDatabase, makePBRequest)
-  global.loggers.trackers.metro.log('GTFSR Fleet Updater: Fetched', gtfsFleeTtrips.length, 'trips')
+  let gtfsFleetTrips = await fetchGTFSRFleet(database, tripDatabase, makePBRequest, existingTrips)
+  global.loggers.trackers.metro.log('GTFSR Fleet Updater: Fetched', gtfsFleetTrips.length, 'trips')
+
+  await writeUpdatedTrips(database, tripDatabase, Object.values(existingTrips))
 
   await discordIntegration('taskLogging', `V/Line Trip Updater: ${hostname()} completed loading`)
 

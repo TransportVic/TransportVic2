@@ -44,13 +44,15 @@ export async function getPlatformUpdates(operationDay, database, ptvAPI) {
   return output
 }
 
-export async function fetchSSSPlatforms(operationDay, db, tripDB, ptvAPI) {
+export async function fetchSSSPlatforms(operationDay, db, tripDB, ptvAPI, existingTrips) {
   let tripUpdates = await getPlatformUpdates(operationDay, db, ptvAPI)
 
   for (let update of tripUpdates) {
     await VLineTripUpdater.updateTrip(db, tripDB, update, {
       skipStopCancellation: true,
-      dataSource: 'vline-platform-arrivals-sss'
+      dataSource: 'vline-platform-arrivals-sss',
+      skipWrite: true,
+      existingTrips
     })
   }
 

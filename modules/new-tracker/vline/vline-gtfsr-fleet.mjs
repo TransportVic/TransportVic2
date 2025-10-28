@@ -30,11 +30,15 @@ export async function getFleetData(gtfsrAPI) {
   return Object.values(trips)
 }
 
-export async function fetchGTFSRFleet(db, tripDB, gtfsrAPI) {
+export async function fetchGTFSRFleet(db, tripDB, gtfsrAPI, existingTrips) {
   let relevantTrips = await getFleetData(gtfsrAPI)
 
   for (let tripData of relevantTrips) {
-    await VLineTripUpdater.updateTrip(db, tripDB, tripData, { dataSource: 'gtfsr-vehicle-update' })
+    await VLineTripUpdater.updateTrip(db, tripDB, tripData, {
+      dataSource: 'gtfsr-vehicle-update',
+      skipWrite: true,
+      existingTrips
+    })
   }
 
   return relevantTrips

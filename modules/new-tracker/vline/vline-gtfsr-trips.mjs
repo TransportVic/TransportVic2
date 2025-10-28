@@ -92,12 +92,17 @@ export async function getUpcomingTrips(db, gtfsrAPI) {
   return Object.values(trips)
 }
 
-export async function fetchGTFSRTrips(db, tripDB, gtfsrAPI) {
+export async function fetchGTFSRTrips(db, tripDB, gtfsrAPI, existingTrips) {
   let relevantTrips = await getUpcomingTrips(db, gtfsrAPI)
 
   for (let tripData of relevantTrips) {
     try {
-      await VLineTripUpdater.updateTrip(db, tripDB, tripData, { skipStopCancellation: true, dataSource: 'gtfsr-trip-update' })
+      await VLineTripUpdater.updateTrip(db, tripDB, tripData, {
+        skipStopCancellation: true,
+        dataSource: 'gtfsr-trip-update',
+        skipWrite: true,
+        existingTrips
+      })
     } catch (e) {
       global.loggers.trackers.vline.err('Failed to update TDN', tripData.runID)
       global.loggers.trackers.vline.err(e)
