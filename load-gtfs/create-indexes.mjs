@@ -350,9 +350,11 @@ async function createLiveTimetableIndex(liveTimetables) {
   }, {name: 'metro live change index', sparse: true})
 
   await liveTimetables.createIndex({
+    mode: 1,
+    operationDays: 1,
     lastUpdated: 1,
     'stopTimings.actualDepartureTimeMS': 1,
-  }, {name: 'last updated index', sparse: true})
+  }, {name: 'last updated index'})
 
   await liveTimetables.createIndex({
     mode: 1,

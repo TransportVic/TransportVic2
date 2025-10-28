@@ -6,12 +6,13 @@ import { PTVAPI, PTVAPIInterface } from '@transportme/ptv-api'
 import { updateTDNFromPTV } from './metro-ptv-trips.mjs'
 import utils from '../../../utils.js'
 import _ from '../../../init-loggers.mjs'
-import { updateRelatedTrips } from './check-new-updates.mjs'
 import fs from 'fs/promises'
 
 export async function getOutdatedTrips(database) {
   let liveTimetables = await database.getCollection('live timetables')
   return (await liveTimetables.findDocuments({
+    mode: 'metro train',
+    operationDays: utils.getYYYYMMDDNow(),
     $and: [{
       stopTimings: {
         $elemMatch: {
@@ -30,10 +31,11 @@ export async function getOutdatedTrips(database) {
       },
     }],
     lastUpdated: {
+      $gte: +utils.now().add(-20, 'minutes'),
       $lte: +utils.now().add(-5, 'minutes')
     },
     isRailReplacementBus: false
-  }).toArray()).filter(trip => {
+  }, { runID: 1, routeName: 1, circular: 1, runID: 1 }).toArray()).filter(trip => {
     let { runID, routeName, circular } = trip
     if (runID[0] === '8') {
       if (runID[1] !== '5') return false
@@ -48,6 +50,8 @@ export async function fetchOutdatedTrips(db, ptvAPI, existingTrips = {}) {
   let updatedTrips = []
 
   for (let outdatedTDN of outdatedTDNs) {
+    if (existingTrips[outdatedTDN]) continue
+
     let tripData = await updateTDNFromPTV(db, outdatedTDN, ptvAPI, {}, 'outdated-trip-from-ptv', true, existingTrips)
     if (tripData) updatedTrips.push(tripData)
   }
