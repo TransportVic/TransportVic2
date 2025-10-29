@@ -18,7 +18,7 @@ function filterDepartures(departures) {
   })
 }
 
-async function getAllBusDepartures(db) {
+async function getAllBusDepartures(db, tripDB) {
   let stops = db.getCollection('stops')
 
   let busLoop = await stops.findDocument({
@@ -35,17 +35,17 @@ async function getAllBusDepartures(db) {
 
   await Promise.all([
     new Promise(async resolve => {
-      try { busLoopDepartures = await getBusDepartures(busLoop, db) }
+      try { busLoopDepartures = await getBusDepartures(busLoop, db, tripDB) }
       catch (e) {}
       resolve()
     }),
     new Promise(async resolve => {
-      try { wellingtonDepartures = (await getBusDepartures(wellington, db)).filter(d => d.routeNumber === '800') }
+      try { wellingtonDepartures = (await getBusDepartures(wellington, db, tripDB)).filter(d => d.routeNumber === '800') }
       catch (e) {}
       resolve()
     }),
     new Promise(async resolve => {
-      try { monash742Departures = await getBusDepartures(monash742, db) }
+      try { monash742Departures = await getBusDepartures(monash742, db, tripDB) }
       catch (e) {}
       resolve()
     })
@@ -74,7 +74,7 @@ async function getAllBusDepartures(db) {
   return Object.values(busDepartures).filter(d => d.length)
 }
 
-async function getAllMetroDepartures(db) {
+async function getAllMetroDepartures(db, tripDB) {
   let stops = db.getCollection('stops')
 
   let huntingdale = (await stops.findDocument({
@@ -118,7 +118,7 @@ router.get('/', async (req, res) => {
 
     await Promise.all([
       new Promise(async resolve => {
-        try { busDepartures = await getAllBusDepartures(res.db) }
+        try { busDepartures = await getAllBusDepartures(res.db, res.tripDB) }
         catch (e) {}
         resolve()
       }),

@@ -51,7 +51,7 @@ async function getData(req, res, full) {
   }
 
   let directionCount = {}
-  let busDepartures = (await getBusDepartures(stop, res.db))
+  let busDepartures = (await getBusDepartures(stop, res.db, res.tripDB))
     .sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
     .filter(departure => {
       if (bay !== '*') {
