@@ -28,26 +28,26 @@ router.use(rateLimit({
   max: 15
 }))
 
-async function generateCrossDepotQuery(smartrakIDs) {
+async function generateCrossDepotQuery(regos) {
   if (crossDepotQuery) return
 
   crossDepotQuery = { $or: [] }
   await async.forEach(Object.keys(knownBuses), async fleet => {
-    let bus = await smartrakIDs.findDocument({ fleetNumber: fleet })
+    let bus = await regos.findDocument({ fleetNumber: fleet })
     let busDepot = knownBuses[fleet]
     let depotRoutes = serviceDepots[busDepot]
 
     if (bus && depotRoutes) {
       crossDepotQuery.$or.push({
-        smartrakID: bus.smartrakID,
+        consist: bus.rego,
         routeNumber: { $not: { $in: depotRoutes } }
       })
     }
   })
 }
 
-async function findCrossDepotTrips(busTrips, smartrakIDs, date) {
-  await generateCrossDepotQuery(smartrakIDs)
+async function findCrossDepotTrips(busTrips, regos, date) {
+  await generateCrossDepotQuery(regos)
 
   let crossDepotQueryOnDate = {
     $or: crossDepotQuery.$or.map(e => {
@@ -243,7 +243,7 @@ router.get('/service', async (req, res) => {
 router.get('/operator-list', async (req, res) => {
   let { tripDB } = res
   let busTrips = tripDB.getCollection('bus trips')
-  let smartrakIDs = tripDB.getCollection('smartrak ids')
+  let regos = tripDB.getCollection('bus regos')
 
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
 
@@ -263,21 +263,21 @@ router.get('/operator-list', async (req, res) => {
     })
   }
 
-  let allBuses = (await smartrakIDs.findDocuments({
+  let allBuses = (await regos.findDocuments({
     operator
   }).sort({ fleetNumber: 1 }).toArray())
   .sort((a, b) => a.fleetNumber.replace(/[^\d]/g, '') - b.fleetNumber.replace(/[^\d]/g, ''))
 
-  let allGTFSIDs = allBuses.map(bus => bus.smartrakID)
+  let allRegos = allBuses.map(bus => bus.rego)
 
   let rawTripsToday = await busTrips.findDocuments({
     date,
-    smartrakID: { $in: allGTFSIDs }
+    consist: { $in: allRegos }
   }).sort({ routeNumber: 1 }).toArray()
 
   let buses = {}
   rawTripsToday.forEach(trip => {
-    let {fleetNumber} = allBuses.find(bus => bus.smartrakID === trip.smartrakID)
+    let {fleetNumber} = allBuses.find(bus => bus.rego === trip.consist[0])
     if (!buses[fleetNumber]) buses[fleetNumber] = []
     if (!buses[fleetNumber].includes(trip.routeNumber)) {
       buses[fleetNumber].push(trip.routeNumber)
@@ -364,7 +364,7 @@ router.get('/highlights', async (req, res) => {
 router.get('/cross-depot', async (req, res) => {
   let { tripDB } = res
   let busTrips = tripDB.getCollection('bus trips')
-  let smartrakIDs = tripDB.getCollection('smartrak ids')
+  let regos = tripDB.getCollection('bus regos')
 
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
 
@@ -374,12 +374,12 @@ router.get('/cross-depot', async (req, res) => {
   if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
   else date = today
 
-  let crossDepotTrips = await findCrossDepotTrips(busTrips, smartrakIDs, date)
+  let crossDepotTrips = await findCrossDepotTrips(busTrips, regos, date)
 
   let tripsToday = (await async.map(crossDepotTrips, async trip => {
-    let {fleetNumber} = await getBusFromRego(smartrakIDs, trip.smartrakID) || {}
+    let {fleetNumber} = await getBusFromRego(regos, trip.consist[0]) || {}
 
-    trip.fleetNumber = fleetNumber ? '#' + fleetNumber : '@' + trip.smartrakID
+    trip.fleetNumber = fleetNumber ? '#' + fleetNumber : '@' + trip.consist[0]
 
     return trip
   })).map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
@@ -398,53 +398,10 @@ router.get('/cross-depot', async (req, res) => {
   })
 })
 
-router.get('/bot', async (req, res) => {
-  let { tripDB } = res
-  let busTrips = tripDB.getCollection('bus trips')
-  let smartrakIDs = tripDB.getCollection('smartrak ids')
-  let date = utils.getYYYYMMDDNow()
-
-  let {fleet, service} = querystring.parse(url.parse(req.url).query)
-
-  if (fleet) {
-    let bus = await smartrakIDs.findDocument({ fleetNumber: fleet })
-    let query = { date }
-
-    let smartrakID
-
-    if (bus) smartrakID = bus.smartrakID
-    else smartrakID = parseInt(fleet)
-
-    query.smartrakID = smartrakID
-    let tripsToday = await busTrips.findDocuments(query)
-      .sort({departureTime: 1}).toArray()
-
-    res.json(tripsToday.map(adjustTrip))
-  } else if (service) {
-    let rawTripsToday = await busTrips.findDocuments({
-      date,
-      routeNumber: service
-    }).sort({departureTime: 1, origin: 1}).toArray()
-
-    let tripsToday = (await async.map(rawTripsToday, async rawTrip => {
-      let {fleetNumber} = await getBusFromRego(smartrakIDs, smartrakID) || {}
-
-      let {origin, destination, departureTime} = rawTrip
-
-      rawTrip.fleetNumber = fleetNumber ? '#' + fleetNumber : '@' + rawTrip.smartrakID
-      return rawTrip
-    }))
-
-    res.json(tripsToday.map(adjustTrip))
-  } else {
-    res.json([])
-  }
-})
-
 router.get('/operator-unknown', async (req, res) => {
   let { db, tripDB } = res
   let busTrips = tripDB.getCollection('bus trips')
-  let smartrakIDs = tripDB.getCollection('smartrak ids')
+  let busRegos = tripDB.getCollection('bus regos')
   let routes = db.getCollection('routes')
 
   let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
@@ -466,7 +423,7 @@ router.get('/operator-unknown', async (req, res) => {
   }
 
   let operatorName = operatorCodes[operator]
-  let allBuses = await smartrakIDs.distinct('smartrakID')
+  let allBuses = await busRegos.distinct('rego')
 
   let operatorServices = manualRoutes[operator] || await routes.distinct('routeGTFSID', {
     operators: operatorName
@@ -477,7 +434,7 @@ router.get('/operator-unknown', async (req, res) => {
     routeGTFSID: {
       $in: operatorServices
     },
-    smartrakID: {
+    consist: {
       $not: {
         $in: allBuses
       }
@@ -491,7 +448,7 @@ router.get('/operator-unknown', async (req, res) => {
       routeGTFSID: {
         $in: operatorServices
       },
-      smartrakID: {
+      consist: {
         $not: {
           $in: allBuses
         }
@@ -500,8 +457,8 @@ router.get('/operator-unknown', async (req, res) => {
   }, {
     $group: {
       _id: '$date',
-      smartraks: {
-        $addToSet: '$smartrakID'
+      regos: {
+        $addToSet: '$consist'
       }
     }
   }, {
@@ -514,9 +471,9 @@ router.get('/operator-unknown', async (req, res) => {
     let date = data._id
     let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
 
-    let buses = data.smartraks.map(smartrak => {
-      return '@' + smartrak
-    }).sort((a, b) => a.slice(1) - b.slice(1))
+    let buses = data.regos.flatMap(rego => {
+      return '@' + rego
+    }).sort((a, b) => a.localeCompare(b))
 
     return {
       date,
@@ -538,6 +495,5 @@ router.use('/locator', require('./BusLocator'))
 
 module.exports = router
 module.exports.initDB = async db => {
-  let smartrakIDs = db.getCollection('smartrak ids')
-  await generateCrossDepotQuery(smartrakIDs)
+  await generateCrossDepotQuery(await db.getCollection('bus regos'))
 }
