@@ -47,9 +47,9 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
 
   await fetchGTFSRFleet(database, tripDatabase, existingTrips)
 
-  await writeUpdatedTrips(db, tripDB, Object.values(existingTrips))
+  await writeUpdatedTrips(database, tripDatabase, Object.values(existingTrips))
 
-  global.loggers.trackers.bus.log('GTFSR Updater: Updated', relevantTrips.length, 'trips')
+  global.loggers.trackers.bus.log('GTFSR Updater: Updated', Object.values(existingTrips).length, 'trips')
 
   await discordIntegration('taskLogging', `Bus Trip Updater: ${hostname()} completed loading`)
 
