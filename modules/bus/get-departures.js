@@ -289,6 +289,13 @@ async function getDepartures(stop, db, tripDB, time, discardUnmatched) {
       return (await async.map(departures, async departure => {
         let {trip} = departure
 
+        if (!trip.vehicle) {
+          trip.vehicle = await busTrips.findDocument({
+            date: utils.getPTYYYYMMDD(departure.originDepartureTime),
+            runID: trip.tripID
+          })
+        }
+
         if (trip.vehicle) {
           const rego = trip.vehicle.consist[0]
           const busData = await busRegos.findDocument({
