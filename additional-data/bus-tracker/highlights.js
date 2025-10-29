@@ -45,7 +45,6 @@ module.exports = [{
   routes: [],
   type: 'exclude'
 }, {
-}, {
   name: 'CDC Oakleigh SmartBuses',
   track: ['CO116', 'CO117', 'CO118', 'CO119', 'CO120', 'CO121'],
   routes: ['900'],
