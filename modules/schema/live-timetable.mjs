@@ -666,6 +666,8 @@ export class BusLiveTimetable extends LiveTimetable {
 
   toTrackerDatabase() {
     const parentData = super.toTrackerDatabase()
+    if (!parentData) return null
+
     const { origin, destination } = this._getUpdatedOriginDest()
 
     parentData.origin = origin
