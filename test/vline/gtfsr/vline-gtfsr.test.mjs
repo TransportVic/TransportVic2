@@ -44,9 +44,11 @@ describe('The V/Line GTFS-R updater', () => {
     await stops.createDocuments(clone(trnStops))
     await timetables.createDocument(clone(td8403Live_NNG_TYN))
 
-    await fetchGTFSRTrips(database, database, () => td8403GTFSR_NNG_TYN)
+    const trips = {}
+    await fetchGTFSRTrips(database, database, () => td8403GTFSR_NNG_TYN, trips)
 
-    let trip = await timetables.findDocument({})
+    const trip = trips['8403'].toDatabase()
+
     expect(trip.stopTimings[0].stopName).to.equal('Nar Nar Goon Railway Station')
     expect(trip.stopTimings[0].cancelled).to.be.true
 

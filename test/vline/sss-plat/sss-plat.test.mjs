@@ -73,9 +73,10 @@ describe('The SSS Platform updater', () => {
     let ptvAPI = new PTVAPI(stubAPI)
     ptvAPI.addVLine(stubAPI)
 
-    await fetchSSSPlatforms('20250718', database, database, ptvAPI)
+    const trips = {}
+    await fetchSSSPlatforms('20250718', database, database, ptvAPI, trips)
 
-    let td8866Trip = await liveTimetables.findDocument({ runID: '8866' })
+    let td8866Trip = trips['8866'].toDatabase()
     expect(td8866Trip.stopTimings[0].cancelled).to.be.false
     expect(td8866Trip.stopTimings[0].stopName).to.equal('Warrnambool Railway Station')
 
@@ -83,7 +84,7 @@ describe('The SSS Platform updater', () => {
     expect(td8866Trip.stopTimings[td8866Trip.stopTimings.length - 1].cancelled).to.be.false
     expect(td8866Trip.stopTimings[td8866Trip.stopTimings.length - 1].platform).to.equal('8')
 
-    let td8741Trip = await liveTimetables.findDocument({ runID: '8741' })
+    let td8741Trip = trips['8741'].toDatabase()
     expect(td8741Trip.stopTimings[0].cancelled).to.be.false
     expect(td8741Trip.stopTimings[0].stopName).to.equal('Southern Cross Railway Station')
     expect(td8741Trip.stopTimings[0].platform).to.equal('1')
@@ -106,9 +107,12 @@ describe('The SSS Platform updater', () => {
     let ptvAPI = new PTVAPI(stubAPI)
     ptvAPI.addVLine(stubAPI)
 
-    await fetchSSSPlatforms('20250914', database, database, ptvAPI)
 
-    let td8431Trip = await liveTimetables.findDocument({ runID: '8431' })
+    const trips = {}
+    await fetchSSSPlatforms('20250914', database, database, ptvAPI, trips)
+
+    let td8431Trip = trips['8431'].toDatabase()
+
     expect(td8431Trip.stopTimings[0].stopName).to.equal('Southern Cross Railway Station')
     expect(td8431Trip.stopTimings[0].platform).to.equal('15A')
   })
