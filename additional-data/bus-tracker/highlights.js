@@ -10,7 +10,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'Ventura Specials',
-  track: ['V292', 'V293', 'V895', 'V8239'],
+  track: ['V234', 'V238', 'V250', 'V292', 'V293', 'V344', 'V355', 'V588', 'V591', 'V592', 'V895', 'V1141', 'V8239'],
   routes: [],
   type: 'exclude'
 }, {
@@ -71,7 +71,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'CDC Wyndham Specials',
-  track: ['CW10', 'CW106', 'CW107', 'CW336', 'CW338', 'CW339', 'CW340', 'CW341', 'CW447'],
+  track: ['CW10', 'CW106', 'CW107', 'CW336', 'CW338', 'CW339', 'CW340', 'CW341'],
   routes: [],
   type: 'exclude'
 }, {
