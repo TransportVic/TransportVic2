@@ -24,6 +24,8 @@ export async function getFleetData(tripDB, gtfsrAPI) {
     const trackedRego = trip.vehicle.vehicle.id
     let trueRego = trackedRego
 
+    if (!gtfsrTripData.getRouteID()) continue
+
     if (!goodRegos.has(trackedRego)) {
       const busData = regosSeen[trackedRego] || await busRegos.findDocument({ trackedRego })
       if (busData) {
