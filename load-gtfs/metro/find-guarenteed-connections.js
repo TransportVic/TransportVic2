@@ -1,11 +1,11 @@
 const async = require('async')
-const DatabaseConnection = require('../../database/DatabaseConnection')
+import { MongoDatabaseConnection } from '@transportme/database'
 const config = require('../../config')
 const utils = require('../../utils')
 
 let timetables
 
-const database = new DatabaseConnection(config.databaseURL, config.databaseName)
+const database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
 
 async function findConnections(changeoverPoint) {
   let shorts = await timetables.findDocuments({

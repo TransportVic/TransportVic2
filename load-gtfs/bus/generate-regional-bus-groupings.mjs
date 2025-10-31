@@ -1,7 +1,7 @@
 import fs from 'fs/promises'
 import async from 'async'
 import config from '../../config.json' with { type: 'json' }
-import DatabaseConnection from '../../database/DatabaseConnection.js'
+import { MongoDatabaseConnection } from '@transportme/database'
 import operators from '../../transportvic-data/excel/bus/operators/regional-numbered-operators.json' with { type: 'json' }
 import path from 'path'
 import url from 'url'
@@ -11,7 +11,7 @@ const __dirname = path.dirname(__filename)
 
 const network = JSON.parse(await fs.readFile(path.join(__dirname, '../../transportvic-data/geospatial/regional-bus-networks/bus-network-regions.geojson')))
 
-const database = new DatabaseConnection(config.databaseURL, config.databaseName)
+const database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
 
 await database.connect({})
 let routes = database.getCollection('gtfs-routes')

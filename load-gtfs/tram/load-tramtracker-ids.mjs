@@ -1,4 +1,4 @@
-import DatabaseConnection from '../../database/DatabaseConnection.js'
+import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../config.json' with { type: 'json' }
 import utils from '../../utils.js'
 import ptvStops from './tram-stops.json' with { type: 'json' }
@@ -7,7 +7,7 @@ import async from 'async'
 import { load as loadHTML } from 'cheerio'
 import ptvOverrides from './ptv-overrides.mjs'
 
-const database = new DatabaseConnection(config.databaseURL, config.databaseName)
+const database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
 
 await database.connect({})
 
