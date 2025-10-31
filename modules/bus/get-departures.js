@@ -1,7 +1,7 @@
 const async = require('async')
 const utils = require('../../utils')
 const ptvAPI = require('../../ptv-api')
-const getStoppingPattern = require('./get-stopping-pattern')
+const getStoppingPattern = require('./get-stopping-pattern.js')
 const stopNameModifier = require('../../additional-data/stop-name-modifier')
 const busBays = require('../../additional-data/bus-data/bus-bays')
 const departureUtils = require('../utils/get-bus-timetables')
@@ -292,7 +292,7 @@ async function getDepartures(stop, db, tripDB, time, discardUnmatched) {
         if (!trip.vehicle) {
           trip.vehicle = await busTrips.findDocument({
             date: utils.getPTYYYYMMDD(departure.originDepartureTime),
-            runID: trip.tripID
+            runID: trip.runID
           })
         }
 

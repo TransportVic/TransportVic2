@@ -41,6 +41,16 @@ async function getRoutes(db, cacheKey, query) {
   })
 }
 
+function getRunIDFromTripID(tripID) {
+  const tripIDParts = tripID.split('-')
+  const depotID = tripIDParts[0]
+  const routeNumber = tripIDParts[1]
+  const routeVariant = tripIDParts[2]
+  const rosterType = tripIDParts[4].replace(/\d+/, '')
+  const tripRunID = tripIDParts[5]
+  return `${depotID}-${routeNumber}-${routeVariant}-${rosterType}-${tripRunID}`
+}
+
 module.exports = async function (data, db) {
   let { ptvRunID, time, referenceTrip } = data
 
@@ -210,7 +220,7 @@ module.exports = async function (data, db) {
     direction: null,
     cancelled: null,
     suspensions: null,
-    runID: ptvRunID.includes('-') ? ptvRunID : referenceTrip.tripID,
+    runID: ptvRunID.includes('-') ? getRunIDFromTripID(ptvRunID) : referenceTrip.runID,
     tripID: ptvRunID.includes('-') ? ptvRunID : referenceTrip.tripID
   }
 

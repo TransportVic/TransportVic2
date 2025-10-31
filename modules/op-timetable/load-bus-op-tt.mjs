@@ -28,12 +28,7 @@ async function loadOperationalTT(db, operationDay) {
     let end = (i + 1) * 1000
 
     // TODO: Implement block data with refactored method
-    let activeTrips = rawActiveTrips.slice(start, end).map(trip => convertToLive(trip, operationDay)).map(trip => {
-      trip.operationDays = opDayFormat
-      trip.runID = trip.tripID
-
-      return trip
-    })
+    let activeTrips = rawActiveTrips.slice(start, end).map(trip => convertToLive(trip, operationDay))
 
     let bulkUpdate = activeTrips.map(trip => ({
       replaceOne: {

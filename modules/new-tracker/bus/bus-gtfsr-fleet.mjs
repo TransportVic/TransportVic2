@@ -9,6 +9,9 @@ import fs from 'fs/promises'
 import BusTripUpdater from '../../bus/trip-updater.mjs'
 import async from 'async'
 import { LiveTimetable } from '../../schema/live-timetable.mjs'
+import { GTFSTypes } from '@transportme/load-ptv-gtfs'
+
+const { SmartrakTrip } = GTFSTypes
 
 export async function getFleetData(tripDB, gtfsrAPI) {
   let tripData = await gtfsrAPI('bus/vehicle-positions')
@@ -24,7 +27,7 @@ export async function getFleetData(tripDB, gtfsrAPI) {
     const trackedRego = trip.vehicle.vehicle.id
     let trueRego = trackedRego
 
-    if (!gtfsrTripData.getRouteID()) continue
+    if (!gtfsrTripData.getTDN()) continue
 
     if (!goodRegos.has(trackedRego)) {
       const busData = regosSeen[trackedRego] || await busRegos.findDocument({ trackedRego })
@@ -38,7 +41,7 @@ export async function getFleetData(tripDB, gtfsrAPI) {
 
     let tripData = {
       operationDays: gtfsrTripData.getOperationDay(),
-      runID: gtfsrTripData.getTDN(),
+      runID: SmartrakTrip.getRunIDFromTripID(gtfsrTripData.getTDN()),
       routeGTFSID: gtfsrTripData.getRouteID(),
       consist: [ trueRego ]
     }

@@ -177,7 +177,7 @@ async function pickBestTrip(data, db, tripDB) {
     if (!ptvRunID) return null // Available options to get ptvRunID unsuccessful - trip does not exist
 
     let trip = await getStoppingPattern({
-      ptvRunID,
+      ptvRunID: gtfsTrip.tripID,
       referenceTrip: gtfsTrip
     }, db)
 
