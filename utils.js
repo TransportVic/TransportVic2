@@ -531,6 +531,8 @@ module.exports = {
     })
   },
   findSubstrings: (str, size=0) => {
+    if (str.length < size) return [str]
+
     let result = []
     for (let i = 0; i < str.length; i++) {
       for (let j = str.length; j - i >= size; j--) {
