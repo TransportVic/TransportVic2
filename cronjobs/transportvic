@@ -91,6 +91,6 @@
   5     0     *     *     *     /home/transportvic/TransportVic/Server/scripts/check-gtfs-updates.sh
   0     4     *     *     *     node /home/transportvic/TransportVic/Server/scripts/update-consists.mjs
   0     0     *     *     *     node /home/transportvic/TransportVic/Server/scripts/cleanup.mjs
-  0     0     *     *     *     node /home/transportvic/TransportVic/Server/scripts/rotate-logs.sh
+  0     0     *     *     *     node /home/transportvic/TransportVic/Server/scripts/rotate-logs.mjs
   50    3     *     *     *     node /home/transportvic/TransportVic/Server/load-gtfs/xpt/load-all.js
   0     3     */2   *     *     /home/transportvic/TransportVic/Backups/backup.sh
