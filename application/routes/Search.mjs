@@ -75,6 +75,10 @@ async function findStops(db, query) {
   let searchRegex = new RegExp(search, 'i')
   let stationRegex = new RegExp(queryString.replace(/sta?t?i?o?n?/i, 'railway station'), 'i')
 
+  const queryWords = (queryString + ' ' + search).split(/[^\w]/)
+  const searchedWords = queryWords.filter(word => word.length >= 4)
+  const shortWords = queryWords.filter(word => word.length < 4)
+
   let remainingResults = (await stops.findDocuments({
     _id: {
       $not: {
@@ -82,7 +86,7 @@ async function findStops(db, query) {
       }
     },
     $and: [
-      ...((queryString + ' ' + search).split(/[^\w]/).map(name => ({ textQuery: name }))),
+      ...(searchedWords.map(name => ({ textQuery: name }))),
       // {
       //   $text: {
       //     $search: queryString + ' ' + search
@@ -99,7 +103,9 @@ async function findStops(db, query) {
         stopName: stationRegex
       }]
     }]
-  }).limit(15 - prioritySearchResults.length).toArray()).sort((a, b) => a.stopName.length - b.stopName.length)
+  }).limit(15 - prioritySearchResults.length).toArray())
+    .filter(stop => shortWords.every(word => stop.stopName.toLowerCase().includes(word)))
+    .sort((a, b) => a.stopName.length - b.stopName.length)
 
   let lowPriorityResults = await stops.findDocuments({
     _id: {
@@ -108,7 +114,7 @@ async function findStops(db, query) {
       }
     },
     $and: [
-      ...((queryString + ' ' + search).split(/[^\w]/).map(name => ({ textQuery: name }))),
+      ...(searchedWords.map(name => ({ textQuery: name }))),
       // {
       //   $text: {
       //     $search: queryString + ' ' + search
