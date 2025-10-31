@@ -88,7 +88,15 @@
   *     0-2   *     *     1     node /home/transportvic/TransportVic/Server/modules/new-tracker/bus.mjs
 
   # Other maintenance scripts
-  5     0     *     *     *     /home/transportvic/TransportVic/Server/scripts/check-gtfs-updates.sh
+  5     0     *     *     *     sudo reboot
+  8     0     *     *     *     /home/transportvic/TransportVic/Server/scripts/check-gtfs-updates.sh
+
+  15    0     *     *     *     sudo reboot
+  18    0     *     *     *     /home/transportvic/TransportVic/Server/scripts/check-gtfs-updates.sh
+
+  25    0     *     *     *     sudo reboot
+  28    0     *     *     *     /home/transportvic/TransportVic/Server/scripts/check-gtfs-updates.sh
+
   0     4     *     *     *     node /home/transportvic/TransportVic/Server/scripts/update-consists.mjs
   0     0     *     *     *     node /home/transportvic/TransportVic/Server/scripts/cleanup.mjs
   0     0     *     *     *     node /home/transportvic/TransportVic/Server/scripts/rotate-logs.mjs
