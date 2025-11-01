@@ -1,0 +1,71 @@
+export default {
+  mode: 'bus',
+  routeGTFSID: '4-670',
+  operationDays: '20251101',
+  tripID: '21-670--1-Sat4-76',
+  shapeID: '21-670-aus-1.5.H',
+  block: null,
+  gtfsDirection: 0,
+  runID: '21-670--Sat-76',
+  isRailReplacementBus: null,
+  vehicle: { size: 1, type: 'Unknown', consist: [ 'BS12MD' ] },
+  direction: null,
+  routeName: 'Lilydale - Ringwood',
+  routeNumber: '670',
+  origin: 'Ringwood Railway Station/Maroondah Highway',
+  destination: 'Lilydale Railway Station/West William Street',
+  departureTime: '31:30',
+  destinationArrivalTime: '32:03',
+  formedBy: null,
+  forming: null,
+  changes: [
+    {
+      type: 'veh-change',
+      oldVal: null,
+      newVal: { size: 1, type: 'Unknown', consist: [ 'BS12MD' ] },
+      timestamp: '2025-11-01T20:38:39.882Z',
+      source: 'gtfsr-vehicle-update'
+    }
+  ],
+  cancelled: false,
+  additional: false,
+  lastUpdated: 1762029519870,
+  stopTimings: [
+    {
+      stopName: 'Ringwood Railway Station/Maroondah Highway',
+      stopNumber: null,
+      suburb: 'Ringwood',
+      stopGTFSID: '21318',
+      arrivalTime: '07:30',
+      arrivalTimeMinutes: 1890,
+      departureTime: '07:30',
+      departureTimeMinutes: 1890,
+      estimatedDepartureTime: null,
+      scheduledDepartureTime: '2025-11-01T20:30:00.000Z',
+      actualDepartureTimeMS: 1762029000000,
+      platform: 'Bay H',
+      cancelled: false,
+      additional: false,
+      stopConditions: { pickup: 0, dropoff: 1 },
+      stopDistance: 0
+    },
+    {
+      stopName: 'Lilydale Railway Station/West William Street',
+      stopNumber: null,
+      suburb: 'Lilydale',
+      stopGTFSID: '28191',
+      arrivalTime: '08:03',
+      arrivalTimeMinutes: 1923,
+      departureTime: '08:03',
+      departureTimeMinutes: 1923,
+      estimatedDepartureTime: null,
+      scheduledDepartureTime: '2025-11-01T21:03:00.000Z',
+      actualDepartureTimeMS: 1762030980000,
+      platform: 'Bay A',
+      cancelled: false,
+      additional: false,
+      stopConditions: { pickup: 1, dropoff: 0 },
+      stopDistance: 16388.37
+    }
+  ]
+}
