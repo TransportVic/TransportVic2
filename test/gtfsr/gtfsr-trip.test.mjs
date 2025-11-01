@@ -188,7 +188,7 @@ describe('The GTFSRTrip class', () => {
       schedule_relationship: 0
     })
 
-    expect(trip.getTDN()).to.equal('21-201--1-MF4-20')
+    expect(trip.getTDN()).to.equal('21-201--MF-20')
     expect(trip.getOperationDay()).to.equal('20251030')
   })
 })

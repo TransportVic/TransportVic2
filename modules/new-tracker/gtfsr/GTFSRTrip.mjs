@@ -1,3 +1,5 @@
+import { SmartrakTrip } from '@transportme/load-ptv-gtfs/lib/gtfs-parser/GTFSTrip.mjs'
+
 export class GTFSRTrip {
 
   #operationDay
@@ -89,28 +91,34 @@ export class GenericRailGTFSRTrip extends GTFSRTrip {
 
 export class BusGTFSRTrip extends GTFSRTrip {
 
+  #runID
+
   constructor(trip) {
     super(trip)
+    console.log(this.getTripID())
+    this.#runID = SmartrakTrip.getRunIDFromTripID(this.getTripID())
   }
 
   static canProcess(trip) {
     return !!trip.trip_id.match(/^\d+-\w+-\w?-1-\w+-\d+$/)
   }
 
-  getTDN() { return this.getTripID() }
+  getTDN() { return this.#runID }
   getRouteID() { return '4-' + this.getTripID().split('-')[1] }
 
 }
 
 export class UnscheduledBusGTFSRTrip extends GTFSRTrip {
 
-  #tdn
+  #tripID
+  #runID
   #operationDay
 
   constructor(trip) {
     super(trip)
     const smartrakTripID = trip.trip_id.match(/_\w+_(\d+-\w+-\w?-1-\w+-\d+)_(\d+)$/)
-    this.#tdn = smartrakTripID[1]
+    this.#tripID = smartrakTripID[1]
+    this.#runID = SmartrakTrip.getRunIDFromTripID(this.getTripID())
     this.#operationDay = smartrakTripID[2]
   }
 
@@ -118,7 +126,8 @@ export class UnscheduledBusGTFSRTrip extends GTFSRTrip {
     return !!trip.trip_id.match(/_\w+_\d+-\w+-\w?-1-\w+-\d+_\d+$/)
   }
 
-  getTDN() { return this.#tdn }
+  getTripID() { return this.#tripID }
+  getTDN() { return this.#runID }
   getOperationDay() { return this.#operationDay }
 
 }

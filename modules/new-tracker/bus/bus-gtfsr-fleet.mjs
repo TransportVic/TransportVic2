@@ -41,7 +41,7 @@ export async function getFleetData(tripDB, gtfsrAPI) {
 
     let tripData = {
       operationDays: gtfsrTripData.getOperationDay(),
-      runID: SmartrakTrip.getRunIDFromTripID(gtfsrTripData.getTDN()),
+      runID: gtfsrTripData.getTDN(),
       routeGTFSID: gtfsrTripData.getRouteID(),
       consist: [ trueRego ]
     }
