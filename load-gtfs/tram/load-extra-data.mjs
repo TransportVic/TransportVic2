@@ -1,16 +1,14 @@
-import { MongoDatabaseConnection, LokiDatabaseConnection } from '@transportme/database'
+import { MongoDatabaseConnection } from '@transportme/database'
 import path from 'path'
 import url from 'url'
 import fs from 'fs/promises'
 import { StopsLoader } from '@transportme/load-ptv-gtfs'
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
+import TramData from '../../transportvic-data/gtfs/tram-data.mjs'
 
 import config from '../../config.json' with { type: 'json' }
 
-import MetroData from '../../transportvic-data/gtfs/metro-data.mjs'
 import GTFSStopsReader from '@transportme/load-ptv-gtfs/lib/gtfs-parser/readers/GTFSStopsReader.mjs'
-import MetroRouteLoader from './MetroRouteLoader.mjs'
-import GTFSRouteReader from '@transportme/load-ptv-gtfs/lib/gtfs-parser/readers/GTFSRouteReader.mjs'
 
 const { TRANSIT_MODES } = GTFS_CONSTANTS
 
@@ -22,15 +20,9 @@ const suburbs = JSON.parse(await fs.readFile(path.join(__dirname, '../../transpo
 let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
 await mongoDB.connect()
 
-let stopLoader = new StopsLoader('', suburbs, TRANSIT_MODES.metroTrain, mongoDB)
+let stopLoader = new StopsLoader('', suburbs, TRANSIT_MODES.tram, mongoDB)
 let reader = new GTFSStopsReader('', suburbs)
 
-for (let stop of MetroData.stops) await stopLoader.loadStop(reader.processEntity(stop))
-
-let routeLoader = new MetroRouteLoader(mongoDB)
-let routeReader = new GTFSRouteReader('', TRANSIT_MODES.metroTrain)
-await routeLoader.loadAgencies()
-
-for (let route of MetroData.routes) await routeLoader.loadRoute(routeReader.processEntity(route))
+for (let stop of TramData.stops) await stopLoader.loadStop(reader.processEntity(stop))
 
 process.exit(0)

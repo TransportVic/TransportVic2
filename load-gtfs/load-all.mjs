@@ -13,6 +13,8 @@ let commands = [
   ['vline/timetables/load-vline-timetables.mjs'],
 
   ['bus/load-788-stop-numbers.mjs'],
+  ['tram/load-extra-data.mjs'],
+
   ['load-all-trips.mjs'],
 
   ['bus/load-flexiride-data.mjs'],

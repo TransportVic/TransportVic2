@@ -1,7 +1,7 @@
 import async from 'async'
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../config.json' with { type: 'json' }
-import stopNumbers from './788-stop-numbers.json' with { type: 'json' }
+import stopNumbers from '../../transportvic-data/bus/misc/788-stop-numbers.mjs'
 
 const database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
 await database.connect()
