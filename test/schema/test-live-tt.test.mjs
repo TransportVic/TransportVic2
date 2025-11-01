@@ -8,6 +8,7 @@ import chaiExclude from 'chai-exclude'
 import utils from '../../utils.js'
 import beg3152 from './sample-data/beg-3152.mjs'
 import bus200Data from './sample-data/bus-200-data.mjs'
+import bus670Data from './sample-data/bus-670-data.mjs'
 use(chaiExclude)
 
 let clone = o => JSON.parse(JSON.stringify(o))
@@ -834,6 +835,14 @@ describe('The LiveTimetable class', () => {
     expect(dbObj.destination).to.equal('Ringwood Railway Station')
     expect(dbObj.destinationArrivalTime).to.equal('26:04')
     expect(dbObj.stopTimings[dbObj.stopTimings.length - 1].departureTime).to.equal('03:04')
+  })
+
+  it('Respects times beyond 24:00 on tracker database entries', () => {
+    const timetable = LiveTimetable.fromDatabase(bus670Data)
+
+    const tracker = timetable.toTrackerDatabase()
+    expect(tracker.departureTime).to.equal('31:30')
+    expect(tracker.destinationArrivalTime).to.equal('32:03')
   })
 
   it('Picks the BusLiveTimetable class for bus trips', () => {

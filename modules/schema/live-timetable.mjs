@@ -493,9 +493,9 @@ export class LiveTimetable {
       destinationArrivalTime = this.destinationArrivalTime
     } else {
       originStop = origin.stopName
-      departureTime = origin.departureTime
+      departureTime = origin.ptDepartureTime
       destinationStop = destination.stopName
-      destinationArrivalTime = destination.arrivalTime
+      destinationArrivalTime = destination.ptArrivalTime
     }
 
     return {
