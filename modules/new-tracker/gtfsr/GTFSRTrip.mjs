@@ -32,7 +32,7 @@ export class GTFSRTrip {
   static canProcess() { return false }
 
   static parse(trip) {
-    let parsers = [ ScheduledRailGTFSRTrip, BusGTFSRTrip, UnscheduledRailGTFSRTrip, GenericRailGTFSRTrip ]
+    let parsers = [ ScheduledRailGTFSRTrip, UnscheduledBusGTFSRTrip, BusGTFSRTrip, UnscheduledRailGTFSRTrip, GenericRailGTFSRTrip ]
     for (let parser of parsers) if (parser.canProcess(trip)) return new parser(trip)
   }
 
@@ -99,5 +99,26 @@ export class BusGTFSRTrip extends GTFSRTrip {
 
   getTDN() { return this.getTripID() }
   getRouteID() { return '4-' + this.getTripID().split('-')[1] }
+
+}
+
+export class UnscheduledBusGTFSRTrip extends GTFSRTrip {
+
+  #tdn
+  #operationDay
+
+  constructor(trip) {
+    super(trip)
+    const smartrakTripID = trip.trip_id.match(/_\w+_(\d+-\w+-\w?-1-\w+-\d+)_(\d+)$/)
+    this.#tdn = smartrakTripID[1]
+    this.#operationDay = smartrakTripID[2]
+  }
+
+  static canProcess(trip) {
+    return !!trip.trip_id.match(/_\w+_\d+-\w+-\w?-1-\w+-\d+_\d+$/)
+  }
+
+  getTDN() { return this.#tdn }
+  getOperationDay() { return this.#operationDay }
 
 }

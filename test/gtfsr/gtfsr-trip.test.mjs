@@ -177,4 +177,18 @@ describe('The GTFSRTrip class', () => {
     expect(data.getStartTime()).to.equal('17:09')
     expect(data.getRouteID()).to.equal('1-WBL')
   })
+
+  it('Extracts unscheduled bus data', () => {
+    const trip = GTFSRTrip.parse({
+      trip_id: 'vic:21201:_:R:aus._201_21-201--1-MF4-20_20251030',
+      route_id: '21201',
+      direction_id: 0,
+      start_time: '11:45:00',
+      start_date: '20251029',
+      schedule_relationship: 0
+    })
+
+    expect(trip.getTDN()).to.equal('21-201--1-MF4-20')
+    expect(trip.getOperationDay()).to.equal('20251030')
+  })
 })
