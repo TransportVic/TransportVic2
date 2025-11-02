@@ -9,8 +9,9 @@ await database.connect({})
 let routes = database.getCollection('gtfs-routes')
 let busRoutes = await routes.findDocuments({
   mode: 'bus',
+  operators: 'Unknown',
   $and: [{
-    routeGTFSID: /^6-/,
+    routeGTFSID: /^[46]-/,
   }, {
     routeGTFSID: {
       $not: {
@@ -64,7 +65,7 @@ busRoutes = busRoutes.map(route => {
     }
   }
 
-  if (route.routeGTFSID === '6-WGT') route.routeNameTest = 'West Gippsland Transit'
+  if (route.routeGTFSID === '4-WGT') route.routeNameTest = 'West Gippsland Transit'
   if (route.routeNumber === 'South - Schools AM') route.routeNameTest = 'Swan Hill Schools - AM'
   if (route.routeNumber === 'South - Schools PM') route.routeNameTest = 'Swan Hill Schools - PM'
 
@@ -91,7 +92,7 @@ busRoutes.forEach(route => {
 
 duplicateNames.forEach(name => {
   let routes = busRoutes.filter(z => z.routeNameTest === name)
-  if (routes[0].routeGTFSID.startsWith('6-w')) return
+  if (!routes.length || routes[0].routeGTFSID.startsWith('6-w')) return
 
   routes.forEach(route => {
     let stops = route.directions[0].stops
@@ -113,7 +114,7 @@ duplicateNames.forEach(name => {
 for (let route of busRoutes) {
   let operator = operators[route.routeNameTest]
   if (!operator) {
-    console.log('Failed to map operator', route.routeNameTest, ' -- ', route.routeName, route.routeGTFSID)
+    console.log('Failed to map operator', route.routeNameTest, ': ', route.routeName, route.routeGTFSID)
     operator = 'Unknown'
   }
 
