@@ -95,7 +95,6 @@ export class BusGTFSRTrip extends GTFSRTrip {
 
   constructor(trip) {
     super(trip)
-    console.log(this.getTripID())
     this.#runID = SmartrakTrip.getRunIDFromTripID(this.getTripID())
   }
 
