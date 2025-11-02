@@ -55,6 +55,7 @@ module.exports.trimFromDestination = async function(db, destination, coreRoute, 
   let destinationWithoutRoad = searchDestination.replace(/ *&.*/, ' &')
 
   if (coreRoute === '70' && searchDestination === 'Wattle Park') return trip
+  if (coreRoute === '72' && searchDestination === 'Camberwell') return trip
   if (coreRoute === '48' && searchDestination === 'North Balwyn') return trip
 
   await async.forEachOf(trip.stopTimings, async (stop, i) => {
