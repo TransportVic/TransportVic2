@@ -86,7 +86,7 @@ export default class MainServer {
       routePromises.push(new Promise(async resolve => {
         try {
           let routerData = await import(path.join(__dirname, '..', 'application', 'routes', routeData.router))
-          if (routerData.initDB) routerData.initDB(this.database)
+          if (routerData.initDB) routerData.initDB(this.database, this.tripDatabase)
 
           let router = routerData.default
           resolve({ ...routeData, router })

@@ -673,9 +673,8 @@ export class BusLiveTimetable extends LiveTimetable {
     parentData.origin = origin
     parentData.destination = destination
 
-    if (this.routeNumber) {
-      parentData.routeNumber = this.routeNumber
-    }
+    if (this.routeNumber) parentData.routeNumber = this.routeNumber
+    parentData.depot = parentData.runID.slice(0, 2)
 
     return parentData
   }

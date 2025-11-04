@@ -9,8 +9,14 @@ const router = new express.Router()
 
 const highlightData = require('../../../additional-data/bus-tracker/highlights')
 
-const knownBuses = require('../../../additional-data/bus-tracker/fleetlist')
-const serviceDepots = require('../../../additional-data/bus-tracker/depots')
+const depotAllocations = require('../../../additional-data/bus-tracker/depot-allocations.json')
+const smartrakDepots = require('../../../transportvic-data/excel/bus/depots/bus-depots.json')
+
+const smartrakDepotLookup = Object.keys(smartrakDepots).reduce((acc, depotID) => ({
+  ...acc,
+  [smartrakDepots[depotID]]: depotID
+}), {})
+
 const operatorCodes = require('../../../additional-data/bus-tracker/operators')
 
 let crossDepotQuery = null
@@ -28,22 +34,25 @@ router.use(rateLimit({
   max: 15
 }))
 
-async function generateCrossDepotQuery(regos) {
+async function generateCrossDepotQuery(busRegos) {
   if (crossDepotQuery) return
 
-  crossDepotQuery = { $or: [] }
-  await async.forEach(Object.keys(knownBuses), async fleet => {
-    let bus = await regos.findDocument({ fleetNumber: fleet })
-    let busDepot = knownBuses[fleet]
-    let depotRoutes = serviceDepots[busDepot]
+  const allBuses = (await busRegos.findDocuments({
+    fleetNumber: { $in: Object.keys(depotAllocations) }
+  }, { rego: 1, fleetNumber: 1 }).toArray()).reduce((acc, bus) => ({
+    ...acc, [bus.fleetNumber]: bus.rego
+  }), {})
 
-    if (bus && depotRoutes) {
-      crossDepotQuery.$or.push({
-        consist: bus.rego,
-        routeNumber: { $not: { $in: depotRoutes } }
-      })
-    }
-  })
+  crossDepotQuery = {
+    $or: Object.keys(depotAllocations).filter(fleetNumber => depotAllocations[fleetNumber] !== 'Kinetic (Orbital)').map(fleetNumber => ({
+      consist: allBuses[fleetNumber],
+      runID: { $not: {
+        $regex: new RegExp('^' + smartrakDepotLookup[depotAllocations[fleetNumber]])
+      } }
+    }))
+  }
+
+  return crossDepotQuery
 }
 
 async function findCrossDepotTrips(busTrips, regos, date) {
@@ -377,16 +386,17 @@ router.get('/cross-depot', async (req, res) => {
   let crossDepotTrips = await findCrossDepotTrips(busTrips, regos, date)
 
   let tripsToday = (await async.map(crossDepotTrips, async trip => {
-    let {fleetNumber} = await getBusFromRego(regos, trip.consist[0]) || {}
+    let { fleetNumber } = await getBusFromRego(regos, trip.consist[0]) || {}
 
-    trip.fleetNumber = fleetNumber ? '#' + fleetNumber : '@' + trip.consist[0]
+    trip.operator = fleetNumber.match(/^([A-Z]+)/)[1]
+    trip.fleetNumber = '#' + fleetNumber
 
     return trip
   })).map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
 
   let operators = {}
   tripsToday.forEach(trip => {
-    let operator = trip.fleetNumber[1]
+    let { operator } = trip
     if (!operators[operator]) operators[operator] = []
     operators[operator].push(trip)
   })
@@ -494,6 +504,6 @@ router.get('/operator-unknown', async (req, res) => {
 router.use('/locator', require('./BusLocator'))
 
 module.exports = router
-module.exports.initDB = async db => {
-  await generateCrossDepotQuery(await db.getCollection('bus regos'))
+module.exports.initDB = async (db, tripDB) => {
+  await generateCrossDepotQuery(await tripDB.getCollection('bus regos'))
 }
