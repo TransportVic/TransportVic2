@@ -1,15 +1,16 @@
 const ical = require('node-ical')
 const path = require('path')
-const DatabaseConnection = require('./database/DatabaseConnection')
+const { MongoDatabaseConnection } = require('@transportme/database')
 const config = require('./config')
 const utils = require('./utils')
 
-const database = new DatabaseConnection(config.databaseURL, config.databaseName)
+const database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
 let gtfsTimetables
 
-database.connect(async err => {
-  gtfsTimetables = database.getCollection('gtfs timetables')
-})
+setTimeout(async () => {
+  await database.connect()
+  gtfsTimetables = await database.getCollection('gtfs timetables')
+}, 1)
 
 let rawEvents = ical.sync.parseFile(path.join(__dirname, 'transportvic-data/calendar/vic-public-holidays/vic-holidays.ics'))
 let events = Object.values(rawEvents).slice(1)

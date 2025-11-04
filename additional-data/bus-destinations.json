@@ -131,11 +131,18 @@
       "Duffields Road/Great Ocean Road": "Jan Juc",
       "St. Andrews Drive/Duffields Road": "Jan Juc"
     },
+    "52": {
+      "RACV Torquay Resort": "Jan Juc",
+      "Munday Street/Bell Street": "Torquay"
+    },
     "53": {
-      "Park Lane/Bell Street": "Torquay"
+      "Park Lane/Bell Street": "Torquay",
+      "Munday Street/Bell Street": "Torquay"
     },
     "54": {
-      "Beckhams Road/Carolyn Way": "Maiden Gully"
+      "Beckhams Road/Carolyn Way": "Maiden Gully",
+      "Park Lane/Bell Street": "Torquay",
+      "Munday Street/Bell Street": "Torquay"
     },
     "55": {
       "Ocean Grove Market Place/Kingston Downs Drive": "Ocean Grove",

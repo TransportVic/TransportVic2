@@ -1,7 +1,6 @@
 const getRouteStops = require('../../../additional-data/route-stops')
 const getMetroDepartures = require('../../../modules/metro-trains/get-departures')
 const getVLineDepartures = require('../../../modules/vline-old/get-departures')
-const destinationOverrides = require('../../../additional-data/coach-stops')
 const utils = require('../../../utils')
 const async = require('async')
 const { getDayOfWeek } = require('../../../public-holidays')
@@ -535,7 +534,6 @@ function trimDepartures(departures, includeStopTimings) {
 
 async function getPIDData(station, platform, options, db) {
   let { dep, has, bus } = await utils.getData('pid-data', station.stopName, async () => {
-    console.log('getting data', station.stopName)
     let departures = []
     let arrivals = []
 
