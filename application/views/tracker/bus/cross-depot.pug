@@ -17,6 +17,6 @@ block content
   h1.title Tracking Cross Depot bus deployments on #{date.format('dddd, MMMM Do YYYY')}
   for operator in Object.keys(operators)
     h1.title #{operatorCodes[operator]}
-    for trip in operators[operator]
+    for trip in operators[operator].sort((a, b) => a.fleetNumber.localeCompare(b.fleetNumber) || a.departureTime.localeCompare(b.departureTime))
       div(class=`trip ${trip.active ? '' : 'inactive'}`)
         a(href=trip.url) #{trip.fleetNumber}: #{trip.departureTime} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]} #{trip.routeNumber}
