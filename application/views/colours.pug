@@ -8,6 +8,7 @@ block title
 
 append style
   link(rel='stylesheet' href=`${staticBase}/static/css/combined-colours.css`)
+  link(rel='stylesheet' href=`${staticBase}/static/css/bus-operators.css`)
   link(rel='stylesheet' href=`${staticBase}/static/css/timings/base-style.css`)
 
 append content
@@ -17,7 +18,7 @@ append content
       for i in [1, 2]
         div.departure
           a(class=`leftContainer ${cssName}`)
-            span.bigNumber 77
+            span.bigNumber 123
           a.departureInfo
             span.towards Operator
             span.destination=originalName

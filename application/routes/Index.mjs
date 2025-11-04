@@ -18,7 +18,7 @@ router.get('/colours', async (req, res) => {
 
   operators = operators.map(operator => {
     return {
-      cssName: utils.encodeName(operator.replace(/ \(.+/, '')),
+      cssName: utils.encodeName(operator),
       originalName: operator
     }
   })

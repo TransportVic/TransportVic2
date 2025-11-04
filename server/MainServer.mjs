@@ -85,7 +85,10 @@ export default class MainServer {
 
       routePromises.push(new Promise(async resolve => {
         try {
-          let router = (await import(path.join(__dirname, '..', 'application', 'routes', routeData.router))).default
+          let routerData = await import(path.join(__dirname, '..', 'application', 'routes', routeData.router))
+          if (routerData.initDB) routerData.initDB(this.database)
+
+          let router = routerData.default
           resolve({ ...routeData, router })
         } catch (e) {
           console.error('Encountered an error loading', routeData, e)
