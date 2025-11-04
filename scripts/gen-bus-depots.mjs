@@ -15,8 +15,13 @@ const today = utils.now().startOf('day')
 const threshold = 14
 const days = Array(threshold).fill(0).map((_, i) => utils.getYYYYMMDD(today.clone().add(-i, 'days')))
 
-const sort = (obj) => Object.keys(obj).sort()
-  .reduce((acc, c) => { acc[c] = obj[c]; return acc }, {})
+const sort = (obj) => Object.keys(obj).sort((a, b) => {
+  const [_, op1, fl1] = a.match(/([A-Z]+)(\d+)/)
+  const [__, op2, fl2] = b.match(/([A-Z]+)(\d+)/)
+  return op1.localeCompare(op2) || (parseInt(fl1) - parseInt(fl2))
+}).reduce((acc, c) => { acc[c] = obj[c]; return acc }, {})
+
+const ORBITAL_ROUTES = ['901', '902', '903']
 
 const database = new MongoDatabaseConnection(config.tripDatabaseURL, config.databaseName)
 await database.connect()
@@ -39,6 +44,18 @@ for (const rego of activeBuses) {
     { $group: { _id: '$runID', count: { $sum: 1 } } }
   ]).toArray()
 
+  const serviceCounts = (await busTrips.aggregate([
+    { $match: {
+      date: { $in: days },
+      consist: rego
+    } },
+    { $group: { _id: '$routeNumber', count: { $sum: 1 } } }
+  ]).toArray()).reduce((acc, { _id, count }) => ({
+    ...acc, [_id]: count
+  }), {})
+
+  const tripsRun = runIDCounts.reduce((acc, { count }) => acc + count, 0)
+
   const depotCounts = runIDCounts
     .map(({ _id, count }) => ({ depot: _id.slice(0, 2), count }))
     .reduce((acc, { depot, count }) => ({
@@ -46,11 +63,24 @@ for (const rego of activeBuses) {
       [depot]: (acc[depot] || 0) + count
   }), {})
 
-  const mostCommonDepot = Object.keys(depotCounts).reduce(
+  const depotIDs = Object.keys(depotCounts)
+  const mostCommonDepot = depotIDs.reduce(
     (curMax, newDepot) => depotCounts[newDepot] > depotCounts[curMax] ? newDepot : curMax
   )
 
-  busDepots[allBuses[rego]] = depots[mostCommonDepot]
+  let mostCommonDepotName = depots[mostCommonDepot]
+
+  // Kinetic bus based out of 3 or more depots, likely an Orbital
+  if (allBuses[rego][0] === 'K') {
+    const orbitalsRun = ORBITAL_ROUTES.reduce((acc, route) => acc + (serviceCounts[route]) || 0, 0)
+    const nonOrbitalsRun = tripsRun - orbitalsRun
+    const multiDepot = depotIDs.length >= 3 && orbitalsRun > 5
+    const singleDepotOrbital = orbitalsRun > 7 && nonOrbitalsRun < orbitalsRun
+
+    if (multiDepot || singleDepotOrbital) mostCommonDepotName = 'Kinetic (Orbital)'
+  }
+
+  busDepots[allBuses[rego]] = mostCommonDepotName
 }
 
 const existingData = await (async () => { try { return JSON.parse(await fs.readFile(depotFile)) } catch (e) { return {} } })()
@@ -58,8 +88,6 @@ await fs.writeFile(depotFile, JSON.stringify(sort({
   ...existingData,
   ...busDepots
 }), null, 2))
-
-console.log(busDepots)
 
 database.close()
 process.exit(0)
