@@ -77,7 +77,6 @@ for (const rego of activeBuses) {
     const multiDepot = depotIDs.length >= 3 && orbitalsRun > 5
     const singleDepotOrbital = orbitalsRun > 7 && nonOrbitalsRun < orbitalsRun
 
-    if (allBuses[rego]=='K4092') console.log(serviceCounts, orbitalsRun, nonOrbitalsRun, multiDepot, singleDepotOrbital)
     if (multiDepot || singleDepotOrbital) mostCommonDepotName = 'Kinetic (Orbital)'
   }
 
