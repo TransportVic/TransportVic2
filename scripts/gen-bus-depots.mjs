@@ -72,11 +72,12 @@ for (const rego of activeBuses) {
 
   // Kinetic bus based out of 3 or more depots, likely an Orbital
   if (allBuses[rego][0] === 'K') {
-    const orbitalsRun = ORBITAL_ROUTES.reduce((acc, route) => acc + (serviceCounts[route]) || 0, 0)
+    const orbitalsRun = ORBITAL_ROUTES.reduce((acc, route) => acc + (serviceCounts[route] || 0), 0)
     const nonOrbitalsRun = tripsRun - orbitalsRun
     const multiDepot = depotIDs.length >= 3 && orbitalsRun > 5
     const singleDepotOrbital = orbitalsRun > 7 && nonOrbitalsRun < orbitalsRun
 
+    if (allBuses[rego]=='K4092') console.log(serviceCounts, orbitalsRun, nonOrbitalsRun, multiDepot, singleDepotOrbital)
     if (multiDepot || singleDepotOrbital) mostCommonDepotName = 'Kinetic (Orbital)'
   }
 
