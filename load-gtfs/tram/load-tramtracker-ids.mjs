@@ -98,16 +98,13 @@ for (let tramTrackerID of sortedTramTrackerIDs) {
   let dbStop
 
   if (ptvStop) {
-    dbStop = await stops.findDocument({
+    dbStop = (await stops.findDocument({
       'bays.originalName': new RegExp('^' + ptvStop.stopName.trim()),
       'bays.stopNumber': ptvStop.stopNumber.toUpperCase()
-    })
-  }
-  if (!dbStop) {
-    dbStop = await stops.findDocument({
+    }, { bays: 1 })) || (await stops.findDocument({
       'bays.originalName': new RegExp(utils.adjustStopName(stopNames[tramTrackerID].split(/ ?[&\-,] ?/)[0].trim()), 'i'),
       'bays.stopNumber': stopNumbers[tramTrackerID]
-    })
+    }, { bays: 1 }))
   }
 
   if (dbStop) {
@@ -123,7 +120,7 @@ for (let tramTrackerID of sortedTramTrackerIDs) {
         'stopTimings.stopGTFSID': {
           $in: stopGTFSIDs
         }
-      })
+      }, { stopTimings: 1 })
 
       if (timetable) {
         let stopTiming = timetable.stopTimings.find(stop => stopGTFSIDs.includes(stop.stopGTFSID))
@@ -135,19 +132,17 @@ for (let tramTrackerID of sortedTramTrackerIDs) {
     if (!bestMatch) console.log(dbStop)
     if (bestMatch[1] > 0) {
       let stopGTFSID = bestMatch[0]
-      dbStop.bays = dbStop.bays.map(bay => {
-        if (bay.mode === 'tram' && bay.stopGTFSID === stopGTFSID) {
-          bay.tramTrackerID = tramTrackerID
-          bay.tramTrackerName = stopNames[tramTrackerID]
-          bay.levelAccess = levelAccess[tramTrackerID]
-        }
-
-        return bay
-      })
-
       await stops.updateDocument({ _id: dbStop._id }, {
         $set: {
-          bays: dbStop.bays
+          bays: dbStop.bays.map(bay => {
+            if (bay.mode === 'tram' && bay.stopGTFSID === stopGTFSID) {
+              bay.tramTrackerID = tramTrackerID
+              bay.tramTrackerName = stopNames[tramTrackerID]
+              bay.levelAccess = levelAccess[tramTrackerID]
+            }
+
+            return bay
+          })
         }
       })
 
@@ -156,7 +151,6 @@ for (let tramTrackerID of sortedTramTrackerIDs) {
     }
   }
 
-  if (dbStop) delete dbStop.textQuery
   console.log('Failed to map stop ID', stopID, '- TT', tramTrackerID, stopNames[tramTrackerID], stopDirections[tramTrackerID], dbStop, ptvStop)
 }
 
