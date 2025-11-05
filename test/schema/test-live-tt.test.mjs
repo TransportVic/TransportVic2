@@ -887,7 +887,8 @@ describe('The BusLiveTimetable class', () => {
       departureTime: '21:50',
       destinationArrivalTime: '22:37',
       consist: [ 'BS05CQ' ],
-      routeNumber: '200'
+      routeNumber: '200',
+      depot: '14'
     })
   })
 })

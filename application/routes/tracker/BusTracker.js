@@ -46,9 +46,7 @@ async function generateCrossDepotQuery(busRegos) {
   crossDepotQuery = {
     $or: Object.keys(depotAllocations).filter(fleetNumber => depotAllocations[fleetNumber] !== 'Kinetic (Orbital)').map(fleetNumber => ({
       consist: allBuses[fleetNumber],
-      runID: { $not: {
-        $regex: new RegExp('^' + smartrakDepotLookup[depotAllocations[fleetNumber]])
-      } }
+      depot: { $ne: smartrakDepotLookup[depotAllocations[fleetNumber]] }
     }))
   }
 
