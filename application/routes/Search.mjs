@@ -9,6 +9,14 @@ router.get('/', (req, res) => {
   res.render('search/index', { placeholder: 'Station, stop or route' })
 })
 
+function expandSearchQuery(query) {
+  return utils.adjustStopName(utils.titleCase(query, true).replace('Sc', 'Shopping Centre')).toLowerCase()
+    .replace(/  +/, ' ')
+    .replace(/fed sq.+/, 'federation square')
+    .replace(/(\b)qvm(\b)/, '$1queen victoria market$2')
+    .replace(/(\b)vic(\b)/, '$1victoria$2')
+}
+
 async function prioritySearch(db, query) {
   let stops = db.getCollection('stops')
 
@@ -18,7 +26,7 @@ async function prioritySearch(db, query) {
     }).toArray()
   }
 
-  const fullQuery = utils.adjustStopName(utils.titleCase(query, true).replace('Sc', 'Shopping Centre')).toLowerCase()
+  const fullQuery = expandSearchQuery(query)
   const queryWords = fullQuery.split(/[^\w]/)
   const searchedWords = queryWords.filter(word => word.length >= 4)
   const shortWords = queryWords.filter(word => word.length < 4)
@@ -62,20 +70,19 @@ async function prioritySearch(db, query) {
   return gtfsMatch.concat(numericalMatchStops).concat(priorityStopsByName)
 }
 
-async function findStops(db, query) {
+async function findStops(db, rawQuery) {
   let stops = db.getCollection('stops')
 
-  let prioritySearchResults = await prioritySearch(db, query)
+  let prioritySearchResults = await prioritySearch(db, rawQuery)
   let excludedIDs = prioritySearchResults.map(stop => stop._id)
 
-  let search = utils.adjustStopName(utils.titleCase(query, true).replace('Sc', 'Shopping Centre')).toLowerCase()
-  let queryString = query.toLowerCase()
+  let query = expandSearchQuery(rawQuery)
 
-  let queryRegex = new RegExp(queryString, 'i')
-  let searchRegex = new RegExp(search, 'i')
-  let stationRegex = new RegExp(queryString.replace(/sta?t?i?o?n?/i, 'railway station'), 'i')
+  let queryRegex = new RegExp(query, 'i')
+  let searchRegex = new RegExp(query, 'i')
+  let stationRegex = new RegExp(query.replace(/sta?t?i?o?n?/i, 'railway station'), 'i')
 
-  const queryWords = (queryString + ' ' + search).split(/[^\w]/)
+  const queryWords = query.split(/[^\w]/)
   const searchedWords = queryWords.filter(word => word.length >= 4)
   const shortWords = queryWords.filter(word => word.length < 4)
 
