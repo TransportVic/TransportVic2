@@ -90,7 +90,9 @@ for (let service of tramServices) {
   }
 }
 
-for (let tramTrackerID of Object.keys(tramTrackerIDs)) {
+let sortedTramTrackerIDs = Object.keys(tramTrackerIDs).sort().reverse()
+
+for (let tramTrackerID of sortedTramTrackerIDs) {
   let stopID = tramTrackerIDs[tramTrackerID]
   let ptvStop = ptvStops.find(stop => stop.stopID === stopID)
   let dbStop
