@@ -61,7 +61,7 @@ module.exports = [{
   type: 'include'
 }, {
   name: 'CDC Tullamarine Specials',
-  track: ['CT26', 'CT52', 'CT53', 'CT55', 'CT56'],
+  track: ['CT26', 'CT52', 'CT53', 'CT55', 'CT56', 'CG104'],
   routes: [],
   type: 'exclude'
 }, {

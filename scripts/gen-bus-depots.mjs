@@ -12,7 +12,7 @@ const __dirname = path.dirname(__filename)
 const depotFile = path.join(__dirname, '..', 'additional-data', 'bus-tracker', 'depot-allocations.json')
 
 const today = utils.now().startOf('day')
-const threshold = 14
+const threshold = 7
 const days = Array(threshold).fill(0).map((_, i) => utils.getYYYYMMDD(today.clone().add(-i, 'days')))
 
 const sort = (obj) => Object.keys(obj).sort((a, b) => {
@@ -34,6 +34,7 @@ const allBuses = (await busRegos.findDocuments({ rego: { $in: activeBuses } }, {
 }), {})
 
 const busDepots = {}
+const existingData = await (async () => { try { return JSON.parse(await fs.readFile(depotFile)) } catch (e) { return {} } })()
 
 for (const rego of activeBuses) {
   const runIDCounts = await busTrips.aggregate([
@@ -74,16 +75,17 @@ for (const rego of activeBuses) {
   if (allBuses[rego][0] === 'K') {
     const orbitalsRun = ORBITAL_ROUTES.reduce((acc, route) => acc + (serviceCounts[route] || 0), 0)
     const nonOrbitalsRun = tripsRun - orbitalsRun
-    const multiDepot = depotIDs.length >= 3 && orbitalsRun > 5
-    const singleDepotOrbital = orbitalsRun > 7 && nonOrbitalsRun < orbitalsRun
+    const multiDepot = depotIDs.length >= 2 && orbitalsRun >= 5
+    const singleDepotOrbital = orbitalsRun > 5 || (nonOrbitalsRun <= 2 && orbitalsRun >= 1)
+    const isOrbital = multiDepot || singleDepotOrbital
 
-    if (multiDepot || singleDepotOrbital) mostCommonDepotName = 'Kinetic (Orbital)'
+    if (!isOrbital && existingData[rego] === 'Kinetic (Orbital)' && tripsRun < 5) continue
+    else if (isOrbital) mostCommonDepotName = 'Kinetic (Orbital)'
   }
 
   busDepots[allBuses[rego]] = mostCommonDepotName
 }
 
-const existingData = await (async () => { try { return JSON.parse(await fs.readFile(depotFile)) } catch (e) { return {} } })()
 await fs.writeFile(depotFile, JSON.stringify(sort({
   ...existingData,
   ...busDepots
