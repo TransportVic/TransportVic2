@@ -97,7 +97,7 @@
   25    0     *     *     *     sudo reboot
   28    0     *     *     *     /home/transportvic/TransportVic/Server/scripts/check-gtfs-updates.sh
 
-  23    50    *     *     *     node /home/transportvic/TransportVic/Server/scripts/gen-bus-depots.mjs
+  50    23    *     *     *     node /home/transportvic/TransportVic/Server/scripts/gen-bus-depots.mjs
   0     4     *     *     *     node /home/transportvic/TransportVic/Server/scripts/update-consists.mjs
   0     0     *     *     *     node /home/transportvic/TransportVic/Server/scripts/cleanup.mjs
   0     0     *     *     *     node /home/transportvic/TransportVic/Server/scripts/rotate-logs.mjs

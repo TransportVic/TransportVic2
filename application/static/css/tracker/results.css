@@ -11,12 +11,20 @@ h1.title {
   margin-top: calc(0.8vw + 0.8vh);
 }
 
+h2.title {
+  margin-top: calc(0.3vw + 0.5vh);
+}
+
 h1, h2, h3, h4 {
   margin: 0;
 }
 
 h1 {
   font-size: calc(2vw + 1.9vh);
+}
+
+h2 {
+  font-size: calc(1.3vw + 1.6vh);
 }
 
 div.trip a {

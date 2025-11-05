@@ -389,22 +389,24 @@ router.get('/cross-depot', async (req, res) => {
     let { fleetNumber } = await getBusFromRego(regos, trip.consist[0]) || {}
 
     trip.operator = fleetNumber.match(/^([A-Z]+)/)[1]
-    trip.fleetNumber = '#' + fleetNumber
+    trip.fleetNumber = fleetNumber
 
     return trip
   })).map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
 
   let operators = {}
   tripsToday.forEach(trip => {
-    let { operator } = trip
-    if (!operators[operator]) operators[operator] = []
-    operators[operator].push(trip)
+    let { operator, fleetNumber } = trip
+    if (!operators[operator]) operators[operator] = {}
+    if (!operators[operator][fleetNumber]) operators[operator][fleetNumber] = []
+    operators[operator][fleetNumber].push(trip)
   })
 
   res.render('tracker/bus/cross-depot', {
     operators,
     operatorCodes,
-    date: utils.parseTime(date, 'YYYYMMDD')
+    date: utils.parseTime(date, 'YYYYMMDD'),
+    depotAllocations
   })
 })
 
