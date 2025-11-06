@@ -7,7 +7,9 @@ const getDepartures = require('../../modules/tram/get-departures')
 const schedule = require('./scheduler')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
+const tripDatabase = new DatabaseConnection(config.tripDatabaseURL, config.databaseName)
 let dbStops
+
 
 function pickRandomStops() {
   return utils.shuffle(stops).slice(0, 20)
@@ -24,7 +26,7 @@ async function requestTimings() {
 
       try {
         global.loggers.oldTrackers.tram.info('requesting timings for', stop)
-        await getDepartures(dbStop, database)
+        await getDepartures(dbStop, database, tripDatabase)
         await utils.sleep(5000)
       } catch (e) {
         global.loggers.oldTrackers.bus.err('Failed to get tram trips at', stop, e)
@@ -36,11 +38,13 @@ async function requestTimings() {
 }
 
 database.connect(async () => {
-  dbStops = database.getCollection('stops')
+  tripDatabase.connect(async () => {
+    dbStops = database.getCollection('stops')
 
-  schedule([
-    [0, 60, 10],
-    [270, 1200, 6],
-    [1201, 1439, 10]
-  ], requestTimings, 'tram tracker', global.loggers.oldTrackers.tram)
+    schedule([
+      [0, 60, 10],
+      [270, 1200, 6],
+      [1201, 1439, 10]
+    ], requestTimings, 'tram tracker', global.loggers.oldTrackers.tram)
+  })
 })
