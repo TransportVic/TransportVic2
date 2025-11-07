@@ -9,6 +9,8 @@ import utils from '../../utils.js'
 import beg3152 from './sample-data/beg-3152.mjs'
 import bus200Data from './sample-data/bus-200-data.mjs'
 import bus670Data from './sample-data/bus-670-data.mjs'
+import { LokiDatabaseConnection } from '@transportme/database'
+import chirnsidePark from './sample-data/chirnside-park.mjs'
 use(chaiExclude)
 
 let clone = o => JSON.parse(JSON.stringify(o))
@@ -873,15 +875,33 @@ describe('The LiveTimetable class', () => {
     expect(dbTrip.destinationArrivalTime).to.equal(bus200Data.destinationArrivalTime)
   })
 
-
   it('Allows updating a stop by ID', async () => {
     const timetable = LiveTimetable.fromDatabase(bus670Data)
+    const db = new LokiDatabaseConnection()
+    const stops = await db.getCollection('stops')
 
-    await timetable.updateStopByID('21318', 0, {
+    await timetable.updateStopByID('21318', 0, stops, {
       estimatedDepartureTime: new Date('2025-04-09T18:03:40.000Z')
     })
 
     expect(timetable.stops[0].estimatedDepartureTime.toISOString()).to.equal('2025-04-09T18:03:40.000Z')
+  })
+
+  it('Creates a stop if it does not exist when updating by ID', async () => {
+    const timetable = LiveTimetable.fromDatabase(bus670Data)
+    const db = new LokiDatabaseConnection()
+    const stops = await db.getCollection('stops')
+    await stops.createDocument(chirnsidePark)
+
+    await timetable.updateStopByID('21300', 1, stops, {
+      scheduledDepartureTime: new Date('2025-11-01T20:30:00.000Z'),
+      estimatedDepartureTime: new Date('2025-04-09T18:03:40.000Z')
+    })
+
+    expect(timetable.stops[2].stopName).to.equal('Chirnside Park Shopping Centre/Maroondah Highway')
+    expect(timetable.stops[2].suburb).to.equal('Chirnside Park')
+    expect(timetable.stops[2].scheduledDepartureTime.toISOString()).to.equal('2025-11-01T20:30:00.000Z')
+    expect(timetable.stops[2].estimatedDepartureTime.toISOString()).to.equal('2025-04-09T18:03:40.000Z')
   })
 })
 

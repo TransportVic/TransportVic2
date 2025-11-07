@@ -594,77 +594,95 @@ export class LiveTimetable {
     if (typeof visitNum === 'undefined') visitNum = 1
     let matchingStop = matchingStops[visitNum - 1]
 
-    this.#updateStop(matchingStop, stopName, stopData)
+    if (matchingStop) this.#updateStop(matchingStop, stopData)
+    else this.#createStop(stopName, stopData)
   }
 
-  async updateStopByID(stopGTFSID, stopSequence, stopData) {
+  async updateStopByID(stopGTFSID, stopSequence, dbStops, stopData) {
     const matchingStop = this.#stops.slice(Math.max(0, stopSequence - 5), stopSequence + 5).find(stop => {
       return stop.stopGTFSID === stopGTFSID
     })
 
-    this.#updateStop(matchingStop, null, stopData)
+    if (matchingStop) return this.#updateStop(matchingStop, stopData)
+    const dbStopData = await dbStops.findDocument({
+      'bays': {
+        $elemMatch: {
+          stopGTFSID,
+          mode: this.mode
+        }
+      }
+    })
+
+    if (!dbStopData) return
+    const bayData = dbStopData.bays.find(bay => bay.stopGTFSID === stopGTFSID && bay.mode === this.mode)
+    this.#createStop(bayData.fullStopName, {
+      suburb: bayData.suburb,
+      stopNumber: bayData.stopNumber,
+      platform: bayData.platform,
+      ...stopData,
+    })
   }
 
-  #updateStop(matchingStop, stopName, stopData) {
-    if (matchingStop) {
-      let existingSchTime = matchingStop.scheduledDepartureTime.toISOString()
-      if (stopData.scheduledDepartureTime && (existingSchTime !== stopData.scheduledDepartureTime)) {
-        matchingStop.scheduledDepartureTime = stopData.scheduledDepartureTime
-        this.addChange({
-          type: 'stop-time-change',
-          stopName: matchingStop.stopName,
-          oldVal: existingSchTime,
-          newVal: stopData.scheduledDepartureTime
-        })
-      }
-
-      if (stopData.estimatedDepartureTime) matchingStop.estimatedDepartureTime = stopData.estimatedDepartureTime
-      if (stopData.platform) {
-        let newPlatform = stopData.platform.toString()
-        if (matchingStop.platform !== newPlatform) this.addChange({
-          type: 'platform-change',
-          stopGTFSID: matchingStop.stopGTFSID,
-          oldVal: matchingStop.platform,
-          newVal: newPlatform
-        })
-        matchingStop.platform = newPlatform
-      }
-
-      if (typeof stopData.cancelled !== 'undefined') {
-        if (matchingStop.cancelled !== stopData.cancelled) this.addChange({
-          type: 'stop-cancelled',
-          stopGTFSID: matchingStop.stopGTFSID,
-          oldVal: matchingStop.cancelled,
-          newVal: stopData.cancelled
-        })
-        matchingStop.cancelled = stopData.cancelled
-      }
-    } else {
-      if (!stopData.scheduledDepartureTime && stopData.estimatedDepartureTime) {
-        stopData.scheduledDepartureTime = stopData.estimatedDepartureTime
-      }
-
-      let stop = new TimetableStop(
-        this.#operationDay.clone(),
-        stopName,
-        stopData.suburb,
-        stopData.stopNumber,
-        stopData.stopGTFSID,
-        stopData.scheduledDepartureTime,
-        stopData.estimatedDepartureTime,
-        {
-          platform: stopData.platform,
-          cancelled: stopData.cancelled,
-          additional: stopData.additional
-        }
-      )
-
+  #updateStop(matchingStop, stopData) {
+    let existingSchTime = matchingStop.scheduledDepartureTime.toISOString()
+    if (stopData.scheduledDepartureTime && (existingSchTime !== stopData.scheduledDepartureTime)) {
+      matchingStop.scheduledDepartureTime = stopData.scheduledDepartureTime
       this.addChange({
-        type: 'add-stop',
-        stopGTFSID: stopData.stopGTFSID
+        type: 'stop-time-change',
+        stopName: matchingStop.stopName,
+        oldVal: existingSchTime,
+        newVal: stopData.scheduledDepartureTime
       })
-      this.#stops.push(stop)
     }
+
+    if (stopData.estimatedDepartureTime) matchingStop.estimatedDepartureTime = stopData.estimatedDepartureTime
+    if (stopData.platform) {
+      let newPlatform = stopData.platform.toString()
+      if (matchingStop.platform !== newPlatform) this.addChange({
+        type: 'platform-change',
+        stopGTFSID: matchingStop.stopGTFSID,
+        oldVal: matchingStop.platform,
+        newVal: newPlatform
+      })
+      matchingStop.platform = newPlatform
+    }
+
+    if (typeof stopData.cancelled !== 'undefined') {
+      if (matchingStop.cancelled !== stopData.cancelled) this.addChange({
+        type: 'stop-cancelled',
+        stopGTFSID: matchingStop.stopGTFSID,
+        oldVal: matchingStop.cancelled,
+        newVal: stopData.cancelled
+      })
+      matchingStop.cancelled = stopData.cancelled
+    }
+  }
+
+  #createStop(stopName, stopData) {
+    if (!stopData.scheduledDepartureTime && stopData.estimatedDepartureTime) {
+      stopData.scheduledDepartureTime = stopData.estimatedDepartureTime
+    }
+
+    let stop = new TimetableStop(
+      this.#operationDay.clone(),
+      stopName,
+      stopData.suburb,
+      stopData.stopNumber,
+      stopData.stopGTFSID,
+      stopData.scheduledDepartureTime,
+      stopData.estimatedDepartureTime,
+      {
+        platform: stopData.platform,
+        cancelled: stopData.cancelled,
+        additional: stopData.additional
+      }
+    )
+
+    this.addChange({
+      type: 'add-stop',
+      stopGTFSID: stopData.stopGTFSID
+    })
+    this.#stops.push(stop)
   }
 
   static canProcessDBTrip (timetable) { return true }
