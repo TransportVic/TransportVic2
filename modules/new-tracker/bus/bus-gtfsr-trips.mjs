@@ -10,45 +10,45 @@ import BusTripUpdater from '../../bus/trip-updater.mjs'
 import async from 'async'
 import { LiveTimetable } from '../../schema/live-timetable.mjs'
 
-export async function getFleetData(tripDB, gtfsrAPI) {
-  let tripData = await gtfsrAPI('bus/vehicle-positions')
-  let busRegos = tripDB.getCollection('bus regos')
-
+export async function getUpcomingTrips(gtfsrAPI) {
+  let tripData = await gtfsrAPI('bus/trip-updates')
+  
   let trips = {}
 
-  let regosSeen = {}
-  let goodRegos = new Set()
-
   for (let trip of tripData.entity) {
-    let gtfsrTripData = GTFSRTrip.parse(trip.vehicle.trip)
-    const trackedRego = trip.vehicle.vehicle.id
-    let trueRego = trackedRego
-
-    if (!goodRegos.has(trackedRego)) {
-      const busData = regosSeen[trackedRego] || await busRegos.findDocument({ trackedRego })
-      if (busData) {
-        regosSeen[trackedRego] = busData
-        trueRego = busData.rego
-      } else {
-        goodRegos.add(trackedRego)
-      }
-    }
+    let gtfsrTripData = GTFSRTrip.parse(trip.trip_update.trip)
 
     let tripData = {
       operationDays: gtfsrTripData.getOperationDay(),
       runID: gtfsrTripData.getTDN(),
       routeGTFSID: gtfsrTripData.getRouteID(),
-      consist: [ trueRego ]
+      stops: [],
+      cancelled: gtfsrTripData.getScheduleRelationship() === GTFSRTrip.SR_CANCELLED,
+      additional: gtfsrTripData.getScheduleRelationship() === GTFSRTrip.SR_ADDED,
+      scheduledStartTime: gtfsrTripData.getStartTime()
     }
 
-    trips[tripData.runID] = tripData
+    for (let stop of trip.trip_update.stop_time_update) {
+      let tripStop = {
+        stopGTFSID: stop.stop_id,
+        stopSequence: stop.stop_sequence
+      }
+
+      if (stop.schedule_relationship === 1) tripStop.cancelled = true
+      if (stop.arrival) tripStop.estimatedArrivalTime = new Date(stop.arrival.time * 1000)
+      if (stop.departure) tripStop.estimatedDepartureTime = new Date(stop.departure.time * 1000)
+
+      tripData.stops.push(tripStop)
+    }
+
+    if (!trips[tripData.runID]) trips[tripData.runID] = tripData
   }
 
-  return trips
+  return Object.values(trips)
 }
 
-export async function fetchGTFSRFleet(db, tripDB, existingTrips) {
-  const trips = await getFleetData(tripDB, makePBRequest)
+export async function fetchGTFSRTrips(db, tripDB, existingTrips) {
+  const trips = await getUpcomingTrips(makePBRequest)
   const relevantTrips = Object.values(trips)
 
   const newRunIDs = Object.keys(trips).filter(runID => !existingTrips[runID])
@@ -66,9 +66,10 @@ export async function fetchGTFSRFleet(db, tripDB, existingTrips) {
 
   await async.forEachLimit(relevantTrips, 400, async tripUpdateData => {
     await BusTripUpdater.updateTrip(db, tripDB, tripUpdateData, {
-      dataSource: 'gtfsr-vehicle-update',
+      dataSource: 'gtfsr-trip-update',
       existingTrips,
-      skipWrite: true
+      skipWrite: true,
+      skipStopCancellation: true
     })
   })
 
@@ -82,7 +83,7 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let tripDatabase = new MongoDatabaseConnection(config.tripDatabaseURL, config.databaseName)
   await tripDatabase.connect()
 
-  await fetchGTFSRFleet(database, tripDatabase, {})
+  await fetchGTFSRTrips(database, tripDatabase, {})
 
   process.exit(0)
 }

@@ -9,6 +9,7 @@ import { isPrimary } from '../replication.mjs'
 import discordIntegration from '../discord-integration.js'
 import { hostname } from 'os'
 import BusTripUpdater from '../bus/trip-updater.mjs'
+import { fetchGTFSRTrips } from './bus/bus-gtfsr-trips.mjs'
 
 async function writeUpdatedTrips(db, tripDB, updatedTrips) {
   const tripBulkOperations = updatedTrips.map(timetable => ({
@@ -46,6 +47,7 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let existingTrips = {}
 
   await fetchGTFSRFleet(database, tripDatabase, existingTrips)
+  await fetchGTFSRTrips(database, tripDatabase, existingTrips)
 
   await writeUpdatedTrips(database, tripDatabase, Object.values(existingTrips))
 
