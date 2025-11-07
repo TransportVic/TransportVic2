@@ -31,10 +31,10 @@ export async function getUpcomingTrips(gtfsrAPI) {
     for (let stop of trip.trip_update.stop_time_update) {
       let tripStop = {
         stopGTFSID: stop.stop_id,
-        stopSequence: stop.stop_sequence
+        stopSequence: stop.stop_sequence,
+        cancelled: stop.schedule_relationship === 1
       }
 
-      if (stop.schedule_relationship === 1) tripStop.cancelled = true
       if (stop.arrival) tripStop.estimatedArrivalTime = new Date(stop.arrival.time * 1000)
       if (stop.departure) tripStop.estimatedDepartureTime = new Date(stop.departure.time * 1000)
 
@@ -69,7 +69,8 @@ export async function fetchGTFSRTrips(db, tripDB, existingTrips) {
       dataSource: 'gtfsr-trip-update',
       existingTrips,
       skipWrite: true,
-      skipStopCancellation: true
+      skipStopCancellation: true,
+      propagateDelay: true
     })
   })
 
