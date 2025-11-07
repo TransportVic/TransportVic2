@@ -594,6 +594,10 @@ export class LiveTimetable {
     if (typeof visitNum === 'undefined') visitNum = 1
     let matchingStop = matchingStops[visitNum - 1]
 
+    this.#updateStop(matchingStop, stopName, stopData)
+  }
+
+  #updateStop(matchingStop, stopName, stopData) {
     if (matchingStop) {
       let existingSchTime = matchingStop.scheduledDepartureTime.toISOString()
       if (stopData.scheduledDepartureTime && (existingSchTime !== stopData.scheduledDepartureTime)) {
@@ -631,6 +635,7 @@ export class LiveTimetable {
       if (!stopData.scheduledDepartureTime && stopData.estimatedDepartureTime) {
         stopData.scheduledDepartureTime = stopData.estimatedDepartureTime
       }
+
       let stop = new TimetableStop(
         this.#operationDay.clone(),
         stopName,
