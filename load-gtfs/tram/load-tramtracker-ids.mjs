@@ -6,6 +6,7 @@ import directions from './tram-directions.mjs'
 import async from 'async'
 import { load as loadHTML } from 'cheerio'
 import ptvOverrides from './ptv-overrides.mjs'
+import baseTTIDs from '../../transportvic-data/tram/tramtracker-ids.mjs'
 
 const database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
 
@@ -15,32 +16,62 @@ let stops = database.getCollection('gtfs-stops')
 let routes = database.getCollection('gtfs-routes')
 let gtfsTimetables = database.getCollection('gtfs-gtfs timetables')
 
+await stops.bulkWrite(Object.keys(baseTTIDs).map(stopGTFSID => ({
+  updateOne: {
+    filter: {
+      bays: { $elemMatch: {
+        mode: 'tram',
+        stopGTFSID
+      } }
+    },
+    update: {
+      $set: {
+        'bays.$.tramTrackerID': baseTTIDs[stopGTFSID].tramTrackerID,
+        'bays.$.tramTrackerName': baseTTIDs[stopGTFSID].tramTrackerName,
+        'bays.$.levelAccess': baseTTIDs[stopGTFSID].levelAccess
+      }
+    }
+  }
+})))
+
 let tramServices = await routes.distinct('routeNumber', { mode: 'tram' })
 let count = 0
 
 let closedStops = []
 
 let tramTrackerIDs = {
-  '3813': 2013
+  3813: 2013,
+  3697: 2870,
+  2253: 2556,
+  2254: 3097,
+  2255: 2697,
+  2257: 2170
 }
 
 let stopDirections = {
   '3813': [{
     service: '35',
     gtfsDirection: 0
+  }],
+  '3697': [{
+    service: '75',
+    gtfsDirection: 0
   }]
 }
 
 let stopNames = {
-  '3813': 'Bourke St/Spring St #0'
+  '3813': 'Bourke St/Spring St #0',
+  '3697': 'Docklands Stadium on Harbour Esplanade'
 }
 
 let stopNumbers = {
-  '3813': '0'
+  '3813': '0',
+  '3697': 'D3'
 }
 
 let levelAccess = {
-  '3813': false
+  '3813': false,
+  '3697': true
 }
 
 for (let service of tramServices) {
@@ -155,4 +186,16 @@ for (let tramTrackerID of sortedTramTrackerIDs) {
 }
 
 console.log('Completed loading in ' + count + ' tramtracker IDs using new method')
+
+const missingTTIDs = await stops.distinct('stopName', {
+  bays: {
+    $elemMatch: {
+      mode: 'tram',
+      tramTrackerID: { $exists: false }
+    }
+  }
+})
+
+if (missingTTIDs.length) console.log('Tram stops with missing TTID:', missingTTIDs)
+
 process.exit()

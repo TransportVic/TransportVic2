@@ -41,6 +41,12 @@ database.connect(async () => {
   tripDatabase.connect(async () => {
     dbStops = database.getCollection('stops')
 
+    for (let stop of stops) {
+      let [cleanSuburbs, cleanName] = stop.split('/')
+      let dbStop = await dbStops.findDocument({ cleanName, cleanSuburbs })
+      if (!dbStop) global.loggers.oldTrackers.tram.err('could not find', stop)
+    }
+
     schedule([
       [0, 60, 10],
       [270, 1200, 6],
