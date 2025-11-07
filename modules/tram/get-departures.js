@@ -220,7 +220,16 @@ async function getScheduledDepartures(stop, db) {
 
 async function getDepartures(stop, db, tripDB) {
   try {
-    return await utils.getData('tram-departures', stop.stopName, async () => {
+    let shouldShowRoad = stop.bays.filter(bay => {
+      return bay.mode === 'tram'
+    }).map(bay => {
+      let {fullStopName} = bay
+      if (fullStopName.includes('/')) {
+        return fullStopName.replace(/\/\d+[a-zA-Z]? /, '/')
+      } else return fullStopName
+    }).filter((e, i, a) => a.indexOf(e) === i).length > 1
+
+    return (await utils.getData('tram-departures', stop.stopName, async () => {
       try {
         return await getDeparturesFromYT(stop, db, tripDB)
       } catch (e) {
@@ -232,6 +241,20 @@ async function getDepartures(stop, db, tripDB) {
           return departure
         })
       }
+    })).map(departure => {
+      const currentStop = departure.trip.stopTimings.find(stop => stop.stopGTFSID == departure.stopGTFSID)
+      if (!currentStop) return departure
+
+      const departureRoad = (currentStop.stopName.split('/').slice(-1)[0] || '').replace(/^\d+[a-zA-Z]? /, '')
+      if (shouldShowRoad && departureRoad) {
+        if (departureRoad && currentStop.stopNumber) {
+          departure.guidanceText = `Departing Stop #${currentStop.stopNumber} on ${departureRoad}`
+        } else if (departureRoad) {
+          departure.guidanceText = `Departing ${departureRoad}`
+        }
+      }
+
+      return departure
     })
   } catch (e) {
     global.loggers.general.err('Failed to get scheduled tram trips', e)
