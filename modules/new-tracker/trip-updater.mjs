@@ -196,8 +196,14 @@ export default class TripUpdater {
 
   static async updateTripDetails(db, timetable, trip, skipStopCancellation, ignoreMissingStops, stopVisits) {
     let existingStops = timetable.getStopNames()
+    const dbStops = await db.getCollection('stops')
 
     for (let stop of trip.stops) {
+      if (stop.stopGTFSID) {
+        await timetable.updateStopByID(stop.stopGTFSID, stop.stopSequence, dbStops, stop)
+        continue
+      }
+
       let { stopData, updatedData } = await this.getBaseStopUpdateData(db, stop)
       if (!stopData) {
         err('Failed to update stop ' + JSON.stringify(trip), stop)

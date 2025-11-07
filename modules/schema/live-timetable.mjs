@@ -599,7 +599,8 @@ export class LiveTimetable {
   }
 
   async updateStopByID(stopGTFSID, stopSequence, dbStops, stopData) {
-    const matchingStop = this.#stops.slice(Math.max(0, stopSequence - 5), stopSequence + 5).find(stop => {
+    let stopRange = typeof stopSequence === 'number' ? this.#stops.slice(Math.max(0, stopSequence - 5), stopSequence + 5) : this.#stops
+    const matchingStop = stopRange.find(stop => {
       return stop.stopGTFSID === stopGTFSID
     })
 
