@@ -872,6 +872,17 @@ describe('The LiveTimetable class', () => {
     expect(dbTrip.departureTime).to.equal(bus200Data.departureTime)
     expect(dbTrip.destinationArrivalTime).to.equal(bus200Data.destinationArrivalTime)
   })
+
+
+  it('Allows updating a stop by ID', async () => {
+    const timetable = LiveTimetable.fromDatabase(bus670Data)
+
+    await timetable.updateStopByID('21318', 0, {
+      estimatedDepartureTime: new Date('2025-04-09T18:03:40.000Z')
+    })
+
+    expect(timetable.stops[0].estimatedDepartureTime.toISOString()).to.equal('2025-04-09T18:03:40.000Z')
+  })
 })
 
 describe('The BusLiveTimetable class', () => {

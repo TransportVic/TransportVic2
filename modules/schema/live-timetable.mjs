@@ -597,6 +597,14 @@ export class LiveTimetable {
     this.#updateStop(matchingStop, stopName, stopData)
   }
 
+  async updateStopByID(stopGTFSID, stopSequence, stopData) {
+    const matchingStop = this.#stops.slice(Math.max(0, stopSequence - 5), stopSequence + 5).find(stop => {
+      return stop.stopGTFSID === stopGTFSID
+    })
+
+    this.#updateStop(matchingStop, null, stopData)
+  }
+
   #updateStop(matchingStop, stopName, stopData) {
     if (matchingStop) {
       let existingSchTime = matchingStop.scheduledDepartureTime.toISOString()
