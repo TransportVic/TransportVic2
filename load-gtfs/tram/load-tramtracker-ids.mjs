@@ -40,28 +40,18 @@ let count = 0
 let closedStops = []
 
 let tramTrackerIDs = {
-  3813: 2013,
-  3697: 2870,
-  2253: 2556,
-  2254: 3097,
-  2255: 2697,
-  2257: 2170
+  3813: 2013
 }
 
 let stopDirections = {
   '3813': [{
     service: '35',
     gtfsDirection: 0
-  }],
-  '3697': [{
-    service: '75',
-    gtfsDirection: 0
   }]
 }
 
 let stopNames = {
-  '3813': 'Bourke St/Spring St #0',
-  '3697': 'Docklands Stadium on Harbour Esplanade'
+  '3813': 'Spring St & Bourke St'
 }
 
 let stopNumbers = {
