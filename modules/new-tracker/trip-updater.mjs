@@ -194,7 +194,7 @@ export default class TripUpdater {
     return false
   }
 
-  static async updateTripDetails(db, timetable, trip, skipStopCancellation, ignoreMissingStops, stopVisits) {
+  static async updateTripDetails(db, timetable, trip, skipStopCancellation, ignoreMissingStops, stopVisits, propagateDelay) {
     let existingStops = timetable.getStopNames()
     const dbStops = await db.getCollection('stops')
 
@@ -224,6 +224,20 @@ export default class TripUpdater {
 
       let matchingCriteria = this.requireStrictTimingMatch(trip) ? { prefSchTime: stop.scheduledDepartureTime.toISOString() } : { visitNum: stopVisits[stop.stopName] }
       timetable.updateStopByName(stopData.stopName, updatedData, matchingCriteria)
+    }
+
+    if (propagateDelay) {
+      let lastDelay = null
+      for (const stop of timetable.stops) {
+        if (stop.cancelled) continue
+
+        if (lastDelay === null) {
+          if (stop.delayChanged) lastDelay = stop.delay
+        } else {
+          if (stop.delayChanged) lastDelay = stop.delay
+          else stop.delay = lastDelay
+        }
+      }
     }
 
     if (!skipStopCancellation) {
@@ -272,7 +286,8 @@ export default class TripUpdater {
     dataSource = 'unknown',
     ignoreMissingStops = [],
     updateTime = null,
-    existingTrips = {}
+    existingTrips = {},
+    propagateDelay = false
   } = {}) {
     if (this.isNonStopUpdate(trip) && !skipWrite) {
       return await this.updateNonStopData(db, tripDB, trip, { dataSource, updateTime })
@@ -295,7 +310,7 @@ export default class TripUpdater {
       this.adjustTripInput(timetable, trip)
 
       if (trip.stops) {
-        await this.updateTripDetails(db, timetable, trip, skipStopCancellation, ignoreMissingStops, stopVisits)
+        await this.updateTripDetails(db, timetable, trip, skipStopCancellation, ignoreMissingStops, stopVisits, propagateDelay)
       }
     } else {
       timetable = await this.createTrip(db, trip, updateTime, stopVisits, dataSource)

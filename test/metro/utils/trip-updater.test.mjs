@@ -1493,6 +1493,61 @@ describe('The trip updater module', () => {
     expect(tripData.stops[0].actualDepartureTime.toISOString()).to.equal('2025-06-05T21:44:00.000Z')
   })
 
+  it('Can propagate delay data', async () => {
+    let database = new LokiDatabaseConnection('test-db')
+    let stops = await database.createCollection('stops')
+    let routes = await database.createCollection('routes')
+    let liveTimetables = await database.createCollection('live timetables')
+
+    await routes.createDocument({
+      "mode" : "metro train",
+      "routeName" : "Pakenham",
+      "cleanName" : "pakenham",
+      "routeNumber" : null,
+      "routeGTFSID" : "2-PKM",
+      "operators" : [
+        "Metro"
+      ],
+      "cleanName" : "pakenham"
+    })
+    await liveTimetables.createDocument(clone(pkmSchTrip))
+
+    expect(await liveTimetables.countDocuments({})).to.equal(1)
+    let tripData = await MetroTripUpdater.updateTrip(database, database, {
+      operationDays: '20250606',
+      runID: 'C036',
+      routeGTFSID: '2-PKM',
+      stops: [{
+        stopGTFSID: 'vic:rail:EPH',
+        platform: '1',
+        estimatedDepartureTime: new Date('2025-06-05T21:45:00.000Z'), // 2 min late
+      }, {
+        stopGTFSID: 'vic:rail:OFC',
+        platform: '1',
+        estimatedDepartureTime: new Date('2025-06-05T21:53:00.000Z'), // on time
+      }],
+      cancelled: false,
+      additional: false,
+      scheduledStartTime: '07:43'
+    }, {
+      propagateDelay: true
+    })
+
+    expect(await liveTimetables.countDocuments({})).to.equal(1)
+    expect(tripData.stops[0].stopName).to.equal('East Pakenham Railway Station')
+    expect(tripData.stops[0].platform).to.equal('1')
+    expect(tripData.stops[0].actualDepartureTime.toISOString()).to.equal('2025-06-05T21:45:00.000Z')
+
+    expect(tripData.stops[1].stopName).to.equal('Pakenham Railway Station')
+    expect(tripData.stops[1].actualDepartureTime.toISOString()).to.equal('2025-06-05T21:48:00.000Z')
+
+    expect(tripData.stops[3].stopName).to.equal('Officer Railway Station')
+    expect(tripData.stops[3].actualDepartureTime.toISOString()).to.equal('2025-06-05T21:53:00.000Z')
+
+    expect(tripData.stops[4].stopName).to.equal('Beaconsfield Railway Station')
+    expect(tripData.stops[4].actualDepartureTime.toISOString()).to.equal('2025-06-05T21:57:00.000Z')
+  })
+
   describe('Updating non-stop time properties', () => {
     it('Checks if a trip update does not update stop times data', () => {
       expect(TripUpdater.isNonStopUpdate({

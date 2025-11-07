@@ -26,6 +26,8 @@ export class TimetableStop {
   #express
 
   #stopDistance
+  
+  delayChanged = false
 
   constructor(operationDayMoment, stopName, suburb, stopNumber, stopGTFSID, scheduledDepartureTime, estimatedDepartureTime, { platform, cancelled, additional, allowPickup, allowDropoff, track, express, stopDistance }) {
     this.#operationDay = operationDayMoment
@@ -62,6 +64,11 @@ export class TimetableStop {
   get scheduledDepartureTime() { return this.#schDepartureTime.clone() }
   get estimatedDepartureTime() { return this.#estDepartureTime ? this.#estDepartureTime.clone() : null }
   get actualDepartureTime() { return this.estimatedDepartureTime || this.scheduledDepartureTime }
+
+  get delay() { return this.actualDepartureTime.diff(this.scheduledDepartureTime) }
+  set delay(delay) {
+    this.estimatedDepartureTime = this.scheduledDepartureTime.add(delay)
+  }
 
   set scheduledDepartureTime(scheduledDepartureTime) {
     this.#schDepartureTime = utils.parseTime(scheduledDepartureTime)
@@ -636,7 +643,11 @@ export class LiveTimetable {
       })
     }
 
-    if (stopData.estimatedDepartureTime) matchingStop.estimatedDepartureTime = stopData.estimatedDepartureTime
+    if (stopData.estimatedDepartureTime) {
+      matchingStop.estimatedDepartureTime = stopData.estimatedDepartureTime
+      matchingStop.delayChanged = true
+    }
+
     if (stopData.platform) {
       let newPlatform = stopData.platform.toString()
       if (matchingStop.platform !== newPlatform) this.addChange({
