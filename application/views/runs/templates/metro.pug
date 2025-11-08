@@ -28,7 +28,10 @@ if trip.runID
   if trip.vehicle && trip.vehicle.consist.length
     div.liveConsist
       span.header Live Tracking
-      span.consist #{trip.vehicle.consist.join('-')}
+      if trip.vehicle.consist.includes('707M')
+        span#viper-link.consist #{trip.vehicle.consist.join('-')}
+      else
+        span.consist #{trip.vehicle.consist.join('-')}
 
 if trip.isRailReplacementBus
   div.departure.noTiming

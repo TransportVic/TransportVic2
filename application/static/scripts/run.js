@@ -20,7 +20,17 @@ function updateBody() {
   $.ajax({ method: 'POST' }, (err, status, body) => {
     if (!err && status === 200) {
       $('#content').innerHTML = body
-      htmlData = body
+      checkViperLink()
+    }
+  })
+}
+
+function checkViperLink() {
+  const text = $('#viper-link')
+  if (!text) return
+  text.on('click', () => {
+    if (window.confirm('Viper says hi! Click Ok to check out his YouTube!')) {
+      window.open('https://www.youtube.com/@iluvsiemens', '_blank')
     }
   })
 }
@@ -30,4 +40,6 @@ document.on('visibilitychange', checkFocus)
 $.ready(() => {
   setInterval(updateBody, 20 * 1000)
   checkFocus()
+
+  checkViperLink()
 })
