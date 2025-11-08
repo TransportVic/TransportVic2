@@ -216,7 +216,7 @@ async function getScheduledDepartures(stopGTFSIDs, db, mode, timeout, useLive, t
     let departureTime = utils.getMomentFromMinutesPastMidnight(stopData.departureTimeMinutes, operationMoment)
 
     let route = routeCache[trip.routeGTFSID]
-    let opertor, routeNumber
+    let operator, routeNumber
 
     let loopDirection
     if (route) {
@@ -253,8 +253,8 @@ async function getScheduledDepartures(stopGTFSIDs, db, mode, timeout, useLive, t
       trip,
       scheduledDepartureTime: departureTime,
       originDepartureTime,
-      estimatedDepartureTime: null,
-      actualDepartureTime: departureTime,
+      estimatedDepartureTime: currentStop.estimatedDepartureTime,
+      actualDepartureTime: currentStop.estimatedDepartureTime || departureTime,
       scheduledDepartureTimeMinutes: stopData.departureTimeMinutes,
       destination: trip.destination,
       routeNumber,

@@ -215,7 +215,7 @@ async function getDeparturesFromPTV(stop, db, time, discardUnmatched) {
 async function getScheduledDepartures(stop, db, time) {
   let gtfsIDs = departureUtils.getUniqueGTFSIDs(stop, 'bus', false)
 
-  return await departureUtils.getScheduledDepartures(gtfsIDs, db, 'bus', 90, false, time)
+  return await departureUtils.getScheduledDepartures(gtfsIDs, db, 'bus', 90, true, time)
 }
 
 async function getDepartures(stop, db, tripDB, time, discardUnmatched) {
