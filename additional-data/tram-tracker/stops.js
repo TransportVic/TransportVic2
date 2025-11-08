@@ -92,5 +92,5 @@ module.exports = [
   'melbourne/melbourne-aquarium-flinders-street',
   'docklands/stadium-precinct-harbour-esplanade',
   'melbourne/exhibition-street-la-trobe-street',
-  'carlton/melbourne-university-swanston-street-stop-swanston-street'
+  'carlton/melbourne-university-swanston-street'
 ]
