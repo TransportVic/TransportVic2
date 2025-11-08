@@ -55,22 +55,22 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
 
   let existingTrips = {}
   // await fetchGTFSRTrips(mongoDB)
-  await fetchGTFSRFleet(database, tripDatabase, existingTrips)
-  await fetchNotifyAlerts(database, ptvAPI)
-  await fetchMetroSiteDepartures(database, tripDatabase, ptvAPI, existingTrips)
+  try { await fetchGTFSRFleet(database, tripDatabase, existingTrips) } catch(e) { console.error(e) }
+  try { await fetchNotifyAlerts(database, ptvAPI) } catch(e) { console.error(e) }
+  try { await fetchMetroSiteDepartures(database, tripDatabase, ptvAPI, existingTrips) } catch(e) { console.error(e) }
 
   let updatedTrips = await fetchPTVDepartures(database, tripDatabase, ptvAPI, { existingTrips })
   global.loggers.trackers.metro.log('> PTV Departures: Updating TDNs: ' + updatedTrips.map(trip => trip.runID).join(', '))
 
-  await fetchPTVTrips(database, tripDatabase, ptvAPI, existingTrips)
-  await fetchNotifyTrips(database, tripDatabase, ptvAPI, existingTrips)
-  await fetchCBDTrips(database, tripDatabase, ptvAPI, existingTrips)
-  await fetchNotifySuspensions(database, tripDatabase, ptvAPI, existingTrips)
-  await fetchOutdatedTrips(database, tripDatabase, ptvAPI, existingTrips)
+  try { await fetchPTVTrips(database, tripDatabase, ptvAPI, existingTrips) } catch(e) { console.error(e) }
+  try { await fetchNotifyTrips(database, tripDatabase, ptvAPI, existingTrips) } catch(e) { console.error(e) }
+  try { await fetchCBDTrips(database, tripDatabase, ptvAPI, existingTrips) } catch(e) { console.error(e) }
+  try { await fetchNotifySuspensions(database, tripDatabase, ptvAPI, existingTrips) } catch(e) { console.error(e) }
+  try { await fetchOutdatedTrips(database, tripDatabase, ptvAPI, existingTrips) } catch(e) { console.error(e) }
 
-  await writeUpdatedTrips(database, tripDatabase, Object.values(existingTrips))
+  try { await writeUpdatedTrips(database, tripDatabase, Object.values(existingTrips)) } catch(e) { console.error(e) }
 
-  await updateRelatedTrips(database, tripDatabase, Object.values(existingTrips), ptvAPI)
+  try { await updateRelatedTrips(database, tripDatabase, Object.values(existingTrips), ptvAPI) } catch(e) { console.error(e) }
 
   await discordIntegration('taskLogging', `Metro Trip Updater: ${hostname()} completed loading`)
 

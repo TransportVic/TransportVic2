@@ -5,12 +5,11 @@ import config from '../../../config.json' with { type: 'json' }
 import { PTVAPI, PTVAPIInterface } from '@transportme/ptv-api'
 import { fetchTrips } from './metro-ptv-departures.mjs'
 import { getTrips } from './metro-ptv-trips.mjs'
-import { updateRelatedTrips } from './check-new-updates.mjs'
 import _ from '../../../init-loggers.mjs'
 import fs from 'fs/promises'
 
-async function fetchStop(name, db, ptvAPI, maxResults, backwards, tdnsSeen, newlyUpdatedTrips) {
-  let updatedTrips = await fetchTrips(db, ptvAPI, { stationName: name, skipTDN: tdnsSeen, maxResults, backwards })
+async function fetchStop(name, db, tripDB, ptvAPI, maxResults, backwards, tdnsSeen, newlyUpdatedTrips) {
+  let updatedTrips = await fetchTrips(db, tripDB, ptvAPI, { stationName: name, skipTDN: tdnsSeen, maxResults, backwards })
   let newTDNs = updatedTrips.map(trip => trip.runID)
   newlyUpdatedTrips.push(...updatedTrips)
   tdnsSeen.push(...newTDNs)
