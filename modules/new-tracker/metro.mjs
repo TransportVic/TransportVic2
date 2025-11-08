@@ -59,8 +59,10 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   try { await fetchNotifyAlerts(database, ptvAPI) } catch(e) { console.error(e) }
   try { await fetchMetroSiteDepartures(database, tripDatabase, ptvAPI, existingTrips) } catch(e) { console.error(e) }
 
-  let updatedTrips = await fetchPTVDepartures(database, tripDatabase, ptvAPI, { existingTrips })
-  global.loggers.trackers.metro.log('> PTV Departures: Updating TDNs: ' + updatedTrips.map(trip => trip.runID).join(', '))
+  try {
+    let updatedTrips = await fetchPTVDepartures(database, tripDatabase, ptvAPI, { existingTrips })
+    global.loggers.trackers.metro.log('> PTV Departures: Updating TDNs: ' + updatedTrips.map(trip => trip.runID).join(', '))
+  } catch (e) { console.error(e) }
 
   try { await fetchPTVTrips(database, tripDatabase, ptvAPI, existingTrips) } catch(e) { console.error(e) }
   try { await fetchNotifyTrips(database, tripDatabase, ptvAPI, existingTrips) } catch(e) { console.error(e) }
