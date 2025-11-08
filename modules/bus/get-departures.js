@@ -103,6 +103,10 @@ async function getDeparturesFromPTV(stop, db, time, discardUnmatched) {
       if (actualDepartureTime.diff(time, 'minutes') > 90) return
 
       if (!run.destination_name) {
+        if (!overrideStops[run.final_stop_id]) {
+          global.loggers.error.err('Invalid run destination!', run)
+          return
+        }
         run.destination_name = overrideStops[run.final_stop_id].stop_name
       }
 

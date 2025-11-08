@@ -67,8 +67,15 @@ let ELT = {
   stop_longitude: 145.147822019567
 }
 
+let LAV = {
+  stop_suburb: 'Laverton',
+  stop_name: 'Laverton Railway Station',
+  stop_longitude: -37.86431665,
+  stop_latitude: 144.77075650
+}
+
 let allStops = [
-  RWD, MONASH, CSA, TNT, HLM, MELB, DONC, GLO_SHOW, ELT
+  RWD, MONASH, CSA, TNT, HLM, MELB, DONC, GLO_SHOW, ELT, LAV
 ]
 
 let failedStops = []
@@ -95,8 +102,7 @@ async function check(stopID) {
 }
 
 async function main() {
-  for (let stopID = 33240; stopID <= 33250; stopID++) await check(stopID)
-  for (let stopID = 34100; stopID <= 34250; stopID++) await check(stopID)
+  for (let stopID = 18550; stopID <= 18570; stopID++) await check(stopID)
   
   await fs.writeFile(__dirname + '/override-stops.json', JSON.stringify(stops, null, 2))
   if (failedStops.length) await updateDiscord()
