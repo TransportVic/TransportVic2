@@ -10,27 +10,48 @@ import { hostname } from 'os'
 
 const { TRANSIT_MODES } = GTFS_CONSTANTS
 
+const BATCH_SIZE = 1000
+async function getBatch(gtfsTimetables, baseQuery, lastSeenID) {
+  const query = lastSeenID ? {
+    ...baseQuery,
+    _id: {
+      $gt: lastSeenID
+    }
+  } : baseQuery
+
+  const trips = await gtfsTimetables.findDocuments(query).sort({ _id: 1 }).limit(BATCH_SIZE).toArray()
+
+  return {
+    trips, lastSeenID: trips.length > 0 ? trips[trips.length - 1]._id : null
+  }
+}
+
 async function loadOperationalTT(db, operationDay) {
   let gtfsTimetables = db.getCollection('gtfs timetables')
   let liveTimetables = db.getCollection('live timetables')
 
-  let opDayFormat = utils.getYYYYMMDD(operationDay)
-  let rawActiveTrips = await gtfsTimetables.findDocuments({
+  const opDayFormat = utils.getYYYYMMDD(operationDay)
+  const baseQuery =  {
     mode: TRANSIT_MODES.bus,
     routeGTFSID: /^4-/,
     operationDays: opDayFormat
-  }).toArray()
+  }
 
-  console.log('Fetched', rawActiveTrips.length, 'trips to process')
+  let curMaxID = null
+  let totalSeen = 0
 
-  for (let i = 0; i < rawActiveTrips.length / 1000; i++) {
-    let start = i * 1000
-    let end = (i + 1) * 1000
+  do {
+    const {
+      trips,
+      lastSeenID
+    } = await getBatch(gtfsTimetables, baseQuery, curMaxID)
+    curMaxID = lastSeenID
+    if (trips.length === 0) break
 
-    // TODO: Implement block data with refactored method
-    let activeTrips = rawActiveTrips.slice(start, end).map(trip => convertToLive(trip, operationDay))
+    totalSeen += trips.length
+    console.log('Fetched', trips.length, 'trips to process')
 
-    let bulkUpdate = activeTrips.map(trip => ({
+    let bulkUpdate = trips.map(trip => convertToLive(trip, operationDay)).map(trip => ({
       replaceOne: {
         filter: { mode: trip.mode, operationDays: trip.operationDays, runID: trip.runID },
         replacement: trip,
@@ -39,7 +60,9 @@ async function loadOperationalTT(db, operationDay) {
     }))
 
     await liveTimetables.bulkWrite(bulkUpdate)
-  }
+  } while (curMaxID !== null)
+
+  console.log('Processed', totalSeen, ' trips in total')
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
