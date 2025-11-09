@@ -31,14 +31,9 @@ async function modifyTrip(db, trip, operationDay) {
   let key = {
     mode: 'tram',
     operationDays: operationDay,
-    routeGTFSID: trip.routeGTFSID,
-    origin: trip.origin,
-    departureTime: trip.departureTime,
-    destination: trip.destination,
-    destinationArrivalTime: trip.destinationArrivalTime
+    runID: trip.runID
   }
 
-  trip.runID = Math.random()
   await db.getCollection('live timetables').replaceDocument(key, trip, {
     upsert: true
   })

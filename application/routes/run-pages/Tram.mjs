@@ -137,11 +137,8 @@ async function pickBestTrip(data, db, tripDB) {
 
     let key = {
       mode: 'tram',
-      routeGTFSID: referenceTrip.routeGTFSID,
       operationDays,
-      departureTime: referenceTrip.departureTime,
-      destinationArrivalTime: referenceTrip.destinationArrivalTime,
-      origin: referenceTrip.origin
+      runID: referenceTrip.runID
     }
 
     referenceTrip.operationDays = operationDays
