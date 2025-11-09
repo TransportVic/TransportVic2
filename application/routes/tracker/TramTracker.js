@@ -36,7 +36,7 @@ Object.keys(tramDepots).forEach(tram => {
   let depot = tramDepots[tram]
 
   crossDepotQuery.$or.push({
-    tram: parseInt(tram),
+    consist: tram,
     routeNumber: {
       $not: {
         $in: fullDepotServices[depot]
@@ -78,7 +78,7 @@ function adjustTrip(trip, date, today, minutesPastMidnightNow) {
 
   trip.active = minutesPastMidnightNow <= destinationArrivalTimeMinutes || date !== today
 
-  trip.tram = `${tramFleet.getModel(trip.tram)}.${trip.tram}`
+  trip.tram = `${tramFleet.getModel(trip.consist[0])}.${trip.consist[0]}`
 
   return trip
 }
@@ -108,11 +108,9 @@ router.get('/fleet', async (req, res) => {
     })
   }
 
-  let tramNumber = parseInt(fleet)
-
   let query = {
     date,
-    tram: tramNumber
+    consist: fleet
   }
 
   let tripsToday = await tramTrips.findDocuments(query)
@@ -120,12 +118,12 @@ router.get('/fleet', async (req, res) => {
 
   tripsToday = tripsToday.map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
 
-  let allDates = (await tramTrips.distinct('date', { tram: tramNumber })).reverse().slice(0, 60)
+  let allDates = (await tramTrips.distinct('date', { consist: fleet })).reverse().slice(0, 60)
 
   let servicesByDay = await async.map(allDates, async date => {
     let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
 
-    let services = await tramTrips.distinct('routeNumber', { tram: tramNumber, date })
+    let services = await tramTrips.distinct('routeNumber', { date, consist: fleet })
 
     return {
       date,
@@ -185,7 +183,7 @@ router.get('/service', async (req, res) => {
   let tramsByDay = await async.map(allDates, async date => {
     let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
 
-    let trams = await tramTrips.distinct('tram', { routeNumber: service, date })
+    let trams = await tramTrips.distinct('consist', { routeNumber: service, date })
 
     return {
       date,
@@ -244,7 +242,7 @@ router.get('/shift', async (req, res) => {
   let tramsByDay = await async.map(allDates, async date => {
     let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
 
-    let trams = await tramTrips.distinct('tram', { shift, date })
+    let trams = await tramTrips.distinct('consist', { shift, date })
 
     return {
       date,
@@ -272,7 +270,7 @@ router.get('/cross-depot', async (req, res) => {
 
   let today = utils.getYYYYMMDDNow()
 
-  let {shift, date} = querystring.parse(url.parse(req.url).query)
+  let {date} = querystring.parse(url.parse(req.url).query)
   if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
   else date = today
 
@@ -294,15 +292,15 @@ router.get('/highlights', async (req, res) => {
 
   let today = utils.getYYYYMMDDNow()
 
-  let {shift, date} = querystring.parse(url.parse(req.url).query)
+  let {date} = querystring.parse(url.parse(req.url).query)
   if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
   else date = today
 
   let unknownTrams = (await tramTrips.findDocuments({
     date: date,
-    tram: {
+    consist: {
       $not: {
-        $in: knownTrams
+        $in: knownTrams.map(t => t.toString())
       }
     }
   }).sort({departureTime: 1}).toArray())
@@ -333,11 +331,11 @@ router.get('/full-list', async (req, res) => {
 
   let rawTripsToday = await tramTrips.findDocuments({
     date
-  }).sort({ routeNumber: 1 }).toArray()
+  }, { routeNumber: 1, consist: 1 }).sort({ routeNumber: 1 }).toArray()
 
   let trams = {}
   rawTripsToday.forEach(trip => {
-    let fleetNumber = `${tramFleet.getModel(trip.tram)}.${trip.tram}`
+    let fleetNumber = `${tramFleet.getModel(trip.consist[0])}.${trip.consist[0]}`
 
     if (!trams[fleetNumber]) trams[fleetNumber] = []
     if (!trams[fleetNumber].includes(trip.routeNumber)) {
