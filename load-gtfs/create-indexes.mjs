@@ -200,22 +200,22 @@ async function createTramTripIndex(tramTrips) {
   }, {name: 'tram trips index', unique: true})
 
   await tramTrips.createIndex({
-    tram: 1,
+    consist: 1,
     date: 1,
     routeNumber: 1
-  }, {name: 'tram index'})
+  }, {name: 'tram index new'})
 
   await tramTrips.createIndex({
     routeNumber: 1,
     date: 1,
-    tram: 1
-  }, {name: 'route operating days'})
+    consist: 1
+  }, {name: 'route operating days new'})
 
   await tramTrips.createIndex({
     shift: 1,
     date: 1,
-    tram: 1
-  }, {name: 'shift index'})
+    consist: 1
+  }, {name: 'shift index new'})
 }
 
 async function createBusTripIndex(busTrips) {
