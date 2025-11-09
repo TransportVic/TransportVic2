@@ -180,7 +180,9 @@ async function getDeparturesFromYT(stop, db, tripDB) {
 
         let tripData = {
           ...query,
+          runID: trip.runID,
           tram: VehicleNo,
+          consist: [ VehicleNo.toString() ],
           routeNumber: HeadBoardRouteNo,
           shift: RunNo.trim()
         }
