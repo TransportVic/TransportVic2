@@ -18,8 +18,7 @@ async function loadOperationalTT(db, operationDay) {
 
   let totalSeen = 0
   await gtfsTimetables.batchQuery({
-    mode: TRANSIT_MODES.bus,
-    routeGTFSID: /^4-/,
+    mode: TRANSIT_MODES.tram,
     operationDays: opDayFormat
   }, 1000, async trips => {
     totalSeen += trips.length
@@ -40,7 +39,7 @@ async function loadOperationalTT(db, operationDay) {
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  await discordIntegration('taskLogging', `Bus Op TT: ${hostname()} loading`)
+  await discordIntegration('taskLogging', `Tram Op TT: ${hostname()} loading`)
 
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
@@ -48,7 +47,7 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   await loadOperationalTT(mongoDB, utils.now())
   await loadOperationalTT(mongoDB, utils.now().add(1, 'day'))
 
-  await discordIntegration('taskLogging', `Bus Op TT: ${hostname()} completed loading`)
+  await discordIntegration('taskLogging', `Tram Op TT: ${hostname()} completed loading`)
 
   await mongoDB.close()
 }
