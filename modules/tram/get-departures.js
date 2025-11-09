@@ -168,7 +168,7 @@ async function getDeparturesFromYT(stop, db, tripDB) {
         let minutesDiff = currentStop.departureTimeMinutes - firstStop.departureTimeMinutes
         let originDepartureTime = scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
 
-        let date = utils.getYYYYMMDD(originDepartureTime)
+        let date = typeof trip.operationDays === 'string' ? trip.operationDays : utils.getPTYYYYMMDD(originDepartureTime)
 
         let query = {
           date,
