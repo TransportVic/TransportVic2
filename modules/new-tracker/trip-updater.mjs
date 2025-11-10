@@ -80,6 +80,20 @@ export default class TripUpdater {
     return stop
   }
 
+  static async getStopByID(db, stopGTFSID) {
+    if (stopCache[stopGTFSID]) return stopCache[stopGTFSID]
+
+    let stops = db.getCollection('stops')
+    let stop = await stops.findDocument({
+      'bays.stopGTFSID': stopGTFSID
+    })
+
+    if (!stop) return null
+
+    stopCache[stopGTFSID] = stop
+    return stop
+  }
+
   static async getRoute(db, routeGTFSID) {
     if (routeIDCache[routeGTFSID]) return routeIDCache[routeGTFSID]
 
@@ -115,9 +129,14 @@ export default class TripUpdater {
   }
 
   static async getBaseStopUpdateData(db, stop) {
-    let stopData = await this.getStopByName(db, stop.stopName)
+    let stopData = stop.stopGTFSID ? await this.getStopByID(db, stop.stopGTFSID) : await this.getStopByName(db, stop.stopName)
+
     let platformBay
     let mode = this.getMode()
+
+    if (stop.stopGTFSID) {
+      platformBay = stopData.bays.find(bay => bay.mode === mode && bay.stopGTFSID === stop.stopGTFSID)
+    }
 
     if (stop.platform) {
       platformBay = stopData.bays.find(bay => bay.mode === mode && bay.platform === stop.platform)
@@ -371,6 +390,11 @@ export default class TripUpdater {
 
     for (let stop of trip.stops) {
       let { stopData, updatedData } = await this.getBaseStopUpdateData(db, stop)
+
+      if (!stopData) {
+        console.log('Could not map stop', stop)
+        continue
+      }
 
       if (!stopVisits[stop.stopName]) stopVisits[stop.stopName] = 0
       stopVisits[stop.stopName]++
