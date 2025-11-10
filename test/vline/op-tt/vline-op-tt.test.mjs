@@ -8,6 +8,7 @@ import loadOperationalTT, { downloadTripPattern, matchTrip } from '../../../modu
 import { LokiDatabaseConnection } from '@transportme/database'
 import td8741GTFS from './sample-data/td8741-gtfs.json' with { type: 'json' }
 import td8891Live from './sample-data/time-change/td8891-live.json' with { type: 'json' }
+import td8891GTFS from './sample-data/time-change/td8891-gtfs.json' with { type: 'json' }
 import td8007NSP from './sample-data/td8007-nsp.json' with { type: 'json' }
 import allStops from './sample-data/stops.json' with { type: 'json' }
 import allRoutes from './sample-data/routes.json' with { type: 'json' }
@@ -310,6 +311,34 @@ describe('The loadOperationalTT function', () => {
     expect(update2Trip.stopTimings[1].departureTime).to.equal('23:13')
     expect(update2Trip.stopTimings[8].stopName).to.equal('South Geelong Railway Station')
     expect(update2Trip.stopTimings[8].departureTime).to.equal('23:55')
+  })
+
+  it('Matches a trip where the times are updated before any live trip is created', async () => {
+    let database = new LokiDatabaseConnection()
+    let stops = database.getCollection('stops')
+    let routes = database.getCollection('routes')
+    let timetables = database.getCollection('gtfs timetables')
+
+    await stops.createDocuments(clone(allStops))
+    await routes.createDocuments(clone(allRoutes))
+    await timetables.createDocument(clone(td8891GTFS))
+
+    let stubAPI = new StubVLineAPI()
+    stubAPI.setResponses([ vlineTripsTD8891_Late, vlineTripsEmpty ])
+    let ptvAPI = new PTVAPI(stubAPI)
+    ptvAPI.addVLine(stubAPI)
+
+    // Go direct to altered times
+    await loadOperationalTT(database, database, utils.parseDate('20250719'), ptvAPI)
+    let updatedTrip = await timetables.findDocument({})
+
+    expect(updatedTrip.runID).to.equal('8891')
+    expect(updatedTrip.stopTimings[0].stopName).to.equal('Southern Cross Railway Station')
+    expect(updatedTrip.stopTimings[0].departureTime).to.equal('22:50')
+    expect(updatedTrip.stopTimings[1].stopName).to.equal('Tarneit Railway Station')
+    expect(updatedTrip.stopTimings[1].departureTime).to.equal('23:13')
+    expect(updatedTrip.stopTimings[8].stopName).to.equal('South Geelong Railway Station')
+    expect(updatedTrip.stopTimings[8].departureTime).to.equal('23:55')
   })
 
   it('Matches a shorted trip not entered into the GTFS data', async () => {
