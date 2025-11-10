@@ -317,11 +317,12 @@ describe('The loadOperationalTT function', () => {
     let database = new LokiDatabaseConnection()
     let stops = database.getCollection('stops')
     let routes = database.getCollection('routes')
-    let timetables = database.getCollection('gtfs timetables')
+    let gtfsTimetables = database.getCollection('gtfs timetables')
+    let liveTimetables = database.getCollection('live timetables')
 
     await stops.createDocuments(clone(allStops))
     await routes.createDocuments(clone(allRoutes))
-    await timetables.createDocument(clone(td8891GTFS))
+    await gtfsTimetables.createDocument(clone(td8891GTFS))
 
     let stubAPI = new StubVLineAPI()
     stubAPI.setResponses([ vlineTripsTD8891_Late, vlineTripsEmpty ])
@@ -330,7 +331,36 @@ describe('The loadOperationalTT function', () => {
 
     // Go direct to altered times
     await loadOperationalTT(database, database, utils.parseDate('20250719'), ptvAPI)
-    let updatedTrip = await timetables.findDocument({})
+    let updatedTrip = await liveTimetables.findDocument({})
+
+    expect(updatedTrip.runID).to.equal('8891')
+    expect(updatedTrip.stopTimings[0].stopName).to.equal('Southern Cross Railway Station')
+    expect(updatedTrip.stopTimings[0].departureTime).to.equal('22:50')
+    expect(updatedTrip.stopTimings[1].stopName).to.equal('Tarneit Railway Station')
+    expect(updatedTrip.stopTimings[1].departureTime).to.equal('23:13')
+    expect(updatedTrip.stopTimings[8].stopName).to.equal('South Geelong Railway Station')
+    expect(updatedTrip.stopTimings[8].departureTime).to.equal('23:55')
+  })
+
+  it('Uses the origin\'s offset when the offset on the first and last stop do not match and are within 5min', async () => {
+    let database = new LokiDatabaseConnection()
+    let stops = database.getCollection('stops')
+    let routes = database.getCollection('routes')
+    let gtfsTimetables = database.getCollection('gtfs timetables')
+    let liveTimetables = database.getCollection('live timetables')
+
+    await stops.createDocuments(clone(allStops))
+    await routes.createDocuments(clone(allRoutes))
+    await gtfsTimetables.createDocument(clone(td8891GTFS))
+
+    let stubAPI = new StubVLineAPI()
+    stubAPI.setResponses([ vlineTripsTD8891_Late.replace('23:55', '23:59'), vlineTripsEmpty ])
+    let ptvAPI = new PTVAPI(stubAPI)
+    ptvAPI.addVLine(stubAPI)
+
+    // Go direct to altered times
+    await loadOperationalTT(database, database, utils.parseDate('20250719'), ptvAPI)
+    let updatedTrip = await liveTimetables.findDocument({})
 
     expect(updatedTrip.runID).to.equal('8891')
     expect(updatedTrip.stopTimings[0].stopName).to.equal('Southern Cross Railway Station')

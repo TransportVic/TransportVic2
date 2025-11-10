@@ -57,8 +57,8 @@ export async function matchTrip(opDayFormat, operationDay, vlineTrip, db) {
         $elemMatch: {
           stopName: originStop.stopName,
           departureTimeMinutes: {
-            $gte: departureTimeMinutes - 3,
-            $lte: departureTimeMinutes + 3,
+            $gte: departureTimeMinutes - 20,
+            $lte: departureTimeMinutes + 20,
           },
         }
       }
@@ -67,8 +67,8 @@ export async function matchTrip(opDayFormat, operationDay, vlineTrip, db) {
         $elemMatch: {
           stopName: destinationStop.stopName,
           arrivalTimeMinutes: {
-            $gte: arrivalTimeMinutes - 3,
-            $lte: arrivalTimeMinutes + 3
+            $gte: arrivalTimeMinutes - 20,
+            $lte: arrivalTimeMinutes + 20
           }
         }
       }
@@ -200,7 +200,7 @@ async function updateExistingTrip(db, tripDB, existingTrip, vlineTrip) {
 
   let originOffset = vlineTrip.departureTime - new Date(existingTrip.stopTimings[0].scheduledDepartureTime)
   let destinationOffset = vlineTrip.arrivalTime - new Date(existingTrip.stopTimings[existingTrip.stopTimings.length - 1].scheduledDepartureTime)
-  if (originOffset !== 0 && originOffset === destinationOffset) {
+  if (originOffset !== 0 && Math.abs(originOffset - destinationOffset) <= 5 * 60 * 1000) {
     await VLineTripUpdater.setTripTimeOffset(
       db, tripDB, existingTrip.operationDays, existingTrip.runID,
       originOffset, 'vline-op-tt'
