@@ -178,10 +178,25 @@ describe('The GTFSRTrip class', () => {
     expect(data.getRouteID()).to.equal('1-WBL')
   })
 
+  it('Extracts scheduled bus data', () => {
+    const trip = GTFSRTrip.parse( {
+      trip_id: '14-908--1-MF16-909153',
+      route_id: '908',
+      direction_id: 0,
+      start_time: '11:28:00',
+      start_date: '20251110',
+      schedule_relationship: 0
+    })
+
+    expect(trip.getTDN()).to.equal('14-908--MF-909153')
+    expect(trip.getRouteID()).to.equal('4-908')
+    expect(trip.getOperationDay()).to.equal('20251110')
+  })
+
   it('Extracts unscheduled bus data', () => {
     const trip = GTFSRTrip.parse({
       trip_id: 'vic:21201:_:R:aus._201_21-201--1-MF4-20_20251030',
-      route_id: '21201',
+      route_id: '',
       direction_id: 0,
       start_time: '11:45:00',
       start_date: '20251029',
@@ -189,6 +204,7 @@ describe('The GTFSRTrip class', () => {
     })
 
     expect(trip.getTDN()).to.equal('21-201--MF-20')
+    expect(trip.getRouteID()).to.equal('4-201')
     expect(trip.getOperationDay()).to.equal('20251030')
   })
 })

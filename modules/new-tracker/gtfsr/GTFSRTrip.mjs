@@ -111,14 +111,16 @@ export class UnscheduledBusGTFSRTrip extends GTFSRTrip {
 
   #tripID
   #runID
+  #routeID
   #operationDay
 
   constructor(trip) {
     super(trip)
-    const smartrakTripID = trip.trip_id.match(/_\w+_(\d+-\w+-\w?-1-\w+-\d+)_(\d+)$/)
-    this.#tripID = smartrakTripID[1]
+    const smartrakTripID = trip.trip_id.match(/_(\w+)_(\d+-\w+-\w?-1-\w+-\d+)_(\d+)$/)
+    this.#routeID = `4-${smartrakTripID[1]}`
+    this.#tripID = smartrakTripID[2]
     this.#runID = SmartrakTrip.getRunIDFromTripID(this.getTripID())
-    this.#operationDay = smartrakTripID[2]
+    this.#operationDay = smartrakTripID[3]
   }
 
   static canProcess(trip) {
@@ -128,5 +130,6 @@ export class UnscheduledBusGTFSRTrip extends GTFSRTrip {
   getTripID() { return this.#tripID }
   getTDN() { return this.#runID }
   getOperationDay() { return this.#operationDay }
+  getRouteID() { return this.#routeID }
 
 }

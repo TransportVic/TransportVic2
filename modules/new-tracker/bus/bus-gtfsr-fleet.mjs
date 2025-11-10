@@ -65,11 +65,15 @@ export async function fetchGTFSRFleet(db, tripDB, existingTrips) {
   global.loggers.trackers.bus.log('GTFSR Updater: Fetched', relevantTrips.length, 'trips')
 
   await async.forEachLimit(relevantTrips, 400, async tripUpdateData => {
-    await BusTripUpdater.updateTrip(db, tripDB, tripUpdateData, {
-      dataSource: 'gtfsr-vehicle-update',
-      existingTrips,
-      skipWrite: true
-    })
+    try {
+      await BusTripUpdater.updateTrip(db, tripDB, tripUpdateData, {
+        dataSource: 'gtfsr-vehicle-update',
+        existingTrips,
+        skipWrite: true
+      })
+    } catch (e) {
+      console.error('Error while updating trip', e)
+    }
   })
 
   return relevantTrips

@@ -345,6 +345,10 @@ export default class TripUpdater {
 
   static async createTrip(db, trip, updateTime, stopVisits, dataSource) {
     let routeData = await this.getRoute(db, trip.routeGTFSID)
+    if (!routeData) {
+      console.error('Invalid route', trip)
+      return null
+    }
 
     let timetable = new LiveTimetable(
       this.getMode(),
