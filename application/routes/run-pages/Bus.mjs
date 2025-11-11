@@ -110,7 +110,7 @@ async function pickBestTrip(data, db, tripDB) {
 
   let isLiveRoute = null
   if (referenceTrip) {
-    isLiveRoute = referenceTrip.routeGTFSID.startsWith('4-') || !!regionalGTFSIDs[referenceTrip.routeGTFSID]
+    isLiveRoute = referenceTrip.routeGTFSID.startsWith('4-')
   }
 
   // Necessary to make distinction between false and null
