@@ -361,3 +361,11 @@
 :nth-child(even) > .tram-109 {
     background-color: #a44700 !important;
 }
+
+.skybus {
+    background-color: #ee3124 !important;
+}
+
+:nth-child(even) > .skybus {
+    background-color: #bb291e !important;
+}
