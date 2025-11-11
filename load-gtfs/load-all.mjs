@@ -13,11 +13,14 @@ let commands = [
   ['vline/timetables/load-vline-timetables.mjs'],
 
   ['bus/load-788-stop-numbers.mjs'],
+  ['/bus/mildura/load-mildura-routes.mjs'],
+
   ['tram/load-extra-data.mjs'],
 
   ['load-all-trips.mjs'],
 
   ['bus/load-flexiride-data.mjs'],
+  ['bus/mildura/cleanup-mildura-routes.mjs'],
 
   ['metro/load-extra-data.mjs'],
   ['metro/download-metro-timetables.mjs'],
