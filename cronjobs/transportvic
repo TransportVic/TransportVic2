@@ -43,6 +43,7 @@
   5     1     *     *     *     node /home/transportvic/TransportVic/Server/modules/op-timetable/load-coach-op-tt.mjs
   7     1     *     *     *     node /home/transportvic/TransportVic/Server/modules/op-timetable/load-tram-op-tt.mjs
   2     3     *     *     *     node /home/transportvic/TransportVic/Server/modules/op-timetable/load-bus-op-tt.mjs
+  2     1     *     *     *     node /home/transportvic/TransportVic/Server/modules/op-timetable/load-regional-bus-op-tt.mjs
   0     1     *     *     *     node /home/transportvic/TransportVic/Server/modules/op-timetable/load-overland-op-tt.mjs
 
   # Metro Tracker

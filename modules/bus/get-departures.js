@@ -252,7 +252,7 @@ async function getDepartures(stop, db, tripDB, time, discardUnmatched) {
 
       let nonLiveDepartures = scheduledDepartures.filter(departure => {
         let { routeGTFSID } = departure.trip
-        return !(routeGTFSID.startsWith('4-') || (regionalGTFSIDs[routeGTFSID] && regionalGTFSIDs[routeGTFSID].liveTrack))
+        return !routeGTFSID.startsWith('4-')
       })
 
       departures = [...ptvDepartures, ...nonLiveDepartures]
