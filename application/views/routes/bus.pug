@@ -16,9 +16,9 @@ block head
     
     let routeName = `${type} ${identifier}`
 
-    if (route.routeGTFSID.startsWith('11-')) routeName = `${identifier.replace(/skybus - /i, '')} SkyBus`
+    if (route.routeGTFSID.startsWith('11-')) routeName = `${identifier.replace(/ skybus/i, '')} SkyBus`
     if (route.routeGTFSID.startsWith('12-')) routeName = `${identifier} Shuttle Bus`
-    
+
     title = routeName
     description = `${routeName}: ${name}`
     

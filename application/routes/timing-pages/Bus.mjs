@@ -25,6 +25,7 @@ async function loadDepartures(req, res) {
   }) : null
 
   if (oppositeStop) {
+    oppositeStop.bays.forEach(b => b.opposite = true)
     stop.bays.push(...oppositeStop.bays)
   }
 
@@ -75,7 +76,8 @@ async function loadDepartures(req, res) {
     classGen: departure => departure.codedOperator,
     currentMode: 'bus',
     maxDepartures: 4,
-    stopHeritageUseDates
+    stopHeritageUseDates,
+    oppositeStop
   }
 }
 

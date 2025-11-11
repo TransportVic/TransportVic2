@@ -29,6 +29,8 @@ export async function matchDirectionStops(mode, stops, dir0, dir1) {
       'bays.stopGTFSID': stopToMatch.stopGTFSID
     }, { textQuery: 0 })
 
+    if (dir0StopData.bays.length > 1) continue
+
     let smallestDistance = Infinity
     let bestMatch = null
 
@@ -49,6 +51,8 @@ export async function matchDirectionStops(mode, stops, dir0, dir1) {
           }
         }
       }, { textQuery: 0 })
+
+      if (dir1StopData.bays.length > 1) continue
 
       let stopDistance = turf.distance(
         turf.center(dir0StopData.location),

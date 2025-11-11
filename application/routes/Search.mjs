@@ -149,7 +149,7 @@ async function findStops(db, rawQuery) {
 
 async function findRoutes(db, query) {
   const routes = await db.getCollection('routes')
-  query = query.replace(/ li?n?e?/, '').trim()
+  query = query.replace(/ li?n?e?\b/, '').trim()
   if (query.length) {
     let queryRegex = new RegExp(query, 'i')
 
@@ -167,10 +167,19 @@ async function findRoutes(db, query) {
       }]
     }).toArray()
 
-    return regionMatch.concat(await routes.findDocuments({
+    const approxMatch = await routes.findDocuments({
       _id: {
         $not: {
           $in: regionMatch.map(r => r._id)
+        }
+      },
+      $and: words.map(w => ({ routeName: new RegExp(w, 'i') }))
+    }).toArray()
+
+    return regionMatch.concat(approxMatch).concat(await routes.findDocuments({
+      _id: {
+        $not: {
+          $in: approxMatch.map(r => r._id).concat(regionMatch.map(r => r._id))
         }
       },
       $or: [{
