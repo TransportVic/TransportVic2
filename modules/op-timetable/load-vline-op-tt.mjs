@@ -25,6 +25,15 @@ async function getStopFromVNetName(stops, vnetName) {
   return stop
 }
 
+async function getScheduledTripByTDN(opDayFormat, vlineTrip, db) {
+  let gtfsTimetables = await db.getCollection('gtfs timetables')
+  return await gtfsTimetables.findDocument({
+    mode: GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain,
+    operationDays: opDayFormat,
+    runID: vlineTrip.tdn
+  })
+}
+
 export async function matchTrip(opDayFormat, operationDay, vlineTrip, db) {
   let gtfsTimetables = await db.getCollection('gtfs timetables')
 
@@ -186,6 +195,100 @@ export async function downloadTripPattern(operationDay, vlineTrip, nspTrip, db) 
   return timetable
 }
 
+async function findMatchingTrip(opDay, opDayFormat, scheduledTDN, vlineTrip, db) {
+  const gtfsTimetables = await db.getCollection('gtfs timetables')
+  const tripLength = vlineTrip.arrivalTime.diff(vlineTrip.departureTime, 'minutes').get('minutes')
+
+  const tripStops = scheduledTDN.stopTimings.map(stop => stop.stopGTFSID)
+  const matchingTripID = await gtfsTimetables.aggregate([{
+    $match: {
+      mode: GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain,
+      operationDays: opDayFormat,
+      $and: tripStops.map(stopGTFSID => ({ 'stopTimings.stopGTFSID': stopGTFSID }))
+    }
+  }, {
+    $project: {
+      originStop: {
+        $arrayElemAt: [
+          {
+              $filter: {
+              input: "$stopTimings",
+              as: "stopTimings",
+              cond: { $eq: ["$$stopTimings.stopGTFSID", scheduledTDN.stopTimings[0].stopGTFSID] }
+            }
+          }, 0
+        ]
+      },
+      destinationStop: {
+        $arrayElemAt: [
+          {
+            $filter: {
+              input: "$stopTimings",
+              as: "stopTimings",
+              cond: { $eq: ["$$stopTimings.stopGTFSID", scheduledTDN.stopTimings[scheduledTDN.stopTimings.length - 1].stopGTFSID] }
+            }
+          }, 0
+        ]
+      }
+    }
+  }, {
+    $project: {
+      tripLengthCloseness: {
+        $abs: {
+          $subtract: [
+            { $subtract: ['$destinationStop.arrivalTimeMinutes', '$originStop.departureTimeMinutes'] },
+            tripLength
+          ]
+        }
+      }
+    }
+  }, {
+    $match: {
+      tripLengthCloseness: {
+        $lte: 3
+      }
+    }
+  }, {
+    $sort: {
+      tripLengthCloseness: 1
+    }
+  }]).limit(1).toArray()
+
+  if (matchingTripID.length === 0) return null
+
+  const matchingTrip = await gtfsTimetables.findDocument({ _id: matchingTripID[0]._id })
+  const tripOffset = matchingTrip.stopTimings[0].departureTimeMinutes - scheduledTDN.stopTimings[0].departureTimeMinutes
+
+  const timetable = new LiveTimetable(
+    GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain,
+    opDayFormat,
+    scheduledTDN.routeName,
+    null,
+    scheduledTDN.routeGTFSID,
+    scheduledTDN.tripID
+  )
+
+  timetable.logChanges = false
+  timetable.runID = vlineTrip.tdn
+  timetable.direction = vlineTrip.direction
+  timetable.gtfsDirection = scheduledTDN.gtfsDirection
+  timetable.isRRB = false
+  
+  for (const stop of matchingTrip.stopTimings) {
+    if (!tripStops.includes(stop.stopGTFSID)) continue
+
+    const stopTime = stop.departureTimeMinutes - tripOffset
+    timetable.updateStopByName(stop.stopName, {
+      stopGTFSID: stop.stopGTFSID,
+      stopNumber: null,
+      suburb: stop.suburb,
+      scheduledDepartureTime: opDay.clone().add(stopTime, 'minutes')
+    })
+  }
+
+  return timetable
+}
+
 async function updateExistingTrip(db, tripDB, existingTrip, vlineTrip) {
   let stops = db.getCollection('stops')
   let originStop = await getStopFromVNetName(stops, vlineTrip.origin)
@@ -254,11 +357,11 @@ export default async function loadOperationalTT(db, tripDB, operationDay, ptvAPI
     tripsNeedingFetch.push({ opDayFormat, vlineTrip, nspTrip })
   }
 
-  let missingTrips = tripsNeedingFetch.slice(15)
+  let missingPatternTrips = tripsNeedingFetch.slice(15)
   for (let { opDayFormat, vlineTrip, nspTrip } of tripsNeedingFetch.slice(0, 15)) {
     let pattern = await downloadTripPattern(opDayFormat, vlineTrip, nspTrip, db)
     if (!pattern) {
-      missingTrips.push({ vlineTrip })
+      missingPatternTrips.push({ vlineTrip })
       continue
     }
 
@@ -269,6 +372,27 @@ export default async function loadOperationalTT(db, tripDB, operationDay, ptvAPI
         upsert: true
       }
     })
+  }
+
+  let missingTrips = []
+  // Matching TDN found, but times incorrect: Find a trip with same time profile and shift times to match
+  for (let { vlineTrip } of missingPatternTrips) {
+    let scheduledTDN = await getScheduledTripByTDN(opDayFormat, vlineTrip, db)
+    if (scheduledTDN) {
+      let matchingTrip = await findMatchingTrip(operationDay, opDayFormat, scheduledTDN, vlineTrip, db)
+      if (matchingTrip) {
+        outputTrips.push({
+          replaceOne: {
+            filter: matchingTrip.getDBKey(),
+            replacement: matchingTrip.toDatabase(),
+            upsert: true
+          }
+        })
+        continue
+      }
+    }
+
+    missingTrips.push({ vlineTrip })
   }
 
   if (outputTrips.length) await liveTimetables.bulkWrite(outputTrips)
@@ -293,7 +417,7 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let opDay = utils.now()
   if (opDay.get('hours') < 3) opDay.add(-1, 'day')
 
-  const missingTrips = await loadOperationalTT(database, tripDatabase, opDay, ptvAPI)
+  const missingTrips = await loadOperationalTT(database, tripDatabase, opDay.startOf('day'), ptvAPI)
   if (missingTrips.length) {
     const tripData = `Missing V/Line trips (${missingTrips.length}):\n` + missingTrips.map(
       ({ vlineTrip }) => `TD${vlineTrip.tdn}: ${vlineTrip.departureTime.toFormat('HH:mm')} ${vlineTrip.origin} - ${vlineTrip.destination}`

@@ -298,6 +298,7 @@ export class LiveTimetable {
     })
   }
 
+  set gtfsDirection(direction) { this.#gtfsDirection = direction }
   set direction(direction) { this.#direction = direction }
   set runID(runID) { this.#runID = runID }
   set isRRB(isRRB) { this.#isRRB = isRRB }
