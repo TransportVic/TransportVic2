@@ -26,7 +26,7 @@ async function discordUpdate(text) {
 
 let lastLastModified
 try {
-  lastLastModified = (await fs.readFile(LAST_MODIFIED_FILE)).toString()
+  lastLastModified = (await fs.readFile(LAST_MODIFIED_FILE)).toString().trim()
 } catch (e) {
   LOGGER.log('No lastModified, downloading data')
 }
