@@ -2,16 +2,22 @@
   "service": {
     "1": {
       "McCallum Street/Campbell Street": "Swan Hill North (Loop)",
+      "MacKillop College": "Swan Hill Loop (North)",
       "Edith Street/Shirley Street": "Shirley Street",
       "Windsor Crescent/Mintern Crescent": "Natimuk Road",
       "Hutchison Street/Patten Street": "Sale South",
-      "McSwains Road/Northern Highway": "Westwood Park",
+      "Old Echuca Post Office": "Echuca",
+      "McSwain Road/Northern Highway": "Westwood Park",
       "32 Harris Road": "Elliminyt",
       "Doonan Street/McLennan Street": "Mooroopna",
-      "Barkly Street/Ingor Street": "Ararat",
       "Albatross Road/Point Road": "Kalimna",
       "Opp 70 Derby Road": "Hedges",
-      "K-Mart Car Park": "Albury"
+      "K-Mart Car Park": "Albury",
+      "138 Guthridge Parade": "Sale Hospital",
+      "Hood Street/Raglan Parade": "Dennington",
+      "Railway Place/Anzac Avenue": "Seymour East (Loop)",
+      "Windham Street/Queen Street": "Wallan Central",
+      "Post Office": "Lakes Entrance"
     },
     "2": {
       "McCallum Street/Campbell Street": "Swan Hill South (Loop)",
@@ -19,7 +25,17 @@
       "Griffiths Street/Bendigo-Maryborough Road": "Princes Park",
       "St Mary's College": "Seymour North",
       "Edith Street/Shirley Street": "Shirley Street",
-      "Hillary Street/Natimuk Road": "Natimuk Road"
+      "Hillary Street/Natimuk Road": "Natimuk Road",
+      "Berry Saltbush Drive/Springridge Boulevard": "Springridge",
+      "Donaldson Street/Moore Street": "Colac West",
+      "Gateway Plaza": "Gateway Plaza",
+      "Millicent Court/Cobains Road": "Gippsland Sports Complex",
+      "Macarthur Street/Raymond Street": "Sale",
+      "Doonan Street/McLennan Street": "Mooroopna",
+      "Mill Street/McLennan Street": "Rodney Park (Loop)",
+      "Post Office": "Lakes Entrance",
+      "Princes Highway/Charles Street": "East Bairnsdale",
+      "Whirakee Street/Bendigo-Maryborough Road": "Princes Park"
     },
     "3": {
       "Thorpes Lane/McCullough Street": "Lakes Entrance East",
@@ -27,13 +43,25 @@
       "Goulburn Ovens Institute of TAFE (William Orr)": "TAFE",
       "Crete Street/Gaza Road": "Puckapunyal",
       "Raggatt Street/Williams Road": "South Bank",
-      "Houston Street/Arnold Street": "Wawunna Road"
+      "Houston Street/Arnold Street": "Wawunna Road",
+      "Rodger Drive/Kettle Street": "Colac East",
+      "Buckland Hill Drive/Wallara Waters Boulevard": "Wallara Waters",
+      "Fire Station/Francis Street": "Moama",
+      "Maiden Street/Meninya Street": "Moama",
+      "Market Street/Harmony Way": "Harcoort",
+      "Post Office": "Lakes Entrance",
+      "White Court/Bennison Drive": "Wurruk"
     },
     "4": {
-      "Warrumbungle Drive/Kakadu Drive": "Connolly Park",
       "Opp Boolarra Post Office": "Boolarra",
       "Boolarra Terminus": "Boolarra",
-      "Old Hamilton Road/Schier Drive": "Haven"
+      "Old Hamilton Road/Schier Drive": "Haven",
+      "Chapel Street/Fountain Street": "Maldon",
+      "Echuca Community for the Aged": "Retirement Village",
+      "Kinchega Drive/Kakadu Drive": "Connolly Park",
+      "Maryborough Education Centre": "Maryborough Education Centre",
+      "Tarrengower Prison": "Tarrengower Prison (Maldon)",
+      "Trentham Milk Bar": "Trentham"
     },
     "5": {
       "Windmill Street/Waratah Road": "Huntly",
@@ -43,11 +71,16 @@
     },
     "7": {
       "Head Street/Liddiard Road": "Traralgon",
-      "Harmony Village": "Market Place"
+      "Harmony Village": "Market Place",
+      "National Park Ent": "Loch Sport"
     },
     "8": {
       "Cath Teychenne Centre": "Traralgon",
-      "277 Waranga Drive": "Kialla"
+      "277 Waranga Drive": "Kialla",
+      "Port Fairy Visitor Centre": "Port Fairy",
+      "Bank Street/Gipps Street": "Port Fairy",
+      "Villiers Street/Polding Street": "Port Fairy",
+      "Barmah Hotel": "Barmah"
     },
     "9": {
       "Cath Teychenne Centre": "Traralgon"
@@ -69,10 +102,11 @@
     },
     "13": {
       "Northwood Court/Slatey Creek Road": "Invermay Park",
-      "Bailey Street - South": "Bairnsdale"
+      "Raymond Island Ferry Terminal": "Paynesville"
     },
     "14": {
-      "Howitt Street/Havelock Street": "Black Hill"
+      "Howitt Street/Havelock Street": "Black Hill",
+      "Omeo Primary School": "Omeo"
     },
     "15": {
       "Ryan Street/Water Street": "Brown Hill"
@@ -174,6 +208,17 @@
     "71": {
       "Strathfieldsaye Road/Blucher Street": "Strathfieldaye"
     },
+    "73": {
+      "Brady Road/Willowbank Road": "Willowbank",
+      "Holy Cross Catholic Primary School": "Holy Cross Catholic PS"
+    },
+    "74": {
+      "Willowbank Road/Brady Road": "Willowbank",
+      "Holy Cross Catholic Primary School": "Holy Cross Catholic PS"
+    },
+    "77": {
+      "Bullengarook CFA": "Bullengarook"
+    },
     "80": {
       "Fairview Village Chapel": "Warragul South"
     },
@@ -217,6 +262,9 @@
       "A'Beckett Street/Queen Street": "Queen Victoria Market"
     },
     "235": {
+      "A'Beckett Street/Queen Street": "Queen Victoria Market"
+    },
+    "236": {
       "A'Beckett Street/Queen Street": "Queen Victoria Market"
     },
     "237": {
@@ -550,6 +598,9 @@
       "Mount Dandenong Observatory": "Mt. Dandenong (Sky High)",
       "Mount Dandenong Hotel": "Olinda",
       "Ridge Road/Mount Dandenong Tourist Road": "Olinda"
+    },
+    "695": {
+      "Beaconsfield-Emerald Road/Belgrave-Gembrook Road": "Emerald Village"
     },
     "696": {
       "Ridge Road/Mount Dandenong Tourist Road": "Olinda"
@@ -888,8 +939,7 @@
     },
     "6-ArM": {
       "Havelock Street/Clarendon Street": "Maryborough",
-      "Alma Street/Tuaggra Street": "Maryborough",
-      "Barkly Street/Ingor Street": "Ararat"
+      "Alma Street/Tuaggra Street": "Maryborough"
     },
     "6-a44": {
       "Post Office": "Myrtleford",
@@ -916,15 +966,6 @@
     "6-908": {
       "Thurgoona Community Centre": "Thurgoona",
       "Feathertop Circuit": "Thurgoona"
-    },
-    "6-WN1": {
-      "Windham Street/Queen Street": "Wallan Central"
-    },
-    "6-WN2": {
-      "Berry Saltbush Drive/Springridge Boulevard": "Springridge"
-    },
-    "6-WN3": {
-      "Buckland Hill Drive/Wallara Waters Boulevard": "Wallara Waters"
     },
     "6-W12": {
       "Hadfield Park/High Street": "Springridge"
@@ -1003,7 +1044,6 @@
     "Lorne Hotel": "Apollo Bay",
     "Melbourne Airport T1 Skybus": "Melbourne Airport (Skybus)",
     "Melbourne Airport T4 Skybus": "Melbourne Airport (Skybus)",
-    "Bailey Street - North": "Bairnsdale",
     "Old Echuca Post Office": "Echuca",
     "Post Office North": "Lakes Entrance",
     "Ouyen Newsagency": "Ouyen",
@@ -1020,6 +1060,18 @@
     "Melbourne University/Royal Parade": "Melbourne University",
     "Snake Valley-Chepstowe Road/Linton-Carngham Road": "Smythesdale",
     "Darling Street/High Street": "Echuca",
-    "Coach Terminal/24 Roberts Street": "Horsham"
+    "Coach Terminal/24 Roberts Street": "Horsham",
+    "ANZ Bank": "Benalla",
+    "Bailey Street/Princes Highway": "Bairnsdale Town Centre",
+    "Barkly Street/Ingor Street": "Ararat",
+    "Stawell Town Hall": "Stawell",
+    "High Street/Doncaster Road": "Doncaster Park & Ride",
+    "Camberwell Central": "Camberwell Central",
+    "Castlemaine RSL": "Castlemaine",
+    "La Trobe Uni Jenny Graves Building": "La Trobe Uni",
+    "RMIT Bundoora Campus West": "RMIT Bundoora",
+    "Warrandyte Reserve": "Warrandyte Reserve",
+    "Deep Creek Reserve": "Deep Creek Reserve",
+    "Tower Square": "Warrnambool"
   }
 }
