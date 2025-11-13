@@ -67,12 +67,21 @@
       "Windmill Street/Waratah Road": "Huntly",
       "Boronia Road/Midland Highway": "Huntly",
       "Rossmore Avenue/North Road": "Yallourn North",
-      "Roundabout": "Archer"
+      "Roundabout": "Archer",
+      "Coach Terminal": "Horsham Town Centre",
+      "Taradale Hall": "Taradale"
+    },
+    "6": {
+      "Ashlee Drive/Granter Street": "Merrivale",
+      "Pitman Street/Main Road": "Chewton",
+      "Loddon Prison": "Loddon Prison",
+      "Surkitt Boulevard/Morgan Street": "Glenhaven Park"
     },
     "7": {
       "Head Street/Liddiard Road": "Traralgon",
       "Harmony Village": "Market Place",
-      "National Park Ent": "Loch Sport"
+      "National Park Ent": "Loch Sport",
+      "Ford Street/Camp Street": "Beechworth"
     },
     "8": {
       "Cath Teychenne Centre": "Traralgon",
@@ -364,9 +373,6 @@
     "456": {
       "Woodgrove SC": "Melton"
     },
-    "461": {
-      "Caroline Springs Library": "Caroline Springs Town Centre"
-    },
     "462": {
       "Lauriston Quay": "Caroline Springs"
     },
@@ -573,11 +579,11 @@
       "Whitegum Drive/Woods Point Road": "Warburton East"
     },
     "684": {
-      "Perkiins Street/Grant Street": "Alexandra",
       "54 Grant Street": "Alexandra"
     },
     "685": {
-      "North Gateway": "Coldstream"
+      "North Gateway": "Coldstream",
+      "Healesville Sanctuary": "Healesville Sanctuary"
     },
     "687": {
       "Heath Road/Old Chum Creek Road": "Chum Creek"
@@ -719,6 +725,9 @@
     "792": {
       "Baxter-Tooradin Road/Pearcedale Road": "Pearcedale"
     },
+    "795": {
+      "Warneet General Store": "Warneet"
+    },
     "796": {
       "Oroya Grove/Railway Road": "Clyde"
     },
@@ -818,12 +827,13 @@
       "Heather Grove/Tuckers Road": "Clyde North"
     },
     "901": {
-      "Mereweather Avenue/Dandenong Road": "Frankston Station"
+      "Melbourne Airport": "Melbourne Airport",
+      "Chisholm TAFE - Dandenong": "Chisholm TAFE - Dandenong"
     },
     "902": {
       "Cheltenham Road/Springvale Road": "Keysborough",
       "Hanrahan Street/Wood Street": "Thomastown",
-      "71 Williamsons Road": "Templestowe",
+      "Atkinson Street/Williamsons Road": "Templestowe",
       "Burwood Highway/Springvale Road": "Vermont South"
     },
     "903": {
@@ -860,6 +870,9 @@
     },
     "961": {
       "Doncaster Junction": "Doncaster"
+    },
+    "965": {
+      "Healesville-Koo Wee Rup Road/Warburton Highway": "Woori Yallock"
     },
     "TB3": {
       "Chevalier Crescent/Landscape Drive": "Rolling Hills"
@@ -913,10 +926,6 @@
     "6-SY4": {
       "Highlands Road/Delatite Road": "Wimble Street"
     },
-    "6-GIV": {
-      "Inverleigh Public Hall": "Inverleigh",
-      "Moorabool Street/Malop Street": "Geelong"
-    },
     "6-GVL": {
       "Visitor Information Centre": "Apollo Bay"
     },
@@ -926,9 +935,6 @@
     "6-a27": {
       "Supreme Court Hotel": "Maryborough"
     },
-    "6-MtE": {
-      "Mount Egerton General Store": "Mount Egerton"
-    },
     "6-rok": {
       "Stockland SC": "Ballarat",
       "Health Centre": "Rokewood"
@@ -937,20 +943,9 @@
       "Stockland SC": "Ballarat",
       "Nunns Road/Carngham-Linton Road": "Snake Valley"
     },
-    "6-ArM": {
-      "Havelock Street/Clarendon Street": "Maryborough",
-      "Alma Street/Tuaggra Street": "Maryborough"
-    },
     "6-a44": {
       "Post Office": "Myrtleford",
       "Wodonga Secondary College": "Wodonga"
-    },
-    "6-MtB": {
-      "Falls Creek Coaches": "Mount Beauty",
-      "Snow White Depot": "Albury"
-    },
-    "6-a31": {
-      "Ford Street/Camp Street": "Beechworth"
     },
     "6-Wyc": {
       "Post Office": "Wycheproof"
@@ -973,6 +968,15 @@
     "6-984": {
       "Royal Hotel/River Street": "Corowa",
       "K-Mart Car Park/Smollett Street": "Albury"
+    },
+    "H46": {
+      "Ned Kelly Statue": "Glenrowan",
+      "Wangaratta Coach Stop": "Wangaratta",
+      "Ovens Street/Rowan Street": "Wangaratta"
+    },
+    "V63": {
+      "Bayley Street/Nihil Street": "Alexandra",
+      "Darlingford Nursing Home": "Eildon"
     }
   },
   "generic": {
@@ -1024,7 +1028,7 @@
     "Eighth Street/Deakin Avenue": "Mildura",
     "Lime Avenue/Eighth Street": "Mildura",
     "Merbein Post Office": "Merbein",
-    "QEII Square/Dean Street": "Albury",
+    "QEII Square": "Albury",
     "Dean Street/David Street": "Albury",
     "Water Tower Park": "Wodonga",
     "Wodonga Library": "Wodonga",
@@ -1065,13 +1069,57 @@
     "Bailey Street/Princes Highway": "Bairnsdale Town Centre",
     "Barkly Street/Ingor Street": "Ararat",
     "Stawell Town Hall": "Stawell",
-    "High Street/Doncaster Road": "Doncaster Park & Ride",
+    "High Street/Doncaster Road": "Doncaster P&R",
     "Camberwell Central": "Camberwell Central",
     "Castlemaine RSL": "Castlemaine",
     "La Trobe Uni Jenny Graves Building": "La Trobe Uni",
     "RMIT Bundoora Campus West": "RMIT Bundoora",
     "Warrandyte Reserve": "Warrandyte Reserve",
     "Deep Creek Reserve": "Deep Creek Reserve",
-    "Tower Square": "Warrnambool"
+    "Tower Square": "Warrnambool",
+    "Fishermans Bend": "Fishermans Bend",
+    "Healesville Sanctuary": "Healesville Sanctuary",
+    "Dandenong Market": "Dandenong Market",
+    "Caroline Springs Library": "Caroline Springs Town Centre",
+    "Austin Street/Warncoort-Birregurra Road": "Birregurra",
+    "Buchan Street/Bearup Street": "Seapray",
+    "Campbell Street/McCallum Street": "Swan Hill",
+    "Curdies River Road/Neal Street": "Timboon",
+    "Delacombe Street/Main Street": "Willaura",
+    "Bush Nursing Centre": "Lake Bolac",
+    "Falls Creek Coaches": "Mount Beauty",
+    "Snow White Depot": "Albury",
+    "Edi Cheshunt Road/King Valley Road": "Cheshunt",
+    "Perkins Street/Grant Street": "Alexandra",
+    "Falls Road/Pack Road": "Marysville",
+    "Fraser Street/Wyndham Street": "Shepparton",
+    "Genoa Hotel": "Genoa",
+    "Bendigo Bank": "Mallacoota",
+    "Gilles Street/Moore Street": "Rochester",
+    "Harleys Bus Depot": "Korumburra",
+    "Harris Road/Grossard Point Road": "Ventor",
+    "Harrison Street/Marengo Crescent": "Marengo",
+    "Havelock Street/Clarendon Street": "Maryborough",
+    "Alma Street/Tuaggra Street": "Maryborough",
+    "McCelland Street/Dillon Street": "Ultima",
+    "McRae Street/Robertson Street": "Naracoorte",
+    "Old Hepburn Hotel": "Hepburn",
+    "Stratford Post Office": "Stratford",
+    "Timboon-Nullawarre Road/Bailey Street": "Timboon",
+    "Woods Point Post Office": "Woods Point",
+    "High Street/Erril Street": "Mansfield",
+    "Inverleigh Public Hall": "Inverleigh",
+    "Moorabool Street/Malop Street": "Geelong",
+    "Ouyen Community Park": "Ouyen",
+    "Warrandyte Bridge": "Warrandyte Bridge",
+    "Austin Street/Henty Highway": "Hopetoun",
+    "Alpine Hotel": "Bright",
+    "Chiltern Sports Complex": "Chiltern",
+    "Galen Catholic College": "Wangaratta",
+    "Dundas Street/Market Street": "St. Arnaud",
+    "Mount Egerton General Store": "Mount Egerton",
+    "Garden City": "Garden City",
+    "Templestowe Village": "Templestowe",
+    "Altona North Park & Ride": "Altona North P&R"
   }
 }
