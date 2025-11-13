@@ -18,6 +18,8 @@ let commands = [
   ['tram/load-extra-data.mjs'],
 
   ['load-all-trips.mjs'],
+  
+  ['restart-database.mjs'],
 
   ['bus/load-flexiride-data.mjs'],
   ['bus/mildura/cleanup-mildura-routes.mjs'],
@@ -27,6 +29,8 @@ let commands = [
   ['metro/load-metro-timetables.mjs'],
 
   ['load-all-post.mjs'],
+
+  ['restart-database.mjs'],
 
   ['tram/load-tramtracker-ids.mjs'],
 

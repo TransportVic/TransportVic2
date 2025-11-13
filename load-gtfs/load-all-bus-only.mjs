@@ -14,6 +14,8 @@ let commands = [
 
   ['load-all-post.mjs'],
 
+  ['restart-database.mjs'],
+
   ['extra/load-search-query.mjs'],
   ['extra/load-route-suburbs.mjs'],
   ['extra/load-opposite-stops.mjs'],
