@@ -146,4 +146,11 @@ router.get('/about', (req, res) => {
   res.render('about', { buildNumber, buildComment })
 })
 
+router.get('/cf-challenge-test', (req, res) => res.json({ s: 'ok' }))
+
+router.get('/cf-challenge', (req, res) => {
+  const returnURL = new URL(req.urlData.searchParams.get('href') || req.urlData.origin)
+  res.redirect(new URL(returnURL.pathname + returnURL.search, req.urlData.origin).toString())
+})
+
 export default router
