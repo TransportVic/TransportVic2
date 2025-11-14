@@ -167,14 +167,14 @@ async function findRoutes(db, query) {
       }]
     }).toArray()
 
-    const approxMatch = await routes.findDocuments({
+    const approxMatch = words.length ? await routes.findDocuments({
       _id: {
         $not: {
           $in: regionMatch.map(r => r._id)
         }
       },
       $and: words.map(w => ({ routeName: new RegExp(w, 'i') }))
-    }).toArray()
+    }).toArray() : []
 
     return regionMatch.concat(approxMatch).concat(await routes.findDocuments({
       _id: {
