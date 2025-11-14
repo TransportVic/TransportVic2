@@ -168,6 +168,7 @@ for (let tramTrackerID of sortedTramTrackerIDs) {
       })
 
       count++
+      if (count % 100 === 0) console.log('Completed', count, `stops (${(count / sortedTramTrackerIDs.length * 100).toFixed(1)}%)`)
       continue
     }
   }
