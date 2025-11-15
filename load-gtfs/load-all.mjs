@@ -41,7 +41,9 @@ let commands = [
   ['bus/generate-regional-bus-groupings.mjs'],
   ['bus/load-regional-bus-operators.mjs'],
 
-  ['move-database.mjs']
+  ['move-database.mjs'],
+
+  ['metro-rail-bus/load.mjs']
 ]
 
 let returnCode = await runCommands(commands)

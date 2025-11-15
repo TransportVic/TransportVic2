@@ -93,7 +93,8 @@ export class MTMRailTrip extends GTFSTypes.GTFSTrip {
       routeName,
       direction: this.getDirection(routeName, patternID),
       runID: getTripID(tripData.tripID),
-      isRailReplacementBus: true
+      isRailReplacementBus: true,
+      isMTMRailTrip: true
     }
   }
 }

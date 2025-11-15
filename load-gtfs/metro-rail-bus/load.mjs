@@ -14,8 +14,6 @@ import utils from '../../utils.js'
 import { loadOperationalTT } from './load-op-timetable.mjs'
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  await discordIntegration('taskLogging', `Metro RRB GTFS: ${hostname()} loading`)
-
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
   
@@ -26,8 +24,6 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
 
   await loadOperationalTT(mongoDB, utils.now())
   await loadOperationalTT(mongoDB, utils.now().add(1, 'day'))
-
-  await discordIntegration('taskLogging', `Metro RRB GTFS: ${hostname()} completed loading`)
 
   process.exit(0)
 }

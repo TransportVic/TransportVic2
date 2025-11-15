@@ -7,9 +7,11 @@ import { PTVGTFS } from '@transportme/load-ptv-gtfs'
 
 import utils from '../utils.js'
 import config from '../config.json' with { type: 'json' }
+import modules from '../modules.json' with { type: 'json' }
 import urls from '../urls.json' with { type: 'json' }
 import postDiscordUpdate from '../modules/discord-integration.js'
 import createLogger from '../init-loggers.mjs'
+import { generateTimetableExtract } from '../modules/offline-trips/generate-data.mjs'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -100,6 +102,11 @@ if (lastModified.toISOString() !== lastLastModified) {
   let maxReturnCode = await updateTimetables()
   if (maxReturnCode === 0) {
     await fs.writeFile(LAST_MODIFIED_FILE, lastModified.toISOString())
+    try {
+      if (modules.timetableExtract) await generateTimetableExtract()
+    } catch (e) {
+      console.log('Failed to generate offline timetable extract')
+    }
   }
 } else {
   LOGGER.log('Timetables all good')
