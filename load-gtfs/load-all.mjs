@@ -43,7 +43,9 @@ let commands = [
 
   ['move-database.mjs'],
 
-  ['metro-rail-bus/load.mjs']
+  ['metro-rail-bus/load.mjs'],
+
+  ['restart-database.mjs']
 ]
 
 let returnCode = await runCommands(commands)
