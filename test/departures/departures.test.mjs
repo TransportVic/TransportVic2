@@ -87,7 +87,7 @@ describe('The shouldUseLiveDepartures function', () => {
     expect(shouldUseLiveDepartures(utils.now())).to.be.true
   })
 
-  it('Should return true for a departure at 8am tomorrow', () => {
+  it('Should return false for a departure at 8am tomorrow', () => {
     expect(shouldUseLiveDepartures(utils.now().startOf('day').add(1, 'day').add('8', 'hours'))).to.be.true
   })
 

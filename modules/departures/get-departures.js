@@ -99,10 +99,13 @@ async function fetchScheduledTrips(station, mode, db, departureTime, timeframe =
   return await gtfsFilter(trips)
 }
 
+function getLiveTimetableCutoff() {
+  return utils.now().startOf('day').add(2, 'days').set('hours', 3)
+}
+
 function shouldUseLiveDepartures(departureTime) {
   // Set to 3 hours as DST could mean there are actually 4 hours inbetween
-  let endOfPTDayTomorrow = utils.now().startOf('day').add(2, 'days').set('hours', 3)
-  return departureTime < endOfPTDayTomorrow
+  return departureTime < getLiveTimetableCutoff()
 }
 
 async function getCombinedDepartures(station, mode, db, {
@@ -141,7 +144,7 @@ async function getCombinedDepartures(station, mode, db, {
 
   // The departure time crossed the PT day and we need to use scheduled times for the rest
   if (useLive && !shouldUseLiveDepartures(departureEndTime)) {
-    let ptDayStart = departureEndTime.clone().startOf('day').set('hours', 3)
+    let ptDayStart = getLiveTimetableCutoff()
     let remainingMinutes = departureEndTime.diff(ptDayStart, 'minutes')
 
     let missingTrips = await fetchScheduledTrips(station, mode, db, ptDayStart, remainingMinutes, { gtfsFilter })
