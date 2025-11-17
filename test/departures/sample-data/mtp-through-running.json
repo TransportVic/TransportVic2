@@ -1,15 +1,23 @@
 [
   {
     "mode": "metro train",
-    "routeName": "Pakenham",
     "routeGTFSID": "2-PKM",
-    "routeNumber": null,
-    "routeDetails": null,
+    "operationDays": "20250607",
+    "gtfsDirection": "1",
     "runID": "C100",
+    "direction": "Up",
+    "routeName": "Pakenham",
+    "routeNumber": null,
+    "origin": "Caulfield Railway Station",
+    "destination": "Town Hall Railway Station",
+    "departureTime": "06:04",
+    "destinationArrivalTime": "06:12",
     "formedBy": "C860",
     "forming": "Z101",
-    "operationDays": "20250607",
-    "vehicle": null,
+    "changes": [],
+    "cancelled": false,
+    "additional": false,
+    "lastUpdated": 1763356725693,
     "stopTimings": [
       {
         "stopName": "Caulfield Railway Station",
@@ -19,9 +27,16 @@
         "departureTime": "06:04",
         "departureTimeMinutes": 364,
         "estimatedDepartureTime": null,
-        "actualDepartureTimeMS": 1749240240000,
         "scheduledDepartureTime": "2025-06-06T20:04:00.000Z",
-        "platform": "3"
+        "scheduledDepartureTimeMS": 1749240240000,
+        "actualDepartureTimeMS": 1749240240000,
+        "platform": "3",
+        "cancelled": false,
+        "additional": false,
+        "stopConditions": {
+          "pickup": 0,
+          "dropoff": 0
+        }
       },
       {
         "stopName": "Anzac Railway Station",
@@ -31,9 +46,16 @@
         "departureTime": "06:08",
         "departureTimeMinutes": 368,
         "estimatedDepartureTime": null,
-        "actualDepartureTimeMS": 1749240480000,
         "scheduledDepartureTime": "2025-06-06T20:08:00.000Z",
-        "platform": "1"
+        "scheduledDepartureTimeMS": 1749240480000,
+        "actualDepartureTimeMS": 1749240480000,
+        "platform": "1",
+        "cancelled": false,
+        "additional": false,
+        "stopConditions": {
+          "pickup": 0,
+          "dropoff": 0
+        }
       },
       {
         "stopName": "Town Hall Railway Station",
@@ -43,30 +65,38 @@
         "departureTime": "06:12",
         "departureTimeMinutes": 372,
         "estimatedDepartureTime": null,
-        "actualDepartureTimeMS": 1749240720000,
         "scheduledDepartureTime": "2025-06-06T20:12:00.000Z",
-        "platform": "1"
+        "scheduledDepartureTimeMS": 1749240720000,
+        "actualDepartureTimeMS": 1749240720000,
+        "platform": "1",
+        "cancelled": false,
+        "additional": false,
+        "stopConditions": {
+          "pickup": 0,
+          "dropoff": 0
+        }
       }
-    ],
-    "origin": "Hawksburn Railway Station",
-    "departureTime": "06:04",
-    "destination": "Town Hall Railway Station",
-    "destinationArrivalTime": "06:12",
-    "gtfsDirection": "1",
-    "direction": "Up",
-    "cancelled": false
+    ]
   },
   {
     "mode": "metro train",
-    "routeName": "Sunbury",
     "routeGTFSID": "2-SUY",
-    "routeNumber": null,
-    "routeDetails": null,
+    "operationDays": "20250607",
+    "gtfsDirection": "1",
     "runID": "Z101",
+    "direction": "Down",
+    "routeName": "Sunbury",
+    "routeNumber": null,
+    "origin": "Town Hall Railway Station",
+    "destination": "West Footscray Railway Station",
+    "departureTime": "06:12",
+    "destinationArrivalTime": "06:27",
     "formedBy": "C100",
     "forming": "Z116",
-    "operationDays": "20250607",
-    "vehicle": null,
+    "changes": [],
+    "cancelled": false,
+    "additional": false,
+    "lastUpdated": 1763356725693,
     "stopTimings": [
       {
         "stopName": "Town Hall Railway Station",
@@ -76,9 +106,16 @@
         "departureTime": "06:12",
         "departureTimeMinutes": 372,
         "estimatedDepartureTime": null,
-        "actualDepartureTimeMS": 1749240720000,
         "scheduledDepartureTime": "2025-06-06T20:12:00.000Z",
-        "platform": "1"
+        "scheduledDepartureTimeMS": 1749240720000,
+        "actualDepartureTimeMS": 1749240720000,
+        "platform": "1",
+        "cancelled": false,
+        "additional": false,
+        "stopConditions": {
+          "pickup": 0,
+          "dropoff": 0
+        }
       },
       {
         "stopName": "State Library Railway Station",
@@ -88,9 +125,16 @@
         "departureTime": "06:14",
         "departureTimeMinutes": 374,
         "estimatedDepartureTime": null,
-        "actualDepartureTimeMS": 1749240840000,
         "scheduledDepartureTime": "2025-06-06T20:14:00.000Z",
-        "platform": "1"
+        "scheduledDepartureTimeMS": 1749240840000,
+        "actualDepartureTimeMS": 1749240840000,
+        "platform": "1",
+        "cancelled": false,
+        "additional": false,
+        "stopConditions": {
+          "pickup": 0,
+          "dropoff": 0
+        }
       },
       {
         "stopName": "Parkville Railway Station",
@@ -100,9 +144,16 @@
         "departureTime": "06:17",
         "departureTimeMinutes": 377,
         "estimatedDepartureTime": null,
-        "actualDepartureTimeMS": 1749241020000,
         "scheduledDepartureTime": "2025-06-06T20:17:00.000Z",
-        "platform": "1"
+        "scheduledDepartureTimeMS": 1749241020000,
+        "actualDepartureTimeMS": 1749241020000,
+        "platform": "1",
+        "cancelled": false,
+        "additional": false,
+        "stopConditions": {
+          "pickup": 0,
+          "dropoff": 0
+        }
       },
       {
         "stopName": "Arden Railway Station",
@@ -112,9 +163,16 @@
         "departureTime": "06:19",
         "departureTimeMinutes": 379,
         "estimatedDepartureTime": null,
-        "actualDepartureTimeMS": 1749241140000,
         "scheduledDepartureTime": "2025-06-06T20:19:00.000Z",
-        "platform": "1"
+        "scheduledDepartureTimeMS": 1749241140000,
+        "actualDepartureTimeMS": 1749241140000,
+        "platform": "1",
+        "cancelled": false,
+        "additional": false,
+        "stopConditions": {
+          "pickup": 0,
+          "dropoff": 0
+        }
       },
       {
         "stopName": "Footscray Railway Station",
@@ -124,9 +182,16 @@
         "departureTime": "06:25",
         "departureTimeMinutes": 385,
         "estimatedDepartureTime": null,
-        "actualDepartureTimeMS": 1749241500000,
         "scheduledDepartureTime": "2025-06-06T20:25:00.000Z",
-        "platform": "2"
+        "scheduledDepartureTimeMS": 1749241500000,
+        "actualDepartureTimeMS": 1749241500000,
+        "platform": "2",
+        "cancelled": false,
+        "additional": false,
+        "stopConditions": {
+          "pickup": 0,
+          "dropoff": 0
+        }
       },
       {
         "stopName": "Middle Footscray Railway Station",
@@ -136,9 +201,16 @@
         "departureTime": "06:25",
         "departureTimeMinutes": 385,
         "estimatedDepartureTime": null,
-        "actualDepartureTimeMS": 1749241500000,
         "scheduledDepartureTime": "2025-06-06T20:25:00.000Z",
-        "platform": "2"
+        "scheduledDepartureTimeMS": 1749241500000,
+        "actualDepartureTimeMS": 1749241500000,
+        "platform": "2",
+        "cancelled": false,
+        "additional": false,
+        "stopConditions": {
+          "pickup": 0,
+          "dropoff": 0
+        }
       },
       {
         "stopName": "West Footscray Railway Station",
@@ -148,17 +220,17 @@
         "departureTime": "06:27",
         "departureTimeMinutes": 387,
         "estimatedDepartureTime": null,
-        "actualDepartureTimeMS": 1749241620000,
         "scheduledDepartureTime": "2025-06-06T20:27:00.000Z",
-        "platform": "3"
+        "scheduledDepartureTimeMS": 1749241620000,
+        "actualDepartureTimeMS": 1749241620000,
+        "platform": "3",
+        "cancelled": false,
+        "additional": false,
+        "stopConditions": {
+          "pickup": 0,
+          "dropoff": 0
+        }
       }
-    ],
-    "origin": "Town Hall Railway Station",
-    "departureTime": "06:12",
-    "destination": "West Footscray Railway Station",
-    "destinationArrivalTime": "06:27",
-    "gtfsDirection": "1",
-    "direction": "Down",
-    "cancelled": false
+    ]
   }
 ]
