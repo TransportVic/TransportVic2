@@ -4,7 +4,19 @@ const { getFormingTrip } = require('./get-forming-trip.js')
 const { NORTHERN_GROUP, CITY_LOOP } = require('./line-groups.mjs')
 
 async function getMetroDepartures(station, db, filter, backwards, departureTime, { mode = 'metro train', returnArrivals = false, timeframe = 120 } = {}) {
-  let departures = await getDepartures(station, mode, db, { departureTime, returnArrivals, timeframe })
+  let departures = await getDepartures(station, mode, db, {
+    departureTime,
+    returnArrivals,
+    timeframe,
+    gtfsFilter: trips => {
+      let hasMetroRRB = trips.some(trip => trip.isRailReplacementBus && trip.isMTMRailTrip)
+      if (hasMetroRRB) {
+        return trips.filter(trip => !trip.isRailReplacementBus || trip.isMTMRailTrip)
+      }
+      return trips
+    }
+  })
+
   let liveTimetables = db.getCollection('live timetables')
 
   let stationName = station.stopName.slice(0, -16)

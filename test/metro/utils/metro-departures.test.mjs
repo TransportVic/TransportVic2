@@ -15,6 +15,7 @@ import getDepartures from '../../../modules/metro-trains/get-departures.js'
 import sssTurnbackTrips from './sample-data/sss-turnback-trips.mjs'
 import utils from '../../../utils.js'
 import northernSSSForming from './sample-data/northern-sss-forming.mjs'
+import mixedRRB from './sample-data/mixed-rrb.mjs'
 
 let clone = o => JSON.parse(JSON.stringify(o))
 
@@ -24,6 +25,11 @@ await (await db.createCollection('gtfs timetables')).createDocuments(clone(sampl
 await (await db.createCollection('live timetables')).createDocuments(clone(sampleLiveTrips))
 
 describe('The metro departures class', () => {
+  let originalNow
+  before(() => {
+    originalNow = utils.now
+  })
+
   it('Should return key departure data extracted from the trips returned', async () => {
     let departures = await getDepartures(alamein, db, null, null, new Date('2025-03-28T20:40:00.000Z'))
     expect(departures.length).to.equal(4)
@@ -514,5 +520,27 @@ describe('The metro departures class', () => {
     expect(departures[0].runID).to.equal('R376')
     expect(departures[0].cancelled).to.be.false
     expect(departures[0].formingTrip).to.not.exist
+  })
+
+  it('Removes duplicate RRB trips when both metro and ptv data are present (keeping metro data)', async () => {
+    utils.now = () => utils.parseTime('2025-11-17T11:00:00.000Z') // current date is 17 nov
+
+    const db = new LokiDatabaseConnection()
+    const gtfsTimetables = await db.createCollection('gtfs timetables')
+    const stops = await db.createCollection('stops')
+    await stops.createDocuments(clone(pkmStops))
+    await gtfsTimetables.createDocuments(clone(mixedRRB))
+
+    const sss = stops.findDocument({ stopName: "Huntingdale Railway Station" })
+
+    // reuqesting 19 nov, will use gtfs
+    const departures = await getDepartures(sss, db, null, null, new Date('2025-11-19T11:50:00.000Z'))
+
+    expect(departures[0].trip.tripID).to.equal('Tue - Wed_8YT9s_rvKKO')
+    expect(departures[1].trip.tripID).to.equal('Tue - Wed_Q-taH0f2fNr')
+  })
+
+  afterEach(() => {
+    utils.now = originalNow
   })
 })
