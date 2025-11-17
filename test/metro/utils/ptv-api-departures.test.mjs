@@ -5,7 +5,7 @@ import TD3826DBTrip from '../tracker/sample-data/lil-3826.json' with { type: 'js
 import ptvAPITD3213 from '../tracker/sample-data/ptv-api-3213.json' with { type: 'json' }
 import ptvAPITD3826 from '../tracker/sample-data/ptv-api-3826.json' with { type: 'json' }
 import { PTVAPI, StubAPI } from '@transportme/ptv-api'
-import getTripUpdateData from '../../../modules/metro-trains/get-ptv-departures.js'
+import getTripUpdateData from '../../../modules/metro-trains/get-ptv-departures.mjs'
 import { LokiDatabaseConnection } from '@transportme/database'
 
 let clone = o => JSON.parse(JSON.stringify(o))

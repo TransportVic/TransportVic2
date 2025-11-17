@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import ptvAPIC406 from '../tracker/sample-data/ptv-api-C406.json' with { type: 'json' }
 import { PTVAPI, StubAPI } from '@transportme/ptv-api'
-import getTripUpdateData from '../../../modules/metro-trains/get-stopping-pattern.js'
+import getTripUpdateData from '../../../modules/metro-trains/get-stopping-pattern.mjs'
 import tdn3000 from './sample-data/tdn-3000-fss-arrival.json' with { type: 'json' }
 import tdn0806 from './sample-data/parliament-only.json' with { type: 'json' }
 

@@ -5,7 +5,7 @@ import config from '../../../config.json' with { type: 'json' }
 import MetroTripUpdater from '../../metro-trains/trip-updater.mjs'
 import getMetroDepartures from '../../metro-trains/get-departures.mjs'
 import { PTVAPI, PTVAPIInterface } from '@transportme/ptv-api'
-import getTripUpdateData from '../../metro-trains/get-stopping-pattern.js'
+import getTripUpdateData from '../../metro-trains/get-stopping-pattern.mjs'
 import utils from '../../../utils.js'
 import _ from '../../../init-loggers.mjs'
 import fs from 'fs/promises'

@@ -1,9 +1,9 @@
-const getStoppingPatternData = require('./get-stopping-pattern.js')
-const metroConsists = require('../../additional-data/metro-tracker/metro-consists.json')
-const { parseConsistFromMotors } = require('./fleet-parser.js')
-const async = require('async')
+import getStoppingPatternData from './get-stopping-pattern.mjs'
+import metroConsists from '../../additional-data/metro-tracker/metro-consists.json' with { type: 'json' }
+import { parseConsistFromMotors } from './fleet-parser.mjs'
+import async from 'async'
 
-module.exports = async function getTripUpdateData(db, stop, ptvAPI, { skipTDN = [], maxResults = 5, backwards = false } = {}) {
+export default async function getTripUpdateData(db, stop, ptvAPI, { skipTDN = [], maxResults = 5, backwards = false } = {}) {
   let liveTimetables = await db.getCollection('live timetables')
   let metroBay = stop.bays.find(bay => bay.mode === 'metro train' && bay.platform)
 

@@ -1,14 +1,14 @@
-module.exports.parseConsist = function parseConsist(consist, metroConsists) {
-  return module.exports.parseConsistFromMotors(module.exports.getMotorVehicles(consist), metroConsists)
+export function parseConsist(consist, metroConsists) {
+  return parseConsistFromMotors(getMotorVehicles(consist), metroConsists)
 }
 
-module.exports.parseConsistFromMotors = function parseConsistFromMotors(motorVehicles, metroConsists) {
+export function parseConsistFromMotors(motorVehicles, metroConsists) {
   if (!motorVehicles.length) return null
-  let leadingVehicles = module.exports.getLeadingVehicles(motorVehicles)
+  let leadingVehicles = getLeadingVehicles(motorVehicles)
   return leadingVehicles.map(vehicle => metroConsists[vehicle]).filter(Boolean)
 }
 
-module.exports.getMotorVehicles = function getMotorVehicles(consist) {
+export function getMotorVehicles(consist) {
   let carriages = consist.split('-')
   if (carriages[0].match(/^\d{4}M$/)) { // New format consists
     return carriages.map(carriages => carriages.slice(0, -1))
@@ -16,7 +16,7 @@ module.exports.getMotorVehicles = function getMotorVehicles(consist) {
   return carriages.filter(carriage => carriage.match(/^\d+M$/))
 }
 
-module.exports.getLeadingVehicles = function getLeadingVehicles(motorVehicles) {
+export function getLeadingVehicles(motorVehicles) {
   if (!motorVehicles.length) return []
   if (motorVehicles[0].match(/^\d{4}$/)) return [ motorVehicles[0] ]
   if (motorVehicles[0].match(/^\d{4}M$/)) return [ motorVehicles[0].slice(0, -1) ]

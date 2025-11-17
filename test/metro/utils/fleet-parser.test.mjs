@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { getLeadingVehicles, getMotorVehicles, parseConsist, parseConsistFromMotors } from '../../../modules/metro-trains/fleet-parser.js'
+import { getLeadingVehicles, getMotorVehicles, parseConsist, parseConsistFromMotors } from '../../../modules/metro-trains/fleet-parser.mjs'
 
 let fleet = [
   ['1M','1301T','2M'],['3M','1302T','4M'],['5M','1303T','6M'],['7M','1304T','8M'],
