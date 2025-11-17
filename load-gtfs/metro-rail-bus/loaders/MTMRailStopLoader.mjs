@@ -21,9 +21,20 @@ let allStopNames = allStops.reduce((acc, stopName) => {
 
 export class MTMRailStop extends GTFSTypes.GTFSStop {
 
-  constructor(data = { stopGTFSID, stopName, stopLat, stopLon, locationType, parentStopGTFSID }, suburbs, suburbHook) {
+  constructor(data = {
+    stopGTFSID,
+    stopName,
+    stopLat,
+    stopLon,
+    locationType,
+    parentStopGTFSID
+  }, operator, suburbs, suburbHook) {
     super(data, suburbs, suburbHook)
-    this.stopGTFSID = `RAIL_${this.stopGTFSID}`
+    this.stopGTFSID = this.constructor.transformStopID(operator, this.stopGTFSID)
+  }
+
+  static transformStopID(operator, stopID) {
+    return `RAIL_${operator}_${stopID}`
   }
 
   requiresSuburb() {
@@ -63,6 +74,13 @@ export class MTMRailStop extends GTFSTypes.GTFSStop {
 
 export class MTMRailStopsReader extends GTFSReaders.GTFSStopsReader {
 
+  #operator
+
+  constructor(stopsFile, operator, suburbs, suburbHook) {
+    super(stopsFile, suburbs, suburbHook)
+    this.#operator = operator
+  }
+
   processEntity(data) {
     let stopData = {
       stopGTFSID: data.stop_id,
@@ -74,14 +92,17 @@ export class MTMRailStopsReader extends GTFSReaders.GTFSStopsReader {
       parentStopGTFSID: data.parent_station
     }
 
-    return new MTMRailStop(stopData, this.getSuburbData(), this.getSuburbHook())
+    return new MTMRailStop(stopData, this.#operator, this.getSuburbData(), this.getSuburbHook())
   }
 }
 
 export default class MTMRailStopLoader extends StopsLoader {
 
-  constructor(stopsFile, database, suburbHook = null) {
+  #operator
+
+  constructor(stopsFile, operator, database, suburbHook = null) {
     super(stopsFile, suburbsVIC, GTFS_CONSTANTS.TRANSIT_MODES.metroTrain, database, suburbHook)
+    this.#operator = operator
   }
 
   getStopsDB(db) {
@@ -89,7 +110,7 @@ export default class MTMRailStopLoader extends StopsLoader {
   }
 
   createStopReader(stopsFile, suburbs, suburbHook) {
-    return new MTMRailStopsReader(stopsFile, suburbs, suburbHook)
+    return new MTMRailStopsReader(stopsFile, this.#operator, suburbs, suburbHook)
   }
 
   async loadStops() {

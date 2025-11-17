@@ -2,11 +2,9 @@ import path from 'path'
 import url from 'url'
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 
-// import routeIDMap from './routes.json' with { type: 'json' }
 import operators from './operators.mjs'
 
-import fs from 'fs/promises'
-import MTMRailTripLoader, { MTMTripReader } from './loaders/MTMRailTripLoader.mjs'
+import MTMRailTripLoader from './loaders/MTMRailTripLoader.mjs'
 import MTMRailShapeLoader from './loaders/MTMRailShapeLoader.mjs'
 
 const __filename = url.fileURLToPath(import.meta.url)
@@ -40,7 +38,7 @@ export async function loadTrips(mongoDB, routeIDMap) {
         tripsFile: tripsFile,
         stopTimesFile: stopTimesFile,
         calendarFile: calendarFile,
-      }, mongoDB)
+      }, operator, mongoDB)
 
       await tripLoader.loadTrips(routeIDMap)
 

@@ -29,7 +29,7 @@ export async function loadStopsRoutes(mongoDB) {
     const agencyFile = path.join(operatorFolder, 'agency.txt')
 
     try {
-      let stopLoader = new MTMRailStopLoader(stopsFile, mongoDB)
+      let stopLoader = new MTMRailStopLoader(stopsFile, operator, mongoDB)
       await stopLoader.loadStops()
 
       console.log('Loaded stops for', operator)

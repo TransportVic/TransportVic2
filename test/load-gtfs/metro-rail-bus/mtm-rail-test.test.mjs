@@ -25,11 +25,11 @@ describe('The GTFS Loaders with the MTM Website Rail data', () => {
       let database = new LokiDatabaseConnection('test-db')
       let stops = await database.createCollection('stops')
 
-      let stopLoader = new MTMRailStopLoader(stopsFile, database, () => 'Suburb')
+      let stopLoader = new MTMRailStopLoader(stopsFile, 'donric', database, () => 'Suburb')
       await stopLoader.loadStops()
 
       let fss = await stops.findDocument({ 
-        'bays.stopGTFSID': 'RAIL_FSS_Up'
+        'bays.stopGTFSID': 'RAIL_donric_FSS_Up'
       })
 
       expect(fss).to.exist
@@ -59,7 +59,7 @@ describe('The GTFS Loaders with the MTM Website Rail data', () => {
       let routes = await database.createCollection('routes')
       let trips = await database.createCollection('gtfs timetables')
 
-      let stopLoader = new MTMRailStopLoader(stopsFile, database, () => 'Suburb')
+      let stopLoader = new MTMRailStopLoader(stopsFile, 'donric', database, () => 'Suburb')
       await stopLoader.loadStops()
 
       let routeLoader = new MTMRailRouteLoader(routesFile, agencyFile, database)
@@ -68,7 +68,7 @@ describe('The GTFS Loaders with the MTM Website Rail data', () => {
       let tripLoader = new MTMRailTripLoader({
         tripsFile, stopTimesFile,
         calendarFile
-      }, database)
+      }, 'donric', database)
 
       await tripLoader.loadTrips(routeLoader.getRouteIDMap())
 

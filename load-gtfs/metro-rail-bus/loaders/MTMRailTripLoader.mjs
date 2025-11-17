@@ -3,6 +3,7 @@ import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 import getTripID from '../../../modules/new-tracker/metro-rail-bus/get-trip-id.mjs'
 
 import allRouteStops from '../../../additional-data/metro-data/metro-routes.json' with { type: 'json' }
+import { MTMRailStop } from './MTMRailStopLoader.mjs'
 
 let routesAtStops = {}
 
@@ -123,15 +124,18 @@ export class MTMTripReader extends GTFSReaders.GTFSTripReader {
 
 export class MTMRailStopTimesReader extends GTFSReaders.GTFSStopTimesReader {
 
-  constructor(stopTimesFile) {
+  #operator
+
+  constructor(stopTimesFile, operator) {
     super(stopTimesFile, GTFS_CONSTANTS.TRANSIT_MODES.metroTrain)
+    this.#operator = operator
   }
 
   processEntity(data) {
     let stopData = {
       arrivalTime: data.arrival_time,
       departureTime: data.departure_time,
-      stopID: 'RAIL_' + data.stop_id,
+      stopID: MTMRailStop.transformStopID(this.#operator, data.stop_id),
       stopSequence: data.stop_sequence,
       pickup: data.pickup_type,
       dropoff: data.drop_off_type,
@@ -148,8 +152,11 @@ export default class MTMRailTripLoader extends TripLoader {
   #patternCache = {}
   #directionCache = {}
 
-  constructor(paths, database) {
+  #operator
+
+  constructor(paths, operator, database) {
     super(paths, GTFS_CONSTANTS.TRANSIT_MODES.metroTrain, database)
+    this.#operator = operator
   }
 
   getRoutesDB(db) {
@@ -165,7 +172,7 @@ export default class MTMRailTripLoader extends TripLoader {
   }
 
   createStopTimesReader(stopTimesFile) {
-    return new MTMRailStopTimesReader(stopTimesFile)
+    return new MTMRailStopTimesReader(stopTimesFile, this.#operator)
   }
 
   createTripReader(tripsFile, calendars, routeMappings) {
