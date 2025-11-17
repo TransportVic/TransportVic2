@@ -13,7 +13,7 @@ try {
   await fs.mkdir(nspFolder)
 } catch (e) {}
 try {
-  currentVersion = JSON.stringify(await fs.readFile(versionFile))
+  currentVersion = JSON.parse(await fs.readFile(versionFile))
 } catch (e) {}
 
 let nspFiles
