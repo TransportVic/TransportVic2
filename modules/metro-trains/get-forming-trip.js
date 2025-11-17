@@ -67,7 +67,7 @@ async function getFormingTrip(trip, isArrival, isWithinCityLoop, liveTimetables)
     returnedFormingTrip = formingTrip
 
     if ((isCrossCityTrip || (isMetroTunnelTrip && !upTripInCityLoop)) && returnedFormingTrip) shouldShowForming = tripCrossesCity(trip, returnedFormingTrip)
-    if (returnedFormingTrip && shouldShowForming) {
+    if (returnedFormingTrip && shouldShowForming && !(upTripInCityLoop && trip.cancelled)) {
       formingDestination = returnedFormingTrip.destination.slice(0, -16)
       formingRunID = returnedFormingTrip.runID
     } else returnedFormingTrip = null

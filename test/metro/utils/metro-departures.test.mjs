@@ -296,6 +296,31 @@ describe('The metro departures class', () => {
     expect(departures[0].futureFormingStops).to.not.exist
   })
 
+  it('Does not show the forming trip if the current up trip in the city loop is cancelled', async () => {
+    const db = new LokiDatabaseConnection()
+    const stops = await db.createCollection('stops')
+    await stops.createDocuments(clone(pkmStops))
+
+    const tripData = clone(ephTrips)
+    tripData[0].cancelled = true
+
+    await (await db.createCollection('live timetables')).createDocuments(tripData)
+
+    const par = await stops.findDocument({ stopName: "Parliament Railway Station" })
+    const departures = await getDepartures(par, db, null, null, new Date('2025-06-10T19:17:00.000Z'))
+
+    expect(departures[0].runID).to.equal('C000')
+    expect(departures[0].platform).to.equal('2')
+    expect(departures[0].cancelled).to.be.true
+    expect(departures[0].estimatedDepartureTime).to.be.null
+
+    expect(departures[0].routeName).to.equal('Pakenham')
+    expect(departures[0].destination).to.equal('Flinders Street')
+    expect(departures[0].formingDestination).to.not.exist
+    expect(departures[0].formingRunID).to.not.exist
+    expect(departures[0].futureFormingStops).to.not.exist
+  })
+
   it('Should return the next trip\'s data for cross city runs', async () => {
     let db = new LokiDatabaseConnection()
     db.connect()
