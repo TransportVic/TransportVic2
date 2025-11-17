@@ -1,4 +1,5 @@
 let stopDataCache
+let departureTime = null
 
 function getStopData(mode, suburb, stopName, callback) {
   if (stopDataCache) return callback(stopDataCache)
@@ -18,7 +19,7 @@ function setBookmarked(mode, suburb, stopName, state, callback) {
     let existingStop = bookmarks.find(stop => stop.id === id)
     if (existingStop) {
       if (state) {
-        if (!existingStop.modes.includes(mode)) {
+        if ( !existingStop.modes.includes(mode)) {
           existingStop.modes.push(mode)
         }
       } else {
@@ -143,6 +144,55 @@ $.ready(() => {
       })
     })
   })
+
+  const hasCombinedPicker = navigator.userAgent.includes('Chrome') || (navigator.userAgent.includes('Mobile') && navigator.userAgent.includes('Safari'))
+  const clock = $('#clock')
+  if (hasCombinedPicker) {
+    const timePicker = $('#departureDateTime')
+    clock.on('click', () => {
+      timePicker.showPicker()
+    })
+
+    timePicker.on('change', () => {
+      departureTime = new Date(timePicker.value)
+    })
+  } else {
+    const dropdown = $('#clockDropdown')
+    let dropdownOpen = false
+
+    clock.on('click', () => {
+      if (dropdownOpen) return
+      dropdown.classList.add('showing')
+      dropdownOpen = true
+
+      setTimeout(() => {
+        const bodyClick = e => {
+          let elem = e.target
+
+          for (let i = 0; i < 3; i++) {
+            if (!elem) break
+            else if (elem === dropdown) return
+            elem = elem.parentElement
+          }
+
+          cleanup()
+        }
+
+        const escape = e => {
+          if (e.key === 'Escape') cleanup()
+        }
+
+        const listeners = [ ['body', 'click', bodyClick], ['body', 'keydown', escape] ]
+        for (const [target, type, fn] of listeners) $(target).on(type, fn)
+
+        const cleanup = () => {
+          dropdown.classList.remove('showing')
+          dropdownOpen = false
+          for (const [target, type, fn] of listeners) $(target).removeEventListener(type, fn)
+        }
+      }, 10)
+    })
+  }
 
   setInterval(updateBody, 30 * 1000)
   checkFocus()

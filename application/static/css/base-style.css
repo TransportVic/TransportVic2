@@ -16,9 +16,6 @@ html, body {
   margin: 0;
   padding: 0;
 
-  font-family: Default-Font;
-  letter-spacing: calc(-0.025vw - 0.025vh);
-
   color: #c5c5c5;
   background-color: #1e1e1e;
 
@@ -27,6 +24,11 @@ html, body {
   -webkit-user-select: none;
 
   overflow-x: none;
+}
+
+* {
+  font-family: Default-Font;
+  letter-spacing: calc(-0.025vw - 0.025vh);
 }
 
 div.errorPage {

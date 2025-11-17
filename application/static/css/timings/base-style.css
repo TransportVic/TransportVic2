@@ -1,6 +1,64 @@
-#mapLink {
+#mapLink, #clock {
   height: calc(2.1vw + 2.1vh);
   margin-right: calc(0.4vw + 1.2vh);
+  cursor: pointer;
+}
+
+#clockDropdown::before {
+  content: " ";
+  display: block;
+  width: calc((2.1vw + 2.1vh) * 0.6);
+  height: calc((2.1vw + 2.1vh) * 0.6);
+  margin-left: calc((2.1vw + 2.1vh) * 2.2 - var(--border-thickness) * sqrt(2));
+  transform: translateY(calc((2.1vw + 2.1vh) * -0.3 - var(--border-thickness) * (1 + sqrt(2) / 10))) rotate(45deg);
+  border-left: calc(0.3vw + 0.3vh) solid #888;
+  border-top: calc(0.3vw + 0.3vh) solid #888;
+  background-color: white;
+  z-index: 999;
+  position: absolute;
+}
+
+#clockDropdown {
+  --border-thickness: calc(0.3vw + 0.3vh);
+
+  position: absolute;
+  width: calc((2.1vw + 2.1vh) * 5);
+  height: calc((2.1vw + 2.1vh) * 4.4);
+  
+  top: calc((2.1vw + 2.1vh) * 2.1);
+  margin-left: calc((2.1vw + 2.1vh) * -2);
+  
+  border-radius: calc(0.3vw + 0.3vh);
+  border: var(--border-thickness) solid #888;
+
+  background-color: white;
+  z-index: 1000;
+  
+  display: none;
+}
+
+#clockDropdown.showing {
+  display: block;
+}
+
+#clockDropdown > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+
+  height: calc((2.1vw + 2.1vh) * 4.4);
+}
+
+#clockDropdown input {
+  font-size: calc(1.2vw + 0.8vh);
+}
+
+#departureDateTime {
+  width: 0;
+  border: 0;
+  padding: 0;
+  background: none;
 }
 
 #mapIcon {
@@ -10,6 +68,7 @@
 #bookmark {
   width: calc(1.5vw + 1.5vh);
   margin-right: calc(0.4vw + 1.2vh);
+  cursor: pointer;
 }
 
 #modeSwitch {
