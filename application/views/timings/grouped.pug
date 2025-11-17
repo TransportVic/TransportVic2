@@ -30,6 +30,14 @@ block title
   span=stop.stopName
   
 block header-right
+  if currentMode === 'bus'
+    img#clock(src=`${staticBase}/static/images/decals/clock.svg` alt='change departure time')
+    input#departureDateTime(type="datetime-local")
+    div#clockDropdown
+      div
+        input#departureDate(type="date")
+        input#departureTime(type="time")
+        input#confirmTime(type="button" value="Update")
   a#mapLink(href=`/stop-preview/${stop.cleanSuburbs[0]}/${stop.cleanName}`)
     img#mapIcon(src=`${staticBase}/static/images/decals/map.svg` alt='map icon')
   img#bookmark(src=`${staticBase}/static/images/decals/bookmark.svg` alt='bookmark icon')

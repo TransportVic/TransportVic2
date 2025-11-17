@@ -99,7 +99,7 @@ function updateBody() {
   $.ajax({
     method: 'POST',
     data: departureTime === null ? {} : {
-      departureTime: departureTime.toString()
+      departureTime: departureTime.toISOString()
     }
   }, (err, status, body) => {
     if (!err && status === 200) {

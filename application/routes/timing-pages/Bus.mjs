@@ -29,11 +29,14 @@ async function loadDepartures(req, res) {
     stop.bays.push(...oppositeStop.bays)
   }
 
-  let departures = await getDepartures(stop, res.db, res.tripDB)
-  let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
 
+  const departureTime = req.body && req.body.departureTime ? utils.parseTime(req.body.departureTime) : null
+  let departures = await getDepartures(stop, res.db, res.tripDB, departureTime)
+
+  const blankOld = departureTime - new Date() < 1000 * 60
+  const stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
   departures = await async.map(departures, async departure => {
-    departure.pretyTimeToDeparture = utils.prettyTime(departure.actualDepartureTime, false, false)
+    departure.pretyTimeToDeparture = utils.prettyTime(departure.actualDepartureTime, false, blankOld)
     departure.headwayDevianceClass = utils.findHeadwayDeviance(departure.scheduledDepartureTime, departure.estimatedDepartureTime, {
       early: 2,
       late: 5

@@ -479,11 +479,13 @@ module.exports = {
     let minutes = timeDifference.get('minutes')
     let prettyTime = ''
 
-    if (showHours) {
+    let minutesToDeparture = hours * 60 + minutes
+    if (!showHours && minutesToDeparture > 180) {
+      prettyTime += hours + ' h'
+    } else if (showHours) {
       if (hours) prettyTime += hours + ' h '
       if (minutes) prettyTime += minutes + ' min'
     } else {
-      let minutesToDeparture = hours * 60 + minutes
       prettyTime = minutesToDeparture + ' m'
     }
 

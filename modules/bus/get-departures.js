@@ -216,10 +216,10 @@ async function getDeparturesFromPTV(stop, db, time, discardUnmatched) {
   return filteredDepartures
 }
 
-async function getScheduledDepartures(stop, db, time) {
+async function getScheduledDepartures(stop, db, time, useLive) {
   let gtfsIDs = departureUtils.getUniqueGTFSIDs(stop, 'bus', false)
 
-  return await departureUtils.getScheduledDepartures(gtfsIDs, db, 'bus', 90, true, time)
+  return await departureUtils.getScheduledDepartures(gtfsIDs, db, 'bus', 90, useLive, time)
 }
 
 async function getDepartures(stop, db, tripDB, time, discardUnmatched) {
@@ -228,22 +228,28 @@ async function getDepartures(stop, db, tripDB, time, discardUnmatched) {
   try {
     return await utils.getData('bus-departures-' + (time ? time.toISOString() : 'current'), cacheKey, async () => {
       time = time || utils.now()
+      const endOfPTDayToday = utils.now().startOf('day').add(1, 'day').set('hour', 3)
+      const endOfPTDayTmr = utils.now().startOf('day').add(2, 'days').set('hour', 3)
+      const startOfPTDayToday = utils.now().startOf('day')
 
       let scheduledDepartures = []
       let ptvDepartures = []
       let departures = []
       let ptvFailed = false, scheduledFailed = false
+      let usePTV = startOfPTDayToday < time && time < endOfPTDayToday
 
       await Promise.all([new Promise(async resolve => {
         try {
-          scheduledDepartures = await getScheduledDepartures(stop, db, time)
+          scheduledDepartures = await getScheduledDepartures(stop, db, time, time < endOfPTDayTmr)
         } catch (e) {
           global.loggers.general.err('Failed to get scheduled departures', e)
           scheduledFailed = true
         } finally { resolve() }
       }), new Promise(async resolve => {
         try {
-          ptvDepartures = await getDeparturesFromPTV(stop, db, time, discardUnmatched)
+          if (usePTV) {
+            ptvDepartures = await getDeparturesFromPTV(stop, db, time, discardUnmatched)
+          }
         } catch (e) {
           global.loggers.general.err('Failed to get PTV departures', e)
           ptvFailed = true
@@ -256,7 +262,7 @@ async function getDepartures(stop, db, tripDB, time, discardUnmatched) {
       })
 
       departures = [...ptvDepartures, ...nonLiveDepartures]
-      if (ptvFailed) departures = scheduledDepartures
+      if (ptvFailed || !usePTV) departures = scheduledDepartures
       if (ptvFailed && scheduledFailed) throw new Error('Both PTV and Scheduled timetables unavailable')
 
       departures = departures.sort((a, b) => {
