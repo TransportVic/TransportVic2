@@ -8,7 +8,7 @@ import fakeCityCircle from '../../departures/sample-data/fake-city-circle.json' 
 import heidelbergADNL_AMEX from '../../departures/sample-data/heidelberg-adnl-amex.json' with { type: 'json' }
 
 import mtpTrips from '../../departures/sample-data/mtp-through-running.json' with { type: 'json' }
-import ccyTrips from '../../departures/sample-data/fkn-wer-wil-through-running.json' with { type: 'json' }
+import ccyTrips from '../../departures/sample-data/cross-city-through-running.json' with { type: 'json' }
 import ephTrips from '../../departures/sample-data/eph-clp-forming.json' with { type: 'json' }
 import pkmStops from '../tracker/sample-data/pkm-stops-db.json' with { type: 'json' }
 import getDepartures from '../../../modules/metro-trains/get-departures.js'
@@ -355,13 +355,13 @@ describe('The metro departures class', () => {
     let syr = await stops.findDocument({ stopName: "South Yarra Railway Station" })
     let departures = await getDepartures(syr, db, null, null, new Date('2025-06-11T07:49:00.000Z'))
 
-    expect(departures[0].runID).to.equal('4444')
-    expect(departures[0].platform).to.equal('3')
+    expect(departures[0].runID).to.equal('X128')
+    expect(departures[0].platform).to.equal('1')
     expect(departures[0].destination).to.equal('Flinders Street')
     expect(departures[0].trueDestination).to.equal('Flinders Street')
 
-    expect(departures[0].routeName).to.equal('Frankston')
-    expect(departures[0].cleanRouteName).to.equal('frankston')
+    expect(departures[0].routeName).to.equal('Sandringham')
+    expect(departures[0].cleanRouteName).to.equal('sandringham')
     expect(departures[0].formingDestination).to.equal('Williamstown')
     expect(departures[0].formingRunID).to.equal('6385')
     expect(departures[0].futureFormingStops).to.deep.equal([
@@ -379,7 +379,7 @@ describe('The metro departures class', () => {
     const tripData = clone(ccyTrips)
 
     tripData[0].stopTimings.reverse()
-    tripData[0].destination = 'Frankston Railway Station'
+    tripData[0].destination = 'Sandringham Railway Station'
     tripData[1].stopTimings.reverse()
     tripData[1].forming = tripData[0].runID
     await (await db.createCollection('live timetables')).createDocuments(tripData)
@@ -391,8 +391,8 @@ describe('The metro departures class', () => {
     expect(departures[0].destination).to.equal('Flinders Street')
 
     expect(departures[0].routeName).to.equal('Williamstown')
-    expect(departures[0].formingDestination).to.equal('Frankston')
-    expect(departures[0].formingRunID).to.equal('4444')
+    expect(departures[0].formingDestination).to.equal('Sandringham')
+    expect(departures[0].formingRunID).to.equal('X128')
   })
 
   it('Should return the next trip\'s data for metro tunnel runs', async () => {

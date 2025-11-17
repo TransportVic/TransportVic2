@@ -5,9 +5,10 @@ import mtpThroughRunning from '../departures/sample-data/mtp-through-running.jso
 import alm from '../departures/sample-data/alamein.json' with { type: 'json' }
 import { getPIDDepartures } from '../../modules/pid/pid.mjs'
 import { LokiDatabaseConnection } from '@transportme/database'
-import fknWerWilSASThroughRunning from './sample-data/fkn-wer-wil-sas-through-running.mjs'
-import fknWerWilThroughRunning from '../departures/sample-data/fkn-wer-wil-through-running.json' with { type: 'json' }
+import crossCityThroughRunning from '../departures/sample-data/cross-city-through-running.json' with { type: 'json' }
 import fknStops from './sample-data/fkn-stops.mjs'
+import pkmStops from '../metro/tracker/sample-data/pkm-stops-db.json' with { type: 'json' }
+
 use(chaiExclude)
 
 const clone = o => JSON.parse(JSON.stringify(o))
@@ -29,21 +30,22 @@ await (await almDB.getCollection('live timetables')).createDocuments(clone(almTr
 }))
 await (await almDB.getCollection('stops')).createDocument(clone(alm))
 
-const fknDepartureTime = { departureTime: new Date('2025-09-13T07:56:00.000Z') }
-const fknDB = new LokiDatabaseConnection()
-await (await fknDB.getCollection('live timetables')).createDocuments(clone(fknWerWilSASThroughRunning))
-await (await fknDB.getCollection('live timetables')).createDocuments(clone(fknWerWilThroughRunning))
-await (await fknDB.getCollection('stops')).createDocuments(clone(fknStops))
+const crossCityDepartureTime_SYR = { departureTime: new Date('2025-06-11T07:30:00.000Z') }
+const crossCityDB = new LokiDatabaseConnection()
+await (await crossCityDB.getCollection('live timetables')).createDocuments(clone(crossCityThroughRunning))
+await (await crossCityDB.getCollection('stops')).createDocuments(clone(fknStops))
+await (await crossCityDB.getCollection('stops')).createDocuments(clone(pkmStops))
 
-const fknNoFormingDB = new LokiDatabaseConnection()
-await (await fknNoFormingDB.getCollection('live timetables')).createDocuments(clone(fknWerWilSASThroughRunning).map(trip => {
+const crossCityNoFormingDB = new LokiDatabaseConnection()
+await (await crossCityNoFormingDB.getCollection('live timetables')).createDocuments(clone(crossCityThroughRunning).map(trip => {
   return {
     ...trip,
     forming: null,
     formedBy: null
   }
 }))
-await (await fknNoFormingDB.getCollection('stops')).createDocuments(clone(fknStops))
+await (await crossCityNoFormingDB.getCollection('stops')).createDocuments(clone(fknStops))
+await (await crossCityNoFormingDB.getCollection('stops')).createDocuments(clone(pkmStops))
 
 const cfdDepartureTime = { departureTime: new Date('2025-06-06T20:04:00.000Z') }
 const cfdDB = new LokiDatabaseConnection()
@@ -92,27 +94,25 @@ describe('The PID getPIDDepartures function', () => {
   })
 
   it('Removes city loop stops if not needed', async () => {
-    const departures = await getPIDDepartures('Caulfield', fknNoFormingDB, fknDepartureTime)
+    const departures = await getPIDDepartures('South Yarra', crossCityNoFormingDB, crossCityDepartureTime_SYR)
     const stops = departures[0].stops
 
     expect(stops).to.exist
-    expect(stops[0]).to.deep.equal({ stopName: 'Caulfield', express: false })
-    expect(stops[1]).to.deep.equal({ stopName: 'Malvern', express: false })
-    expect(stops[6]).to.deep.equal({ stopName: 'Richmond', express: false })
-    expect(stops[7]).to.deep.equal({ stopName: 'Flinders Street', express: false })
+    expect(stops[0]).to.deep.equal({ stopName: 'South Yarra', express: false })
+    expect(stops[1]).to.deep.equal({ stopName: 'Richmond', express: false })
+    expect(stops[2]).to.deep.equal({ stopName: 'Flinders Street', express: false })
   })
 
   it('Appends stops from the next trip onto the PID', async () => {
-    const departures = await getPIDDepartures('Caulfield', fknDB, fknDepartureTime)
+    const departures = await getPIDDepartures('South Yarra', crossCityDB, crossCityDepartureTime_SYR)
     const stops = departures[0].stops
 
     expect(stops).to.exist
-    expect(stops[0]).to.deep.equal({ stopName: 'Caulfield', express: false })
-    expect(stops[1]).to.deep.equal({ stopName: 'Malvern', express: false })
-    expect(stops[6]).to.deep.equal({ stopName: 'Richmond', express: false })
-    expect(stops[7]).to.deep.equal({ stopName: 'Flinders Street', express: false })
-    expect(stops[8]).to.deep.equal({ stopName: 'Southern Cross', express: false })
-    expect(stops[9]).to.deep.equal({ stopName: 'North Melbourne', express: false })
+    expect(stops[0]).to.deep.equal({ stopName: 'South Yarra', express: false })
+    expect(stops[1]).to.deep.equal({ stopName: 'Richmond', express: false })
+    expect(stops[2]).to.deep.equal({ stopName: 'Flinders Street', express: false })
+    expect(stops[3]).to.deep.equal({ stopName: 'Southern Cross', express: false })
+    expect(stops[4]).to.deep.equal({ stopName: 'North Melbourne', express: true })
   })
 
   it('Checks express running on the forming trip', async () => {
@@ -136,10 +136,10 @@ describe('The PID getPIDDepartures function', () => {
     expect(departures[0].extendedStoppingType).to.equal('Stopping All Stations')
   })
 
-  it('Contains a stopping pattern and types on a cross city express train', async () => {
-    const departures = await getPIDDepartures('Frankston', fknDB, { departureTime: new Date('2025-06-11T06:49:00.000Z') })
-    expect(departures[0].stoppingPattern).to.equal('Runs Express to South Yarra, Stops All Stations from South Yarra to Southern Cross, then Runs Express from Southern Cross to Williamstown')
-    expect(departures[0].stoppingType).to.equal('Ltd Express')
-    expect(departures[0].extendedStoppingType).to.equal('Stopping at South Yarra')
+  it('Contains a stopping pattern and types on a cross city train', async () => {
+    const departures = await getPIDDepartures('South Yarra', crossCityDB, { departureTime: new Date('2025-06-11T06:49:00.000Z') })
+    expect(departures[0].stoppingPattern).to.equal('Stops All Stations to Southern Cross, then Runs Express to Williamstown')
+    expect(departures[0].stoppingType).to.equal('Express')
+    expect(departures[0].extendedStoppingType).to.equal('Express Southern Cross -- Williamstown')
   })
 })
