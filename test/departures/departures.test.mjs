@@ -311,4 +311,35 @@ describe('The getDepartures function', () => {
     let departures = await getDepartures(flindersStreet, 'metro train', cclDB, { departureTime: new Date('2025-04-04T18:39:00.000Z'), timeframe: 120 })
     expect(departures.length).to.equal(0)
   })
+
+  it('Does not set an estimated time for cancelled trains', async () => {
+    const amexTripDB = new LokiDatabaseConnection()
+    const liveTimetables = await amexTripDB.createCollection('live timetables')
+    const tripData = clone(sampleLiveTrips)
+    tripData[0].stopTimings[0].cancelled = true
+
+    await liveTimetables.createDocuments(tripData)
+
+    let departures = await getDepartures(alamein, 'metro train', amexTripDB, { departureTime: new Date('2025-03-28T20:00:00.000Z') })
+    expect(departures[0].trip.runID).to.equal('2316')
+    expect(departures[0].cancelled).to.be.true
+    expect(departures[0].scheduledDepartureTime.toISOString()).to.equal('2025-03-28T20:48:00.000Z')
+    expect(departures[0].estimatedDepartureTime).to.be.null
+  })
+
+  it('Returns cancelled trains at their regular time, even if they were early and running before the given departure time', async () => {
+    const amexTripDB = new LokiDatabaseConnection()
+    const liveTimetables = await amexTripDB.createCollection('live timetables')
+    const tripData = clone(sampleLiveTrips)
+    tripData[0].stopTimings[0].cancelled = true
+    tripData[0].stopTimings[0].estimatedDepartureTime = '2025-03-28T19:48:00.000Z' // 1hr early
+    tripData[0].stopTimings[0].actualDepartureTime = +new Date('2025-03-28T19:48:00.000Z') // 1hr early
+
+    await liveTimetables.createDocuments(tripData)
+
+    let departures = await getDepartures(alamein, 'metro train', amexTripDB, { departureTime: new Date('2025-03-28T20:00:00.000Z') })
+    expect(departures[0].trip.runID).to.equal('2316')
+    expect(departures[0].cancelled).to.be.true
+    expect(departures[0].scheduledDepartureTime.toISOString()).to.equal('2025-03-28T20:48:00.000Z')
+  })
 })

@@ -21,21 +21,32 @@ async function fetchLiveTrips(station, mode, db, departureTime, timeframe=120) {
   let timeMS = +departureTime
   let timeoutMS = timeframe * 60 * 1000
 
-  let actualDepartureTimeMS = {
+  let timeQuery = {
     $gte: timeMS - 1000 * 60,
     $lte: timeMS + timeoutMS
   }
 
   let trips = await liveTimetables.findDocuments({
     mode,
-    stopTimings: {
-      $elemMatch: {
-        stopGTFSID: {
-          $in: stopGTFSIDs
-        },
-        actualDepartureTimeMS
+    $or: [{
+      stopTimings: {
+        $elemMatch: {
+          stopGTFSID: {
+            $in: stopGTFSIDs
+          },
+          actualDepartureTimeMS: timeQuery,
+        }
       }
-    },
+    }, {
+      stopTimings: {
+        $elemMatch: {
+          stopGTFSID: {
+            $in: stopGTFSIDs
+          },
+          scheduledDepartureTimeMS: timeQuery
+        }
+      }
+    }]
   }).toArray()
 
   return trips
@@ -149,24 +160,26 @@ async function getDepartures(station, mode, db, { departureTime = null, timefram
 
     let prevVisitSchDep = null
 
-    for (let currentStopIndex of stopIndices) {
-      let currentStop = trip.stopTimings[currentStopIndex]
+    for (const currentStopIndex of stopIndices) {
+      const currentStop = trip.stopTimings[currentStopIndex]
+      const cancelled = trip.cancelled || currentStop.cancelled
 
-      let scheduledDepartureTime = utils.parseTime(currentStop.scheduledDepartureTime)
-      let estimatedDepartureTime = currentStop.estimatedDepartureTime ? utils.parseTime(currentStop.estimatedDepartureTime) : null
+      const scheduledDepartureTime = utils.parseTime(currentStop.scheduledDepartureTime)
+      const estimatedDepartureTime = (currentStop.estimatedDepartureTime && !cancelled) ? utils.parseTime(currentStop.estimatedDepartureTime) : null
 
       if (prevVisitSchDep !== null && scheduledDepartureTime.diff(prevVisitSchDep, 'minutes') <= 2) continue
       prevVisitSchDep = scheduledDepartureTime
       
-      let actualDepartureTime = estimatedDepartureTime || scheduledDepartureTime
-      if (departureTime.diff(actualDepartureTime, 'minutes') > 1) continue
+      const actualDepartureTime = estimatedDepartureTime || scheduledDepartureTime
+      const isEarly = departureTime.diff(actualDepartureTime, 'minutes') > 1
+      if (isEarly) continue
 
       departures.push({
         scheduledDepartureTime,
         estimatedDepartureTime,
         actualDepartureTime,
         currentStop,
-        cancelled: trip.cancelled || currentStop.cancelled,
+        cancelled,
         routeName: trip.routeName,
         cleanRouteName: utils.encodeName(trip.routeName),
         trip,
