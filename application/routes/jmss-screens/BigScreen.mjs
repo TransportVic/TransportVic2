@@ -1,11 +1,11 @@
-const express = require('express')
-const router = new express.Router()
-const ptvAPI = require('../../../ptv-api')
-const utils = require('../../../utils')
-const getMetroDepartures = require('../../../modules/metro-trains/get-departures')
-const getVLineDepartures = require('../../../modules/vline-old/get-departures')
-const getBusDepartures = require('../../../modules/bus/get-departures')
-const busDestinations = require('../../../additional-data/bus-destinations')
+import express from 'express'
+import utils from '../../../utils.js'
+import getMetroDepartures from '../../../modules/metro-trains/get-departures.mjs'
+import getVLineDepartures from '../../../modules/vline-old/get-departures.js'
+import getBusDepartures from '../../../modules/bus/get-departures.js'
+import busDestinations from '../../../additional-data/bus-destinations.json' with { type: 'json' }
+
+const router = express.Router()
 
 function filterDepartures(departures) {
   return departures.map(departure => {
@@ -139,4 +139,4 @@ router.get('/', async (req, res) => {
   }))
 })
 
-module.exports = router
+export default router

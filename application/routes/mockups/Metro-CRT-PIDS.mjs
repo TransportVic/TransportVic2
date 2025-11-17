@@ -1,7 +1,8 @@
-const express = require('express')
+import express from 'express'
+import utils from '../../../utils.js'
+import PIDBackend from './PIDBackend.mjs'
+
 const router = new express.Router()
-const utils = require('../../../utils')
-const PIDBackend = require('./PIDBackend')
 
 async function getData(req, res) {
   let station = await PIDBackend.getStation(req.params.station, res.db)
@@ -20,4 +21,4 @@ router.post('/:station/:platform/', async (req, res) => {
   res.json(departures)
 })
 
-module.exports = router
+export default router

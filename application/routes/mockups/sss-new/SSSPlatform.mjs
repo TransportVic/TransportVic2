@@ -1,10 +1,8 @@
-const express = require('express')
-const router = new express.Router()
-const moment = require('moment')
-const async = require('async')
-const utils = require('../../../../utils')
+import express from 'express'
+import utils from '../../../../utils.js'
+import PIDBackend from '../PIDBackend.mjs'
 
-const PIDBackend = require('../PIDBackend')
+const router = new express.Router()
 
 async function getData(req, res) {
   let station = await PIDBackend.getStation('southern-cross', res.db)
@@ -29,4 +27,4 @@ router.post('/:platform', async (req, res) => {
   res.json(departures)
 })
 
-module.exports = router
+export default router

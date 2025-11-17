@@ -1,14 +1,15 @@
-const async = require('async')
-const urls = require('../../../../urls')
-const utils = require('../../../../utils')
-const cheerio = require('cheerio')
-const termini = require('../../../../additional-data/termini-to-lines')
-const getMetroDepartures = require('../../../../modules/metro-trains/get-departures')
-const getVLineStops = require('./SSS-Lines')
-const getMetroStops = require('../../../../additional-data/route-stops')
-const TrainUtils = require('../TrainUtils')
+import async from 'async'
+import urls from '../../../../urls.json' with { type: 'json' }
+import utils from '../../../../utils.js'
+import cheerio from 'cheerio'
+import termini from '../../../../additional-data/termini-to-lines.js'
+import getMetroDepartures from '../../../../modules/metro-trains/get-departures.mjs'
+import getVLineStops from './SSS-Lines.mjs'
+import getMetroStops from '../../../../additional-data/route-stops.js'
+import TrainUtils from '../TrainUtils.mjs'
+import { getDayOfWeek } from '../../../../public-holidays.js'
+
 const emptyCars = []
-const { getDayOfWeek } = require('../../../../public-holidays')
 
 let northernGroup = [
   'Craigieburn',
@@ -533,7 +534,7 @@ async function appendArrivalData(arrival, timetables) {
   return arrival
 }
 
-module.exports = async (platforms, db) => {
+export default async (platforms, db) => {
   let rawData = await utils.getData('sss-trains', 'sss', async () => {
     let sss = await db.getCollection('stops').findDocument({
       cleanName: 'southern-cross-railway-station'

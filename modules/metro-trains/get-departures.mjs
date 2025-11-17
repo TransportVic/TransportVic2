@@ -1,6 +1,6 @@
 import utils from '../../utils.js'
-import Departures, { getDepartures } from '../departures/get-departures.mjs'
-import { getFormingTrip } from './get-forming-trip.js'
+import Departures from '../departures/get-departures.mjs'
+import { getFormingTrip } from './get-forming-trip.mjs'
 import { NORTHERN_GROUP, CITY_LOOP } from './line-groups.mjs'
 
 export class MetroDepartures extends Departures {

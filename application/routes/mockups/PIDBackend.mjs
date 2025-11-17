@@ -1,10 +1,10 @@
-const getRouteStops = require('../../../additional-data/route-stops')
-const getMetroDepartures = require('../../../modules/metro-trains/get-departures')
-const getVLineDepartures = require('../../../modules/vline-old/get-departures')
-const utils = require('../../../utils')
-const async = require('async')
-const { getDayOfWeek } = require('../../../public-holidays')
-const metroTypes = require('../../../additional-data/metro-tracker/metro-types')
+import getRouteStops from '../../../additional-data/route-stops.js'
+import getMetroDepartures from '../../../modules/metro-trains/get-departures.mjs'
+import getVLineDepartures from '../../../modules/vline-old/get-departures.js'
+import utils from '../../../utils.js'
+import async from 'async'
+import { getDayOfWeek } from '../../../public-holidays.js'
+import metroTypes from '../../../additional-data/metro-tracker/metro-types.json' with { type: 'json' }
 
 let undergroundLoopStations = ['Parliament', 'Flagstaff', 'Melbourne Central']
 let cityLoopStations = [...undergroundLoopStations, 'Southern Cross']
@@ -532,7 +532,7 @@ function trimDepartures(departures, includeStopTimings) {
   })
 }
 
-async function getPIDData(station, platform, options, db) {
+export async function getPIDData(station, platform, options, db) {
   let { dep, has, bus } = await utils.getData('pid-data', station.stopName, async () => {
     let departures = []
     let arrivals = []
@@ -598,7 +598,7 @@ async function getPIDData(station, platform, options, db) {
   }
 }
 
-async function getStation(stationName, db) {
+export async function getStation(stationName, db) {
   return await utils.getData('pid-station', stationName, async () => {
     return await db.getCollection('stops').findDocument({
       cleanName: stationName + '-railway-station'
@@ -606,7 +606,7 @@ async function getStation(stationName, db) {
   }, 1000 * 60 * 60)
 }
 
-function getURL(station, pid) {
+export function getURL(station, pid) {
   let pidURL
   if (pid.concourse) {
     pidURL = `/mockups/metro-lcd/concourse/${station}/${pid.type}${pid.query ? '?' + pid.query : ''}`
@@ -627,7 +627,7 @@ function getURL(station, pid) {
   return pidURL
 }
 
-module.exports = {
+export default {
   getPIDData,
   getStation,
   getURL

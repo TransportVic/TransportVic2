@@ -1,9 +1,7 @@
-const express = require('express')
+import express from 'express'
+import PIDBackend from './PIDBackend.mjs'
+
 const router = new express.Router()
-const moment = require('moment')
-const async = require('async')
-const utils = require('../../../utils')
-const PIDBackend = require('./PIDBackend')
 
 let stoppingTextMap = {
   stopsAll: 'Stops All Stations',
@@ -49,7 +47,7 @@ router.post('/:station/:platform', async (req, res) => {
   res.json(departures)
 })
 
-module.exports = router
+export default router
 
 
 /*

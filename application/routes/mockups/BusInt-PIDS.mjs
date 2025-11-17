@@ -1,11 +1,10 @@
-const express = require('express')
+import express from 'express'
+import getBusDepartures from '../../../modules/bus/get-departures.js'
+import getTrainDepartures from '../../../modules/metro-trains/get-departures.mjs'
+import busDestinations from '../../../additional-data/bus-destinations.json' with { type: 'json' }
+import utils from '../../../utils.js'
+
 const router = new express.Router()
-const getBusDepartures = require('../../../modules/bus/get-departures')
-const getTrainDepartures = require('../../../modules/metro-trains/get-departures')
-const busDestinations = require('../../../additional-data/bus-destinations')
-const moment = require('moment')
-const async = require('async')
-const utils = require('../../../utils')
 
 async function getData(req, res, full) {
   let stops = res.db.getCollection('stops')
@@ -117,7 +116,7 @@ router.post('/:type/:suburb/:stopName/:bay', async (req, res) => {
   res.json(data)
 })
 
-module.exports = router
+export default router
 
 
 

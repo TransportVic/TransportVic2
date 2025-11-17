@@ -1,25 +1,25 @@
-const {
+import {
   METRO_TUNNEL_GROUP_EAST,
   METRO_TUNNEL_GROUP_WEST,
   NORTHERN_GROUP,
   CROSS_CITY_GROUP_EAST,
   CROSS_CITY_GROUP_WEST,
   MURL
-} = require('./line-groups.mjs')
+} from './line-groups.mjs'
 
 const CLIFTON_HILL_GROUP = [
   'Hurstbridge',
   'Mernda'
 ]
 
-function tripCrossesCity(prevTrip, nextTrip) {
+export function tripCrossesCity(prevTrip, nextTrip) {
   return (CROSS_CITY_GROUP_EAST.includes(prevTrip.routeName) && CROSS_CITY_GROUP_WEST.includes(nextTrip.routeName))
     || (CROSS_CITY_GROUP_WEST.includes(prevTrip.routeName) && CROSS_CITY_GROUP_EAST.includes(nextTrip.routeName))
     || (METRO_TUNNEL_GROUP_EAST.includes(prevTrip.routeName) && METRO_TUNNEL_GROUP_WEST.includes(nextTrip.routeName))
     || (METRO_TUNNEL_GROUP_WEST.includes(prevTrip.routeName) && METRO_TUNNEL_GROUP_EAST.includes(nextTrip.routeName))
 }
 
-function checkIsCHLFormingCCLSpecialCase(trip, formingTrip) {
+export function checkIsCHLFormingCCLSpecialCase(trip, formingTrip) {
   if (CLIFTON_HILL_GROUP.includes(trip.routeName) && trip.direction === 'Down' && formingTrip) {
     let lastNonAMEX = trip.stopTimings.findLast(stop => !stop.cancelled)
     let isTerminatingPAR = lastNonAMEX && lastNonAMEX.stopName === 'Parliament Railway Station' && lastNonAMEX.stopName !== trip.destination
@@ -30,11 +30,11 @@ function checkIsCHLFormingCCLSpecialCase(trip, formingTrip) {
   return false
 }
 
-function nextTripHasLoop(formingTrip) {
+export function nextTripHasLoop(formingTrip) {
   return formingTrip.stopTimings.some(stop => MURL.includes(stop.stopName.slice(0, -16)))
 }
 
-async function getFormingTrip(trip, isArrival, isWithinCityLoop, isSSS, liveTimetables) {
+export async function getFormingTrip(trip, isArrival, isWithinCityLoop, isSSS, liveTimetables) {
   let formingDestination = null, formingRunID = null
   let returnedFormingTrip
 
@@ -85,7 +85,7 @@ async function getFormingTrip(trip, isArrival, isWithinCityLoop, isSSS, liveTime
   }
 }
 
-module.exports = {
+export default {
   tripCrossesCity,
   getFormingTrip,
   checkIsCHLFormingCCLSpecialCase

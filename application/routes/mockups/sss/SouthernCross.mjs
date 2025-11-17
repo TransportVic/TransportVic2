@@ -1,7 +1,8 @@
-const express = require('express')
+import express from 'express'
+import getData from './SouthernCrossTrains.mjs'
+import utils from '../../../../utils.js'
+
 const router = new express.Router()
-const getData = require('./SouthernCrossTrains')
-const utils = require('../../../../utils')
 
 // true regional, false metro
 let sssPlatforms = {
@@ -70,4 +71,4 @@ router.post('/:type/:platforms/', async (req, res) => {
   res.json({ departures, arrivals })
 })
 
-module.exports = router
+export default router

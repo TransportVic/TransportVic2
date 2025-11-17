@@ -1,11 +1,12 @@
-const express = require('express')
+import express from 'express'
+import url from 'url'
+import querystring from 'querystring'
+import utils from '../../../../utils.js'
+import PIDBackend from '../PIDBackend.mjs'
+import stationDestinations from './station-destinations.mjs'
+import csrf from '../csrf.js'
+
 const router = new express.Router()
-const url = require('url')
-const querystring = require('querystring')
-const utils = require('../../../../utils')
-const PIDBackend = require('../PIDBackend')
-const stationDestinations = require('./station-destinations')
-const csrf = require('../csrf')
 
 async function getData(req, res, options={}) {
   let station = await PIDBackend.getStation(req.params.station, res.db)
@@ -103,4 +104,4 @@ router.post('/:station/interchange', csrf, async (req, res) => {
   })
 })
 
-module.exports = router
+export default router

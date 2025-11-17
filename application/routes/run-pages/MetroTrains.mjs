@@ -1,6 +1,6 @@
 import express from 'express'
 import utils from '../../../utils.js'
-import { tripCrossesCity, checkIsCHLFormingCCLSpecialCase } from '../../../modules/metro-trains/get-forming-trip.js'
+import { tripCrossesCity, checkIsCHLFormingCCLSpecialCase } from '../../../modules/metro-trains/get-forming-trip.mjs'
 
 const router = new express.Router()
 

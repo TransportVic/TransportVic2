@@ -1,11 +1,10 @@
-const express = require('express')
+import express from 'express'
+import stationCodes from '../../../additional-data/station-codes.json' with { type: 'json' }
+import rawStationPIDs from '../../../additional-data/station-pids.js'
+import utils from '../../../utils.js'
+import PIDBackend from './PIDBackend.mjs'
+
 const router = new express.Router()
-const stationCodes = require('../../../additional-data/station-codes')
-const rawStationPIDs = require('../../../additional-data/station-pids')
-const utils = require('../../../utils')
-const url = require('url')
-const querystring = require('querystring')
-const PIDBackend = require('./PIDBackend')
 
 function filter(req, next) {
   let host = req.headers.host || ''
@@ -43,4 +42,4 @@ router.use((req, res, next) => {
   }
 })
 
-module.exports = router
+export default router

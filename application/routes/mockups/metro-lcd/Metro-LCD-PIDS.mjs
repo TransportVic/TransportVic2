@@ -1,8 +1,9 @@
-const express = require('express')
+ import express from 'express'
+import utils from '../../../../utils.js'
+import PIDBackend from '../PIDBackend.mjs'
+import csrf from '../csrf.js'
+
 const router = new express.Router()
-const utils = require('../../../../utils')
-const PIDBackend = require('../PIDBackend')
-const csrf = require('../csrf')
 
 let validPIDTypes = ['half-platform-bold', 'half-platform', 'platform', 'pre-platform-vertical']
 
@@ -37,4 +38,4 @@ router.post('/:station/:platform/:type', csrf, async (req, res) => {
   res.json(departures)
 })
 
-module.exports = router
+export default router

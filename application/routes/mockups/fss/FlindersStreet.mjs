@@ -1,8 +1,9 @@
-const express = require('express')
+import express from 'express'
+import utils from '../../../../utils.js'
+import PIDBackend from '../PIDBackend.mjs'
+import csrf from '../csrf.js'
+
 const router = new express.Router()
-const utils = require('../../../../utils')
-const PIDBackend = require('../PIDBackend')
-const csrf = require('../csrf')
 
 let validPIDTypes = ['escalator', 'platform']
 let cityLoopConfigStops = ['Flinders Street', 'Parliament', 'Melbourne Central', 'Flagstaff', 'Southern Cross', 'North Melbourne', 'Jolimont', 'Richmond']
@@ -72,4 +73,4 @@ router.post('/trains-from-fss', csrf, async (req, res) => {
   res.json(departures)
 })
 
-module.exports = router
+export default router

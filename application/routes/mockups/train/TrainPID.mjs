@@ -1,7 +1,8 @@
-const TimedCache = require('../../../../TimedCache')
-const utils = require('../../../../utils')
-const getLineStops = require('../../../../additional-data/route-stops')
-const express = require('express')
+import TimedCache from '../../../../TimedCache.js'
+import utils from '../../../../utils.js'
+import getLineStops from '../../../../additional-data/route-stops.js'
+import express from 'express'
+
 const router = new express.Router()
 
 let dayCache = new TimedCache(1000 * 120)
@@ -134,4 +135,4 @@ router.post('/:type/:runID', async (req, res) => {
   })
 })
 
-module.exports = router
+export default router

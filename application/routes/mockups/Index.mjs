@@ -5,7 +5,7 @@ import rawStationPlatforms from '../../../additional-data/station-platforms.json
 import rawStationPIDs from '../../../additional-data/station-pids.js'
 import url from 'url'
 import querystring from 'querystring'
-import PIDBackend from './PIDBackend.js'
+import PIDBackend from './PIDBackend.mjs'
 
 const router = new express.Router()
 

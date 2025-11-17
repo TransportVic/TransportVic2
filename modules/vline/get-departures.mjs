@@ -1,12 +1,24 @@
-import { getDepartures } from '../departures/get-departures.mjs'
+import Departures from '../departures/get-departures.mjs'
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 import guessScheduledPlatforms from '../vline-old/guess-scheduled-platforms.js'
 import getCoachDepartures from '../regional-coach/get-departures.mjs'
+import utils from '../../utils.js'
 
 const { TRANSIT_MODES } = GTFS_CONSTANTS
 
+export class VLineDepartures extends Departures {
+
+  static getLiveTimetableCutoff() {
+    const now = utils.now()
+
+    if (now.get('hours') < 3) return now.startOf('day').set('hours', 3)
+    return now.startOf('day').add(1, 'day').set('hours', 3)
+  }
+
+}
+
 export default async function getVLineDepartures(station, db, departureTime, { timeframe = 120 } = {}) {
-  let departures = await getDepartures(station, TRANSIT_MODES.regionalTrain, db, { departureTime, timeframe })
+  let departures = await VLineDepartures.getDepartures(station, TRANSIT_MODES.regionalTrain, db, { departureTime, timeframe })
 
   let coachStop = station.stopName === 'Southern Cross Railway Station' ? await db.getCollection('stops').findDocument({
     stopName: 'Southern Cross Coach Terminal/Spencer Street'

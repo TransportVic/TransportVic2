@@ -1,12 +1,11 @@
-const express = require('express')
+import express from 'express'
+import getCoachDepartures from '../../../../modules/regional-coach/get-departures-old.js'
+import destinationOverrides from '../../../../additional-data/coach-stops.js'
+import utils from '../../../../utils.js'
+import url from 'url'
+import querystring from 'querystring'
+
 const router = new express.Router()
-const getCoachDepartures = require('../../../../modules/regional-coach/get-departures-old.js')
-const destinationOverrides = require('../../../../additional-data/coach-stops')
-const termini = require('../../../../additional-data/termini-to-lines')
-const utils = require('../../../../utils')
-const url = require('url')
-const querystring = require('querystring')
-const moment = require('moment')
 
 router.get('/', async (req, res) => {
   let query = querystring.parse(url.parse(req.url).query)
@@ -94,4 +93,4 @@ router.post('/', async (req, res) => {
   res.json(departures)
 })
 
-module.exports = router
+export default router

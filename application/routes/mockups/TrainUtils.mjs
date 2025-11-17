@@ -1,11 +1,12 @@
-const getLineStops = require('../../../additional-data/route-stops')
-const getMetroDepartures = require('../../../modules/metro-trains/get-departures')
-const getVLineDepartures = require('../../../modules/vline-old/get-departures')
-const destinationOverrides = require('../../../additional-data/coach-stops')
-const utils = require('../../../utils')
-const async = require('async')
+import getLineStops from '../../../additional-data/route-stops.js'
+import getMetroDepartures from '../../../modules/metro-trains/get-departures.mjs'
+import getVLineDepartures from '../../../modules/vline-old/get-departures.js'
+import destinationOverrides from '../../../additional-data/coach-stops.js'
+import utils from '../../../utils.js'
+import async from 'async'
+import { getDayOfWeek } from '../../../public-holidays.js'
+
 const emptyShunts = [] // Replace with metro shunts db
-const { getDayOfWeek } = require('../../../public-holidays')
 
 let defaultStoppingText = {
   stopsAll: 'Stops All Stations',
@@ -65,11 +66,11 @@ let caulfieldGroup = [
 
 let cityLoopStations = ['Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 
-module.exports = {
-  getHumanName: (fullStopName, stopSuburb) => {
+
+  export const getHumanName = (fullStopName, stopSuburb) => {
     return destinationOverrides.stops[`${fullStopName.replace('Shopping Centre', 'SC')} ${stopSuburb}`] || fullStopName.replace(/Railway Station.*/, '')
-  },
-  getEmptyShunts: async (station, db) => {
+  }
+  export const getEmptyShunts = async (station, db) => {
     return await utils.getData('pid-arrivals', station.stopName, async () => {
       let timetables = db.getCollection('timetables')
       let today = await getDayOfWeek(utils.now())
@@ -128,8 +129,8 @@ module.exports = {
         })
       })
     }, 1000 * 15)
-  },
-  getCombinedDepartures: async (station, db) => {
+  }
+  export const getCombinedDepartures = async (station, db) => {
     return await utils.getData('pid-combined-departures', station.stopName, async () => {
       let timetables = db.getCollection('timetables')
 
@@ -215,8 +216,8 @@ module.exports = {
         return !departure.cancelled && minutesDifference < 120 && secondsDifference > -60
       })
     }, 1000 * 15)
-  },
-  addTimeToDeparture: departure => {
+  }
+  export const addTimeToDeparture = departure => {
     let timeDifference = departure.actualDepartureTime.clone().add(30, 'seconds').diff(utils.now(), 'minutes')
     departure.minutesToDeparture = timeDifference
 
@@ -224,8 +225,8 @@ module.exports = {
     else departure.prettyTimeToDeparture = timeDifference + ' min'
 
     return departure
-  },
-  getFixedLineStops: (tripStops, lineStops, lineName, isUp, type, willSkipCCL) => {
+  }
+  export const getFixedLineStops = (tripStops, lineStops, lineName, isUp, type, willSkipCCL) => {
     let viaCityLoop = tripStops.includes('Flagstaff') || tripStops.includes('Parliament') || !!willSkipCCL
     if (!northernGroup.includes(lineName) && !viaCityLoop && type !== 'vline') {
       viaCityLoop = tripStops.includes('Southern Cross')
@@ -305,8 +306,8 @@ module.exports = {
     }
 
     return lineStops.filter((e, i, a) => a.indexOf(e) === i)
-  },
-  trimTrip: (isUp, stopTimings, fromStation, routeName, willSkipCCL, destination) => {
+  }
+  export const trimTrip = (isUp, stopTimings, fromStation, routeName, willSkipCCL, destination) => {
     if (routeName === 'City Circle') return stopTimings
     if (isUp) {
       let hasSeenFSS = false
@@ -351,8 +352,8 @@ module.exports = {
     }
 
     return stopTimings
-  },
-  appendScreenDataToDeparture: (departure, destination, station, routeName) => {
+  }
+  export const appendScreenDataToDeparture = (departure, destination, station, routeName) => {
     departure = module.exports.addTimeToDeparture(departure)
     departure.cleanRouteName = utils.encodeName(departure.trip.routeName)
 
@@ -431,8 +432,8 @@ module.exports = {
     if (trip.routeGTFSID === '2-CCL') departure.destination = 'City Loop'
 
     return departure
-  },
-  findExpressStops: (tripStops, lineStops, routeName, isUp, stationName) => {
+  }
+  export const findExpressStops = (tripStops, lineStops, routeName, isUp, stationName) => {
     let startIndex = tripStops.indexOf(stationName)
     let endIndex = tripStops.length
 
@@ -476,8 +477,8 @@ module.exports = {
     }
 
     return expressParts
-  },
-  determineStoppingPattern: (expressParts, destination, lineStops, currentStation, stoppingText) => {
+  }
+  export const determineStoppingPattern = (expressParts, destination, lineStops, currentStation, stoppingText) => {
     if (expressParts.length === 0) return stoppingText.stopsAll
     if (expressParts.length === 1 && expressParts[0].length === 1) return stoppingText.allExcept.format(expressParts[0][0])
 
@@ -533,8 +534,8 @@ module.exports = {
     }
 
     return texts.join(', ').replace(/ Railway Station/g, '')
-  },
-  filterPlatforms: (departures, platform) => {
+  }
+  export const filterPlatforms = (departures, platform) => {
     let shouldFilterPlatform = platform !== '*'
     if (!shouldFilterPlatform) return departures
 
@@ -549,8 +550,8 @@ module.exports = {
         return departurePlatform === platform
       }
     })
-  },
-  trimDepartureData: (departures, maxDepartures, addStopTimings, fromStop) => {
+  }
+  export const trimDepartureData = (departures, maxDepartures, addStopTimings, fromStop) => {
     return departures.map((departure, i) => {
       let data = {
         destination: departure.destination,
@@ -590,7 +591,7 @@ module.exports = {
       return data
     }).slice(0, maxDepartures)
   },
-  getPIDSDepartures: async (db, station, platform, stoppingText, stoppingType, maxDepartures=6, addStopTimings=false) => {
+  export const getPIDSDepartures = async (db, station, platform, stoppingText, stoppingType, maxDepartures=6, addStopTimings=false) => {
     stoppingText = stoppingText || defaultStoppingText
     stoppingType = stoppingType || defaultStoppingType
 
@@ -665,4 +666,3 @@ module.exports = {
       }
     }, 1000 * 15)
   }
-}
