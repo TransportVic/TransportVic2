@@ -18,10 +18,12 @@ async function loadDepartures(req, res) {
 
   let stopHeritageUseDates = await timingUtils.getStopHeritageUseDates(res.db, station)
 
-  let departures = await getDepartures(station, res.db, false, false, null)
+  const departureTime = req.body && req.body.departureTime ? new Date(req.body.departureTime) : null
+  let departures = await getDepartures(station, res.db, false, false, departureTime)
 
+  const blankOld = departureTime - new Date() < 1000 * 60
   departures = departures.map(departure => {
-    departure.pretyTimeToDeparture = utils.prettyTime(departure.actualDepartureTime, true, false)
+    departure.pretyTimeToDeparture = utils.prettyTime(departure.actualDepartureTime, true, blankOld)
     departure.headwayDevianceClass = utils.findHeadwayDeviance(departure.scheduledDepartureTime, departure.estimatedDepartureTime, {
       early: 0.5,
       late: 5

@@ -96,7 +96,12 @@ function updateBody() {
     if (timeDiff > 2 * 60 * 1000) return
   }
 
-  $.ajax({ method: 'POST' }, (err, status, body) => {
+  $.ajax({
+    method: 'POST',
+    data: departureTime === null ? {} : {
+      departureTime: departureTime.toString()
+    }
+  }, (err, status, body) => {
     if (!err && status === 200) {
       $('#departures').innerHTML = body
       htmlData = body
