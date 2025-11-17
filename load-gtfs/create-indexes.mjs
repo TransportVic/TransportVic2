@@ -331,6 +331,20 @@ async function createLiveTimetableIndex(liveTimetables) {
 
   await liveTimetables.createIndex({
     mode: 1,
+    operationDays: 1,
+    'stopTimings.stopGTFSID': 1,
+    'stopTimings.scheduledDepartureTimeMS': 1
+  }, {name: 'live stop scheduled timings index'})
+
+  await liveTimetables.createIndex({
+    mode: 1,
+    operationDays: 1,
+    'stopTimings.stopGTFSID': 1,
+    'stopTimings.actualDepartureTimeMS': 1
+  }, {name: 'live stop actual timings index'})
+
+  await liveTimetables.createIndex({
+    mode: 1,
     'stopTimings.actualDepartureTimeMS': 1,
   }, {name: 'active trip index'})
 

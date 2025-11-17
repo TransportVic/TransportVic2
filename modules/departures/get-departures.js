@@ -26,18 +26,19 @@ async function fetchLiveTrips(station, mode, db, departureTime, timeframe=120) {
     $lte: timeMS + timeoutMS
   }
 
-  let trips = await liveTimetables.findDocuments({
-    mode,
+  const trips = await liveTimetables.findDocuments({
     $or: [{
+      mode,
       stopTimings: {
         $elemMatch: {
           stopGTFSID: {
             $in: stopGTFSIDs
           },
-          actualDepartureTimeMS: timeQuery,
+          actualDepartureTimeMS: timeQuery
         }
       }
     }, {
+      mode,
       stopTimings: {
         $elemMatch: {
           stopGTFSID: {
