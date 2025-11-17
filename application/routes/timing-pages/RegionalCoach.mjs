@@ -19,23 +19,18 @@ async function loadDepartures(req, res) {
 
   let stopHeritageUseDates = await timingUtils.getStopHeritageUseDates(res.db, stop)
 
-  let departures = await getDepartures(stop, res.db)
-  let stopGTFSIDs = stop.bays.map(bay => bay.stopGTFSID)
+  const departureTime = req.body && req.body.departureTime ? new Date(req.body.departureTime) : null
+  let departures = await getDepartures(stop, res.db, departureTime)
 
-  let now = utils.now()
-
+  const blankOld = departureTime - new Date() < 1000 * 60
   departures = (await async.map(departures, async departure => {
-    if (departure.scheduledDepartureTime.diff(now, 'minutes') > 180) return
-
-    departure.pretyTimeToDeparture = utils.prettyTime(departure.actualDepartureTime, true, false)
+    departure.pretyTimeToDeparture = utils.prettyTime(departure.actualDepartureTime, true, blankOld)
     departure.headwayDevianceClass = 'unknown'
 
-    let currentStop = departure.trip.stopTimings.find(tripStop => stopGTFSIDs.includes(tripStop.stopGTFSID))
-    let {stopGTFSID} = currentStop
-
+    const currentStop = departure.currentStop
     departure.tripURL = `/coach/run/${utils.encodeName(departure.trip.origin)}/${departure.trip.departureTime}/`
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`
-      + `${departure.departureDay}/#stop-${stopGTFSID}`
+      + `${departure.departureDay}/#stop-${currentStop.stopGTFSID}`
 
     let destinationStopTiming = departure.trip.stopTimings.slice(-1)[0]
     let destinationStop = await stops.findDocument({

@@ -152,7 +152,7 @@ $.ready(() => {
 
   const hasCombinedPicker = navigator.userAgent.includes('Chrome') || (navigator.userAgent.includes('Mobile') && navigator.userAgent.includes('Safari'))
   const clock = $('#clock')
-  if (hasCombinedPicker) {
+  if (hasCombinedPicker && clock) {
     const timePicker = $('#departureDateTime')
     clock.on('click', () => {
       timePicker.showPicker()
@@ -168,7 +168,7 @@ $.ready(() => {
     const timePicker = $('#departureTime')
 
     const now = new Date()
-    datePicker.value = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${(now.getDate() + 1).toString().padStart(2, '0')}`
+    datePicker.value = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${(now.getDate()).toString().padStart(2, '0')}`
     timePicker.value = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`
 
     let dropdownOpen = false
@@ -203,7 +203,7 @@ $.ready(() => {
           const [ year, month, day ] = departureDateParts.slice(1).map(v => parseInt(v))
           const [ hours, minutes ] = departureTimeParts.slice(1).map(v => parseInt(v))
 
-          departureTime = new Date(year, month - 1, day - 1, hours, minutes)
+          departureTime = new Date(year, month - 1, day, hours, minutes)
           cleanup()
           updateBody()
         }

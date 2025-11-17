@@ -15,12 +15,14 @@ async function loadDepartures(req, res) {
   }
 
   let stopHeritageUseDates = await timingUtils.getStopHeritageUseDates(res.db, station)
-
-  let departures = await getDepartures(station, res.db)
   let stopGTFSIDs = station.bays.map(bay => bay.stopGTFSID)
 
+  const departureTime = req.body && req.body.departureTime ? new Date(req.body.departureTime) : null
+  let departures = await getDepartures(station, res.db, departureTime)
+
+  const blankOld = departureTime - new Date() < 1000 * 60
   departures = departures.map(departure => {
-    departure.pretyTimeToDeparture = utils.prettyTime(departure.actualDepartureTime, true, false)
+    departure.pretyTimeToDeparture = utils.prettyTime(departure.actualDepartureTime, true, blankOld)
     departure.headwayDevianceClass = utils.findHeadwayDeviance(departure.scheduledDepartureTime, departure.estimatedDepartureTime, {
       early: 1,
       late: 5
@@ -30,14 +32,12 @@ async function loadDepartures(req, res) {
     if (stationName === 'Southern Cross Railway Station' && departure.isRailReplacementBus)
       stationName = 'Southern Cross Coach Terminal/Spencer Street'
 
-    let currentStation = departure.trip.stopTimings.find(tripStop => tripStop.stopName === stationName || stopGTFSIDs.includes(tripStop.stopGTFSID))
-    let { stopGTFSID } = currentStation
-
+    const currentStation = departure.currentStop
     departure.displayDestination = departure.isRailReplacementBus ? departure.destination : (departure.trip.stopTimings.findLast(stop => !stop.cancelled)?.stopName || departure.trip.destination).slice(0, -16)
 
     departure.tripURL = `/${departure.isRailReplacementBus ? 'coach' : 'vline'}/run/${utils.encodeName(departure.trip.origin)}/${departure.trip.departureTime}/`
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`
-      + `${departure.departureDay}/#stop-${stopGTFSID}`
+      + `${departure.departureDay}/#stop-${currentStation.stopGTFSID}`
 
     return departure
   })
