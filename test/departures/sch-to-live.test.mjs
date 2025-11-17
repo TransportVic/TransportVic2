@@ -19,6 +19,7 @@ describe('The convertToLive function', () => {
 
     expect(trip.stopTimings[6].stopName).to.equal('Camberwell Railway Station')
     expect(trip.stopTimings[6].scheduledDepartureTime).to.equal('2025-03-28T22:19:00.000Z')
+    expect(trip.stopTimings[6].scheduledDepartureTimeMS).to.equal(+new Date('2025-03-28T22:19:00.000Z'))
   })
 
   it('Should account for a DST repeated 2am and add an extra hour', async () => {

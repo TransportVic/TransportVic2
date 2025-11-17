@@ -112,6 +112,7 @@ export class TimetableStop {
       departureTimeMinutes: this.departureTimeMinutes,
       estimatedDepartureTime: this.#estDepartureTime ? this.estimatedDepartureTime.toISOString() : null,
       scheduledDepartureTime: this.scheduledDepartureTime.toISOString(),
+      scheduledDepartureTimeMS: +this.scheduledDepartureTime,
       actualDepartureTimeMS: +this.actualDepartureTime,
       platform: this.#platform,
       cancelled: this.#cancelled,

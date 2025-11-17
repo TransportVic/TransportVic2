@@ -118,6 +118,7 @@ describe('The LiveTimetable class', () => {
 
     expect(dbObj.stopTimings[0].estimatedDepartureTime).to.equal('2025-04-09T18:03:40.000Z')
     expect(dbObj.stopTimings[0].scheduledDepartureTime).to.equal('2025-04-09T18:04:00.000Z')
+    expect(dbObj.stopTimings[0].scheduledDepartureTimeMS).to.equal(+new Date('2025-04-09T18:04:00.000Z'))
     expect(dbObj.stopTimings[0].actualDepartureTimeMS).to.equal(+new Date('2025-04-09T18:03:40.000Z'))
     expect(dbObj.stopTimings[0].platform).to.equal('1')
     expect(dbObj.stopTimings[0].cancelled).to.be.false
