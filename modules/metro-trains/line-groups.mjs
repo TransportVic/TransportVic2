@@ -54,3 +54,15 @@ export const METRO_TUNNEL_GROUP_WEST = [
 ]
 
 export const METRO_TUNNEL_GROUP = METRO_TUNNEL_GROUP_EAST.concat(METRO_TUNNEL_GROUP_WEST)
+
+export const CROSS_CITY_GROUP_EAST = [
+  'Frankston',
+  'Sandringham'
+]
+
+export const CROSS_CITY_GROUP_WEST = [
+  'Werribee',
+  'Williamstown'
+]
+
+export const CROSS_CITY_GROUP = CROSS_CITY_GROUP_EAST.concat(CROSS_CITY_GROUP_WEST)

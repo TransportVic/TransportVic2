@@ -19,16 +19,17 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime,
     let hasALT = trip.stopTimings.some(stop => stop.stopName === 'Altona Railway Station')
 
     let origin, trueOrigin, destination, trueDestination
+    let isUpTrain = trip.direction === 'Up'
 
     trueOrigin = trip.stopTimings.find(stop => !stop.additional).stopName.slice(0, -16)
     trueDestination = trip.stopTimings.findLast(stop => !stop.additional).stopName.slice(0, -16)
-    if (!isWithinCityLoop && trueDestination === 'Flinders Street' && trip.direction === 'Up' && !!par) trueDestination = 'City Loop'
+    if (!isWithinCityLoop && trueDestination === 'Flinders Street' && isUpTrain && !!par) trueDestination = 'City Loop'
 
     let updatedOrigin = trip.stopTimings.find(stop => !stop.cancelled).stopName.slice(0, -16)
     let destinationStop = trip.stopTimings.findLast(stop => !stop.cancelled)
     let updatedDestination = destinationStop.stopName.slice(0, -16)
 
-    if (!isWithinCityLoop && updatedDestination === 'Flinders Street' && trip.direction === 'Up' && !!par && !par.cancelled) updatedDestination = 'City Loop'
+    if (!isWithinCityLoop && updatedDestination === 'Flinders Street' && isUpTrain && !!par && !par.cancelled) updatedDestination = 'City Loop'
     if (!departure.isArrival && destinationStop === currentStop) departure.cancelled = (currentStop.cancelled = true) // Rest of the trip is cancelled so this stop is also cancelled
 
     // If current stop is cancelled but the trip is still running, show the original details
@@ -46,7 +47,7 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime,
     else destination = trueDestination
 
     let futureStops = departure.futureStops.map(stop => stop.slice(0, -16))
-    let tripHasCityLoop = (NORTHERN_GROUP.includes(trip.routeName) ? isWithinCityLoop && !isSSS : isWithinCityLoop)
+    let isNorthernTrain = NORTHERN_GROUP.includes(trip.routeName)
 
     let {
       shouldShowForming,
@@ -54,7 +55,7 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime,
       formingRunID,
       formingTrip,
       formingType
-    } = await getFormingTrip(trip, departure.isArrival, tripHasCityLoop, liveTimetables)
+    } = await getFormingTrip(trip, departure.isArrival, isWithinCityLoop, isSSS, liveTimetables)
 
     let futureFormingStops = null
     if (formingTrip && shouldShowForming) {

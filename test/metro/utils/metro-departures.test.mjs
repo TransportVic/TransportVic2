@@ -13,6 +13,8 @@ import ephTrips from '../../departures/sample-data/eph-clp-forming.json' with { 
 import pkmStops from '../tracker/sample-data/pkm-stops-db.json' with { type: 'json' }
 import getDepartures from '../../../modules/metro-trains/get-departures.js'
 import sssTurnbackTrips from './sample-data/sss-turnback-trips.mjs'
+import utils from '../../../utils.js'
+import northernSSSForming from './sample-data/northern-sss-forming.mjs'
 
 let clone = o => JSON.parse(JSON.stringify(o))
 
@@ -270,21 +272,42 @@ describe('The metro departures class', () => {
     ])
   })
 
-  it('Should only return the next trip\'s data if it is a down trip', async () => {
-    let db = new LokiDatabaseConnection()
+  it('Returns the next trip\'s data for northern trains at Southern Cross going via the loop on the next trip', async () => {
+    const db = new LokiDatabaseConnection()
     db.connect()
 
-    let stops = await db.createCollection('stops')
+    const stops = await db.createCollection('stops')
     await stops.createDocuments(clone(pkmStops))
-    let trips = clone(ephTrips)
-    let loopStops = trips[0].stopTimings.splice(2, 4).reverse()
+    await (await db.createCollection('live timetables')).createDocuments(clone(northernSSSForming))
+
+    const sss = await stops.findDocument({ stopName: "Southern Cross Railway Station" })
+    const departures = await getDepartures(sss, db, null, null, new Date('2025-11-17T06:16:22.863Z'))
+
+    expect(departures[0].runID).to.equal('5028')
+    expect(departures[0].platform).to.equal('11')
+
+    expect(departures[0].routeName).to.equal('Craigieburn')
+    expect(departures[0].destination).to.equal('Flinders Street')
+    expect(departures[0].formingDestination).to.equal('Craigieburn')
+    expect(departures[0].formingRunID).to.equal('5847')
+  })
+
+  it('Should only return the next trip\'s data if it is a down trip', async () => {
+    const db = new LokiDatabaseConnection()
+    const stops = await db.createCollection('stops')
+    await stops.createDocuments(clone(pkmStops))
+    
+    // Have a down trip in the city loop, forming an up trip on the return to the city
+    // FSS CLP RMD EPH, then EPH RMD FSS
+    const trips = clone(ephTrips)
+    const loopStops = trips[0].stopTimings.splice(2, 4).reverse()
     trips[1].stopTimings.splice(1, 0, ...loopStops)
     trips[1].forming = trips[0].runID
 
     await (await db.createCollection('live timetables')).createDocuments(trips)
 
-    let par = await stops.findDocument({ stopName: "Parliament Railway Station" })
-    let departures = await getDepartures(par, db, null, null, new Date('2025-06-10T19:14:00.000Z'))
+    const par = await stops.findDocument({ stopName: "Parliament Railway Station" })
+    const departures = await getDepartures(par, db, null, null, new Date('2025-06-10T19:14:00.000Z'))
 
     expect(departures[0].runID).to.equal('C005')
     expect(departures[0].platform).to.equal('2')
@@ -461,7 +484,7 @@ describe('The metro departures class', () => {
     await stops.createDocuments(clone(pkmStops))
     await liveTimetables.createDocuments(clone(sssTurnbackTrips))
 
-    const sss = stops.findDocument({ stopName: /Southern Cross/ })
+    const sss = stops.findDocument({ stopName: "Southern Cross Railway Station" })
 
     const departures = await getDepartures(sss, db, null, null, new Date('2025-09-06T12:29:00.000Z'))
 
