@@ -352,8 +352,8 @@ describe('The metro departures class', () => {
     await stops.createDocuments(clone(pkmStops))
     await (await db.createCollection('live timetables')).createDocuments(clone(ccyTrips))
 
-    let par = await stops.findDocument({ stopName: "South Yarra Railway Station" })
-    let departures = await getDepartures(par, db, null, null, new Date('2025-06-11T07:49:00.000Z'))
+    let syr = await stops.findDocument({ stopName: "South Yarra Railway Station" })
+    let departures = await getDepartures(syr, db, null, null, new Date('2025-06-11T07:49:00.000Z'))
 
     expect(departures[0].runID).to.equal('4444')
     expect(departures[0].platform).to.equal('3')
@@ -370,6 +370,29 @@ describe('The metro departures class', () => {
       'Southern Cross',
       'Williamstown'
     ])
+  })
+
+  it('Should return the next trip\'s data for cross city runs at SSS (Eastbound)', async () => {
+    const db = new LokiDatabaseConnection()
+    const stops = await db.createCollection('stops')
+    await stops.createDocuments(clone(pkmStops))
+    const tripData = clone(ccyTrips)
+
+    tripData[0].stopTimings.reverse()
+    tripData[0].destination = 'Frankston Railway Station'
+    tripData[1].stopTimings.reverse()
+    tripData[1].forming = tripData[0].runID
+    await (await db.createCollection('live timetables')).createDocuments(tripData)
+
+    const sss = await stops.findDocument({ stopName: "Southern Cross Railway Station" })
+    const departures = await getDepartures(sss, db, null, null, new Date('2025-06-11T07:49:00.000Z'))
+
+    expect(departures[0].runID).to.equal('6385')
+    expect(departures[0].destination).to.equal('Flinders Street')
+
+    expect(departures[0].routeName).to.equal('Williamstown')
+    expect(departures[0].formingDestination).to.equal('Frankston')
+    expect(departures[0].formingRunID).to.equal('4444')
   })
 
   it('Should return the next trip\'s data for metro tunnel runs', async () => {

@@ -64,7 +64,7 @@ async function getFormingTrip(trip, isArrival, isWithinCityLoop, isSSS, liveTime
     returnedFormingTrip = formingTrip
 
     if ((isCrossCityTrip || (isMetroTunnelTrip && !upTripInCityLoop)) && returnedFormingTrip) shouldShowForming = tripCrossesCity(trip, returnedFormingTrip)
-    if (returnedFormingTrip && isNorthernTrip && upTripInCityLoop && isSSS) shouldShowForming = nextTripHasLoop(returnedFormingTrip)
+    else if (returnedFormingTrip && isNorthernTrip && upTripInCityLoop && isSSS) shouldShowForming = nextTripHasLoop(returnedFormingTrip)
 
     const applyForming = returnedFormingTrip
       && shouldShowForming
