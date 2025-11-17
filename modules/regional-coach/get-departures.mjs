@@ -1,4 +1,4 @@
-import { getDepartures } from '../departures/get-departures.js'
+import { getDepartures } from '../departures/get-departures.mjs'
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 import destinationOverrides from '../../additional-data/coach-stops.js'
 import utils from '../../utils.js'

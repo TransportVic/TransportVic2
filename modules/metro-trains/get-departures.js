@@ -1,5 +1,5 @@
 const utils = require('../../utils.js')
-const { getDepartures } = require('../departures/get-departures.js')
+const { getDepartures } = require('../departures/get-departures.mjs')
 const { getFormingTrip } = require('./get-forming-trip.js')
 const { NORTHERN_GROUP, CITY_LOOP } = require('./line-groups.mjs')
 
