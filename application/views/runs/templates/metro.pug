@@ -69,7 +69,7 @@ div.timing-list
     if tripLateStart
       for stop in trip.stopTimings.slice(0, firstNonAMEX)
         +stopRow(stop)
-      +infoTextRow(`Prior stops from ${trip.destination.slice(0, -16)} cancelled`)
+      +infoTextRow(`Prior stops from ${trip.origin.slice(0, -16)} cancelled`)
 
     for stop in trip.stopTimings.slice(firstNonAMEX, lastNonAMEX + 1)
       +stopRow(stop)
