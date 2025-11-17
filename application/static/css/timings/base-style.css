@@ -4,6 +4,10 @@
   cursor: pointer;
 }
 
+#clock-label {
+  height: calc(2.1vw + 2.1vh);
+}
+
 #clockDropdown::before {
   content: " ";
   display: block;
@@ -59,6 +63,8 @@
   border: 0;
   padding: 0;
   background: none;
+  position: absolute;
+  opacity: 0;
 }
 
 #mapIcon {

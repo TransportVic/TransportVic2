@@ -31,8 +31,9 @@ block title
   
 block header-right
   if currentMode === 'bus'
-    img#clock(src=`${staticBase}/static/images/decals/clock.svg` alt='change departure time')
-    input#departureDateTime(type="datetime-local")
+    label#clock-label(for='departureDateTime')
+      img#clock(src=`${staticBase}/static/images/decals/clock.svg` alt='change departure time' tabindex='1')
+    input#departureDateTime(type="datetime-local" tabindex="-1")
     div#clockDropdown
       div
         input#departureDate(type="date")

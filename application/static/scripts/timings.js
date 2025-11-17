@@ -152,14 +152,15 @@ $.ready(() => {
 
   const hasCombinedPicker = navigator.userAgent.includes('Chrome') || (navigator.userAgent.includes('Mobile') && navigator.userAgent.includes('Safari'))
   const clock = $('#clock')
+  const dateTimePicker = $('#departureDateTime')
   if (hasCombinedPicker && clock) {
-    const timePicker = $('#departureDateTime')
-    clock.on('click', () => {
-      timePicker.showPicker()
+    clock.on('click', dateTimePicker.showPicker)
+    clock.on('keypress', e => {
+      if (e.key === 'Enter') dateTimePicker.showPicker()
     })
 
-    timePicker.on('change', () => {
-      departureTime = new Date(timePicker.value)
+    dateTimePicker.on('change', () => {
+      departureTime = new Date(dateTimePicker.value)
       updateBody()
     })
   } else {
@@ -167,12 +168,14 @@ $.ready(() => {
     const datePicker = $('#departureDate')
     const timePicker = $('#departureTime')
 
+    dateTimePicker.style.display = 'none'
+
     const now = new Date()
     datePicker.value = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${(now.getDate()).toString().padStart(2, '0')}`
     timePicker.value = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`
 
     let dropdownOpen = false
-    clock.on('click', () => {
+    const openClock = () => {
       if (dropdownOpen) return
       dropdown.classList.add('showing')
       dropdownOpen = true
@@ -217,6 +220,11 @@ $.ready(() => {
           for (const [target, type, fn] of listeners) $(target).removeEventListener(type, fn)
         }
       }, 10)
+    }
+
+    clock.on('click', openClock)
+    clock.on('keypress', e => {
+      if (e.key === 'Enter') openClock()
     })
   }
 
