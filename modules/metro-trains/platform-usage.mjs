@@ -1,5 +1,5 @@
 import utils from '../../utils.js'
-import getMetroDepartures from './get-departures.js'
+import getMetroDepartures from './get-departures.mjs'
 
 export async function getPlatformUsage(db, station, time) {
   let startTime = utils.parseTime(time).add(-30, 'minutes')

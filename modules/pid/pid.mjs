@@ -1,4 +1,4 @@
-import getMetroDepartures from '../metro-trains/get-departures.js'
+import getMetroDepartures from '../metro-trains/get-departures.mjs'
 import { ALTONA_LOOP, CITY_LOOP, METRO_TUNNEL_GROUP, MTP_STOPS, MURL, NON_MTP_STOPS, NORTHERN_GROUP, NPT_LAV_MAINLINE } from '../metro-trains/line-groups.mjs'
 import getLineStops from './route-stops.mjs'
 

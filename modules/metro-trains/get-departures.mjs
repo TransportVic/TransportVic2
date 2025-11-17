@@ -1,20 +1,27 @@
-const utils = require('../../utils.js')
-const { getDepartures } = require('../departures/get-departures.mjs')
-const { getFormingTrip } = require('./get-forming-trip.js')
-const { NORTHERN_GROUP, CITY_LOOP } = require('./line-groups.mjs')
+import utils from '../../utils.js'
+import Departures, { getDepartures } from '../departures/get-departures.mjs'
+import { getFormingTrip } from './get-forming-trip.js'
+import { NORTHERN_GROUP, CITY_LOOP } from './line-groups.mjs'
 
-async function getMetroDepartures(station, db, filter, backwards, departureTime, { mode = 'metro train', returnArrivals = false, timeframe = 120 } = {}) {
-  let departures = await getDepartures(station, mode, db, {
+export class MetroDepartures extends Departures {
+
+  static async fetchScheduledTrips(station, mode, db, departureTime, timeframe = 120) {
+    const trips = await super.fetchScheduledTrips(station, mode, db, departureTime, timeframe)
+
+    const hasMetroRRB = trips.some(trip => trip.isRailReplacementBus && trip.isMTMRailTrip)
+    if (hasMetroRRB) {
+      return trips.filter(trip => !trip.isRailReplacementBus || trip.isMTMRailTrip)
+    }
+    return trips
+  }
+
+}
+
+export default async function getMetroDepartures(station, db, filter, backwards, departureTime, { mode = 'metro train', returnArrivals = false, timeframe = 120 } = {}) {
+  let departures = await MetroDepartures.getDepartures(station, mode, db, {
     departureTime,
     returnArrivals,
-    timeframe,
-    gtfsFilter: trips => {
-      let hasMetroRRB = trips.some(trip => trip.isRailReplacementBus && trip.isMTMRailTrip)
-      if (hasMetroRRB) {
-        return trips.filter(trip => !trip.isRailReplacementBus || trip.isMTMRailTrip)
-      }
-      return trips
-    }
+    timeframe
   })
 
   let liveTimetables = db.getCollection('live timetables')
@@ -105,5 +112,3 @@ async function getMetroDepartures(station, db, filter, backwards, departureTime,
 
   return outputDepartures
 }
-
-module.exports = getMetroDepartures

@@ -55,9 +55,7 @@ export default class Departures {
     return trips
   }
 
-  static async fetchScheduledTrips(station, mode, db, departureTime, timeframe = 120, {
-    gtfsFilter = i => i
-  } = {}) {
+  static async fetchScheduledTrips(station, mode, db, departureTime, timeframe = 120) {
     let gtfsTimetables = db.getCollection('gtfs timetables')
     let stopGTFSIDs = station.bays
       .filter(bay => bay.mode === mode)
@@ -98,7 +96,7 @@ export default class Departures {
       trips.push(...dayTrips.map(trip => convertToLive(trip, operationDay)))
     }
 
-    return await gtfsFilter(trips)
+    return trips
   }
 
   static getLiveTimetableCutoff() {
@@ -112,8 +110,7 @@ export default class Departures {
 
   static async getCombinedDepartures(station, mode, db, {
     departureTime = null,
-    timeframe = 120,
-    gtfsFilter
+    timeframe = 120
   } = {}) {
     departureTime = departureTime ? utils.parseTime(departureTime) : utils.now()
 
@@ -121,7 +118,7 @@ export default class Departures {
     let liveTrips = await this.fetchLiveTrips(station, mode, db, departureTime, timeframe)
 
     if (useLive) departures = liveTrips
-    else departures = await this.fetchScheduledTrips(station, mode, db, departureTime, timeframe, { gtfsFilter })
+    else departures = await this.fetchScheduledTrips(station, mode, db, departureTime, timeframe)
 
     if (!useLive && liveTrips.length) {
       for (let liveTrip of liveTrips) {
@@ -149,7 +146,7 @@ export default class Departures {
       let ptDayStart = this.getLiveTimetableCutoff()
       let remainingMinutes = departureEndTime.diff(ptDayStart, 'minutes')
 
-      let missingTrips = await this.fetchScheduledTrips(station, mode, db, ptDayStart, remainingMinutes, { gtfsFilter })
+      let missingTrips = await this.fetchScheduledTrips(station, mode, db, ptDayStart, remainingMinutes)
       departures.push(...missingTrips)
     }
 
@@ -159,13 +156,12 @@ export default class Departures {
   static async getDepartures(station, mode, db, {
     departureTime = null,
     timeframe = 120,
-    returnArrivals = false,
-    gtfsFilter
+    returnArrivals = false
   } = {}) {
     let stopGTFSIDs = station.bays.map(stop => stop.stopGTFSID)
     departureTime = departureTime ? utils.parseTime(departureTime) : utils.now()
 
-    let combinedDepartures = await this.getCombinedDepartures(station, mode, db, { departureTime, timeframe, gtfsFilter })
+    let combinedDepartures = await this.getCombinedDepartures(station, mode, db, { departureTime, timeframe })
     let departures = []
 
     for (let trip of combinedDepartures) {
