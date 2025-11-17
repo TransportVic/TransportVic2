@@ -154,7 +154,7 @@ $.ready(() => {
   const clock = $('#clock')
   const dateTimePicker = $('#departureDateTime')
   if (hasCombinedPicker && clock) {
-    clock.on('click', dateTimePicker.showPicker)
+    clock.on('click', () => dateTimePicker.showPicker())
     clock.on('keypress', e => {
       if (e.key === 'Enter') dateTimePicker.showPicker()
     })
