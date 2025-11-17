@@ -155,11 +155,18 @@ $.ready(() => {
 
     timePicker.on('change', () => {
       departureTime = new Date(timePicker.value)
+      updateBody()
     })
   } else {
     const dropdown = $('#clockDropdown')
-    let dropdownOpen = false
+    const datePicker = $('#departureDate')
+    const timePicker = $('#departureTime')
 
+    const now = new Date()
+    datePicker.value = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${(now.getDate() + 1).toString().padStart(2, '0')}`
+    timePicker.value = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`
+
+    let dropdownOpen = false
     clock.on('click', () => {
       if (dropdownOpen) return
       dropdown.classList.add('showing')
@@ -182,7 +189,21 @@ $.ready(() => {
           if (e.key === 'Escape') cleanup()
         }
 
-        const listeners = [ ['body', 'click', bodyClick], ['body', 'keydown', escape] ]
+        const update = () => {
+          const departureDateParts = datePicker.value.match(/^(\d+)-(\d+)-(\d+)$/)
+          const departureTimeParts = timePicker.value.match(/^(\d+):(\d+)$/)
+
+          if (!departureDateParts || !departureTimeParts) return
+
+          const [ year, month, day ] = departureDateParts.slice(1).map(v => parseInt(v))
+          const [ hours, minutes ] = departureTimeParts.slice(1).map(v => parseInt(v))
+
+          departureTime = new Date(year, month - 1, day - 1, hours, minutes)
+          cleanup()
+          updateBody()
+        }
+
+        const listeners = [ ['body', 'click', bodyClick], ['body', 'keydown', escape], ['#confirmTime', 'click', update] ]
         for (const [target, type, fn] of listeners) $(target).on(type, fn)
 
         const cleanup = () => {
