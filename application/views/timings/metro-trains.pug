@@ -17,6 +17,7 @@ block head
 
   link(rel='preload' as='style' href=`${staticBase}/static/css/combined-colours.css`)
   link(rel='preload' as='style' href=`${staticBase}/static/css/timings/base-style.css`)
+  link(rel='preload' as='style' href=`${staticBase}/static/css/timings/alerts.css`)
   
 
 block title
@@ -42,6 +43,7 @@ append style
   link(rel='stylesheet' href=`${staticBase}/static/css/site-colours.css`)
   link(rel='stylesheet' href=`${staticBase}/static/css/combined-colours.css`)
   link(rel='stylesheet' href=`${staticBase}/static/css/timings/base-style.css`)
+  link(rel='stylesheet' href=`${staticBase}/static/css/timings/alerts.css`)
 
 append content
   - let currentMode = 'metro train'

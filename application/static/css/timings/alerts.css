@@ -1,0 +1,67 @@
+i.alertStatus.service {
+  background-color: #D3ECF4;
+}
+
+i.alertStatus.minor {
+  background-color: #E87800;
+}
+
+i.alertStatus.major {
+  background-color: #EF4135;
+}
+
+i.alertStatus.suspended {
+  background-color: #3D3D3D;
+  border: 0.15rem solid #a6a6a6;
+  box-sizing: border-box;
+}
+
+i.alertStatus.works {
+  background-color: #FFD500;
+}
+
+i.alertStatus.travel {
+  background-color: #3199BA;
+}
+
+i.alertStatus.cancellation {
+  background-color: #7e547d;
+}
+
+i.alertStatus.general {
+  background-color: #0073CF;
+}
+
+
+div.alerts div.generalAlert {
+  margin-inline: calc(1vw + 1vh);
+}
+
+div.alerts div.generalAlert p.alertHeader {
+  font-size: calc(1.2vw + 1.6vh);
+  margin-block: calc(0.8vw + 0.8vh);
+}
+
+div.alerts div.generalAlert p.alertHeader i.alertStatus {
+  width: calc(1.2vw + 1.6vh);
+  height: calc(1.2vw + 1.6vh);
+
+  display: inline-block;
+  border-radius: calc(1.2vw + 1.6vh);
+
+  vertical-align: middle;
+}
+
+div.alerts div.generalAlert p.alertHeader span {
+  vertical-align: middle;
+  margin-inline-start: calc(0.4vw + 0.4vh);
+}
+
+div.alerts div.generalAlert div.alertText {
+  font-size: calc(1vw + 1.3vh);
+}
+
+div.alerts div.generalAlert div.alertText > * {
+  margin-block-start: 0;
+  margin-block-end: calc(0.5vw + 0.7vh);
+}

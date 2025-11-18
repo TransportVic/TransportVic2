@@ -2,7 +2,7 @@ import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 
 const { TRANSIT_MODES } = GTFS_CONSTANTS
 
-const isStationLevel = alert => alert.type === 'works' || alert.type === 'suspended'
+const isStationLevel = alert => alert.type === 'works' || alert.type === 'suspended' || alert.type === 'general'
 const isIndividual = alert => alert.type === 'service'
 const isSuspended = alert => alert.type === 'suspended'
 
