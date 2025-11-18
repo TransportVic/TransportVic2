@@ -223,7 +223,7 @@ export default class TripUpdater {
         continue
       }
 
-      let { stopData, updatedData } = await this.getBaseStopUpdateData(db, stop)
+      let { stopData, platformBay, updatedData } = await this.getBaseStopUpdateData(db, stop)
       if (!stopData) {
         err('Failed to update stop ' + JSON.stringify(trip), stop)
         continue
@@ -242,7 +242,7 @@ export default class TripUpdater {
       if (stop.estimatedArrivalTime) updatedData.estimatedArrivalTime = stop.estimatedArrivalTime.toISOString()
 
       let matchingCriteria = this.requireStrictTimingMatch(trip) ? { prefSchTime: stop.scheduledDepartureTime.toISOString() } : { visitNum: stopVisits[stop.stopName] }
-      timetable.updateStopByName(stopData.stopName, updatedData, matchingCriteria)
+      timetable.updateStopByName(platformBay.fullStopName, updatedData, matchingCriteria)
     }
 
     if (propagateDelay) {
@@ -389,7 +389,7 @@ export default class TripUpdater {
     if (!trip.stops || !trip.stops.length) return null
 
     for (let stop of trip.stops) {
-      let { stopData, updatedData } = await this.getBaseStopUpdateData(db, stop)
+      let { stopData, platformBay, updatedData } = await this.getBaseStopUpdateData(db, stop)
 
       if (!stopData) {
         console.log('Could not map stop', stop)
@@ -409,7 +409,7 @@ export default class TripUpdater {
       if (stop.estimatedDepartureTime) updatedData.estimatedDepartureTime = stop.estimatedDepartureTime.toISOString()
 
       let matchingCriteria = this.requireStrictTimingMatch(trip) ? { prefSchTime: stop.scheduledDepartureTime.toISOString() } : { visitNum: stopVisits[stop.stopName] }
-      timetable.updateStopByName(stopData.stopName, updatedData, matchingCriteria)
+      timetable.updateStopByName(platformBay.fullStopName, updatedData, matchingCriteria)
     }
 
     return timetable
