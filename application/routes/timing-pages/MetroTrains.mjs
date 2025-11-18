@@ -2,7 +2,7 @@ import express from 'express'
 import getDepartures from '../../../modules/metro-trains/get-departures.mjs'
 import utils from '../../../utils.js'
 import timingUtils from './timing-utils.js'
-import { getStationAlerts, shouldShowDelays } from '../../../modules/metro-trains/metro-notify.mjs'
+import { getImportantDelays, getStationAlerts, shouldShowDelays } from '../../../modules/metro-trains/metro-notify.mjs'
 
 const router = new express.Router()
 
@@ -22,7 +22,6 @@ async function loadDepartures(req, res) {
   const departureTime = req.body && req.body.departureTime ? new Date(req.body.departureTime) : null
   let departures = await getDepartures(station, res.db, false, false, departureTime)
   const notifyAlerts = await getStationAlerts(station, res.db)
-  const showDelayOverview = shouldShowDelays(station)
 
   const blankOld = departureTime - new Date() < 1000 * 60
   departures = departures.map(departure => {
@@ -74,7 +73,7 @@ async function loadDepartures(req, res) {
     placeholder: 'Destination or platform',
     stopHeritageUseDates,
     notifyAlerts,
-    showDelayOverview
+    importantDelays: getImportantDelays(station, notifyAlerts)
   }
 }
 

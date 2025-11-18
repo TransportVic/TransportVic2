@@ -2,7 +2,7 @@
 
 if departures.length
   div.alerts
-    for alert in notifyAlerts.general.concat(showDelayOverview ? notifyAlerts.rawDelays : [])
+    for alert in notifyAlerts.general.concat(importantDelays)
       div.generalAlert
         input(type='checkbox' id=`alert-expansion-${alert.rawAlertID}`)
         label(for=`alert-expansion-${alert.rawAlertID}`)
@@ -77,7 +77,10 @@ if departures.length
         else if departure.delayAlert
           span.broadDepartureInfo.delayAlert
             i(class=`alertStatus ${departure.delayAlert.type}`)
-            span Delays up to !{departure.delayAlert.maxDelay} minutes
+            if departure.delayAlert.maxDelay
+              span Delays up to !{departure.delayAlert.maxDelay} minutes
+            else
+              span #{departure.delayAlert.summary}
         //- else
           
           -
