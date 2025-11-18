@@ -22,7 +22,13 @@ export async function getStationAlerts(station, db) {
 
   const stationLevel = activeAlerts.filter(isStationLevel)
   const individual = activeAlerts.filter(isIndividual)
-  const suspended = Array.from(new Set(activeAlerts.filter(isSuspended).flatMap(alert => alert.routeName)))
+  const suspended = activeAlerts.filter(isSuspended).reduce((acc, alert) => {
+    const summary = alert.text.match(/(Buses replace .+\.)/)
+    if (summary) alert.summary = summary[1]
+    for (const line of alert.routeName) acc[line] = alert
+
+    return acc
+  }, {})
 
   return {
     general: stationLevel,

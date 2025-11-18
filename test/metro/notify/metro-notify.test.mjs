@@ -35,7 +35,9 @@ describe('The metro notify module', () => {
     await dbRoutes.createDocuments(clone(routes))
 
     const { suspended } = await getStationAlerts(await stops.findDocument({ stopName: 'Frankston Railway Station' }), db)
-    expect(suspended).to.deep.equal(['Stony Point'])
+    expect(suspended['Stony Point']).to.exist
+    expect(suspended['Stony Point'].rawAlertID).to.equal('703017')
+    expect(suspended['Stony Point'].summary).to.equal('Buses replace trains between Frankston and Stony Point due to an equipment fault.')
   })
 
   it('Returns a individual train alerts', async () => {
