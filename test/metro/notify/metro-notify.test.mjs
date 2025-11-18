@@ -2,7 +2,7 @@ import { expect } from 'chai'
 import { LokiDatabaseConnection } from '@transportme/database'
 import alerts from './sample-data/alerts.mjs'
 import stations from './sample-data/stations.mjs'
-import { getStationAlerts, simplifySummary } from '../../../modules/metro-trains/metro-notify.mjs'
+import { getDirection, getMaxDelay, getStationAlerts, simplifySummary } from '../../../modules/metro-trains/metro-notify.mjs'
 import routes from './sample-data/routes.mjs'
 
 const clone = o => JSON.parse(JSON.stringify(o))
@@ -56,7 +56,7 @@ describe('The metro notify module', () => {
     expect(suspended['Stony Point'].summary).to.equal('Buses replace trains between Frankston and Stony Point due to an equipment fault.')
   })
 
-  it('Returns a individual train alerts', async () => {
+  it('Returns individual train alerts', async () => {
     const db = new LokiDatabaseConnection()
     const stops = await db.createCollection('stops')
     const dbRoutes = await db.createCollection('routes')
@@ -70,6 +70,86 @@ describe('The metro notify module', () => {
     expect(individual.length).to.equal(1)
     expect(individual[0].runID).to.equal('2637')
     expect(individual[0].summary).to.equal('This service will run direct from Flinders Street to Richmond, not via the City Loop.')
+  })
+
+  it('Returns delay alerts', async () => {
+    const db = new LokiDatabaseConnection()
+    const stops = await db.createCollection('stops')
+    const dbRoutes = await db.createCollection('routes')
+    const metroNotify = await db.createCollection('metro notify')
+    
+    await metroNotify.createDocuments(clone(alerts))
+    await stops.createDocuments(clone(stations))
+    await dbRoutes.createDocuments(clone(routes))
+
+    const { delays } = await getStationAlerts(await stops.findDocument({ stopName: 'Sandown Park Railway Station' }), db)
+
+    expect(delays['Cranbourne']).to.exist
+    expect(delays['Pakenham']).to.exist
+    expect(delays['Cranbourne'].maxDelay).to.equal(10)
+    expect(delays['Cranbourne'].direction).to.null
+  })
+
+  it('Excludes delay alerts tagged on a particular service', async () => {
+    const db = new LokiDatabaseConnection()
+    const stops = await db.createCollection('stops')
+    const dbRoutes = await db.createCollection('routes')
+    const metroNotify = await db.createCollection('metro notify')
+
+    await metroNotify.createDocuments(clone(alerts).filter(alert => alert.rawAlertID === '497756'))
+    await stops.createDocuments(clone(stations))
+    await dbRoutes.createDocuments(clone(routes))
+
+    const { individual, delays } = await getStationAlerts(await stops.findDocument({ stopName: 'Sandown Park Railway Station' }), db)
+
+    expect(delays['Cranbourne']).to.not.exist
+    expect(delays['Pakenham']).to.not.exist
+    expect(individual.length).to.equal(1)
+  })
+
+  it('Extracts the delay time from an alert', () => {
+    expect(
+      getMaxDelay('<p>Trains are on the move with delays up to 30 minutes now clearing after a police request near Coolaroo.</p>')
+    ).to.equal(30)
+
+    expect(
+      getMaxDelay('<p>There may be delays of up to 90 minutes after ambulance attend to an ill passenger at Kooyong.</p>')
+    ).to.equal(90)
+
+    expect(
+      getMaxDelay('<p>Citybound delays 30 minutes and clearing after an earlier operational incident in the Laburnum area.</p>')
+    ).to.equal(30)
+
+    expect(
+      getMaxDelay('<p>Buses replace trains between Diamond Creek and Hurstbridge due to a track fault near Wattle Glen.</p>')
+    ).to.equal(null)
+  })
+
+  it('Extracts the direction from an alert', () => {
+    expect(
+      getDirection('<p>City bound delays up to 20 minutes after a police request in the East Malvern area.</p>')
+    ).to.equal('Up')
+
+    expect(
+      getDirection('<p>Citybound delays 30 minutes and clearing after an earlier operational incident in the Laburnum area.</p>')
+    ).to.equal('Up')
+
+    expect(
+      getDirection('<p>Delays of up to 20 minutes for inbound services and clearing after an earlier police request near the Westall area.</p>')
+    ).to.equal('Up')
+
+    // Both directions
+    expect(
+      getDirection('<p>Citybound delays up to 90 minutes and outbound delays up to 45 minutes between Lilydale and Ringwood due to vandalism in the Mooroolbark area.</p>')
+    ).to.equal(null)
+
+    expect(
+      getDirection('<p>Delays up to 20 minutes for outbound services due to an equipment fault in the Clayton area.</p>')
+    ).to.equal('Down')
+
+    expect(
+      getDirection('<p>There may be out bound delays of up 25 minutes due to an operational incident at North Melbourne.</p>')
+    ).to.equal('Down')
   })
 
   it('Simplifies the alert text', () => {

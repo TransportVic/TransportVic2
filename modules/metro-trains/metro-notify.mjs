@@ -5,6 +5,7 @@ const { TRANSIT_MODES } = GTFS_CONSTANTS
 const isStationLevel = alert => alert.type === 'works' || alert.type === 'suspended' || alert.type === 'general'
 const isIndividual = alert => !!alert.runID
 const isSuspended = alert => alert.type === 'suspended'
+const isDelay = alert => !isIndividual(alert) && (alert.type === 'minor' || alert.type === 'major')
 
 export async function getStationAlerts(station, db) {
   const metroBays = station.bays.filter(bay => bay.mode === TRANSIT_MODES.metroTrain)
@@ -22,20 +23,39 @@ export async function getStationAlerts(station, db) {
 
   const stationLevel = activeAlerts.filter(isStationLevel).map(alert => {
     if (alert.type === 'works') {
-      alert.text = alert.text.replace(/<p>Visit our.+/gm, '').replace(/<p>Plan your.+/gm, '').trim()
+      alert.text = alert.text.replace(/<p>Visit our.+/gm, '').replace(/<p>Plan your.+/gm, '').trim().replaceAll('&#8211;', '-')
     }
     return alert
   })
 
   const individual = activeAlerts.filter(isIndividual).map(alert => {
     const summary = alert.text.match(/<p>(.+)<\/p>/)
-    if (summary) alert.summary = simplifySummary(summary[1])
+    if (summary) alert.summary = simplifySummary(summary[1].replaceAll('&#8211;', '-'))
 
     return alert
   })
+
   const suspended = activeAlerts.filter(isSuspended).reduce((acc, alert) => {
     const summary = alert.text.match(/(Buses replace .+\.)/)
-    if (summary) alert.summary = summary[1]
+    if (summary) alert.summary = summary[1].replaceAll('&#8211;', '-')
+    for (const line of alert.routeName) acc[line] = alert
+
+    return acc
+  }, {})
+
+  const delays = activeAlerts.filter(isDelay).reduce((acc, alert) => {
+    const summaryData = alert.text.match(/<p>(.+)<\/p>/)
+
+    if (summaryData) {
+      const summary = summaryData[1]
+      const maxDelay = getMaxDelay(summary)
+      const direction = getDirection(summary)
+
+      alert.maxDelay = maxDelay
+      alert.direction = direction
+      alert.summary = summary
+    }
+
     for (const line of alert.routeName) acc[line] = alert
 
     return acc
@@ -44,10 +64,27 @@ export async function getStationAlerts(station, db) {
   return {
     general: stationLevel,
     individual,
-    suspended
+    suspended,
+    delays
   }
 }
 
 export function simplifySummary(text) {
   return text.replace(/^The \d+:\d+[ap]m [\w ]+ to [\w ]+(?: service)? (will|has|is|shall|was)/, 'This service $1')
+}
+
+export function getMaxDelay(text) {
+  const parts = text.match(/(\d+) ?min/)
+  return parts ? parseInt(parts[1]) : null
+}
+
+export function getDirection(rawText) {
+  const text = rawText.toLowerCase()
+  const hasUp = text.includes('city bound') || text.includes('citybound') || text.includes('inbound') || text.includes('in bound')
+  const hasDown = text.includes('outbound') || text.includes('out bound')
+
+  if (hasUp && hasDown) return null
+  if (hasUp) return 'Up'
+  if (hasDown) return 'Down'
+  return null
 }

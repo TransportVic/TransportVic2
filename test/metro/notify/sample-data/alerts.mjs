@@ -60,7 +60,8 @@ export default [
     text: '<p>The 10:12pm East Pakenham to Flinders Street service is currently running up to 10 minutes late.</p>',
     runID: 'C086',
     active: true
-  },  {
+  },
+  {
     alertID: '72d38c4c7f771ce8358bce09cfa48cc228b101d7df78117f0a870e775cd6711c',
     rawAlertID: '699573',
     routeName: [ 'Frankston' ],
@@ -73,5 +74,28 @@ export default [
       '<p>Visit our <a href="https://tinyurl.com/ymnc3auj">Planned Works</a> page for more information.</p>\n' +
       '<p>Plan your journey at <strong>transport.vic.gov.au</strong> or call <strong>1800 800 007</strong>.</p>',
     active: true
+  },
+  {
+    alertID: '1e9a3341dde0d79a04c6e3f0ec2d84c9d1a9c192ce29399bab5a107214508f3e',
+    rawAlertID: '703115',
+    routeName: [ 'Cranbourne', 'Frankston', 'Pakenham', 'Sandringham' ],
+    fromDate: 1763463780,
+    toDate: 1763467200,
+    type: 'minor',
+    text: '<p>Delays up to 10 minutes due to an earlier police request in the South Yarra area.</p>\n' +
+      '<p>Check information displays and listen for announcements as services may be altered at short notice.</p>',
+    active: true
+  },
+  {
+    alertID: '497756',
+    rawAlertID: '497756',
+    routeName: [ 'Cranbourne' ],
+    fromDate: 1666527240,
+    toDate: 1666527420,
+    type: 'major',
+    text: '<p>The 10:42pm Flinders Street to Cranbourne service has been delayed by 26 minutes due to congestion near Flinders Street.</p>\n' +
+      '<p>Listen for announcements and check information displays.</p>',
+    active: true,
+    runID: 'C000'
   }
 ]
