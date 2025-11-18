@@ -291,6 +291,26 @@ a.departureInfo span.broadDepartureInfo {
 a.departureInfo span.serviceAlert {
   font-size: calc(1 * var(--width) + 1.0 * var(--height)) !important;
   line-height: calc(1.1 * var(--width) + 1.1 * var(--height)) !important;
+} 
+ 
+a.departureInfo span.delayAlert {
+  font-size: calc(1.1 * var(--width) + 1.1 * var(--height)) !important;
+  color: #e87800 !important;
+}
+
+a.departureInfo span.delayAlert i.alertStatus {
+  width: calc(1.1 * var(--width) + 1.1 * var(--height));
+  height: calc(1.1 * var(--width) + 1.1 * var(--height));
+
+  display: inline-block;
+  border-radius: calc(1.1 * var(--width) + 1.1 * var(--height));
+
+  vertical-align: middle;
+}
+
+a.departureInfo span.delayAlert > span {
+  margin-inline-start: calc(0.4 * var(--width) + 0.4 * var(--height));
+  vertical-align: middle;
 }
 
 a.departureInfo span.important {

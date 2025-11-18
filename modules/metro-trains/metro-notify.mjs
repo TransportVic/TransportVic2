@@ -1,11 +1,12 @@
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
+import { NON_MTP_STOPS } from './line-groups.mjs'
 
 const { TRANSIT_MODES } = GTFS_CONSTANTS
 
 const isStationLevel = alert => alert.type === 'works' || alert.type === 'suspended' || alert.type === 'general'
 const isIndividual = alert => !!alert.runID
 const isSuspended = alert => alert.type === 'suspended'
-const isDelay = alert => !isIndividual(alert) && (alert.type === 'minor' || alert.type === 'major')
+const isDelay = alert => !isIndividual(alert) && (alert.type === 'minor' || alert.type === 'major') 
 
 export async function getStationAlerts(station, db) {
   const metroBays = station.bays.filter(bay => bay.mode === TRANSIT_MODES.metroTrain)
@@ -43,7 +44,8 @@ export async function getStationAlerts(station, db) {
     return acc
   }, {})
 
-  const delays = activeAlerts.filter(isDelay).reduce((acc, alert) => {
+  const rawDelays = activeAlerts.filter(isDelay)
+  const delays = rawDelays.reduce((acc, alert) => {
     const summaryData = alert.text.match(/<p>(.+)<\/p>/)
 
     if (summaryData) {
@@ -65,7 +67,8 @@ export async function getStationAlerts(station, db) {
     general: stationLevel,
     individual,
     suspended,
-    delays
+    delays,
+    rawDelays
   }
 }
 
@@ -87,4 +90,8 @@ export function getDirection(rawText) {
   if (hasUp) return 'Up'
   if (hasDown) return 'Down'
   return null
+}
+
+export function shouldShowDelays(station) {
+  return !NON_MTP_STOPS.includes(station.stopName.slice(0, -16))
 }
