@@ -205,19 +205,19 @@ describe('The GTFSRTrip class', () => {
 
     expect(trip.getTDN()).to.equal('21-201--MF-20')
     expect(trip.getRouteID()).to.equal('4-201')
-    expect(trip.getOperationDay()).to.equal('20251030')
+    expect(trip.getOperationDay()).to.equal('20251029')
 
     const regionalTrip = GTFSRTrip.parse({
       trip_id: 'vic:5910B:_:R:aus._10_59-10B--1-MF1-4361410_20251117',
       route_id: '',
       direction_id: 0,
       start_time: '10:37:00',
-      start_date: '20251117',
+      start_date: '20251118',
       schedule_relationship: 0
     })
 
     expect(regionalTrip.getTDN()).to.equal('59-10B--MF-4361410')
     expect(regionalTrip.getRouteID()).to.equal('4-10B')
-    expect(regionalTrip.getOperationDay()).to.equal('20251117')
+    expect(regionalTrip.getOperationDay()).to.equal('20251118')
   })
 })

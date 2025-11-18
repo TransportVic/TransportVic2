@@ -131,7 +131,7 @@ export class UnscheduledBusGTFSRTrip extends GTFSRTrip {
 
   getTripID() { return this.#tripID }
   getTDN() { return this.#runID }
-  getOperationDay() { return this.#operationDay }
+  // getOperationDay() { return this.#operationDay }
   getRouteID() { return this.#routeID }
 
 }
