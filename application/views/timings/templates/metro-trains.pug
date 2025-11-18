@@ -48,7 +48,14 @@ if departures.length
           let prettyLineName = `${routeName} Line`
           if (routeName === 'City Circle') prettyLineName = routeName
         span.towards #{prettyLineName} towards
-        span.destination #{departure.formingDestination || departure.destination}
+        if departure.formingDestination
+          span.destination #{departure.formingDestination}
+        else if departure.destination !== departure.trueDestination
+            span.destination
+              span.strikethrough #{departure.trueDestination}
+              |  #{departure.destination}
+        else
+          span.destination #{departure.destination}
 
         if departure.suspension
           if departure.cancelled
@@ -57,13 +64,16 @@ if departures.length
             span.broadDepartureInfo.important #{departure.suspension.summary}
         else if departure.cancelled
           if  departure.notifyAlert && departure.notifyAlert.summary
-            span.broadDepartureInfo.important CANCELLED: #{departure.suspension.summary}
+            span.broadDepartureInfo.important CANCELLED: #{departure.notifyAlert.summary}
           else
             span.broadDepartureInfo.important CANCELLED
         else if departure.isRailReplacementBus
           span.broadDepartureInfo.important.clampLine.clamp2 Rail Replacement Bus - Stops #{futureStops.join(', ')}
         else if departure.notifyAlert && departure.notifyAlert.summary
-          span.broadDepartureInfo !{departure.notifyAlert.summary}
+          if departure.notifyAlert.type === 'cancellation'
+            span.broadDepartureInfo.important CANCELLED: !{departure.notifyAlert.summary}
+          else
+            span.broadDepartureInfo.serviceAlert !{departure.notifyAlert.summary}
         //- else
           
           -

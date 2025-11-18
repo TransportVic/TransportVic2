@@ -71,7 +71,7 @@ div.alerts div.generalAlert {
 }
 
 div.alerts div.generalAlert p.alertHeader {
-  font-size: calc(1.2 * var(--width) + 1.6 * var(--height));
+  font-size: calc(1.6 * var(--width) + 1.2 * var(--height));
   margin-block-start: calc(0.5 * var(--width) + 0.7 * var(--height));
   margin-block-end: calc(0.2 * var(--width) + 0.3 * var(--height));
 }
@@ -92,7 +92,7 @@ div.alerts div.generalAlert p.alertHeader span {
 }
 
 div.alerts div.generalAlert div.alertText {
-  font-size: calc(1 * var(--width) + 1.3 * var(--height));
+  font-size: calc(1 * var(--width) + 1.1 * var(--height));
 }
 
 div.alerts div.generalAlert div.alertText > * {
