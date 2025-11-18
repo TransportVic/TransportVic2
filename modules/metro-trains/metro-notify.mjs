@@ -20,7 +20,13 @@ export async function getStationAlerts(station, db) {
     active: true
   }).toArray()
 
-  const stationLevel = activeAlerts.filter(isStationLevel)
+  const stationLevel = activeAlerts.filter(isStationLevel).map(alert => {
+    if (alert.type === 'works') {
+      alert.text = alert.text.replace(/<p>Visit our.+/gm, '').replace(/<p>Plan your.+/gm, '').trim()
+    }
+    return alert
+  })
+
   const individual = activeAlerts.filter(isIndividual).map(alert => {
     const summary = alert.text.match(/<p>(.+)<\/p>/)
     if (summary) alert.summary = simplifySummary(summary[1])

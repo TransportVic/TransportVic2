@@ -24,6 +24,22 @@ describe('The metro notify module', () => {
     expect(general[0].type).to.equal('suspended') 
   })
 
+  it('Removes default plan your journey text from works alerts', async () => {
+    const db = new LokiDatabaseConnection()
+    const stops = await db.createCollection('stops')
+    const dbRoutes = await db.createCollection('routes')
+    const metroNotify = await db.createCollection('metro notify')
+
+    await metroNotify.createDocuments(clone(alerts))
+    await stops.createDocuments(clone(stations))
+    await dbRoutes.createDocuments(clone(routes))
+
+    const { general } = await getStationAlerts(await stops.findDocument({ stopName: 'Sandown Park Railway Station' }), db)
+    expect(general.length).to.equal(1)
+    expect(general[0].rawAlertID).to.equal('702508')
+    expect(general[0].text).to.equal('<p>Buses replace trains between Caulfield and Dandenong from 8:30pm to last train tonight, while maintenance and renewal works take place.</p>') 
+  })
+
   it('Returns a list of suspended lines', async () => {
     const db = new LokiDatabaseConnection()
     const stops = await db.createCollection('stops')

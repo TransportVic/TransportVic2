@@ -708,4 +708,221 @@ export default [{
   screenServices: [],
   cleanName: 'darling-railway-station',
   cleanNames: [ 'darling-railway-station' ]
+}, {
+  stopName: 'Sandown Park Railway Station',
+  suburb: [ 'Springvale' ],
+  cleanSuburbs: [ 'springvale' ],
+  bays: [
+    {
+      originalName: 'Sandown Park Railway Station',
+      fullStopName: 'Sandown Park Railway Station',
+      stopGTFSID: 'vic:rail:SNP',
+      location: { type: 'Point', coordinates: [ 145.16282634, -37.95648655 ] },
+      stopNumber: null,
+      mode: 'metro train',
+      suburb: 'Springvale',
+      services: [
+        { routeGTFSID: '2-CBE', gtfsDirection: 1, routeNumber: null },
+        { routeGTFSID: '2-CBE', gtfsDirection: 0, routeNumber: null },
+        { routeGTFSID: '2-PKM', gtfsDirection: 1, routeNumber: null },
+        { routeGTFSID: '2-PKM', gtfsDirection: 0, routeNumber: null }
+      ],
+      screenServices: [
+        { routeGTFSID: '2-CBE', gtfsDirection: 1, routeNumber: null },
+        { routeGTFSID: '2-CBE', gtfsDirection: 0, routeNumber: null },
+        { routeGTFSID: '2-PKM', gtfsDirection: 1, routeNumber: null },
+        { routeGTFSID: '2-PKM', gtfsDirection: 0, routeNumber: null }
+      ],
+      stopType: 'station',
+      parentStopGTFSID: null
+    },
+    {
+      originalName: 'Sandown Park Station',
+      fullStopName: 'Sandown Park Railway Station',
+      stopGTFSID: '12194',
+      location: { type: 'Point', coordinates: [ 145.16272372, -37.95649396 ] },
+      stopNumber: null,
+      mode: 'metro train',
+      suburb: 'Springvale',
+      services: [],
+      screenServices: [],
+      stopType: 'stop',
+      parentStopGTFSID: 'vic:rail:SNP',
+      platform: '1'
+    },
+    {
+      originalName: 'Sandown Park Station',
+      fullStopName: 'Sandown Park Railway Station',
+      stopGTFSID: '13713',
+      location: { type: 'Point', coordinates: [ 145.16280381, -37.95647719 ] },
+      stopNumber: null,
+      mode: 'metro train',
+      suburb: 'Springvale',
+      services: [],
+      screenServices: [],
+      stopType: 'stop',
+      parentStopGTFSID: 'vic:rail:SNP',
+      platform: '2'
+    },
+    {
+      originalName: 'Sandown Park Railway Station',
+      fullStopName: 'Sandown Park Railway Station',
+      stopGTFSID: '26273',
+      location: { type: 'Point', coordinates: [ 145.16259071, -37.9568073 ] },
+      stopNumber: null,
+      mode: 'metro train',
+      suburb: 'Springvale',
+      services: [],
+      screenServices: [],
+      stopType: 'stop',
+      parentStopGTFSID: 'vic:rail:SNP',
+      platform: 'RRB'
+    },
+    {
+      originalName: 'Sandown Park_Up',
+      fullStopName: 'Sandown Park Railway Station',
+      stopGTFSID: 'RAIL_78146',
+      location: { type: 'Point', coordinates: [ 145.162592, -37.956805 ] },
+      stopNumber: null,
+      mode: 'metro train',
+      suburb: 'Springvale',
+      services: [],
+      screenServices: [],
+      stopType: 'stop',
+      parentStopGTFSID: null
+    },
+    {
+      originalName: 'Sandown Park_Down',
+      fullStopName: 'Sandown Park Railway Station',
+      stopGTFSID: 'RAIL_77903',
+      location: { type: 'Point', coordinates: [ 145.162822, -37.956879 ] },
+      stopNumber: null,
+      mode: 'metro train',
+      suburb: 'Springvale',
+      services: [],
+      screenServices: [],
+      stopType: 'stop',
+      parentStopGTFSID: null
+    },
+    {
+      originalName: 'Sandown Park',
+      fullStopName: 'Sandown Park Railway Station',
+      stopGTFSID: 'RAIL_SNP_Down',
+      location: { type: 'Point', coordinates: [ 145.162822, -37.956879 ] },
+      stopNumber: null,
+      mode: 'metro train',
+      suburb: 'Springvale',
+      services: [
+        { routeGTFSID: '2-RRB', gtfsDirection: 0, routeNumber: null },
+        { routeGTFSID: '2-RRB', gtfsDirection: 0, routeNumber: null },
+        { routeGTFSID: '2-RRB', gtfsDirection: 0, routeNumber: null },
+        { routeGTFSID: '2-RRB', gtfsDirection: 0, routeNumber: null }
+      ],
+      screenServices: [
+        { routeGTFSID: '2-RRB', gtfsDirection: 0, routeNumber: null },
+        { routeGTFSID: '2-RRB', gtfsDirection: 0, routeNumber: null },
+        { routeGTFSID: '2-RRB', gtfsDirection: 0, routeNumber: null },
+        { routeGTFSID: '2-RRB', gtfsDirection: 0, routeNumber: null }
+      ],
+      stopType: 'stop',
+      parentStopGTFSID: null
+    },
+    {
+      originalName: 'Sandown ParkUP',
+      fullStopName: 'Sandown Park Railway Station',
+      stopGTFSID: 'RAIL_SNP_Up',
+      location: { type: 'Point', coordinates: [ 145.1625055, -37.95673625 ] },
+      stopNumber: null,
+      mode: 'metro train',
+      suburb: 'Springvale',
+      services: [
+        { routeGTFSID: '2-RRB', gtfsDirection: 1, routeNumber: null },
+        { routeGTFSID: '2-RRB', gtfsDirection: 1, routeNumber: null },
+        { routeGTFSID: '2-RRB', gtfsDirection: 1, routeNumber: null },
+        { routeGTFSID: '2-RRB', gtfsDirection: 1, routeNumber: null }
+      ],
+      screenServices: [
+        { routeGTFSID: '2-RRB', gtfsDirection: 1, routeNumber: null },
+        { routeGTFSID: '2-RRB', gtfsDirection: 1, routeNumber: null },
+        { routeGTFSID: '2-RRB', gtfsDirection: 1, routeNumber: null },
+        { routeGTFSID: '2-RRB', gtfsDirection: 1, routeNumber: null }
+      ],
+      stopType: 'stop',
+      parentStopGTFSID: null
+    },
+    {
+      originalName: 'Sandown Park_Up',
+      fullStopName: 'Sandown Park Railway Station',
+      stopGTFSID: 'RAIL_donric_78146',
+      location: { type: 'Point', coordinates: [ 145.162592, -37.956805 ] },
+      stopNumber: null,
+      mode: 'metro train',
+      suburb: 'Springvale',
+      services: [],
+      screenServices: [],
+      stopType: 'stop',
+      parentStopGTFSID: null
+    },
+    {
+      originalName: 'Sandown Park_Down',
+      fullStopName: 'Sandown Park Railway Station',
+      stopGTFSID: 'RAIL_donric_77903',
+      location: { type: 'Point', coordinates: [ 145.162822, -37.956879 ] },
+      stopNumber: null,
+      mode: 'metro train',
+      suburb: 'Springvale',
+      services: [],
+      screenServices: [],
+      stopType: 'stop',
+      parentStopGTFSID: null
+    },
+    {
+      originalName: 'Sandown Park',
+      fullStopName: 'Sandown Park Railway Station',
+      stopGTFSID: 'RAIL_donric_SNP_Down',
+      location: { type: 'Point', coordinates: [ 145.162822, -37.956879 ] },
+      stopNumber: null,
+      mode: 'metro train',
+      suburb: 'Springvale',
+      services: [ { routeGTFSID: '2-RRB', gtfsDirection: 0, routeNumber: null } ],
+      screenServices: [ { routeGTFSID: '2-RRB', gtfsDirection: 0, routeNumber: null } ],
+      stopType: 'stop',
+      parentStopGTFSID: null
+    },
+    {
+      originalName: 'Sandown ParkUP',
+      fullStopName: 'Sandown Park Railway Station',
+      stopGTFSID: 'RAIL_donric_SNP_Up',
+      location: { type: 'Point', coordinates: [ 145.1625055, -37.95673625 ] },
+      stopNumber: null,
+      mode: 'metro train',
+      suburb: 'Springvale',
+      services: [ { routeGTFSID: '2-RRB', gtfsDirection: 1, routeNumber: null } ],
+      screenServices: [ { routeGTFSID: '2-RRB', gtfsDirection: 1, routeNumber: null } ],
+      stopType: 'stop',
+      parentStopGTFSID: null
+    }
+  ],
+  location: {
+    type: 'MultiPoint',
+    coordinates: [
+      [ 145.16282634, -37.95648655 ],
+      [ 145.16272372, -37.95649396 ],
+      [ 145.16280381, -37.95647719 ],
+      [ 145.16259071, -37.9568073 ],
+      [ 145.162592, -37.956805 ],
+      [ 145.162822, -37.956879 ],
+      [ 145.162822, -37.956879 ],
+      [ 145.1625055, -37.95673625 ],
+      [ 145.162592, -37.956805 ],
+      [ 145.162822, -37.956879 ],
+      [ 145.162822, -37.956879 ],
+      [ 145.1625055, -37.95673625 ]
+    ]
+  },
+  mergeName: 'Sandown Park Railway Station',
+  services: [],
+  screenServices: [],
+  cleanName: 'sandown-park-railway-station',
+  cleanNames: [ 'sandown-park-railway-station' ]
 }]
