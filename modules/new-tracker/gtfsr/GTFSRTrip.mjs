@@ -116,11 +116,13 @@ export class UnscheduledBusGTFSRTrip extends GTFSRTrip {
 
   constructor(trip) {
     super(trip)
-    const smartrakTripID = trip.trip_id.match(/_(\w+)_(\d+-\w+-\w?-1-\w+-\d+)_(\d+)$/)
-    this.#routeID = `4-${smartrakTripID[1]}`
-    this.#tripID = smartrakTripID[2]
-    this.#runID = SmartrakTrip.getRunIDFromTripID(this.getTripID())
-    this.#operationDay = smartrakTripID[3]
+    const smartrakTripID = trip.trip_id.match(/_\w+_(\d+-\w+-\w?-1-\w+-\d+)_(\d+)$/)
+    const tripID = smartrakTripID[1]
+
+    this.#routeID = `4-${tripID.split('-')[1]}`
+    this.#tripID = tripID
+    this.#runID = SmartrakTrip.getRunIDFromTripID(tripID)
+    this.#operationDay = smartrakTripID[2]
   }
 
   static canProcess(trip) {
