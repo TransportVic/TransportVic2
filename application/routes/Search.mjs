@@ -2,8 +2,14 @@ import express from 'express'
 import escapeRegex from 'escape-regex-string'
 import utils from '../../utils.js'
 import stationCodes from '../../additional-data/station-codes.json' with { type: 'json' }
+import { distance } from 'fastest-levenshtein'
 
 const router = new express.Router()
+
+const addDistance = (arr, query) => arr.map(stop => {
+  stop.distance = distance(stop.stopName.toLowerCase(), query.toLowerCase())
+  return stop
+})
 
 router.get('/', (req, res) => {
   res.render('search/index', { placeholder: 'Station, stop or route' })
@@ -31,28 +37,35 @@ async function prioritySearch(db, query) {
   const searchedWords = queryWords.filter(word => word.length >= 4)
   const shortWords = queryWords.filter(word => word.length < 4)
 
+  const stations = await stops.findDocuments({
+    $and: [
+      ...(searchedWords.map(name => ({ textQuery: name }))),
+      {
+        mergeName: /Railway Station/
+      }
+    ]
+  }).limit(6).toArray()
+
   let priorityStopsByName = (await stops.findDocuments({
     $and: [
       ...(searchedWords.map(name => ({ textQuery: name }))),
-      // {
-      //   textQuery: fullQuery
-      //   $text: {
-      //     $search: fullQuery
-      //   }
-      // }, {
-    {
-    //   $or: possibleStopNames.map(name => ({ mergeName: name }))
-    // }, {
-      $or: [{
-        mergeName: /Shopping Centre/
-      }, {
-        mergeName: /Railway Station/
-      }, {
-        mergeName: /University/
-      }, {
-        mergeName: /Town Centre/
-      }]
-    }]
+      {
+        _id: {
+          $not: {
+            $in: stations.map(s => s._id)
+          }
+        }
+      },
+      {
+        $or: [{
+          mergeName: /Shopping Centre/
+        }, {
+          mergeName: /University/
+        }, {
+          mergeName: /Town Centre/
+        }]
+      }
+    ]
   }).limit(6).toArray()).filter(stop => shortWords.every(word => stop.stopName.toLowerCase().includes(word))).sort((a, b) => a.stopName.length - b.stopName.length)
 
   let gtfsMatch = await stops.findDocuments({
@@ -67,7 +80,7 @@ async function prioritySearch(db, query) {
     }]
   }).toArray()).sort((a, b) => a.stopName.length - b.stopName.length)
 
-  return gtfsMatch.concat(numericalMatchStops).concat(priorityStopsByName)
+  return gtfsMatch.concat(numericalMatchStops).concat(priorityStopsByName).concat(stations)
 }
 
 async function findStops(db, rawQuery) {
@@ -142,7 +155,11 @@ async function findStops(db, rawQuery) {
     }]
   }).limit(15 - prioritySearchResults.length - remainingResults.length).toArray()
 
-  let currentResults = prioritySearchResults.concat(remainingResults).concat(lowPriorityResults)
+  let currentResults = [
+    ...addDistance(prioritySearchResults, rawQuery).sort((a, b) => a.distance - b.distance),
+    ...addDistance(remainingResults, rawQuery).sort((a, b) => a.distance - b.distance),
+    ...lowPriorityResults
+  ]
 
   return currentResults
 }
