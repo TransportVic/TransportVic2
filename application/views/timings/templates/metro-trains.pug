@@ -1,6 +1,11 @@
 - let cityStations = ['Flinders Street', 'Southern Cross', 'Parliament', 'Flagstaff', 'Melbourne Central']
 
 if departures.length
+  for alert in notifyAlerts.general
+    div.generalAlert
+      i(class=`alertStatus ${alert.type}`)
+      p !{alert.text}
+
   for departure in departures
     div.departure
       -
@@ -32,15 +37,22 @@ if departures.length
           if (routeName === 'City Circle') prettyLineName = routeName
         span.towards #{prettyLineName} towards
         span.destination #{departure.formingDestination || departure.destination}
-        
-        - let currentSuspension = departure.suspension
-        if currentSuspension && currentSuspension.disruptionStatus !== 'passed' && !departure.cancelled
-          span.broadDepartureInfo.important Buses replace trains from #{currentSuspension.startStation.slice(0, -16)} to #{currentSuspension.endStation.slice(0, -16)}
+
+        if departure.suspension
+          if departure.cancelled
+            span.broadDepartureInfo.important CANCELLED: #{departure.suspension.summary}
+          else
+            span.broadDepartureInfo.important #{departure.suspension.summary}
         else if departure.cancelled
-          span.broadDepartureInfo.important CANCELLED
+          if  departure.notifyAlert && departure.notifyAlert.summary
+            span.broadDepartureInfo.important CANCELLED: #{departure.suspension.summary}
+          else
+            span.broadDepartureInfo.important CANCELLED
         else if departure.isRailReplacementBus
           span.broadDepartureInfo.important.clampLine.clamp2 Rail Replacement Bus - Stops #{futureStops.join(', ')}
-        else
+        else if departure.notifyAlert && departure.notifyAlert.summary
+          span.broadDepartureInfo !{departure.notifyAlert.summary}
+        //- else
           
           -
             let configText = []

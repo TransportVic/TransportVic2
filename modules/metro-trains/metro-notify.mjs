@@ -21,7 +21,12 @@ export async function getStationAlerts(station, db) {
   }).toArray()
 
   const stationLevel = activeAlerts.filter(isStationLevel)
-  const individual = activeAlerts.filter(isIndividual)
+  const individual = activeAlerts.filter(isIndividual).map(alert => {
+    const summary = alert.text.match(/<p>(.+)<\/p>/)
+    if (summary) alert.summary = simplifySummary(summary[1])
+
+    return alert
+  })
   const suspended = activeAlerts.filter(isSuspended).reduce((acc, alert) => {
     const summary = alert.text.match(/(Buses replace .+\.)/)
     if (summary) alert.summary = summary[1]
@@ -35,4 +40,8 @@ export async function getStationAlerts(station, db) {
     individual,
     suspended
   }
+}
+
+export function simplifySummary(text) {
+  return text.replace(/^The \d+:\d+[ap]m [\w ]+ to [\w ]+(?: service)? (will|has|is|shall|was)/, 'This service $1')
 }

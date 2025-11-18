@@ -2,6 +2,7 @@ import express from 'express'
 import getDepartures from '../../../modules/metro-trains/get-departures.mjs'
 import utils from '../../../utils.js'
 import timingUtils from './timing-utils.js'
+import { getStationAlerts } from '../../../modules/metro-trains/metro-notify.mjs'
 
 const router = new express.Router()
 
@@ -20,6 +21,7 @@ async function loadDepartures(req, res) {
 
   const departureTime = req.body && req.body.departureTime ? new Date(req.body.departureTime) : null
   let departures = await getDepartures(station, res.db, false, false, departureTime)
+  const notifyAlerts = await getStationAlerts(station, res.db)
 
   const blankOld = departureTime - new Date() < 1000 * 60
   departures = departures.map(departure => {
@@ -55,6 +57,9 @@ async function loadDepartures(req, res) {
       departure.destinationURL = `/metro/timings/${utils.encodeName(departure.formingDestination)}`
     }
 
+    departure.notifyAlert = notifyAlerts.individual.find(alert => alert.runID === departure.runID)
+    departure.suspension = notifyAlerts.suspended[departure.routeName]
+
     return departure
   })
 
@@ -62,7 +67,8 @@ async function loadDepartures(req, res) {
     departures,
     station,
     placeholder: 'Destination or platform',
-    stopHeritageUseDates
+    stopHeritageUseDates,
+    notifyAlerts
   }
 }
 

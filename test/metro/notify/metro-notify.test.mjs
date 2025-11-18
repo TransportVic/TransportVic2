@@ -2,7 +2,7 @@ import { expect } from 'chai'
 import { LokiDatabaseConnection } from '@transportme/database'
 import alerts from './sample-data/alerts.mjs'
 import stations from './sample-data/stations.mjs'
-import { getStationAlerts } from '../../../modules/metro-trains/metro-notify.mjs'
+import { getStationAlerts, simplifySummary } from '../../../modules/metro-trains/metro-notify.mjs'
 import routes from './sample-data/routes.mjs'
 
 const clone = o => JSON.parse(JSON.stringify(o))
@@ -53,5 +53,28 @@ describe('The metro notify module', () => {
     const { individual } = await getStationAlerts(await stops.findDocument({ stopName: 'Darling Railway Station' }), db)
     expect(individual.length).to.equal(1)
     expect(individual[0].runID).to.equal('2637')
+    expect(individual[0].summary).to.equal('This service will run direct from Flinders Street to Richmond, not via the City Loop.')
+  })
+
+  it('Simplifies the alert text', () => {
+    expect(
+      simplifySummary('The 8:06am Flinders Street to Belgrave service is running 20 minutes late from Blackburn due to an Ill passenger needing assistance.')
+    ).to.equal('This service is running 20 minutes late from Blackburn due to an Ill passenger needing assistance.')
+
+    expect(
+      simplifySummary('The 5:18pm Upfield to Flinders Street service will originate from Batman at 5:27pm due to an earlier ill passenger incident.')
+    ).to.equal('This service will originate from Batman at 5:27pm due to an earlier ill passenger incident.')
+
+    expect(
+      simplifySummary('The 5:16pm Sunbury to Flinders Street service has been altered and will originate from Watergardens at 5:27pm and not cancelled as earlier advised.')
+    ).to.equal('This service will originate from Watergardens at 5:27pm and not cancelled as earlier advised.')
+
+    expect(
+      simplifySummary('The 4:50pm Flinders Street to Glen Waverley will run direct from Flinders Street to Richmond, not via the City Loop.')
+    ).to.equal('This service will run direct from Flinders Street to Richmond, not via the City Loop.')
+
+    expect(
+      simplifySummary('The 4:30pm Flinders Street to Sandringham has been terminated at Hampton due to vandalism.')
+    ).to.equal('This service has been terminated at Hampton due to vandalism.')
   })
 })
