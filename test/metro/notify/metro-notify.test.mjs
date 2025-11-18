@@ -77,8 +77,8 @@ describe('The metro notify module', () => {
     const stops = await db.createCollection('stops')
     const dbRoutes = await db.createCollection('routes')
     const metroNotify = await db.createCollection('metro notify')
-    
-    await metroNotify.createDocuments(clone(alerts))
+
+    await metroNotify.createDocuments(clone(alerts).filter(alert => alert.rawAlertID === '703115'))
     await stops.createDocuments(clone(stations))
     await dbRoutes.createDocuments(clone(routes))
 
@@ -87,7 +87,25 @@ describe('The metro notify module', () => {
     expect(delays['Cranbourne']).to.exist
     expect(delays['Pakenham']).to.exist
     expect(delays['Cranbourne'].maxDelay).to.equal(10)
-    expect(delays['Cranbourne'].direction).to.null
+    expect(delays['Cranbourne'].direction).to.be.null
+  })
+
+  it('Cleans up the summary on a delay alert with no minute data', async () => {
+    const db = new LokiDatabaseConnection()
+    const stops = await db.createCollection('stops')
+    const dbRoutes = await db.createCollection('routes')
+    const metroNotify = await db.createCollection('metro notify')
+    
+    await metroNotify.createDocuments(clone(alerts).filter(alert => alert.rawAlertID === '497757'))
+    await stops.createDocuments(clone(stations))
+    await dbRoutes.createDocuments(clone(routes))
+
+    const { delays } = await getStationAlerts(await stops.findDocument({ stopName: 'Sandown Park Railway Station' }), db)
+
+    expect(delays['Cranbourne']).to.exist
+    expect(delays['Cranbourne'].maxDelay).to.be.null
+    expect(delays['Cranbourne'].direction).to.be.null
+    expect(delays['Cranbourne'].summary).to.equal('Buses replace trains between Dandenong and Cranbourne')
   })
 
   it('Excludes delay alerts tagged on a particular service', async () => {

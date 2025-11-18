@@ -97,5 +97,16 @@ export default [
       '<p>Listen for announcements and check information displays.</p>',
     active: true,
     runID: 'C000'
+  },
+  {
+    alertID: '497757',
+    rawAlertID: '497757',
+    routeName: [ 'Cranbourne' ],
+    fromDate: 1666527240,
+    toDate: 1666527420,
+    type: 'major',
+    text: '<p>Buses replace trains between Dandenong and Cranbourne due to a track fault near Lynbrook.</p>\n' +
+      '<p>Listen for announcements and check information displays.</p>',
+    active: true
   }
 ]

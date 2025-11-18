@@ -55,7 +55,7 @@ export async function getStationAlerts(station, db) {
 
       alert.maxDelay = maxDelay
       alert.direction = direction
-      alert.summary = summary
+      alert.summary = summary.replace(/ due to.+/, '')
     }
 
     for (const line of alert.routeName) acc[line] = alert
