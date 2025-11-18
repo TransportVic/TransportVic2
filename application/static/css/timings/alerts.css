@@ -33,13 +33,47 @@ i.alertStatus.general {
 }
 
 
+span.alertLabel.service::before {
+  content: "Service Alert:";
+}
+
+span.alertLabel.minor::before {
+  content: "Minor Delays:";
+}
+
+span.alertLabel.major::before {
+  content: "Major Delays:";
+}
+
+span.alertLabel.suspended::before {
+  content: "Suspended:";
+}
+
+span.alertLabel.works::before {
+  content: "Works Alert:";
+}
+
+span.alertLabel.travel::before {
+  content: "Travel Alert:";
+}
+
+span.alertLabel.cancellation::before {
+  content: "Cancellation:";
+}
+
+span.alertLabel.general::before {
+  content: "General Alert:";
+}
+
+
 div.alerts div.generalAlert {
   margin-inline: calc(1 * var(--width) + 1 * var(--height));
 }
 
 div.alerts div.generalAlert p.alertHeader {
   font-size: calc(1.2 * var(--width) + 1.6 * var(--height));
-  margin-block: calc(0.5 * var(--width) + 0.7 * var(--height));
+  margin-block-start: calc(0.5 * var(--width) + 0.7 * var(--height));
+  margin-block-end: calc(0.2 * var(--width) + 0.3 * var(--height));
 }
 
 div.alerts div.generalAlert p.alertHeader i.alertStatus {
@@ -67,5 +101,13 @@ div.alerts div.generalAlert div.alertText > * {
 }
 
 div.alerts div.generalAlert div.alertText > p:has(+p) {
-  margin-block-end: calc(0.2 * var(--width) + 0.2 * var(--height));
+  margin-block-end: calc(0.2 * var(--width) + 0.3 * var(--height));
+}
+
+div.alerts div.generalAlert input[type='checkbox'] {
+  display: none;
+}
+
+div.alerts div.generalAlert input[type='checkbox']:not(:checked) ~ label div.alertText :not(:first-child) {
+  display: none;
 }

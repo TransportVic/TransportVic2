@@ -471,7 +471,7 @@ module.exports = {
     time = module.exports.parseTime(time)
     let timeDifference = moment.utc(time.diff(module.exports.now()))
 
-    if (blankOld && +timeDifference <= -30000) return ''
+    if (blankOld && +timeDifference <= -60000 * 2) return ''
     if (+timeDifference <= 60000) return 'Now'
     if (+timeDifference > 1440 * 60 * 1000) return module.exports.getHumanDateShort(time)
 
