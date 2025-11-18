@@ -1,3 +1,8 @@
+#content {
+  --width: 1vw;
+  --height: 1vh;
+}
+
 #mapLink, #clock {
   height: calc(2.1vw + 2.1vh);
   margin-right: calc(0.4vw + 1.2vh);
@@ -78,16 +83,16 @@
 }
 
 #modeSwitch {
-  width: 100vw;
+  width: calc(100 * var(--width));
   display: flex;
-  height: calc(4vw + 4vh);
+  height: calc(4 * var(--width) + 4 * var(--height));
   flex-direction: row;
 }
 
 #modeSwitch .modeSwitchType {
   color: #f9f9f9;
-  font-size: calc(0.8vw + 1vh);
-  line-height: calc(1.2vw + 1.2vh);
+  font-size: calc(0.8 * var(--width) + 1 * var(--height));
+  line-height: calc(1.2 * var(--width) + 1.2 * var(--height));
 }
 
 .modeSwitchType.inactive {
@@ -123,7 +128,7 @@
 }
 
 .modeSwitchType img {
-  height: calc(2vw + 1.7vh);
+  height: calc(2 * var(--width) + 1.7 * var(--height));
 }
 
 @media (max-width: 600px) {
@@ -133,7 +138,7 @@
 }
 
 .modeSwitchType {
-  height: calc(4vw + 4vh);
+  height: calc(4 * var(--width) + 4 * var(--height));
   flex-grow: 1;
   flex-basis: 0;
   display: flex;
@@ -143,22 +148,22 @@
 }
 
 div#textbar-container ~ div#modeSwitch ~ div#departures > div.errorPage {
-  height: calc(96vh - 4vw - (4vw + 4vh) - (5vw + 5vh));
+  height: calc(96 * var(--height) - 4 * var(--width) - (4 * var(--width) + 4 * var(--height)) - (5 * var(--width) + 5 * var(--height)));
 }
 
 div#modeSwitch:nth-child(1) ~ div#departures > div.errorPage {
-  height: calc(96vh - 4vw - (4vw + 4vh));
+  height: calc(96 * var(--height) - 4 * var(--width) - (4 * var(--width) + 4 * var(--height)));
 }
 
 div#textbar-container ~ div#departures > div.errorPage {
-  height: calc(96vh - 4vw - (5vw + 5vh));
+  height: calc(96 * var(--height) - 4 * var(--width) - (5 * var(--width) + 5 * var(--height)));
 }
 
 div.departure {
   background-color: #2a2a2a;
 
   display: flex;
-  height: calc(7vw + 7vh);
+  height: calc(7 * var(--width) + 7 * var(--height));
   margin-left: auto;
 }
 
@@ -171,8 +176,8 @@ div.departure:nth-child(even) a.departureInfo.reservationsOnly {
 }
 
 .leftContainer {
-  min-width: calc(5.2vw + 5.8vh);
-  height: calc(7vw + 7vh);
+  min-width: calc(5.2 * var(--width) + 5.8 * var(--height));
+  height: calc(7 * var(--width) + 7 * var(--height));
 
   display: flex;
   align-items: center;
@@ -193,34 +198,34 @@ div.departure:nth-child(even) a.departureInfo.reservationsOnly {
 }
 
 .leftContainer span {
-  max-width: calc(5.2vw + 5.8vh);
+  max-width: calc(5.2 * var(--width) + 5.8 * var(--height));
   text-align: center;
 }
 
 .leftContainer span.topText {
-  font-size: calc(1vw + 1vh);
+  font-size: calc(1 * var(--width) + 1 * var(--height));
 }
 
 .leftContainer span.bigNumber {
-  font-size: calc(3.2vw + 2.5vh);
-  height: calc(4.5vw + 3.2vh);
-  line-height: calc(4.5vw + 3.6vh);
-  letter-spacing: calc(-0.15vw - 0.15vh);
-  margin-right: calc(0.2vw + 0.2vh);
+  font-size: calc(3.2 * var(--width) + 2.5 * var(--height));
+  height: calc(4.5 * var(--width) + 3.2 * var(--height));
+  line-height: calc(4.5 * var(--width) + 3.6 * var(--height));
+  letter-spacing: calc(-0.15 * var(--width) - 0.15 * var(--height));
+  margin-right: calc(0.2 * var(--width) + 0.2 * var(--height));
 }
 
 .leftContainer span.bigNumber.smaller {
-  font-size: calc(2.2vw + 2.2vh);
+  font-size: calc(2.2 * var(--width) + 2.2 * var(--height));
 }
 
 .leftContainer span.bottomText {
-  font-size: calc(0.9vw + 0.9vh);
+  font-size: calc(0.9 * var(--width) + 0.9 * var(--height));
 }
 
 .leftContainer img {
-  margin-top: calc(0.75vw + 0.75vh);
-  width: calc(3vw + 3vh);
-  padding-bottom: calc(0.25vw + 0.25vh);
+  margin-top: calc(0.75 * var(--width) + 0.75 * var(--height));
+  width: calc(3 * var(--width) + 3 * var(--height));
+  padding-bottom: calc(0.25 * var(--width) + 0.25 * var(--height));
 }
 
 a.departureInfo {
@@ -237,19 +242,19 @@ a.departureInfo.reservationsOnly {
 }
 
 a.departureInfo span {
-  margin-left: calc(1vw + 1vh);
+  margin-left: calc(1 * var(--width) + 1 * var(--height));
 }
 
 a.departureInfo span.towards {
-  font-size: calc(1vh + 0.9vw);
+  font-size: calc(0.9 * var(--width) + 1 * var(--height));
 
   color: #8f8f8f;
 }
 
 a.departureInfo span.destination {
-  font-size: calc(1.6vw + 1.6vh);
-  margin-top: calc(-0.3vw - 0.3vh);
-  line-height: calc(1.8vw + 1.8vh);
+  font-size: calc(1.6 * var(--width) + 1.6 * var(--height));
+  margin-top: calc(-0.3 * var(--width) - 0.3 * var(--height));
+  line-height: calc(1.8 * var(--width) + 1.8 * var(--height));
 
   color: #c5c5c5;
 }
@@ -277,15 +282,15 @@ a.departureInfo span.broadDepartureInfo~span.broadDepartureInfo {
 a.departureInfo span.broadDepartureInfo {
   overflow: hidden;
 
-  font-size: calc(0.9vw + 0.9vh);
-  line-height: calc(1.2vw + 1.2vh);
+  font-size: calc(0.9 * var(--width) + 0.9 * var(--height));
+  line-height: calc(1.2 * var(--width) + 1.2 * var(--height));
 
   color: #bababa;
 }
 
 a.departureInfo span.important {
-  font-size: calc(1.1vw + 1.1vh) !important;
-  line-height: calc(1.2vw + 1.2vh) !important;
+  font-size: calc(1.1 * var(--width) + 1.1 * var(--height)) !important;
+  line-height: calc(1.2 * var(--width) + 1.2 * var(--height)) !important;
   color: #e03549 !important;
 }
 
@@ -303,31 +308,31 @@ a.departureInfo.departure3 { --departureCount: 3; }
 a.departureInfo.departure4 { --departureCount: 4; }
 
 div.departure.noNumber a.departureInfo span {
-  width: calc(100vw - (3.2vw + 3.2vh) * var(--departureCount) - (1vw + 1vh) - 1.5vw);
+  width: calc(100 * var(--width) - (3.2 * var(--width) + 3.2 * var(--height)) * var(--departureCount) - (1 * var(--width) + 1 * var(--height)) - 1.5 * var(--width));
 }
 
 div.departure.noNumber:not(.groupedTimings) a.departureInfo span {
-  width: calc(100vw - (6vw + 6.3vh) - (1.2vw + 1.8vh) - (1vw + 1vh) - 1.5vw);
+  width: calc(100 * var(--width) - (6 * var(--width) + 6.3 * var(--height)) - (1.2 * var(--width) + 1.8 * var(--height)) - (1 * var(--width) + 1 * var(--height)) - 1.5 * var(--width));
 }
 
 div.departure:not(.noNumber) a.departureInfo span {
-  width: calc(100vw - (3.2vw + 3.2vh) * var(--departureCount) - (5.25vw + 5.25vh) - (1vw + 1vh) - 1.5vw);
+  width: calc(100 * var(--width) - (3.2 * var(--width) + 3.2 * var(--height)) * var(--departureCount) - (5.25 * var(--width) + 5.25 * var(--height)) - (1 * var(--width) + 1 * var(--height)) - 1.5 * var(--width));
 }
 
 div.departure:not(.noNumber).noTiming a.departureInfo span {
-  width: calc(100vw - (5.25vw + 5.25vh) - (1vw + 1vh) - 1.5vw);
+  width: calc(100 * var(--width) - (5.25 * var(--width) + 5.25 * var(--height)) - (1 * var(--width) + 1 * var(--height)) - 1.5 * var(--width));
 }
 
 div.departure.noNumber.noTiming a.departureInfo span {
-  width: calc(100vw - (1vw + 1vh) - 1.5vw);
+  width: calc(100 * var(--width) - (1 * var(--width) + 1 * var(--height)) - 1.5 * var(--width));
 }
 
 div.departure:not(.groupedTimings) a.departureInfo span {
-  width: calc(100vw - (6vw + 6.3vh) - (1.2vw + 1.8vh) - (5vw + 5vh) - (1vw + 1vh) - 1.5vw);
+  width: calc(100 * var(--width) - (6 * var(--width) + 6.3 * var(--height)) - (1.2 * var(--width) + 1.8 * var(--height)) - (5 * var(--width) + 5 * var(--height)) - (1 * var(--width) + 1 * var(--height)) - 1.5 * var(--width));
 }
 
 div.departure.noNumber a.departureInfo span.routeName {
-  font-size: calc(1vw + 1vh);
+  font-size: calc(1 * var(--width) + 1 * var(--height));
 
   overflow: hidden;
 
@@ -339,22 +344,22 @@ div.departure.noNumber a.departureInfo span.routeName {
 }
 
 div.departure.noNumber a.departureInfo span.towards {
-  font-size: calc(1vh + 0.9vw);
-  margin-top: calc(-0.1vw - 0.15vh);
+  font-size: calc(1 * var(--height) + 0.9 * var(--width));
+  margin-top: calc(-0.1 * var(--width) - 0.15 * var(--height));
 
   color: #8f8f8f;
 }
 
 div.departure.noNumber a.departureInfo span.destination {
-  font-size: calc(1.6vw + 1.6vh);
-  line-height: calc(1.9vw + 1.9vh);
+  font-size: calc(1.6 * var(--width) + 1.6 * var(--height));
+  line-height: calc(1.9 * var(--width) + 1.9 * var(--height));
 
   color: #c5c5c5;
 }
 
 div.departure.noNumber a.departureInfo span.broadDepartureInfo {
-  font-size: calc(1vw + 1vh);
-  line-height: calc(1.6vw + 1.6vh);
+  font-size: calc(1 * var(--width) + 1 * var(--height));
+  line-height: calc(1.6 * var(--width) + 1.6 * var(--height));
 
   color: #c5c5c5;
 }
@@ -368,8 +373,8 @@ div.timings {
 }
 
 a.timing {
-  height: calc(7vw + 7vh);
-  width: calc(6vw + 6.3vh);
+  height: calc(7 * var(--width) + 7 * var(--height));
+  width: calc(6 * var(--width) + 6.3 * var(--height));
 
   display: flex;
   flex-direction: column;
@@ -377,7 +382,7 @@ a.timing {
   align-items: center;
   justify-content: center;
 
-  font-size: calc(1.05vw + 1.05vh);
+  font-size: calc(1.05 * var(--width) + 1.05 * var(--height));
   color: #101010;
 }
 
@@ -386,16 +391,16 @@ div.departure.groupedTimings a.timing.hidden {
 }
 
 div.departure.groupedTimings a.timing {
-  width: calc(3.2vw + 3.2vh);
-  font-size: calc(1vw + 1vh);
+  width: calc(3.2 * var(--width) + 3.2 * var(--height));
+  font-size: calc(1 * var(--width) + 1 * var(--height));
 }
 
 div.departure.groupedTimings a.timing > div.vehicleData {
-  height: calc(1vw + 1vh);
-  width: calc(3.2vw + 3.2vh);
+  height: calc(1 * var(--width) + 1 * var(--height));
+  width: calc(3.2 * var(--width) + 3.2 * var(--height));
 
   position: relative;
-  margin-top: calc(-1vw - 1vh);
+  margin-top: calc(-1 * var(--width) - 1 * var(--height));
 
   display: flex;
   align-items: center;
@@ -403,29 +408,29 @@ div.departure.groupedTimings a.timing > div.vehicleData {
 }
 
 div.departure.groupedTimings a.timing > div.vehicleData > img {
-  width: calc(1vw + 1vh);
-  margin-bottom: calc(0.75vw + 0.75vh);
+  width: calc(1 * var(--width) + 1 * var(--height));
+  margin-bottom: calc(0.75 * var(--width) + 0.75 * var(--height));
 }
 
 div.departure.groupedTimings a.timing span {
-  width: calc(3.2vw + 3.2vh);
+  width: calc(3.2 * var(--width) + 3.2 * var(--height));
 }
 
 div.departure.noNumber a.timing span.rego {
-  top: calc(0.5vw + 0.5vh);
-  font-size: calc(1vw + 1vh);
+  top: calc(0.5 * var(--width) + 0.5 * var(--height));
+  font-size: calc(1 * var(--width) + 1 * var(--height));
 }
 
 a.timing span.rego {
   position: relative;
-  font-size: calc(0.75vw + 0.75vh) !important;
-  top: calc(0.75vw + 0.75vh) !important;
-  letter-spacing: calc(-0.025vw - 0.025vh);
+  font-size: calc(0.75 * var(--width) + 0.75 * var(--height)) !important;
+  top: calc(0.75 * var(--width) + 0.75 * var(--height)) !important;
+  letter-spacing: calc(-0.025 * var(--width) - 0.025 * var(--height));
   height: 0;
 }
 
 a.timing span {
-  width: calc(6vw + 6vh);
+  width: calc(6 * var(--width) + 6 * var(--height));
   text-align: center;
 }
 
