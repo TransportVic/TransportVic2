@@ -39,7 +39,7 @@ div.alerts div.generalAlert {
 
 div.alerts div.generalAlert p.alertHeader {
   font-size: calc(1.2 * var(--width) + 1.6 * var(--height));
-  margin-block: calc(0.8 * var(--width) + 0.8 * var(--height));
+  margin-block: calc(0.5 * var(--width) + 0.7 * var(--height));
 }
 
 div.alerts div.generalAlert p.alertHeader i.alertStatus {
@@ -64,4 +64,8 @@ div.alerts div.generalAlert div.alertText {
 div.alerts div.generalAlert div.alertText > * {
   margin-block-start: 0;
   margin-block-end: calc(0.5 * var(--width) + 0.7 * var(--height));
+}
+
+div.alerts div.generalAlert div.alertText > p:has(+p) {
+  margin-block-end: calc(0.2 * var(--width) + 0.2 * var(--height));
 }
