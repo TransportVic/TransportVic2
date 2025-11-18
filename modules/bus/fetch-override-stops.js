@@ -70,8 +70,8 @@ let ELT = {
 let LAV = {
   stop_suburb: 'Laverton',
   stop_name: 'Laverton Railway Station',
-  stop_longitude: -37.86431665,
-  stop_latitude: 144.77075650
+  stop_latitude: -37.86431665,
+  stop_longitude: 144.77075650
 }
 
 let allStops = [

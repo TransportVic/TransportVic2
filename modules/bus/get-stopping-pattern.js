@@ -98,7 +98,8 @@ module.exports = async function (data, db) {
 
   if (!ptvRouteNumber) return
 
-  if (stopType === 'metro') {
+  let regionalRoute = screenServices.find(svc => regionalGTFSIDs[svc.routeGTFSID])
+  if (stopType === 'metro' && !regionalRoute) {
     let potentialBusRoutes = await getRoutes(db, `M-${ptvRouteNumber}`, {
       routeNumber: ptvRouteNumber,
       routeGTFSID: /^4-/
@@ -107,9 +108,8 @@ module.exports = async function (data, db) {
     routeGTFSIDQuery = {
       $in: potentialBusRoutes.map(route => route.routeGTFSID)
     }
-  } else if (stopType === 'regional-live') {
-    let liveRoute = screenServices.find(svc => regionalGTFSIDs[svc.routeGTFSID])
-    let regionRoute = regionalGTFSIDs[liveRoute.routeGTFSID]
+  } else if (stopType === 'regional-live' || regionalRoute) {
+    let regionRoute = regionalGTFSIDs[regionalRoute.routeGTFSID]
 
     routeGTFSIDQuery = {
       $in: regionalRouteNumbers[regionRoute.region].filter(route => route.routeNumber === ptvRouteNumber).map(route => route.routeGTFSID)
