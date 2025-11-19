@@ -78,7 +78,7 @@ async function loadDepartures(req, res) {
     stop,
     classGen: departure => departure.codedOperator,
     currentMode: 'bus',
-    maxDepartures: 4,
+    maxDepartures: 3,
     stopHeritageUseDates,
     oppositeStop
   }

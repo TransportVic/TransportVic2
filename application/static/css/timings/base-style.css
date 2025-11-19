@@ -10,6 +10,11 @@
   cursor: pointer;
 }
 
+#mapIcon {
+  height: calc(2.1vw + 2.1vh);
+  width: unset;
+}
+
 #clock-label {
   height: calc(2.1vw + 2.1vh);
 }
@@ -71,10 +76,6 @@
   background: none;
   position: absolute;
   opacity: 0;
-}
-
-#mapIcon {
-  height: calc(2.1vw + 2.1vh);
 }
 
 #modeSwitch {
@@ -336,7 +337,7 @@ a.departureInfo.departure3 { --departureCount: 3; }
 a.departureInfo.departure4 { --departureCount: 4; }
 
 div.departure.noNumber a.departureInfo span {
-  width: calc(100 * var(--width) - (3.2 * var(--width) + 3.2 * var(--height)) * var(--departureCount) - (1 * var(--width) + 1 * var(--height)) - 1.5 * var(--width));
+  width: calc(100 * var(--width) - (3.4 * var(--width) + 3.4 * var(--height)) * var(--departureCount) - (1 * var(--width) + 1 * var(--height)) - 1.5 * var(--width));
 }
 
 div.departure.noNumber:not(.groupedTimings) a.departureInfo span {
@@ -344,7 +345,7 @@ div.departure.noNumber:not(.groupedTimings) a.departureInfo span {
 }
 
 div.departure:not(.noNumber) a.departureInfo span {
-  width: calc(100 * var(--width) - (3.2 * var(--width) + 3.2 * var(--height)) * var(--departureCount) - (5.25 * var(--width) + 5.25 * var(--height)) - (1 * var(--width) + 1 * var(--height)) - 1.5 * var(--width));
+  width: calc(100 * var(--width) - (3.4 * var(--width) + 3.4 * var(--height)) * var(--departureCount) - (5.25 * var(--width) + 5.25 * var(--height)) - (1 * var(--width) + 1 * var(--height)) - 1.5 * var(--width) - 1.5 * var(--width));
 }
 
 div.departure:not(.noNumber).noTiming a.departureInfo span {
@@ -360,7 +361,7 @@ div.departure:not(.groupedTimings) a.departureInfo span {
 }
 
 div.departure.noNumber a.departureInfo span.routeName {
-  font-size: calc(1 * var(--width) + 1 * var(--height));
+  font-size: calc(1.1 * var(--width) + 1.1 * var(--height));
 
   overflow: hidden;
 
@@ -406,7 +407,7 @@ a.timing {
   align-items: center;
   justify-content: center;
 
-  font-size: calc(1.05 * var(--width) + 1.05 * var(--height));
+  font-size: calc(1.2 * var(--width) + 1.15 * var(--height));
   color: #101010;
 }
 
@@ -415,13 +416,13 @@ div.departure.groupedTimings a.timing.hidden {
 }
 
 div.departure.groupedTimings a.timing {
-  width: calc(3.2 * var(--width) + 3.2 * var(--height));
-  font-size: calc(1 * var(--width) + 1 * var(--height));
+  width: calc(3.4 * var(--width) + 3.4 * var(--height));
+  font-size: calc(1.2 * var(--width) + 1.15 * var(--height));
 }
 
 div.departure.groupedTimings a.timing > div.vehicleData {
   height: calc(1 * var(--width) + 1 * var(--height));
-  width: calc(3.2 * var(--width) + 3.2 * var(--height));
+  width: calc(3.4 * var(--width) + 3.4 * var(--height));
 
   position: relative;
   margin-top: calc(-1 * var(--width) - 1 * var(--height));
@@ -437,17 +438,17 @@ div.departure.groupedTimings a.timing > div.vehicleData > img {
 }
 
 div.departure.groupedTimings a.timing span {
-  width: calc(3.2 * var(--width) + 3.2 * var(--height));
+  width: calc(3.4 * var(--width) + 3.4 * var(--height));
 }
 
 div.departure.noNumber a.timing span.rego {
   top: calc(0.5 * var(--width) + 0.5 * var(--height));
-  font-size: calc(1 * var(--width) + 1 * var(--height));
+  font-size: calc(1.2 * var(--width) + 1.15 * var(--height));
 }
 
 a.timing span.rego {
   position: relative;
-  font-size: calc(0.75 * var(--width) + 0.75 * var(--height)) !important;
+  font-size: calc(1.2 * var(--width) + 1.15 * var(--height));
   top: calc(0.75 * var(--width) + 0.75 * var(--height)) !important;
   letter-spacing: calc(-0.025 * var(--width) - 0.025 * var(--height));
   height: 0;
