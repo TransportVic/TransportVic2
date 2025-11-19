@@ -5,6 +5,7 @@
 
 #mapLink, #clock, #bookmark {
   height: calc(2.1vw + 2.1vh);
+  width: unset;
   margin-right: calc(0.4vw + 1.2vh);
   cursor: pointer;
 }
@@ -123,6 +124,7 @@
 
 .modeSwitchType img {
   height: calc(2 * var(--width) + 1.7 * var(--height));
+  width: unset;
 }
 
 @media (max-width: 600px) {

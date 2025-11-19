@@ -65,27 +65,34 @@
 }
 
 .upfield-line {
-  background-color: #a2a500 !important;
+  background-color: #ffbe00 !important;
+  --operator-text: #1E1E1E;
 }
 
 :nth-child(even) > .upfield-line {
-  background-color: #7d7f00 !important;
+  background-color: #e9ae00 !important;
 }
 
 .craigieburn-line {
-  background-color: #a2a500 !important;
+  background-color: #ffbe00 !important;
+  --operator-text: #1E1E1E;
 }
 
 :nth-child(even) > .craigieburn-line {
-  background-color: #7d7f00 !important;
+  background-color: #e9ae00 !important;
 }
 
 .sunbury-line {
-  background-color: #a2a500 !important;
+  background-color: #ffbe00 !important;
+  --operator-text: #1E1E1E;
 }
 
 :nth-child(even) > .sunbury-line {
-  background-color: #7d7f00 !important;
+  background-color: #e9ae00 !important;
+}
+
+.leftContainer.upfield-line img, .leftContainer.craigieburn-line img, .leftContainer.sunbury-line img {
+  filter: brightness(8%);
 }
 
 .werribee-line {
@@ -121,27 +128,39 @@
 }
 
 .cranbourne-line {
-  background-color: #45a6c6 !important;
+  background-color: #279FD5 !important;
+  --operator-text: #1E1E1E;
 }
 
 :nth-child(even) > .cranbourne-line {
-  background-color: #349abc !important;
+  background-color: #2491c4 !important;
 }
 
 .pakenham-line {
-  background-color: #45a6c6 !important;
+  background-color: #279FD5 !important;
+  --operator-text: #1E1E1E;
 }
 
+.leftContainer.cranbourne-line img, .leftContainer.pakenham-line img {
+  filter: brightness(8%);
+}
+
+
 :nth-child(even) > .pakenham-line {
-  background-color: #349abc !important;
+  background-color: #2491c4 !important;
 }
 
 .sandringham-line {
-  background-color: #dd4fd4 !important;
+  background-color: #F178AF !important;
+  --operator-text: #1E1E1E;
+}
+
+.leftContainer.sandringham-line img {
+  filter: brightness(8%);
 }
 
 :nth-child(even) > .sandringham-line {
-  background-color: #ce39c4 !important;
+  background-color: #dc6b9e !important;
 }
 
 .flemington-racecourse-line {
