@@ -10,8 +10,10 @@ if (!location.hostname.match(/.*\..*\.transportvic\.me/)) {
   }
 }
 
-$.ajax({
-  url: '/cf-challenge-test'
-}, (err, status, body) => {
-  if (status === 403) window.location.href = `/cf-challenge?u=${location.href}`
+$.ready(() => {
+  $.ajax({
+    url: '/cf-challenge-test'
+  }, (err, status, body) => {
+    if (status === 403) window.location.href = `/cf-challenge?u=${location.href}`
+  })
 })

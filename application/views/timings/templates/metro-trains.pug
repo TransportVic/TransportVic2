@@ -5,7 +5,7 @@ if departures.length
     for alert in notifyAlerts.general.concat(importantDelays)
       div.generalAlert
         input(type='checkbox' id=`alert-expansion-${alert.rawAlertID}`)
-        label(for=`alert-expansion-${alert.rawAlertID}`)
+        label(for=`alert-expansion-${alert.rawAlertID}` tabindex='0')
           p.alertHeader
             i(class=`alertStatus ${alert.type}`)
             span(class=`alertLabel ${alert.type}`)
@@ -121,9 +121,18 @@ if departures.length
             else
               
               span.broadDepartureInfo #{configText.join(' -> ')}
-      div.timings
+      -
+        let screenReaderText = `Scheduled for ${departure.scheduledDepartureTime.format('hh:mm a')} `
+        let readableTime = departure.prettyTimeToDeparture === 'Now' ? 'now' : 'in ' + departure.prettyTimeToDeparture.replace('h ', 'hours and ').replace('min', 'minutes')
+
+        if (departure.estimatedDepartureTime) {
+          screenReaderText += `and will be departing ${readableTime}.`
+        } else {
+          screenReaderText += `and is scheduled to depart ${readableTime}.`
+        }
+      div.timings(aria-label=screenReaderText)
         a(class='timing ' + departure.headwayDevianceClass href=`/metro/run/${departure.tripURL}`)
-          span #{departure.pretyTimeToDeparture}
+          span #{departure.prettyTimeToDeparture}
           span #{departure.scheduledDepartureTime.format('HH:mm')}
 else
   div.errorPage

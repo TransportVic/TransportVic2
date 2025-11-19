@@ -14,22 +14,10 @@
     }
   }
   
-  if (stopModes.includes('heritage train') && currentMode !== 'heritage train') {
-    let bay = stopToUse.bays.find(bay => bay.mode === 'heritage train')
-    if (bay.stopGTFSID > 13100000) {
-      let now = +new Date()
-      let msDay = 1440 * 60 * 1000
-      let close = stopHeritageUseDates.find(date => Math.abs(now - date) <= msDay)
-      
-      if (!close) stopModes = stopModes.filter(mode => mode !== 'heritage train')
-    }
-  }
-  
   let iconMap = {
     'bus': 'bus',
     'metro train': 'metro',
     'regional train': 'vline',
-    'heritage train': 'vline',
     'regional coach': 'coach',
     'tram': 'tram',
     'ferry': 'ferry'
@@ -37,9 +25,17 @@
   
   let urlMap = {
     'regional train': 'vline',
-    'heritage train': 'heritage',
     'metro train': 'metro',
     'regional coach': 'coach'
+  }
+
+  let screenReaderLabels = {
+    'bus': 'bus',
+    'metro train': 'suburban train',
+    'regional train': 'v line',
+    'regional coach': 'coach',
+    'tram': 'tram',
+    'ferry': 'ferry'
   }
 
 if stopModes.length > 1
@@ -65,6 +61,6 @@ if stopModes.length > 1
         } else if (mode === 'regional train' && stopToUse.stopName === 'Southern Cross Coach Terminal/Spencer Street') {
           url = '/vline/timings/southern-cross'
         }
-      a(href=url class=`modeSwitchType ${mode.replace(' ', '-')} ${mode === currentMode ? '' : 'inactive'}`)
-        img(src=`${staticBase}/static/images/clear-icons/${iconMap[mode] || mode}.svg` alt='')
+      a(href=url class=`modeSwitchType ${mode.replace(' ', '-')} ${mode === currentMode ? '' : 'inactive'}` aria-label=`View ${screenReaderLabels[mode]} departures from this stop`)
+        img(src=`${staticBase}/static/images/clear-icons/${iconMap[mode] || mode}.svg` alt='' height='30')
         span=mode

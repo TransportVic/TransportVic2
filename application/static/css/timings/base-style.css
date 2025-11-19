@@ -3,7 +3,7 @@
   --height: 1vh;
 }
 
-#mapLink, #clock {
+#mapLink, #clock, #bookmark {
   height: calc(2.1vw + 2.1vh);
   margin-right: calc(0.4vw + 1.2vh);
   cursor: pointer;
@@ -74,12 +74,6 @@
 
 #mapIcon {
   height: calc(2.1vw + 2.1vh);
-}
-
-#bookmark {
-  width: calc(1.5vw + 1.5vh);
-  margin-right: calc(0.4vw + 1.2vh);
-  cursor: pointer;
 }
 
 #modeSwitch {
@@ -184,7 +178,7 @@ div.departure:nth-child(even) a.departureInfo.reservationsOnly {
   justify-content: center;
   flex-direction: column;
 
-  color: #f9f9f9;
+  color: var(--operator-text, #f9f9f9);
   background-color: var(--operator-odd);
 }
 

@@ -3,6 +3,8 @@ html(lang='en-GB')
   head
     - let themeColour = '#171717'
     meta(charset='UTF-8')
+
+    link(rel='preconnect' href=staticBase)
       
     link(rel='preload' as='font' href=`${staticBase}/static/fonts/Nunito.woff2` crossorigin='anonymous')
     link(rel='preload' as='style' href=`${staticBase}/static/css/base-style.css`)
@@ -61,5 +63,6 @@ html(lang='en-GB')
     main#content
       block content
     
+    block postStyle
     block scripts
     script(src=`${staticBase}/static/scripts/sw-load.js`)

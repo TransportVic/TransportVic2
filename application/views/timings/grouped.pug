@@ -47,10 +47,12 @@ block scripts
   script(src=`${staticBase}/static/scripts/timings.js` async)
   
 append style
+  link(rel='stylesheet' href=`${staticBase}/static/css/timings/base-style.css`)
+
+append postStyle
   link(rel='stylesheet' href=`${staticBase}/static/css/site-colours.css`)
   link(rel='stylesheet' href=`${staticBase}/static/css/bus-operators.css`)
   link(rel='stylesheet' href=`${staticBase}/static/css/combined-colours.css`)
-  link(rel='stylesheet' href=`${staticBase}/static/css/timings/base-style.css`)
 
 append content
   include mode-switch

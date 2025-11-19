@@ -24,26 +24,19 @@ block title
   span=station.stopName
 
 block header-right
-  label#clock-label(for='departureDateTime')
-    img#clock(src=`${staticBase}/static/images/decals/clock.svg` alt='change departure time' tabindex='1')
-  input#departureDateTime(type="datetime-local" tabindex="-1")
-  div#clockDropdown
-    div
-      input#departureDate(type="date")
-      input#departureTime(type="time")
-      input#confirmTime(type="button" value="Update")
-  a#mapLink(href=`/stop-preview/${station.cleanSuburbs[0]}/${station.cleanName}`)
-    img#mapIcon(src=`${staticBase}/static/images/decals/map.svg` alt='map icon')
-  img#bookmark(src=`${staticBase}/static/images/decals/bookmark.svg` alt='bookmark icon')
+  include ./templates/header
+  +header(station)
 
 block scripts
   script(src=`${staticBase}/static/scripts/timings.js` async)
 
 append style
-  link(rel='stylesheet' href=`${staticBase}/static/css/site-colours.css`)
-  link(rel='stylesheet' href=`${staticBase}/static/css/combined-colours.css`)
   link(rel='stylesheet' href=`${staticBase}/static/css/timings/base-style.css`)
   link(rel='stylesheet' href=`${staticBase}/static/css/timings/alerts.css`)
+
+append postStyle
+  link(rel='stylesheet' href=`${staticBase}/static/css/site-colours.css`)
+  link(rel='stylesheet' href=`${staticBase}/static/css/combined-colours.css`)
 
 append content
   - let currentMode = 'metro train'

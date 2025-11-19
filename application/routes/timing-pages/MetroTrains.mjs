@@ -25,7 +25,7 @@ async function loadDepartures(req, res) {
 
   const blankOld = departureTime - new Date() < 1000 * 60
   departures = departures.map(departure => {
-    departure.pretyTimeToDeparture = utils.prettyTime(departure.actualDepartureTime, true, blankOld)
+    departure.prettyTimeToDeparture = utils.prettyTime(departure.actualDepartureTime, true, blankOld)
     departure.headwayDevianceClass = utils.findHeadwayDeviance(departure.scheduledDepartureTime, departure.estimatedDepartureTime, {
       early: 0.5,
       late: 5
