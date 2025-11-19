@@ -30,7 +30,7 @@ if services.length
           if firstDeparture.guidanceText
             span.broadDepartureInfo.clampLine #{firstDeparture.guidanceText}
           if firstDeparture.viaText && hasNumber
-            span.broadDepartureInfo.clampLine #{firstDeparture.viaText}
+            span.broadDepartureInfo.clampLine.clamp2 #{firstDeparture.viaText}
         div.timings
           for departure in Array(maxDepartures - departures.length)
             a.timing.hidden

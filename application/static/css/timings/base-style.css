@@ -242,9 +242,9 @@ a.departureInfo span {
 }
 
 a.departureInfo span.towards {
-  font-size: calc(0.9 * var(--width) + 1 * var(--height));
+  font-size: calc(1.1 * var(--width) + 1.2 * var(--height));
 
-  color: #8f8f8f;
+  color: #a2a2a2;
 }
 
 a.departureInfo span.destination {
@@ -278,10 +278,10 @@ a.departureInfo span.broadDepartureInfo~span.broadDepartureInfo {
 a.departureInfo span.broadDepartureInfo {
   overflow: hidden;
 
-  font-size: calc(0.9 * var(--width) + 0.9 * var(--height));
+  font-size: calc(1.1 * var(--width) + 1 * var(--height));
   line-height: calc(1.2 * var(--width) + 1.2 * var(--height));
 
-  color: #bababa;
+  color: #c5c5c5;
 }
 
 a.departureInfo span.serviceAlert {
@@ -374,15 +374,11 @@ div.departure.noNumber a.departureInfo span.routeName {
 div.departure.noNumber a.departureInfo span.towards {
   font-size: calc(1 * var(--height) + 0.9 * var(--width));
   margin-top: calc(-0.1 * var(--width) - 0.15 * var(--height));
-
-  color: #8f8f8f;
 }
 
 div.departure.noNumber a.departureInfo span.destination {
   font-size: calc(1.6 * var(--width) + 1.6 * var(--height));
   line-height: calc(1.9 * var(--width) + 1.9 * var(--height));
-
-  color: #c5c5c5;
 }
 
 div.departure.noNumber a.departureInfo span.broadDepartureInfo {
