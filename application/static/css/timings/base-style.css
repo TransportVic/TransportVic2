@@ -443,15 +443,20 @@ div.departure.groupedTimings a.timing span {
 
 div.departure.noNumber a.timing span.rego {
   top: calc(0.5 * var(--width) + 0.5 * var(--height));
-  font-size: calc(1.2 * var(--width) + 1.15 * var(--height));
 }
 
 a.timing span.rego {
   position: relative;
-  font-size: calc(1.2 * var(--width) + 1.15 * var(--height));
+  font-size: calc(0.9 * var(--width) + 1 * var(--height));
+
   top: calc(0.75 * var(--width) + 0.75 * var(--height)) !important;
   letter-spacing: calc(-0.025 * var(--width) - 0.025 * var(--height));
   height: 0;
+}
+
+a.timing span.rego.small {
+  font-size: calc(0.85 * var(--width) + 0.8 * var(--height));
+  top: calc(0.84 * var(--width) + 0.84 * var(--height)) !important;
 }
 
 a.timing span {

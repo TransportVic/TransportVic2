@@ -45,7 +45,10 @@ if services.length
               span #{departure.pretyTimeToDeparture}
               span #{departure.scheduledDepartureTime.format('HH:mm')}
               if departure.vehicle
-                span.rego #{departure.vehicle.name}
+                if departure.vehicle.name.length >= 6
+                  span.rego.small #{departure.vehicle.name}
+                else
+                  span.rego #{departure.vehicle.name}
 else
   div.errorPage
     h2 No Upcoming Departures...
