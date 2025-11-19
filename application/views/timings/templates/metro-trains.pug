@@ -63,19 +63,19 @@ if departures.length
           else
             span.broadDepartureInfo.important #{departure.suspension.summary}
         else if departure.cancelled
-          if  departure.notifyAlert && departure.notifyAlert.summary
+          if  departure.notifyAlert && departure.notifyAlert.summary && departure.notifyAlert.summary !== 'This service has been cancelled.'
             span.broadDepartureInfo.important CANCELLED: #{departure.notifyAlert.summary}
           else
             span.broadDepartureInfo.important CANCELLED
         else if departure.isRailReplacementBus
           span.broadDepartureInfo.important.clampLine.clamp2 Rail Replacement Bus - Stops #{futureStops.join(', ')}
-        else if departure.notifyAlert && departure.notifyAlert.summary
+        else if departure.notifyAlert && departure.notifyAlert.summary && departure.notifyAlert.summary !== 'This service has been cancelled.'
           if departure.notifyAlert.type === 'cancellation'
             span.broadDepartureInfo.important CANCELLED: !{departure.notifyAlert.summary}
           else
             span.broadDepartureInfo.serviceAlert !{departure.notifyAlert.summary}
         else if departure.delayAlert
-          span.broadDepartureInfo.delayAlert
+          span.broadDepartureInfo.delayAlert(type=departure.delayAlert.type)
             i(class=`alertStatus ${departure.delayAlert.type}`)
             if departure.delayAlert.maxDelay
               span Delays up to !{departure.delayAlert.maxDelay} minutes

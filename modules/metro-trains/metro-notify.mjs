@@ -102,6 +102,6 @@ export function getImportantDelays(station, notifyAlerts) {
     const text = alert.summary.toLowerCase()
     return text.includes('buses replac')
       || text.includes('run direct') || text.includes('running direct') || text.includes('direct to')
-      || (alert.maxDelay && alert.maxDelay > 45)
+      || (alert.maxDelay && alert.maxDelay >= 30)
   })
 }

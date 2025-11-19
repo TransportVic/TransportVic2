@@ -295,7 +295,14 @@ a.departureInfo span.serviceAlert {
  
 a.departureInfo span.delayAlert {
   font-size: calc(1.1 * var(--width) + 1.1 * var(--height)) !important;
+}
+
+a.departureInfo span.delayAlert[type='minor'] > span {
   color: #e87800 !important;
+}
+
+a.departureInfo span.delayAlert[type='major'] > span {
+  color: #EF4135 !important;
 }
 
 a.departureInfo span.delayAlert i.alertStatus {
