@@ -20,7 +20,7 @@ import { isPrimary } from '../replication.mjs'
 import discordIntegration from '../discord-integration.js'
 import { hostname } from 'os'
 
-async function writeUpdatedTrips(db, tripDB, updatedTrips) {
+export async function writeUpdatedTrips(db, tripDB, updatedTrips) {
   const tripBulkOperations = updatedTrips.map(timetable => ({
     replaceOne: {
       filter: timetable.getDBKey(),
@@ -42,8 +42,6 @@ async function writeUpdatedTrips(db, tripDB, updatedTrips) {
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  await discordIntegration('taskLogging', `Metro Trip Updater: ${hostname()} loading`)
-
   let database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await database.connect()
 
@@ -73,8 +71,6 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   try { await writeUpdatedTrips(database, tripDatabase, Object.values(existingTrips)) } catch(e) { console.error(e) }
 
   try { await updateRelatedTrips(database, tripDatabase, Object.values(existingTrips), ptvAPI) } catch(e) { console.error(e) }
-
-  await discordIntegration('taskLogging', `Metro Trip Updater: ${hostname()} completed loading`)
 
   process.exit(0)
 }

@@ -18,31 +18,37 @@ import fs from 'fs/promises'
 import { isPrimary } from '../replication.mjs'
 import { hostname } from 'os'
 import discordIntegration from '../discord-integration.js'
+import { writeUpdatedTrips } from './metro.mjs'
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && await isPrimary()) {
-  await discordIntegration('taskLogging', `Metro Trip Updater: ${hostname()} loading`)
+  let database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+  await database.connect()
 
-  let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
-  await mongoDB.connect()
+  let tripDatabase = new MongoDatabaseConnection(config.tripDatabaseURL, config.databaseName)
+  await tripDatabase.connect()
 
   let ptvAPI = new PTVAPI(new PTVAPIInterface(config.ptvKeys[0].devID, config.ptvKeys[0].key))
   ptvAPI.addMetroSite(new MetroSiteAPIInterface())
 
+  let existingTrips = {}
   // await fetchGTFSRTrips(mongoDB)
-  await fetchGTFSRFleet(mongoDB)
-  await fetchNotifyAlerts(mongoDB, ptvAPI)
+  try { await fetchGTFSRFleet(database, tripDatabase, existingTrips) } catch(e) { console.error(e) }
+  try { await fetchNotifyAlerts(database, ptvAPI) } catch(e) { console.error(e) }
 
-  let updatedTrips = await fetchPTVDepartures(mongoDB, ptvAPI)
-  global.loggers.trackers.metro.log('> PTV Departures: Updating TDNs: ' + updatedTrips.map(trip => trip.runID).join(', '))
-  await updateRelatedTrips(mongoDB, updatedTrips, ptvAPI)
+  try {
+    let updatedTrips = await fetchPTVDepartures(database, tripDatabase, ptvAPI, { existingTrips })
+    global.loggers.trackers.metro.log('> PTV Departures: Updating TDNs: ' + updatedTrips.map(trip => trip.runID).join(', '))
+  } catch (e) { console.error(e) }
 
-  await fetchPTVTrips(mongoDB, ptvAPI)
-  await fetchNotifyTrips(mongoDB, ptvAPI)
-  await fetchCBDTrips(mongoDB, ptvAPI)
-  await fetchNotifySuspensions(mongoDB, ptvAPI)
-  await fetchOutdatedTrips(mongoDB, ptvAPI)
+  try { await fetchPTVTrips(database, tripDatabase, ptvAPI, existingTrips) } catch(e) { console.error(e) }
+  try { await fetchNotifyTrips(database, tripDatabase, ptvAPI, existingTrips) } catch(e) { console.error(e) }
+  try { await fetchCBDTrips(database, tripDatabase, ptvAPI, existingTrips) } catch(e) { console.error(e) }
+  try { await fetchNotifySuspensions(database, tripDatabase, ptvAPI, existingTrips) } catch(e) { console.error(e) }
+  try { await fetchOutdatedTrips(database, tripDatabase, ptvAPI, existingTrips) } catch(e) { console.error(e) }
 
-  await discordIntegration('taskLogging', `Metro Trip Updater: ${hostname()} completed loading`)
+  try { await writeUpdatedTrips(database, tripDatabase, Object.values(existingTrips)) } catch(e) { console.error(e) }
+
+  try { await updateRelatedTrips(database, tripDatabase, Object.values(existingTrips), ptvAPI) } catch(e) { console.error(e) }
 
   process.exit(0)
 }
