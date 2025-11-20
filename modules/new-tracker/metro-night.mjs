@@ -15,12 +15,9 @@ import { fetchOutdatedTrips } from './metro/metro-outdated-trips.mjs'
 import { fetchGTFSRTrips } from './metro/metro-gtfsr-trips.mjs'
 import { updateRelatedTrips } from './metro/check-new-updates.mjs'
 import fs from 'fs/promises'
-import { isPrimary } from '../replication.mjs'
-import { hostname } from 'os'
-import discordIntegration from '../discord-integration.js'
 import { writeUpdatedTrips } from './metro.mjs'
 
-if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url) && await isPrimary()) {
+if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await database.connect()
 
