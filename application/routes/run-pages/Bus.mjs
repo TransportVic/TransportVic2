@@ -58,8 +58,8 @@ async function pickBestTrip(data, db, tripDB) {
   let tripEndMinutes = utils.getPTMinutesPastMidnight(tripEndTime)
 
   if (tripEndMinutes < tripStartMinutes) tripEndMinutes += 1440
-  if (tripStartMinutes >= 1440) tripDay.add(-1, 'day')
-  if (tripEndTime < tripStartTime) tripEndTime.add(1, 'day') // Because we don't have date stamps on start and end this is required
+  // if (tripStartMinutes >= 1440) tripDay.add(-1, 'day')
+  // if (tripEndTime < tripStartTime) tripEndTime.add(1, 'day') // Because we don't have date stamps on start and end this is required
 
   let dbStops = db.getCollection('stops')
 
@@ -82,15 +82,13 @@ async function pickBestTrip(data, db, tripDB) {
 
   let originStop = possibleOriginStops.find(stop => stop.bays.includes(originBay))
 
-  let operationDays = utils.getYYYYMMDD(tripDay)
-
   let query = {
     mode: 'bus',
     origin: originBay.fullStopName,
     departureTime: data.departureTime,
     destination: destinationBay.fullStopName,
     destinationArrivalTime: data.destinationArrivalTime,
-    operationDays
+    operationDays: data.operationDays
   }
 
   let gtfsTrip = await db.getCollection('gtfs timetables').findDocument(query)
@@ -187,7 +185,7 @@ async function pickBestTrip(data, db, tripDB) {
   } catch (e) {
     global.loggers.general.err('Failed to get Bus trip', e)
 
-    let isLive = referenceTrip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
+    let isLive = referenceTrip ? referenceTrip.stopTimings.some(stop => !!stop.estimatedDepartureTime) : null
     return referenceTrip ? { trip: referenceTrip, tripStartTime, isLive } : null
   }
 }
