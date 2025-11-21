@@ -16,6 +16,7 @@ import sssTurnbackTrips from './sample-data/sss-turnback-trips.mjs'
 import utils from '../../../utils.js'
 import northernSSSForming from './sample-data/northern-sss-forming.mjs'
 import mixedRRB from './sample-data/mixed-rrb.mjs'
+import mtpThroughRunningBlock from './sample-data/mtp-through-running-block.mjs'
 
 let clone = o => JSON.parse(JSON.stringify(o))
 
@@ -538,6 +539,23 @@ describe('The metro departures class', () => {
 
     expect(departures[0].trip.tripID).to.equal('Tue - Wed_8YT9s_rvKKO')
     expect(departures[1].trip.tripID).to.equal('Tue - Wed_Q-taH0f2fNr')
+  })
+
+  it('Searches for a forming trip using its block when using scheduled data for the future', async () => {
+    utils.now = () => utils.parseTime('2025-11-17T11:00:00.000Z') // current date is 17 nov
+
+    const db = new LokiDatabaseConnection()
+    const gtfsTimetables = await db.createCollection('gtfs timetables')
+    const stops = await db.createCollection('stops')
+    await stops.createDocuments(clone(pkmStops))
+    await gtfsTimetables.createDocuments(clone(mtpThroughRunningBlock))
+
+    const sss = stops.findDocument({ stopName: 'East Pakenham Railway Station' })
+
+    // reuqesting 6 dec, will use gtfs
+    const departures = await getDepartures(sss, db, null, null, new Date('2025-12-05T22:50:00.000Z'))
+    expect(departures[0].formingRunID).to.equal('Z001')
+    expect(departures[0].formingDestination).to.equal('Sunbury')
   })
 
   afterEach(() => {
