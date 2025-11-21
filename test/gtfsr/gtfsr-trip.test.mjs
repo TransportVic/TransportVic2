@@ -235,5 +235,19 @@ describe('The GTFSRTrip class', () => {
     expect(trip.getTDN()).to.equal('20-900--MF-83')
     expect(trip.getRouteID()).to.equal('4-900')
     expect(trip.getOperationDay()).to.equal('20251121')
+
+    const post3amTrip = GTFSRTrip.parse({
+      trip_id: '49-630--1-Sat3-563460',
+      route_id: '630',
+      direction_id: 0,
+      start_time: '04:37:00',
+      start_date: '20251122',
+      schedule_relationship: 0,
+      modified_trip: undefined
+    })
+
+    expect(post3amTrip.getTDN()).to.equal('49-630--Sat-563460')
+    expect(post3amTrip.getRouteID()).to.equal('4-630')
+    expect(post3amTrip.getOperationDay()).to.equal('20251121')
   })
 })

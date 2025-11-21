@@ -106,6 +106,22 @@ export class BusGTFSRTrip extends GTFSRTrip {
   getTDN() { return this.#runID }
   getRouteID() { return '4-' + this.getTripID().split('-')[1] }
 
+  getOperationDay() {
+    // Applies to friday roster trips tracking as Saturday
+    const correctRoster = this.getTDN().includes('-Sat-')
+    const startTime = this.getStartTime()
+    const startHour = parseInt(startTime.split(':')[0])
+
+    const opDayMoment = utils.parseDate(super.getOperationDay())
+    const dayOfWeek = opDayMoment.get('day')
+
+    if (correctRoster && startHour <= 7 && dayOfWeek === 6) {
+      return utils.getYYYYMMDD(opDayMoment.clone().add(-1, 'day'))
+    }
+
+    return super.getOperationDay()
+  }
+
 }
 
 export class UnscheduledBusGTFSRTrip extends GTFSRTrip {
