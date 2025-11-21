@@ -541,7 +541,7 @@ describe('The metro departures class', () => {
     expect(departures[1].trip.tripID).to.equal('Tue - Wed_Q-taH0f2fNr')
   })
 
-  it.only('Searches for a forming trip using its block when using scheduled data for the future', async () => {
+  it('Searches for a forming trip using its block when using scheduled data for the future', async () => {
     utils.now = () => utils.parseTime('2025-11-17T11:00:00.000Z') // current date is 17 nov
 
     const db = new LokiDatabaseConnection()

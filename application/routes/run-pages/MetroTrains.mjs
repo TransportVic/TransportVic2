@@ -1,6 +1,6 @@
 import express from 'express'
 import utils from '../../../utils.js'
-import { tripCrossesCity, checkIsCHLFormingCCLSpecialCase } from '../../../modules/metro-trains/get-forming-trip.mjs'
+import { tripCrossesCity, checkIsCHLFormingCCLSpecialCase, getFormedByTripData, getFormingTripData } from '../../../modules/metro-trains/get-forming-trip.mjs'
 
 const router = new express.Router()
 
@@ -107,17 +107,8 @@ async function getTripData(req, res) {
 
   addStopTimingData(isLive, trip)
 
-  let formedBy = await liveTimetables.findDocument({
-    mode: trip.mode,
-    operationDays: trip.operationDays,
-    runID: trip.formedBy
-  })
-
-  let forming = await liveTimetables.findDocument({
-    mode: trip.mode,
-    operationDays: trip.operationDays,
-    runID: trip.forming
-  })
+  let formedBy = await getFormedByTripData(trip, isLive, res.db)
+  let forming = await getFormingTripData(trip, isLive, res.db)
 
   let showFormedBy, showForming
 
