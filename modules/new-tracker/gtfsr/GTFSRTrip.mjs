@@ -1,4 +1,5 @@
 import { SmartrakTrip } from '@transportme/load-ptv-gtfs/lib/gtfs-parser/GTFSTrip.mjs'
+import utils from '../../../utils.js'
 
 export class GTFSRTrip {
 
@@ -131,7 +132,21 @@ export class UnscheduledBusGTFSRTrip extends GTFSRTrip {
 
   getTripID() { return this.#tripID }
   getTDN() { return this.#runID }
-  // getOperationDay() { return this.#operationDay }
+  getOperationDay() {
+    const givenOperationDay = super.getOperationDay()
+    if (givenOperationDay !== this.#operationDay) {
+      const correctRoster = this.getTDN().includes('-MF-') || this.getTDN().includes('-Sat-')
+      const startTime = this.getStartTime()
+      const startHour = parseInt(startTime.split(':')[0])
+
+      const opDayMoment = utils.parseDate(this.#operationDay)
+      const dayOfWeek = opDayMoment.get('day')
+
+      if (correctRoster && startHour <= 7 && [5, 6].includes(dayOfWeek)) return this.#operationDay
+    }
+
+    return givenOperationDay
+  }
   getRouteID() { return this.#routeID }
 
 }

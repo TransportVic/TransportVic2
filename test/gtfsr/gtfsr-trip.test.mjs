@@ -220,4 +220,20 @@ describe('The GTFSRTrip class', () => {
     expect(regionalTrip.getRouteID()).to.equal('4-10B')
     expect(regionalTrip.getOperationDay()).to.equal('20251118')
   })
+
+  it('Uses the live start date for night network trips', () => {
+    const trip = GTFSRTrip.parse({
+      trip_id: 'vic:20900:_:R:aus._900_20-900--1-MF2-83_20251121',
+      route_id: '900',
+      direction_id: 0,
+      start_time: '03:26:00',
+      start_date: '20251122',
+      schedule_relationship: 0,
+      modified_trip: undefined
+    })
+
+    expect(trip.getTDN()).to.equal('20-900--MF-83')
+    expect(trip.getRouteID()).to.equal('4-900')
+    expect(trip.getOperationDay()).to.equal('20251121')
+  })
 })
