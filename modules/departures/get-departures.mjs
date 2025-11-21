@@ -162,10 +162,9 @@ export default class Departures {
     departureTime = departureTime ? utils.parseTime(departureTime) : utils.now()
 
     let { liveTrips, scheduledTrips } = await this.getCombinedDepartures(station, mode, db, { departureTime, timeframe })
-    let combinedDepartures = liveTrips.concat(scheduledTrips)
     let departures = []
 
-    for (let trip of combinedDepartures) {
+    const processTrip = isLive => trip => {
       let stopIndices = trip.stopTimings
         .slice(0, returnArrivals ? trip.stopTimings.length : -1) // Exclude the last stop
         .map((stop, i) => ({ m: stopGTFSIDs.includes(stop.stopGTFSID), i }))
@@ -202,10 +201,14 @@ export default class Departures {
           departureDayMoment: utils.parseDate(trip.operationDays),
           allStops: trip.stopTimings.map(stop => stop.stopName),
           futureStops: trip.stopTimings.slice(currentStopIndex + 1).map(stop => stop.stopName),
-          isArrival: currentStopIndex === trip.stopTimings.length - 1
+          isArrival: currentStopIndex === trip.stopTimings.length - 1,
+          isLive
         })
       }
     }
+
+    liveTrips.forEach(processTrip(true))
+    scheduledTrips.forEach(processTrip(false))
 
     return departures.sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
   }
