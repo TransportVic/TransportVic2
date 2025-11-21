@@ -114,15 +114,14 @@ export default class Departures {
   } = {}) {
     departureTime = departureTime ? utils.parseTime(departureTime) : utils.now()
 
-    let departures, useLive = this.shouldUseLiveDepartures(departureTime)
-    let liveTrips = await this.fetchLiveTrips(station, mode, db, departureTime, timeframe)
+    let useLive = this.shouldUseLiveDepartures(departureTime)
+    let rawLiveTrips = await this.fetchLiveTrips(station, mode, db, departureTime, timeframe)
+    let liveTrips = []
+    let scheduledTrips = useLive ? [] : await this.fetchScheduledTrips(station, mode, db, departureTime, timeframe) 
 
-    if (useLive) departures = liveTrips
-    else departures = await this.fetchScheduledTrips(station, mode, db, departureTime, timeframe)
-
-    if (!useLive && liveTrips.length) {
-      for (let liveTrip of liveTrips) {
-        let matchingScheduled = departures.findIndex(scheduled => {
+    if (!useLive && rawLiveTrips.length) {
+      for (let liveTrip of rawLiveTrips) {
+        let matchingScheduled = scheduledTrips.findIndex(scheduled => {
           if (typeof liveTrip.runID !== 'undefined' && liveTrip.runID === scheduled.runID) return true
           if (typeof liveTrip.tripID !== 'undefined' && liveTrip.tripID === scheduled.tripID) return true
           if (
@@ -131,13 +130,14 @@ export default class Departures {
             && liveTrip.destinationArrivalTime === scheduled.destinationArrivalTime
           ) return true
         })
-        if (matchingScheduled === -1) { // Extra trip, insert it in
-          departures.push(liveTrip)
-        } else {
-          departures[matchingScheduled] = liveTrip
+        // Always insert the live trip
+        liveTrips.push(liveTrip)
+
+        if (matchingScheduled !== -1) { // But if it matches, remove the original scheduled trip
+          scheduledTrips.splice(matchingScheduled, 1)
         }
       }
-    }
+    } else liveTrips = rawLiveTrips
 
     let departureEndTime = departureTime.clone().add(timeframe, 'minutes')
 
@@ -147,10 +147,10 @@ export default class Departures {
       let remainingMinutes = departureEndTime.diff(ptDayStart, 'minutes')
 
       let missingTrips = await this.fetchScheduledTrips(station, mode, db, ptDayStart, remainingMinutes)
-      departures.push(...missingTrips)
+      scheduledTrips.push(...missingTrips)
     }
 
-    return departures
+    return { liveTrips, scheduledTrips }
   }
 
   static async getDepartures(station, mode, db, {
@@ -161,7 +161,8 @@ export default class Departures {
     let stopGTFSIDs = station.bays.map(stop => stop.stopGTFSID)
     departureTime = departureTime ? utils.parseTime(departureTime) : utils.now()
 
-    let combinedDepartures = await this.getCombinedDepartures(station, mode, db, { departureTime, timeframe })
+    let { liveTrips, scheduledTrips } = await this.getCombinedDepartures(station, mode, db, { departureTime, timeframe })
+    let combinedDepartures = liveTrips.concat(scheduledTrips)
     let departures = []
 
     for (let trip of combinedDepartures) {

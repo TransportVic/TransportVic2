@@ -107,12 +107,14 @@ describe('The shouldUseLiveDepartures function', () => {
 
 describe('The getCombinedDepartures function', () => {
   it('Should return live departures for departure times in the past', async () => {
-    let departures = await getCombinedDepartures(alamein, 'metro train', db, { departureTime: new Date('2025-03-28T20:50:00.000Z'), timeframe: 10 })
-    expect(departures.length).to.equal(1)
-    expect(departures[0].stopTimings[0].scheduledDepartureTime).to.equal('2025-03-28T20:48:00.000Z')
-    expect(departures[0].stopTimings[0].estimatedDepartureTime).to.equal('2025-03-28T20:51:00.000Z')
-    expect(departures[0].departureTime).to.equal('07:48')
-    expect(departures[0]._live).to.exist
+    let { liveTrips, scheduledTrips } = await getCombinedDepartures(alamein, 'metro train', db, { departureTime: new Date('2025-03-28T20:50:00.000Z'), timeframe: 10 })
+    expect(liveTrips.length).to.equal(1)
+    expect(scheduledTrips.length).to.equal(0)
+
+    expect(liveTrips[0].stopTimings[0].scheduledDepartureTime).to.equal('2025-03-28T20:48:00.000Z')
+    expect(liveTrips[0].stopTimings[0].estimatedDepartureTime).to.equal('2025-03-28T20:51:00.000Z')
+    expect(liveTrips[0].departureTime).to.equal('07:48')
+    expect(liveTrips[0]._live).to.exist
   })
 
   describe('Returning scheduled departures for departure times in the future on a different day', () => {
@@ -128,10 +130,11 @@ describe('The getCombinedDepartures function', () => {
       await testDB.createCollection('live timetables')
 
       // fetch for 29 march
-      let departures = await getCombinedDepartures(alamein, 'metro train', testDB, { departureTime: new Date('2025-03-28T20:45:00.000Z'), timeframe: 10 })
-      expect(departures.length).to.equal(1)
-      expect(departures[0].departureTime).to.equal('07:48')
-      expect(departures[0]._live).to.not.exist
+      let { liveTrips, scheduledTrips } = await getCombinedDepartures(alamein, 'metro train', testDB, { departureTime: new Date('2025-03-28T20:45:00.000Z'), timeframe: 10 })
+      expect(liveTrips.length).to.equal(0)
+      expect(scheduledTrips.length).to.equal(1)
+      expect(scheduledTrips[0].departureTime).to.equal('07:48')
+      expect(scheduledTrips[0]._live).to.not.exist
     })
     after(() => {
       utils.now = originalNow
@@ -146,10 +149,11 @@ describe('The getCombinedDepartures function', () => {
     })
     it('test', async () => {
       // fetch for 29 march 7.45am
-      let departures = await getCombinedDepartures(alamein, 'metro train', db, { departureTime: new Date('2025-03-28T20:45:00.000Z'), timeframe: 10 })
-      expect(departures.length).to.equal(1)
-      expect(departures[0].departureTime).to.equal('07:48')
-      expect(departures[0]._live).to.exist
+      let { liveTrips, scheduledTrips } = await getCombinedDepartures(alamein, 'metro train', db, { departureTime: new Date('2025-03-28T20:45:00.000Z'), timeframe: 10 })
+      expect(liveTrips.length).to.equal(1)
+      expect(scheduledTrips.length).to.equal(0)
+      expect(liveTrips[0].departureTime).to.equal('07:48')
+      expect(liveTrips[0]._live).to.exist
     })
     after(() => {
       utils.now = originalNow
@@ -164,11 +168,12 @@ describe('The getCombinedDepartures function', () => {
     })
     it('test', async () => {
       // fetch for 30 march 1.10am (same PT day)
-      let departures = await getCombinedDepartures(alamein, 'metro train', midnightDBNoDST, { departureTime: new Date('2025-03-29T14:10:00.000Z'), timeframe: 10 })
-      expect(departures.length).to.equal(1)
-      expect(departures[0].departureTime).to.equal('25:14')
-      expect(departures[0].stopTimings[0].departureTime).to.equal('01:14')
-      expect(departures[0]._live).to.exist
+      let { liveTrips, scheduledTrips } = await getCombinedDepartures(alamein, 'metro train', midnightDBNoDST, { departureTime: new Date('2025-03-29T14:10:00.000Z'), timeframe: 10 })
+      expect(liveTrips.length).to.equal(1)
+      expect(scheduledTrips.length).to.equal(0)
+      expect(liveTrips[0].departureTime).to.equal('25:14')
+      expect(liveTrips[0].stopTimings[0].departureTime).to.equal('01:14')
+      expect(liveTrips[0]._live).to.exist
     })
     after(() => {
       utils.now = originalNow
@@ -183,17 +188,18 @@ describe('The getCombinedDepartures function', () => {
     })
     it('test', async () => {
       // fetch for 30 march 1.10am (end of next PT day), should include departures for 30 march 3am (subsequent PT day)
-      let departures = await getCombinedDepartures(alamein, 'metro train', midnightDBNoDST, { departureTime: new Date('2025-03-29T14:10:00.000Z'), timeframe: 180 })
+      let { liveTrips, scheduledTrips } = await getCombinedDepartures(alamein, 'metro train', midnightDBNoDST, { departureTime: new Date('2025-03-29T14:10:00.000Z'), timeframe: 180 })
 
-      expect(departures.length).to.equal(3)
-      expect(departures[0].stopTimings[0].departureTime).to.equal('01:14')
-      expect(departures[0]._live).to.exist
+      expect(liveTrips.length).to.equal(2)
+      expect(liveTrips[0].stopTimings[0].departureTime).to.equal('01:14')
+      expect(liveTrips[0]._live).to.exist
 
-      expect(departures[1].stopTimings[0].departureTime).to.equal('02:16')
-      expect(departures[1]._live).to.exist
+      expect(liveTrips[1].stopTimings[0].departureTime).to.equal('02:16')
+      expect(liveTrips[1]._live).to.exist
 
-      expect(departures[2].stopTimings[0].departureTime).to.equal('03:18')
-      expect(departures[2]._live).to.not.exist
+      expect(scheduledTrips.length).to.equal(1)
+      expect(scheduledTrips[0].stopTimings[0].departureTime).to.equal('03:18')
+      expect(scheduledTrips[0]._live).to.not.exist
     })
     after(() => {
       utils.now = originalNow
@@ -214,14 +220,14 @@ describe('The getCombinedDepartures function', () => {
       await (await testDB.createCollection('live timetables')).createDocuments(clone(sampleLiveTrips).slice(0, 1))
 
       // fetch for 29 march
-      let departures = await getCombinedDepartures(alamein, 'metro train', testDB, { departureTime: new Date('2025-03-28T20:45:00.000Z'), timeframe: 120 })
-      expect(departures.length).to.equal(4)
+      let { liveTrips, scheduledTrips } = await getCombinedDepartures(alamein, 'metro train', testDB, { departureTime: new Date('2025-03-28T20:45:00.000Z'), timeframe: 120 })
+      expect(liveTrips.length + scheduledTrips.length).to.equal(4)
 
-      let dep0748 = departures.find(dep => dep.departureTime === '07:48')
+      let dep0748 = liveTrips.find(dep => dep.departureTime === '07:48')
       expect(dep0748).to.exist
       expect(dep0748._live).to.exist
 
-      let dep0808 = departures.find(dep => dep.departureTime === '08:08')
+      let dep0808 = scheduledTrips.find(dep => dep.departureTime === '08:08')
       expect(dep0808).to.exist
       expect(dep0808._live).to.not.exist
     })
@@ -235,14 +241,14 @@ describe('The getCombinedDepartures function', () => {
       await (await testDB.createCollection('live timetables')).createDocuments(clone(sampleLiveTrips).slice(0, 1))
 
       // fetch for 29 march
-      let departures = await getCombinedDepartures(alamein, 'metro train', testDB, { departureTime: new Date('2025-03-28T20:45:00.000Z'), timeframe: 120 })
-      expect(departures.length).to.equal(4)
+      let { liveTrips, scheduledTrips } = await getCombinedDepartures(alamein, 'metro train', testDB, { departureTime: new Date('2025-03-28T20:45:00.000Z'), timeframe: 120 })
+      expect(liveTrips.length + scheduledTrips.length).to.equal(4)
 
-      let dep0748 = departures.find(dep => dep.departureTime === '07:48')
+      let dep0748 = liveTrips.find(dep => dep.departureTime === '07:48')
       expect(dep0748).to.exist
       expect(dep0748._live).to.exist
 
-      let dep0808 = departures.find(dep => dep.departureTime === '08:08')
+      let dep0808 = scheduledTrips.find(dep => dep.departureTime === '08:08')
       expect(dep0808).to.exist
       expect(dep0808._live).to.not.exist
     })
