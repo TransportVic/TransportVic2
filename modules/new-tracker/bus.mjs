@@ -47,7 +47,7 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let existingTrips = {}
 
   await fetchGTFSRFleet(database, tripDatabase, existingTrips)
-  // await fetchGTFSRTrips(database, tripDatabase, existingTrips)
+  await fetchGTFSRTrips(database, tripDatabase, existingTrips)
 
   await writeUpdatedTrips(database, tripDatabase, Object.values(existingTrips))
 
