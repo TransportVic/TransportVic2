@@ -24,8 +24,6 @@ export default async function getMetroDepartures(station, db, filter, backwards,
     timeframe
   })
 
-  let liveTimetables = db.getCollection('live timetables')
-
   let stationName = station.stopName.slice(0, -16)
   let isSSS = stationName === 'Southern Cross'
   let isWithinCityLoop = CITY_LOOP.includes(stationName)
@@ -66,7 +64,6 @@ export default async function getMetroDepartures(station, db, filter, backwards,
     else destination = trueDestination
 
     let futureStops = departure.futureStops.map(stop => stop.slice(0, -16))
-    let isNorthernTrain = NORTHERN_GROUP.includes(trip.routeName)
 
     let {
       shouldShowForming,
@@ -74,7 +71,7 @@ export default async function getMetroDepartures(station, db, filter, backwards,
       formingRunID,
       formingTrip,
       formingType
-    } = await getFormingTrip(trip, departure.isArrival, isWithinCityLoop, isSSS, liveTimetables)
+    } = await getFormingTrip(trip, departure.isArrival, departure.isLive, isWithinCityLoop, isSSS, db)
 
     let futureFormingStops = null
     if (formingTrip && shouldShowForming) {

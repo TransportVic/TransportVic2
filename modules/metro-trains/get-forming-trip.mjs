@@ -34,7 +34,27 @@ export function nextTripHasLoop(formingTrip) {
   return formingTrip.stopTimings.some(stop => MURL.includes(stop.stopName.slice(0, -16)))
 }
 
-export async function getFormingTrip(trip, isArrival, isWithinCityLoop, isSSS, liveTimetables) {
+async function getFormingTripData(trip, isLiveDeparture, db) {
+  const liveTimetables = db.getCollection('live timetables')
+  const gtfsTimetables = db.getCollection('gtfs timetables')
+
+  if (isLiveDeparture) {
+    return trip.forming ? await liveTimetables.findDocument({
+      mode: trip.mode,
+      operationDays: trip.operationDays,
+      runID: trip.forming
+    }) : null
+  } else {
+    return trip.block ? await gtfsTimetables.findDocuments({
+      mode: trip.mode,
+      operationDays: trip.operationDays,
+      block: trip.block,
+      departureTime: { $gte: trip.destinationArrivalTime }
+    }).sort({ departureTime: 1 }).next() : null
+  }
+}
+
+export async function getFormingTrip(trip, isArrival, isLiveDeparture, isWithinCityLoop, isSSS, db) {
   let formingDestination = null, formingRunID = null
   let returnedFormingTrip
 
@@ -46,11 +66,7 @@ export async function getFormingTrip(trip, isArrival, isWithinCityLoop, isSSS, l
   let shouldShowForming = (upTripInCityLoop || isCrossCityTrip || isMetroTunnelTrip) && !isCityCircle
   let isCHLFormingCCLSpecialCase
 
-  let formingTrip = trip.forming ? await liveTimetables.findDocument({
-    mode: trip.mode,
-    operationDays: trip.operationDays,
-    runID: trip.forming
-  }) : null
+  let formingTrip = await getFormingTripData(trip, isLiveDeparture, db)
 
   if (!shouldShowForming) {
     isCHLFormingCCLSpecialCase = checkIsCHLFormingCCLSpecialCase(trip, formingTrip)

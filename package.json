@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@transportme/database": "^1.0.49",
+    "@transportme/database": "^1.0.50",
     "@transportme/load-ptv-gtfs": "^1.4.34",
     "@transportme/logger": "^1.0.1",
     "@transportme/ptv-api": "^1.0.32",
