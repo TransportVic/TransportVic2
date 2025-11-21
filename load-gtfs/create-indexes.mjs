@@ -380,13 +380,25 @@ async function createLiveTimetableIndex(liveTimetables) {
   }, {name: 'metro live trip index (TDN index)', unique: true, sparse: true})
 }
 
+
+async function createGTFSTimetableIndex(gtfsTimetables) {
+  await gtfsTimetables.createIndex({
+    mode: 1,
+    operationDays: 1,
+    block: 1,
+    departureTime: 1
+  }, {name: 'block (forming) index'})
+}
+
 await createStopIndex(await mainDB.getCollection('gtfs-stops'))
 await createRouteIndex(await mainDB.getCollection('gtfs-routes'))
 await createTimetableIndex(await mainDB.getCollection('gtfs-gtfs timetables'))
+await createGTFSTimetableIndex(await mainDB.getCollection('gtfs-gtfs timetables'))
 await createTimetableIndex(await mainDB.getCollection('gtfs-timetables'))
 
 await createStopIndex(await mainDB.getCollection('stops'))
 await createRouteIndex(await mainDB.getCollection('routes'))
+await createGTFSTimetableIndex(await mainDB.getCollection('gtfs timetables'))
 await createTimetableIndex(await mainDB.getCollection('gtfs timetables'))
 await createTimetableIndex(await mainDB.getCollection('timetables'))
 
