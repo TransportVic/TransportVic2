@@ -148,6 +148,7 @@ describe('The changelog tracker', () => {
     let tripsNeedingUpdate = await getTripsRequiringUpdates(timetables, updatedTrips)
     expect(tripsNeedingUpdate).to.deep.equal([{
       operationDays: '20250716',
+      departureTime: 587,
       runID: '3638',
       setNull: 'forming',
       badVal: '3437'
@@ -181,6 +182,7 @@ describe('The changelog tracker', () => {
     let tripsNeedingUpdate = await getTripsRequiringUpdates(timetables, updatedTrips)
     expect(tripsNeedingUpdate).to.deep.equal([{
       operationDays: '20250718',
+      departureTime: 1250,
       runID: '1951',
       enforceField: 'forming',
       enforceValue: '7138'
