@@ -18,6 +18,7 @@ const CITY_LOOP = [
 ].map(stop => stop + ' Railway Station')
 
 async function pickBestTrip(data, db) {
+  const operationDay = utils.parseDate(data.operationDays)
   let tripStartTime = utils.parseTime(`${data.operationDays} ${data.departureTime}`, 'YYYYMMDD HH:mm')
 
   let originStop = await db.getCollection('stops').findDocument({
@@ -55,15 +56,15 @@ async function pickBestTrip(data, db) {
     || referenceTrip.departureTime !== data.departureTime
     || referenceTrip.destinationArrivalTime !== data.destinationArrivalTime) : false
 
-  if (liveTrip) return { trip: liveTrip, tripStartTime, isLive: true, needsRedirect }
-  else return gtfsTrip ? { trip: gtfsTrip, tripStartTime, isLive: false, needsRedirect } : null
+  if (liveTrip) return { trip: liveTrip, tripStartTime, operationDay, isLive: true, needsRedirect }
+  else return gtfsTrip ? { trip: gtfsTrip, tripStartTime, operationDay, isLive: false, needsRedirect } : null
 }
 
 function tripViaCityLoop(trip) {
   return trip.stopTimings.some(stop => MURL.includes(stop.stopName))
 }
 
-function addStopTimingData(isLive, trip) {
+function addStopTimingData(isLive, operationDay, trip) {
   let hasLiveTimings = trip.stopTimings.some(stop => stop.estimatedDepartureTime)
   trip.stopTimings = trip.stopTimings.map(stop => {
     stop.pretyTimeToDeparture = ''
@@ -77,8 +78,8 @@ function addStopTimingData(isLive, trip) {
     }
 
     if (!hasLiveTimings || (isLive && stop.estimatedDepartureTime)) {
-      let scheduledDepartureTime = utils.parseTime(stop.scheduledDepartureTime)
-      let estimatedDepartureTime = utils.parseTime(stop.actualDepartureTimeMS)
+      let scheduledDepartureTime = isLive ? utils.parseTime(stop.scheduledDepartureTime) : operationDay.clone().add(stop.departureTimeMinutes, 'minutes')
+      let estimatedDepartureTime = isLive ? utils.parseTime(stop.actualDepartureTimeMS) : null
 
       stop.pretyTimeToDeparture = utils.prettyTime(estimatedDepartureTime || scheduledDepartureTime, true, true)
       if (!hasLiveTimings) return stop
@@ -98,14 +99,14 @@ async function getTripData(req, res) {
   let tripData = await pickBestTrip(req.params, res.db)
   if (!tripData) return null
 
-  let { trip, tripStartTime, isLive, needsRedirect } = tripData
+  let { trip, tripStartTime, operationDay, isLive, needsRedirect } = tripData
 
   if (needsRedirect) {
     let operationDay = utils.getYYYYMMDD(tripStartTime)
     return res.redirect(`/metro/run/${utils.encodeName(trip.origin.slice(0, -16))}/${trip.departureTime}/${utils.encodeName(trip.destination.slice(0, -16))}/${trip.destinationArrivalTime}/${operationDay}`)
   }
 
-  addStopTimingData(isLive, trip)
+  addStopTimingData(isLive, operationDay, trip)
 
   let formedBy = await getFormedByTripData(trip, isLive, res.db)
   let forming = await getFormingTripData(trip, isLive, res.db)
@@ -135,12 +136,12 @@ async function getTripData(req, res) {
 
   if (showFormedBy) {
     trip.formedByTrip = showFormedBy
-    addStopTimingData(true, showFormedBy)
+    addStopTimingData(true, operationDay, showFormedBy)
   }
 
   if (showForming) {
     trip.formingTrip = showForming
-    addStopTimingData(true, showForming)
+    addStopTimingData(true, operationDay, showForming)
   }
 
   return trip
