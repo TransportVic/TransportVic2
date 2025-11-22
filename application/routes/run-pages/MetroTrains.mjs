@@ -136,12 +136,12 @@ async function getTripData(req, res) {
 
   if (showFormedBy) {
     trip.formedByTrip = showFormedBy
-    addStopTimingData(true, operationDay, showFormedBy)
+    addStopTimingData(isLive, operationDay, showFormedBy)
   }
 
   if (showForming) {
     trip.formingTrip = showForming
-    addStopTimingData(true, operationDay, showForming)
+    addStopTimingData(isLive, operationDay, showForming)
   }
 
   return trip
