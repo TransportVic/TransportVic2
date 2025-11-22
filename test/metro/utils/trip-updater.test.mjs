@@ -1445,7 +1445,7 @@ describe('The trip updater module', () => {
 
     const gtfsrTrips = await getUpcomingTrips(database, () => clone(gtfsr_EPH))
     const tripData = await MetroTripUpdater.updateTrip(database, database, gtfsrTrips[0], {
-      existingTrips: { 'C036': tripTimetable }
+      existingTrips: { [MetroTripUpdater.getTripCacheValue(tripTimetableData)]: tripTimetable }
     })
     const addedStops = tripData.toDatabase().stopTimings.filter(stop => stop.additional)
 

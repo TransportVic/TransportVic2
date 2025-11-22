@@ -60,7 +60,7 @@ export async function fetchGTFSRFleet(db, tripDB, existingTrips) {
     }))
   }).toArray()
 
-  for (let trip of tripData) existingTrips[trip.runID] = LiveTimetable.fromDatabase(trip)
+  for (let trip of tripData) existingTrips[BusTripUpdater.getTripCacheValue(trip)] = LiveTimetable.fromDatabase(trip)
 
   global.loggers.trackers.bus.log('GTFSR Updater: Fetched', relevantTrips.length, 'trips')
 

@@ -299,6 +299,11 @@ export default class TripUpdater {
     return timetable
   }
 
+  static getTripCacheValue(trip) {
+    if (trip instanceof LiveTimetable) return `${trip.operationDay}-${trip.runID}`
+    return `${trip.operationDays}-${trip.runID}`
+  }
+
   static async updateTrip(db, tripDB, trip, {
     skipWrite = false,
     skipStopCancellation = false,
@@ -312,7 +317,7 @@ export default class TripUpdater {
       return await this.updateNonStopData(db, tripDB, trip, { dataSource, updateTime })
     }
 
-    let timetable = existingTrips[trip.runID] || await this.getTimetable(db, trip.runID, trip.operationDays)
+    let timetable = existingTrips[this.getTripCacheValue(trip)] || await this.getTimetable(db, trip.runID, trip.operationDays)
     let liveTimetables = db.getCollection('live timetables')
 
     let stopVisits = {}
@@ -357,7 +362,7 @@ export default class TripUpdater {
       await this.updateTrackerData(tripDB, timetable)
     }
 
-    existingTrips[timetable.runID] = timetable
+    existingTrips[this.getTripCacheValue(timetable)] = timetable
 
     return timetable
   }

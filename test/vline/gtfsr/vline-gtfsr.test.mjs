@@ -46,8 +46,7 @@ describe('The V/Line GTFS-R updater', () => {
 
     const trips = {}
     await fetchGTFSRTrips(database, database, () => td8403GTFSR_NNG_TYN, trips)
-
-    const trip = trips['8403'].toDatabase()
+    const trip = trips['20250811-8403'].toDatabase()
 
     expect(trip.stopTimings[0].stopName).to.equal('Nar Nar Goon Railway Station')
     expect(trip.stopTimings[0].cancelled).to.be.true
