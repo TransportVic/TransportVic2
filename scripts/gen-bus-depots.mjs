@@ -5,6 +5,7 @@ import depots from '../transportvic-data/excel/bus/depots/bus-depots.json' with 
 import path from 'path'
 import fs from 'fs/promises'
 import url from 'url'
+import manualOverrides from '../additional-data/bus-tracker/manual-overrides.json' with { type: 'json' }
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -84,6 +85,10 @@ for (const rego of activeBuses) {
   }
 
   busDepots[allBuses[rego]] = mostCommonDepotName
+}
+
+for (const bus of Object.keys(manualOverrides)) {
+  busDepots[bus] = manualOverrides[bus]
 }
 
 await fs.writeFile(depotFile, JSON.stringify(sort({
