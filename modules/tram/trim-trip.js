@@ -44,6 +44,7 @@ module.exports.trimFromDestination = async function(db, destination, coreRoute, 
   let stops = db.getCollection('stops')
 
   if (destination === 'Abbotsford St Intg') destination = 'Royal Childrens Hospital'
+  if (destination === 'Flemington Rcse') destination = 'Flemington Racecourse'
   let searchDestination = utils.expandStopName(utils.adjustStopName(destination.replace(/ - .*/, '').trim())).replace(' and ', ' & ')
   if (searchDestination === 'St. Kilda Road') searchDestination = 'Flinders Street Railway Station'
 
@@ -52,7 +53,7 @@ module.exports.trimFromDestination = async function(db, destination, coreRoute, 
   if (coreRoute === '70' && searchDestination === 'Wattle Park') return trip
   if (coreRoute === '72' && searchDestination === 'Camberwell') return trip
   if (coreRoute === '48' && searchDestination === 'North Balwyn') return trip
-  if (coreRoute === '6' && searchDestination === 'Moreland') return trip
+  if (coreRoute.match(/^6($|[a-z]$)/) && searchDestination === 'Moreland') return trip
   if (coreRoute === '58' && searchDestination === 'Toorak') return trip
 
   await async.forEachOf(trip.stopTimings, async (stop, i) => {
