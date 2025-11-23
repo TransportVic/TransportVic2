@@ -48,18 +48,23 @@ export default class MainServer {
   configMiddleware() {
     let app = this.app
 
-    function filter(prefix, req, next) {
-      let host = req.headers.host || ''
-      if (host.startsWith(prefix)) return true
-      else return void next()
-    }
-
     let staticBase = config.staticBase || ''
     app.use((req, res, next) => {
       res.locals.staticBase = staticBase
-      res.setHeader('served-by', hostname)
+      res.setHeader('Served-By', hostname)
+
+      const allowedOrigins = "'self' static.transportvic.me static.cloudflareinsights.com"
+      res.setHeader('Content-Security-Policy', `script-src ${allowedOrigins};
+        img-src ${allowedOrigins};
+        frame-src 'self';
+      `.replaceAll(/\n +/g, ' ').trim())
+
+      // Plenty of inline styling still used, disable for now
+      // style-src ${allowedOrigins};
+
       if (req.url.includes('tracker') && req.ip.includes('::ffff:47.79')) return req.status(400).end('Blocked')
-      if (filter('vic.', req, next)) res.redirect(301, `https://transportvic.me${req.url}`)
+
+      next()
     })
 
     app.get('/static-server', (req, res) => {
@@ -68,7 +73,7 @@ export default class MainServer {
     })
   }
 
-  async configRoutes () {
+  async configRoutes() {
     let app = this.app
 
     app.post('/mockups', rateLimit({

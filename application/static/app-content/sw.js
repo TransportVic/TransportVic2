@@ -161,7 +161,6 @@ self.addEventListener('install', event => {
       '/static/scripts/sw-load.js',
       '/static/scripts/timings.js',
       '/static/scripts/run.js',
-      '/static/scripts/updating.js',
       '/static/scripts/util.js',
       '/static/scripts/index.js',
 

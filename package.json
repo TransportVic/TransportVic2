@@ -21,6 +21,7 @@
     "adm-zip": "^0.5.14",
     "async": "^3.2.3",
     "cheerio": "^1.0.0-rc.3",
+    "clean-css": "^5.3.3",
     "escape-regex-string": "^1.0.6",
     "express-rate-limit": "^5.5.1",
     "fastest-levenshtein": "^1.0.12",
