@@ -37,7 +37,7 @@ export async function getStationAlerts(station, db) {
   })
 
   const suspended = activeAlerts.filter(isSuspended).reduce((acc, alert) => {
-    const summary = alert.text.match(/(Buses replace .+\.)/)
+    const summary = alert.text.match(/(Buses replace .+\.)/) || alert.text.match(/<p>(.+)<\/p>/)
     if (summary) alert.summary = summary[1].replaceAll('&#8211;', '-')
     for (const line of alert.routeName) acc[line] = alert
 

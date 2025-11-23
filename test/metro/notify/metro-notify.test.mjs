@@ -56,6 +56,22 @@ describe('The metro notify module', () => {
     expect(suspended['Stony Point'].summary).to.equal('Buses replace trains between Frankston and Stony Point due to an equipment fault.')
   })
 
+  it('Uses the first line of text if it cannot match "buses replace trains"', async () => {
+    const db = new LokiDatabaseConnection()
+    const stops = await db.createCollection('stops')
+    const dbRoutes = await db.createCollection('routes')
+    const metroNotify = await db.createCollection('metro notify')
+
+    await metroNotify.createDocuments(clone(alerts))
+    await stops.createDocuments(clone(stations))
+    await dbRoutes.createDocuments(clone(routes))
+
+    const { suspended } = await getStationAlerts(await stops.findDocument({ stopName: 'Frankston Railway Station' }), db)
+    expect(suspended['Frankston']).to.exist
+    expect(suspended['Frankston'].rawAlertID).to.equal('703639')
+    expect(suspended['Frankston'].summary).to.equal('There is currently no train service between Caulfield and the City due to a track fault near Flinders St.')
+  })
+
   it('Returns individual train alerts', async () => {
     const db = new LokiDatabaseConnection()
     const stops = await db.createCollection('stops')

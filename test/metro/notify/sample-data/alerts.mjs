@@ -108,5 +108,23 @@ export default [
     text: '<p>Buses replace trains between Dandenong and Cranbourne due to a track fault near Lynbrook.</p>\n' +
       '<p>Listen for announcements and check information displays.</p>',
     active: true
-  }
+  },
+  {
+  alertID: 'd845357c8578836819f83450483b0a8bb59b6ae47f5c2881d8b5691f742d4479',
+  rawAlertID: '703639',
+  routeName: [ 'Frankston'],
+  fromDate: 1763844420,
+  toDate: 1763870400,
+  type: 'suspended',
+  text: '<p>There is currently no train service between Caulfield and the City due to a track fault near Flinders St.</p>\n' +
+    '<p>Buses will replace trains as follows:</p>\n' +
+    '<ul>\n' +
+    '<li>Caulfield – Elsternwick, express. Passengers can then change to a Sandringham line train for travel to/from the City.</li>\n' +
+    '<li>Caulfield – South Yarra, stopping all. Passengers for Malvern, Armadale, Toorak and Hawksburn only.</li>\n' +
+    '</ul>\n' +
+    '<p>Allow an extra 60 minutes for your journey.</p>\n' +
+    '<p>A train service will operate between Caulfield – Frankston and Caulfield – East Pakenham/Cranbourne, with delays to the service.</p>\n' +
+    '<p>Check information displays and listen for announcements.</p>',
+  active: true
+}
 ]
