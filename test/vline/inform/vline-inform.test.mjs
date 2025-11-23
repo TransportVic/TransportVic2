@@ -1,8 +1,10 @@
 import { expect, use } from 'chai'
 import utils from '../../../utils.js'
 import { LokiDatabaseConnection } from '@transportme/database'
-import { createAlert } from '../../../modules/vline/vline-inform.mjs'
+import { createAlert, matchService } from '../../../modules/vline/vline-inform.mjs'
 import chaiExclude from 'chai-exclude'
+import tdn8141 from './sample-data/tdn-8141.mjs'
+import nsp8141 from './sample-data/nsp-8141.mjs'
 
 use(chaiExclude)
 
@@ -19,7 +21,7 @@ describe('The V/Line inform module', () => {
     originalNow = utils.now
   })
 
-  it.only('Processes and creates an alert for an email', async () => {
+  it('Processes and creates an alert for an email', async () => {
     utils.now = () => utils.parseTime('2025-11-23T05:52:37.000Z')
 
     const database = new LokiDatabaseConnection()
@@ -36,6 +38,48 @@ describe('The V/Line inform module', () => {
       active: true,
       acknowledged: false
     })
+  })
+
+  it('Matches the service data to a trip', async () => {
+    utils.now = () => utils.parseTime('2025-11-23T05:52:37.000Z')
+
+    const database = new LokiDatabaseConnection()
+    const liveTimetables = database.getCollection('live timetables')
+    await liveTimetables.createDocument(clone(tdn8141))
+
+    const service = await matchService(database, {
+      "departureTime": "17:15",
+      "origin": "Southern Cross",
+      "destination": "Bacchus Marsh",
+      "line": "Ararat",
+      "matchedText": "17:15 Southern Cross to Bacchus Marsh"
+    })
+
+    expect(service).to.exist
+    expect(service.operationDays).to.equal('20251123')
+    expect(service.runID).to.equal('8141')
+  })
+
+  it('Matches the service data using the NSP if unable to match the live trip', async () => {
+    utils.now = () => utils.parseTime('2025-11-23T05:52:37.000Z')
+
+    const database = new LokiDatabaseConnection()
+    const timetables = database.getCollection('timetables')
+    const liveTimetables = database.getCollection('live timetables')
+    await timetables.createDocument(clone(nsp8141))
+    await liveTimetables.createDocument(clone(tdn8141))
+
+    const service = await matchService(database, {
+      "departureTime": "17:15",
+      "origin": "Southern Cross",
+      "destination": "Wendouree",
+      "line": "Ararat",
+      "matchedText": "17:15 Southern Cross to Wendouree"
+    })
+
+    expect(service).to.exist
+    expect(service.operationDays).to.equal('20251123')
+    expect(service.runID).to.equal('8141')
   })
 
   afterEach(() => {

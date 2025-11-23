@@ -11,6 +11,38 @@ const lineGroups = {
   "Eastern": [ "Traralgon", "Bairnsdale" ]
 }
 
+export async function matchService(db, serviceData) {
+  const liveTimetables = db.getCollection('live timetables')
+  const timetables = db.getCollection('timetables')
+  const now = utils.now()
+  const operationDay = utils.getPTYYYYMMDD(now)
+
+  const query = {
+    mode: 'regional train',
+    origin: `${serviceData.origin} Railway Station`,
+    destination: `${serviceData.destination} Railway Station`,
+    departureTime: serviceData.departureTime
+  }
+
+  const liveTrip = await liveTimetables.findDocument({
+    ...query,
+    operationDays: operationDay
+  })
+  if (liveTrip) return liveTrip
+
+  const nspTrip = await timetables.findDocument({
+    ...query,
+    operationDays: utils.getDayOfWeek(now)
+  })
+
+  if (nspTrip) {
+    return await liveTimetables.findDocument({
+      operationDays: operationDay,
+      runID: nspTrip.runID
+    })
+  }
+}
+
 export async function createAlert(db, payload) {
   const vlineInform = db.getCollection('vline inform')
   const server = new VLineMailServer(null, { vlineStations, lineStops })
