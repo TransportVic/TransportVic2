@@ -75,13 +75,13 @@ div.timing-list
       +stopRow(stop)
 
     if tripEarlyTermination
-      if trip.formingTrip
-        +infoTextRow(`Diverted to ${trip.formingTrip.destination.slice(0, -16)}`)
-        for stop in trip.formingTrip.stopTimings
-          +stopRow(stop)
       +infoTextRow(`Remaining stops to ${trip.destination.slice(0, -16)} cancelled`)
       for stop in trip.stopTimings.slice(lastNonAMEX + 1)
         +stopRow(stop)
+      //- if trip.formingTrip
+        +infoTextRow(`Diverted to ${trip.formingTrip.destination.slice(0, -16)}`)
+        for stop in trip.formingTrip.stopTimings
+          +stopRow(stop)
 
   else
     for stop in trip.stopTimings
