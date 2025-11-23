@@ -2,8 +2,8 @@ extends ../../layout
     
 block head
   title TransportVic - Bus Locator
-  link(rel='stylesheet' href='https://unpkg.com/leaflet@1.6.0/dist/leaflet.css')
-  script(src='https://unpkg.com/leaflet@1.6.0/dist/leaflet.js')
+  link(rel='stylesheet' href=`${staticBase}/static/css/vendor/leaflet-1.6.0.css`)
+  script(src=`${staticBase}/static/scripts/vendor/leaflet-1.6.0.js`)
   style.
     .bus {
       --size: calc(3vw + 3vh);

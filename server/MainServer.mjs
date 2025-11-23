@@ -55,7 +55,7 @@ export default class MainServer {
 
       const allowedOrigins = "'self' static.transportvic.me static.cloudflareinsights.com"
       res.setHeader('Content-Security-Policy', `script-src ${allowedOrigins};
-        img-src ${allowedOrigins};
+        img-src ${allowedOrigins} api.mapbox.com;
         frame-src 'self';
       `.replaceAll(/\n +/g, ' ').trim())
 
