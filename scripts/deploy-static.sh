@@ -8,10 +8,11 @@ mkdir public/static
 
 node modules/optimise-svg.js
 cp -R application/static/app-content public/static/
-cp -R application/static/css public/static/
+# cp -R application/static/css public/static/
 cp -R application/static/fonts public/static/
 cp -R application/static/images public/static/
 cp -R application/static/seized public/static/
 
-npm i uglify-js
-node scripts/minify-static-js.mjs
+npm i uglify-js clean-css
+node scripts/minify/scripts.mjs
+node scripts/minify/styles.mjs
