@@ -17,6 +17,7 @@
     "@transportme/server-template": "^1.0.8",
     "@transportme/transportvic-utils": "^1.0.4",
     "@transportme/vline-nsp-reader": "^1.0.0",
+    "@transportme/vline-mail-server": "^1.0.3",
     "@turf/turf": "^5.1.6",
     "adm-zip": "^0.5.14",
     "async": "^3.2.3",
@@ -48,6 +49,7 @@
     "chai": "^5.1.0",
     "chai-exclude": "^3.0.1",
     "mocha": "^10.3.0",
-    "mochawesome": "^7.1.3"
+    "mochawesome": "^7.1.3",
+    "node-mocks-http": "^1.17.2"
   }
 }
