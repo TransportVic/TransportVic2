@@ -25,18 +25,29 @@ describe('The V/Line inform module', () => {
     utils.now = () => utils.parseTime('2025-11-23T05:52:37.000Z')
 
     const database = new LokiDatabaseConnection()
+    const liveTimetables = database.getCollection('live timetables')
     const vlineInform = database.getCollection('vline inform')
+    await liveTimetables.createDocument(clone(tdn8141))
     await createAlert(database, emailPayload)
 
     const alert = await vlineInform.findDocument({})
+    expect(alert).to.exist
     expect(alert).excluding('_id').excluding('meta').excluding('$loki').to.deep.equal({
       routeName: [ 'Ararat', 'Ballarat', 'Maryborough' ],
+      active: true,
+      acknowledged: false,
+
       fromDate: +utils.now() / 1000,
       // 15 minutes after the service ends
       toDate: +utils.parseTime('2025-11-23T07:00:00.000Z').add(15, 'minutes') / 1000,
+
       type: 'reduction',
-      active: true,
-      acknowledged: false
+      runID: '8141',
+      text: 'The 17:15 Southern Cross to Bacchus Marsh will run at a reduced capacity of 3 VLocity carriages.',
+      specificData: [{
+        carriages: 3,
+        type: 'reduction'
+      }]
     })
   })
 

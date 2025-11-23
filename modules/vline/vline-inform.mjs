@@ -53,13 +53,19 @@ export async function createAlert(db, payload) {
   })
 
   if (messageData.messageType === 'non_specific') return
-  const { messageType, serviceData, specificData } = messageData
-  console.log(messageData)
+  const { messageType, serviceData, specificData, text } = messageData
+  const trip = await matchService(db, serviceData)
+  if (!trip) return
+
   await vlineInform.createDocument({
     routeName: lineGroups[Object.keys(lineGroups).find(group => lineGroups[group].includes(serviceData.line))],
     active: true,
     acknowledged: false,
     fromDate: +utils.now() / 1000,
-    type: messageType
+    toDate: +utils.parseDate(trip.operationDays).add(trip.stopTimings[trip.stopTimings.length - 1].arrivalTimeMinutes + 15, 'minutes') / 1000,
+    type: messageType,
+    specificData,
+    text,
+    runID: trip.runID
   })
 }
