@@ -904,6 +904,38 @@ describe('The LiveTimetable class', () => {
     expect(timetable.stops[2].scheduledDepartureTime.toISOString()).to.equal('2025-11-01T20:30:00.000Z')
     expect(timetable.stops[2].estimatedDepartureTime.toISOString()).to.equal('2025-04-09T18:03:40.000Z')
   })
+
+  it('Contains custom trip flags', () => {
+    const timetable = LiveTimetable.fromDatabase(bus670Data)
+    expect(timetable.flags).to.deep.equal({})
+    timetable.flags.isNightNetwork = true
+
+    expect(timetable.flags).to.deep.equal({
+      isNightNetwork: true
+    })
+  })
+
+  it('Exports custom trip flags', () => {
+    const timetable = LiveTimetable.fromDatabase(bus670Data)
+    expect(timetable.flags).to.deep.equal({})
+    timetable.flags.isNightNetwork = true
+
+    const dbTrip = timetable.toDatabase()
+    expect(dbTrip.flags).to.deep.equal({
+      isNightNetwork: true
+    })
+  })
+
+  it('Imports custom trip flags', () => {
+    const tripData = {
+      ...clone(bus670Data),
+      flags: { isNightNetwork: true }
+    }
+    const timetable = LiveTimetable.fromDatabase(tripData)
+    expect(timetable.flags).to.deep.equal({
+      isNightNetwork: true
+    })
+  })
 })
 
 describe('The BusLiveTimetable class', () => {
