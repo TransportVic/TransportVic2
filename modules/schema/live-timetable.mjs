@@ -2,6 +2,8 @@ import utils from '../../utils.js'
 import allRouteStops from '../../additional-data/metro-data/metro-routes.json' with { type: 'json' }
 import metroTypes from '../../additional-data/metro-tracker/metro-types.json' with { type: 'json' }
 
+const clone = o => JSON.parse(JSON.stringify(o))
+
 export class TimetableStop {
 
   #operationDay
@@ -173,6 +175,8 @@ export class LiveTimetable {
   #originalDepTime
   #originalArrTime
 
+  #flags = {}
+
   constructor(mode, operationDays, routeName, routeNumber, routeGTFSID, tripID, block, lastUpdated) {
     this.#mode = mode
     this.#operationDay = utils.parseDate(operationDays).startOf('day')
@@ -329,6 +333,8 @@ export class LiveTimetable {
 
   get formedBy() { return this.#formedBy }
   get forming() { return this.#forming }
+  
+  get flags() { return this.#flags }
 
   setModificationSource(source) { this.#dataSource = source }
 
@@ -386,6 +392,7 @@ export class LiveTimetable {
       timetableInstance.#vehicleForced = timetable.vehicle.forced || false
     }
     if (typeof timetable.gtfsDirection !== 'undefined') timetableInstance.#gtfsDirection = timetable.gtfsDirection
+    if (typeof timetable.flags !== 'undefined') timetableInstance.#flags = clone(timetable.flags)
 
     for (let stopData of timetable.stopTimings || []) {
       let stop = new TimetableStop(
@@ -469,6 +476,7 @@ export class LiveTimetable {
 
     if (typeof this.#circular !== 'undefined') returnData.circular = this.#circular
     if (typeof this.#headsign !== 'undefined') returnData.headsign = this.#headsign
+    if (Object.keys(this.#flags).length > 0) returnData.flags = this.#flags
 
     return returnData
   }
