@@ -144,7 +144,7 @@
       {
         "originalName": "Armadale_Down",
         "fullStopName": "Armadale Railway Station",
-        "stopGTFSID": "RAIL_77705",
+        "stopGTFSID": "RAIL_donric_77705",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -161,7 +161,7 @@
       {
         "originalName": "Armadale_Up",
         "fullStopName": "Armadale Railway Station",
-        "stopGTFSID": "RAIL_77948",
+        "stopGTFSID": "RAIL_donric_77948",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -178,7 +178,7 @@
       {
         "originalName": "Armadale",
         "fullStopName": "Armadale Railway Station",
-        "stopGTFSID": "RAIL_ARM_Down",
+        "stopGTFSID": "RAIL_donric_ARM_Down",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -195,7 +195,7 @@
       {
         "originalName": "ArmadaleUP",
         "fullStopName": "Armadale Railway Station",
-        "stopGTFSID": "RAIL_ARM_Up",
+        "stopGTFSID": "RAIL_donric_ARM_Up",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -304,7 +304,7 @@
       {
         "originalName": "Beaconsfield_Down",
         "fullStopName": "Beaconsfield Railway Station",
-        "stopGTFSID": "RAIL_77721",
+        "stopGTFSID": "RAIL_donric_77721",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -321,7 +321,7 @@
       {
         "originalName": "Beaconsfield_Up",
         "fullStopName": "Beaconsfield Railway Station",
-        "stopGTFSID": "RAIL_77964",
+        "stopGTFSID": "RAIL_donric_77964",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -430,7 +430,7 @@
       {
         "originalName": "Berwick_Down",
         "fullStopName": "Berwick Railway Station",
-        "stopGTFSID": "RAIL_77720",
+        "stopGTFSID": "RAIL_donric_77720",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -447,7 +447,7 @@
       {
         "originalName": "Berwick_Up",
         "fullStopName": "Berwick Railway Station",
-        "stopGTFSID": "RAIL_77963",
+        "stopGTFSID": "RAIL_donric_77963",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -556,7 +556,7 @@
       {
         "originalName": "Cardinia Road_Down",
         "fullStopName": "Cardinia Road Railway Station",
-        "stopGTFSID": "RAIL_77737",
+        "stopGTFSID": "RAIL_donric_77737",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -573,7 +573,7 @@
       {
         "originalName": "Cardinia Road_Up",
         "fullStopName": "Cardinia Road Railway Station",
-        "stopGTFSID": "RAIL_77980",
+        "stopGTFSID": "RAIL_donric_77980",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -734,7 +734,7 @@
       {
         "originalName": "Carnegie_Down",
         "fullStopName": "Carnegie Railway Station",
-        "stopGTFSID": "RAIL_77746",
+        "stopGTFSID": "RAIL_donric_77746",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -751,7 +751,7 @@
       {
         "originalName": "Carnegie_Up",
         "fullStopName": "Carnegie Railway Station",
-        "stopGTFSID": "RAIL_77989",
+        "stopGTFSID": "RAIL_donric_77989",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -768,7 +768,7 @@
       {
         "originalName": "Carnegie",
         "fullStopName": "Carnegie Railway Station",
-        "stopGTFSID": "RAIL_CNE_Down",
+        "stopGTFSID": "RAIL_donric_CNE_Down",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -785,7 +785,7 @@
       {
         "originalName": "CarnegieUP",
         "fullStopName": "Carnegie Railway Station",
-        "stopGTFSID": "RAIL_CNE_Up",
+        "stopGTFSID": "RAIL_donric_CNE_Up",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -999,7 +999,7 @@
       {
         "originalName": "Caulfield_Down",
         "fullStopName": "Caulfield Railway Station",
-        "stopGTFSID": "RAIL_77739",
+        "stopGTFSID": "RAIL_donric_77739",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -1016,7 +1016,7 @@
       {
         "originalName": "Caulfield_Up",
         "fullStopName": "Caulfield Railway Station",
-        "stopGTFSID": "RAIL_77982",
+        "stopGTFSID": "RAIL_donric_77982",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -1033,7 +1033,7 @@
       {
         "originalName": "Caulfield (Normanby Rd)",
         "fullStopName": "Caulfield Railway Station",
-        "stopGTFSID": "RAIL_CFD_Down1",
+        "stopGTFSID": "RAIL_donric_CFD_Down1",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -1050,7 +1050,7 @@
       {
         "originalName": "Caulfield (Normanby Rd)",
         "fullStopName": "Caulfield Railway Station",
-        "stopGTFSID": "RAIL_CFD_Down2",
+        "stopGTFSID": "RAIL_donric_CFD_Down2",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -1067,7 +1067,7 @@
       {
         "originalName": "CaulfieldUP (Sir John Monash)",
         "fullStopName": "Caulfield Railway Station",
-        "stopGTFSID": "RAIL_CFD_Up2",
+        "stopGTFSID": "RAIL_donric_CFD_Up2",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -1228,7 +1228,7 @@
       {
         "originalName": "Clayton_Down",
         "fullStopName": "Clayton Railway Station",
-        "stopGTFSID": "RAIL_77744",
+        "stopGTFSID": "RAIL_donric_77744",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -1245,7 +1245,7 @@
       {
         "originalName": "Clayton_Up",
         "fullStopName": "Clayton Railway Station",
-        "stopGTFSID": "RAIL_77987",
+        "stopGTFSID": "RAIL_donric_77987",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -1262,7 +1262,7 @@
       {
         "originalName": "Clayton",
         "fullStopName": "Clayton Railway Station",
-        "stopGTFSID": "RAIL_CLA_Down",
+        "stopGTFSID": "RAIL_donric_CLA_Down",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -1279,7 +1279,7 @@
       {
         "originalName": "ClaytonUP",
         "fullStopName": "Clayton Railway Station",
-        "stopGTFSID": "RAIL_CLA_Up",
+        "stopGTFSID": "RAIL_donric_CLA_Up",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -1406,7 +1406,7 @@
       {
         "originalName": "Dandenong_Down",
         "fullStopName": "Dandenong Railway Station",
-        "stopGTFSID": "RAIL_77762",
+        "stopGTFSID": "RAIL_donric_77762",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -1423,7 +1423,7 @@
       {
         "originalName": "Dandenong_Up",
         "fullStopName": "Dandenong Railway Station",
-        "stopGTFSID": "RAIL_78005",
+        "stopGTFSID": "RAIL_donric_78005",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -1601,7 +1601,7 @@
       {
         "originalName": "Darling_Down",
         "fullStopName": "Darling Railway Station",
-        "stopGTFSID": "RAIL_77758",
+        "stopGTFSID": "RAIL_donric_77758",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -1618,7 +1618,7 @@
       {
         "originalName": "Darling_Down",
         "fullStopName": "Darling Railway Station",
-        "stopGTFSID": "RAIL_77759",
+        "stopGTFSID": "RAIL_donric_77759",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -1635,7 +1635,7 @@
       {
         "originalName": "Darling_Up",
         "fullStopName": "Darling Railway Station",
-        "stopGTFSID": "RAIL_78001",
+        "stopGTFSID": "RAIL_donric_78001",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -1652,7 +1652,7 @@
       {
         "originalName": "Darling (thru Running)",
         "fullStopName": "Darling Railway Station",
-        "stopGTFSID": "RAIL_DLG_Down1",
+        "stopGTFSID": "RAIL_donric_DLG_Down1",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -1669,7 +1669,7 @@
       {
         "originalName": "DarlingUP",
         "fullStopName": "Darling Railway Station",
-        "stopGTFSID": "RAIL_DLG_Up1",
+        "stopGTFSID": "RAIL_donric_DLG_Up1",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -1849,7 +1849,7 @@
       {
         "originalName": "East Pakenham_Down",
         "fullStopName": "East Pakenham Railway Station",
-        "stopGTFSID": "RAIL_78188",
+        "stopGTFSID": "RAIL_donric_78188",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -1866,7 +1866,7 @@
       {
         "originalName": "East Pakenham_Up",
         "fullStopName": "East Pakenham Railway Station",
-        "stopGTFSID": "RAIL_78189",
+        "stopGTFSID": "RAIL_donric_78189",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -2011,7 +2011,7 @@
       {
         "originalName": "Flagstaff_Down",
         "fullStopName": "Flagstaff Railway Station",
-        "stopGTFSID": "RAIL_77780",
+        "stopGTFSID": "RAIL_donric_77780",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -2028,7 +2028,7 @@
       {
         "originalName": "Flagstaff_Up",
         "fullStopName": "Flagstaff Railway Station",
-        "stopGTFSID": "RAIL_78023",
+        "stopGTFSID": "RAIL_donric_78023",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -2335,7 +2335,7 @@
       {
         "originalName": "Flinders StreetUP",
         "fullStopName": "Flinders Street Railway Station",
-        "stopGTFSID": "RAIL_FSS_Up",
+        "stopGTFSID": "RAIL_donric_FSS_Up",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -2352,7 +2352,7 @@
       {
         "originalName": "Flinders Street_Up",
         "fullStopName": "Flinders Street Railway Station",
-        "stopGTFSID": "RAIL_317",
+        "stopGTFSID": "RAIL_donric_317",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -2461,7 +2461,7 @@
       {
         "originalName": "Hallam_Down",
         "fullStopName": "Hallam Railway Station",
-        "stopGTFSID": "RAIL_77803",
+        "stopGTFSID": "RAIL_donric_77803",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -2478,7 +2478,7 @@
       {
         "originalName": "Hallam_Up",
         "fullStopName": "Hallam Railway Station",
-        "stopGTFSID": "RAIL_78046",
+        "stopGTFSID": "RAIL_donric_78046",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -2639,7 +2639,7 @@
       {
         "originalName": "Hawksburn_Down",
         "fullStopName": "Hawksburn Railway Station",
-        "stopGTFSID": "RAIL_77802",
+        "stopGTFSID": "RAIL_donric_77802",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -2656,7 +2656,7 @@
       {
         "originalName": "Hawksburn_Up",
         "fullStopName": "Hawksburn Railway Station",
-        "stopGTFSID": "RAIL_78045",
+        "stopGTFSID": "RAIL_donric_78045",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -2673,7 +2673,7 @@
       {
         "originalName": "Hawksburn",
         "fullStopName": "Hawksburn Railway Station",
-        "stopGTFSID": "RAIL_HKN_Down",
+        "stopGTFSID": "RAIL_donric_HKN_Down",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -2690,7 +2690,7 @@
       {
         "originalName": "HawksburnUP",
         "fullStopName": "Hawksburn Railway Station",
-        "stopGTFSID": "RAIL_HKN_Up",
+        "stopGTFSID": "RAIL_donric_HKN_Up",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -2851,7 +2851,7 @@
       {
         "originalName": "Hughesdale_Down",
         "fullStopName": "Hughesdale Railway Station",
-        "stopGTFSID": "RAIL_77808",
+        "stopGTFSID": "RAIL_donric_77808",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -2868,7 +2868,7 @@
       {
         "originalName": "Hughesdale_Up",
         "fullStopName": "Hughesdale Railway Station",
-        "stopGTFSID": "RAIL_78051",
+        "stopGTFSID": "RAIL_donric_78051",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -2885,7 +2885,7 @@
       {
         "originalName": "Hughesdale",
         "fullStopName": "Hughesdale Railway Station",
-        "stopGTFSID": "RAIL_HUG_Down",
+        "stopGTFSID": "RAIL_donric_HUG_Down",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -2902,7 +2902,7 @@
       {
         "originalName": "HughesdaleUP",
         "fullStopName": "Hughesdale Railway Station",
-        "stopGTFSID": "RAIL_HUG_Up",
+        "stopGTFSID": "RAIL_donric_HUG_Up",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -3063,7 +3063,7 @@
       {
         "originalName": "Huntingdale_Down",
         "fullStopName": "Huntingdale Railway Station",
-        "stopGTFSID": "RAIL_77809",
+        "stopGTFSID": "RAIL_donric_77809",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -3080,7 +3080,7 @@
       {
         "originalName": "Huntingdale_Up",
         "fullStopName": "Huntingdale Railway Station",
-        "stopGTFSID": "RAIL_78052",
+        "stopGTFSID": "RAIL_donric_78052",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -3097,7 +3097,7 @@
       {
         "originalName": "Huntingdale",
         "fullStopName": "Huntingdale Railway Station",
-        "stopGTFSID": "RAIL_HUN_Down",
+        "stopGTFSID": "RAIL_donric_HUN_Down",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -3114,7 +3114,7 @@
       {
         "originalName": "HuntingdaleUP",
         "fullStopName": "Huntingdale Railway Station",
-        "stopGTFSID": "RAIL_HUN_Up",
+        "stopGTFSID": "RAIL_donric_HUN_Up",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -3311,7 +3311,7 @@
       {
         "originalName": "Malvern_Down",
         "fullStopName": "Malvern Railway Station",
-        "stopGTFSID": "RAIL_77831",
+        "stopGTFSID": "RAIL_donric_77831",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -3328,7 +3328,7 @@
       {
         "originalName": "Malvern_Up",
         "fullStopName": "Malvern Railway Station",
-        "stopGTFSID": "RAIL_78074",
+        "stopGTFSID": "RAIL_donric_78074",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -3345,7 +3345,7 @@
       {
         "originalName": "Malvern",
         "fullStopName": "Malvern Railway Station",
-        "stopGTFSID": "RAIL_MAL_Down",
+        "stopGTFSID": "RAIL_donric_MAL_Down",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -3362,7 +3362,7 @@
       {
         "originalName": "MalvernUP",
         "fullStopName": "Malvern Railway Station",
-        "stopGTFSID": "RAIL_MAL_Up",
+        "stopGTFSID": "RAIL_donric_MAL_Up",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -3617,7 +3617,7 @@
       {
         "originalName": "Murrumbeena_Down",
         "fullStopName": "Murrumbeena Railway Station",
-        "stopGTFSID": "RAIL_77848",
+        "stopGTFSID": "RAIL_donric_77848",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -3634,7 +3634,7 @@
       {
         "originalName": "Murrumbeena_Up",
         "fullStopName": "Murrumbeena Railway Station",
-        "stopGTFSID": "RAIL_78091",
+        "stopGTFSID": "RAIL_donric_78091",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -3651,7 +3651,7 @@
       {
         "originalName": "Murrumbeena",
         "fullStopName": "Murrumbeena Railway Station",
-        "stopGTFSID": "RAIL_MRB_Down",
+        "stopGTFSID": "RAIL_donric_MRB_Down",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -3668,7 +3668,7 @@
       {
         "originalName": "MurrumbeenaUP",
         "fullStopName": "Murrumbeena Railway Station",
-        "stopGTFSID": "RAIL_MRB_Up",
+        "stopGTFSID": "RAIL_donric_MRB_Up",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -3777,7 +3777,7 @@
       {
         "originalName": "Narre Warren_Down",
         "fullStopName": "Narre Warren Railway Station",
-        "stopGTFSID": "RAIL_77864",
+        "stopGTFSID": "RAIL_donric_77864",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -3794,7 +3794,7 @@
       {
         "originalName": "Narre Warren_Up",
         "fullStopName": "Narre Warren Railway Station",
-        "stopGTFSID": "RAIL_78107",
+        "stopGTFSID": "RAIL_donric_78107",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -3903,7 +3903,7 @@
       {
         "originalName": "Noble Park_Down",
         "fullStopName": "Noble Park Railway Station",
-        "stopGTFSID": "RAIL_77860",
+        "stopGTFSID": "RAIL_donric_77860",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -3920,7 +3920,7 @@
       {
         "originalName": "Noble Park_Up",
         "fullStopName": "Noble Park Railway Station",
-        "stopGTFSID": "RAIL_78103",
+        "stopGTFSID": "RAIL_donric_78103",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -4081,7 +4081,7 @@
       {
         "originalName": "Oakleigh_Down",
         "fullStopName": "Oakleigh Railway Station",
-        "stopGTFSID": "RAIL_77867",
+        "stopGTFSID": "RAIL_donric_77867",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -4098,7 +4098,7 @@
       {
         "originalName": "Oakleigh_Up",
         "fullStopName": "Oakleigh Railway Station",
-        "stopGTFSID": "RAIL_78110",
+        "stopGTFSID": "RAIL_donric_78110",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -4115,7 +4115,7 @@
       {
         "originalName": "Oakleigh",
         "fullStopName": "Oakleigh Railway Station",
-        "stopGTFSID": "RAIL_OAK_Down",
+        "stopGTFSID": "RAIL_donric_OAK_Down",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -4132,7 +4132,7 @@
       {
         "originalName": "OakleighUP",
         "fullStopName": "Oakleigh Railway Station",
-        "stopGTFSID": "RAIL_OAK_Up",
+        "stopGTFSID": "RAIL_donric_OAK_Up",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -4224,7 +4224,7 @@
       {
         "originalName": "Officer_Down",
         "fullStopName": "Officer Railway Station",
-        "stopGTFSID": "RAIL_77870",
+        "stopGTFSID": "RAIL_donric_77870",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -4263,7 +4263,7 @@
       {
         "originalName": "Officer_Up",
         "fullStopName": "Officer Railway Station",
-        "stopGTFSID": "RAIL_78112",
+        "stopGTFSID": "RAIL_donric_78112",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -4372,7 +4372,7 @@
       {
         "originalName": "Pakenham_Down",
         "fullStopName": "Pakenham Railway Station",
-        "stopGTFSID": "RAIL_77876",
+        "stopGTFSID": "RAIL_donric_77876",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -4389,7 +4389,7 @@
       {
         "originalName": "Pakenham_Up",
         "fullStopName": "Pakenham Railway Station",
-        "stopGTFSID": "RAIL_78119",
+        "stopGTFSID": "RAIL_donric_78119",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -4637,7 +4637,7 @@
       {
         "originalName": "Parliament_Down",
         "fullStopName": "Parliament Railway Station",
-        "stopGTFSID": "RAIL_77873",
+        "stopGTFSID": "RAIL_donric_77873",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -4654,7 +4654,7 @@
       {
         "originalName": "Parliament_Up",
         "fullStopName": "Parliament Railway Station",
-        "stopGTFSID": "RAIL_78116",
+        "stopGTFSID": "RAIL_donric_78116",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -4671,7 +4671,7 @@
       {
         "originalName": "Parliament",
         "fullStopName": "Parliament Railway Station",
-        "stopGTFSID": "RAIL_PAR_Down",
+        "stopGTFSID": "RAIL_donric_PAR_Down",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -4688,7 +4688,7 @@
       {
         "originalName": "ParliamentUP",
         "fullStopName": "Parliament Railway Station",
-        "stopGTFSID": "RAIL_PAR_Up",
+        "stopGTFSID": "RAIL_donric_PAR_Up",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -4705,7 +4705,7 @@
       {
         "originalName": "Parliament_Down",
         "fullStopName": "Parliament Railway Station",
-        "stopGTFSID": "RAIL_554",
+        "stopGTFSID": "RAIL_donric_554",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -4722,7 +4722,7 @@
       {
         "originalName": "Parliament_Up",
         "fullStopName": "Parliament Railway Station",
-        "stopGTFSID": "RAIL_555",
+        "stopGTFSID": "RAIL_donric_555",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -4739,7 +4739,7 @@
       {
         "originalName": "Parliament Station",
         "fullStopName": "Parliament Railway Station",
-        "stopGTFSID": "RAIL_558",
+        "stopGTFSID": "RAIL_donric_558",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -4756,7 +4756,7 @@
       {
         "originalName": "Parliament Station",
         "fullStopName": "Parliament Railway Station",
-        "stopGTFSID": "RAIL_559",
+        "stopGTFSID": "RAIL_donric_559",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -5078,7 +5078,7 @@
       {
         "originalName": "Richmond_Down",
         "fullStopName": "Richmond Railway Station",
-        "stopGTFSID": "RAIL_77884",
+        "stopGTFSID": "RAIL_donric_77884",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -5095,7 +5095,7 @@
       {
         "originalName": "Richmond_Up",
         "fullStopName": "Richmond Railway Station",
-        "stopGTFSID": "RAIL_78127",
+        "stopGTFSID": "RAIL_donric_78127",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -5112,7 +5112,7 @@
       {
         "originalName": "Richmond(Swan St)",
         "fullStopName": "Richmond Railway Station",
-        "stopGTFSID": "RAIL_RMD_Down1",
+        "stopGTFSID": "RAIL_donric_RMD_Down1",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -5129,7 +5129,7 @@
       {
         "originalName": "RichmondUP(Swan St)",
         "fullStopName": "Richmond Railway Station",
-        "stopGTFSID": "RAIL_RMD_Up1",
+        "stopGTFSID": "RAIL_donric_RMD_Up1",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -5146,7 +5146,7 @@
       {
         "originalName": "RichmondUP(Punt Rd)",
         "fullStopName": "Richmond Railway Station",
-        "stopGTFSID": "RAIL_RMD_Up2",
+        "stopGTFSID": "RAIL_donric_RMD_Up2",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -5255,7 +5255,7 @@
       {
         "originalName": "Sandown Park_Down",
         "fullStopName": "Sandown Park Railway Station",
-        "stopGTFSID": "RAIL_77903",
+        "stopGTFSID": "RAIL_donric_77903",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -5272,7 +5272,7 @@
       {
         "originalName": "Sandown Park_Up",
         "fullStopName": "Sandown Park Railway Station",
-        "stopGTFSID": "RAIL_78146",
+        "stopGTFSID": "RAIL_donric_78146",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -5505,7 +5505,7 @@
       {
         "originalName": "South Yarra_Down",
         "fullStopName": "South Yarra Railway Station",
-        "stopGTFSID": "RAIL_77913",
+        "stopGTFSID": "RAIL_donric_77913",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -5522,7 +5522,7 @@
       {
         "originalName": "South Yarra_Up",
         "fullStopName": "South Yarra Railway Station",
-        "stopGTFSID": "RAIL_78156",
+        "stopGTFSID": "RAIL_donric_78156",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -5539,7 +5539,7 @@
       {
         "originalName": "South Yarra",
         "fullStopName": "South Yarra Railway Station",
-        "stopGTFSID": "RAIL_SYR_Down",
+        "stopGTFSID": "RAIL_donric_SYR_Down",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -5556,7 +5556,7 @@
       {
         "originalName": "South YarraUP",
         "fullStopName": "South Yarra Railway Station",
-        "stopGTFSID": "RAIL_SYR_Up",
+        "stopGTFSID": "RAIL_donric_SYR_Up",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -6025,7 +6025,7 @@
       {
         "originalName": "Springvale_Down",
         "fullStopName": "Springvale Railway Station",
-        "stopGTFSID": "RAIL_77906",
+        "stopGTFSID": "RAIL_donric_77906",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -6042,7 +6042,7 @@
       {
         "originalName": "Springvale_Up",
         "fullStopName": "Springvale Railway Station",
-        "stopGTFSID": "RAIL_78149",
+        "stopGTFSID": "RAIL_donric_78149",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -6203,7 +6203,7 @@
       {
         "originalName": "Toorak_Down",
         "fullStopName": "Toorak Railway Station",
-        "stopGTFSID": "RAIL_77919",
+        "stopGTFSID": "RAIL_donric_77919",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -6220,7 +6220,7 @@
       {
         "originalName": "Toorak_Up",
         "fullStopName": "Toorak Railway Station",
-        "stopGTFSID": "RAIL_78162",
+        "stopGTFSID": "RAIL_donric_78162",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -6237,7 +6237,7 @@
       {
         "originalName": "Toorak",
         "fullStopName": "Toorak Railway Station",
-        "stopGTFSID": "RAIL_TOR_Down",
+        "stopGTFSID": "RAIL_donric_TOR_Down",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -6254,7 +6254,7 @@
       {
         "originalName": "ToorakUP",
         "fullStopName": "Toorak Railway Station",
-        "stopGTFSID": "RAIL_TOR_Up",
+        "stopGTFSID": "RAIL_donric_TOR_Up",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -6433,7 +6433,7 @@
       {
         "originalName": "Westall_Down",
         "fullStopName": "Westall Railway Station",
-        "stopGTFSID": "RAIL_77938",
+        "stopGTFSID": "RAIL_donric_77938",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -6450,7 +6450,7 @@
       {
         "originalName": "Westall_Up",
         "fullStopName": "Westall Railway Station",
-        "stopGTFSID": "RAIL_78181",
+        "stopGTFSID": "RAIL_donric_78181",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -6467,7 +6467,7 @@
       {
         "originalName": "Westall",
         "fullStopName": "Westall Railway Station",
-        "stopGTFSID": "RAIL_WTL_Down",
+        "stopGTFSID": "RAIL_donric_WTL_Down",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -6484,7 +6484,7 @@
       {
         "originalName": "WestallUP",
         "fullStopName": "Westall Railway Station",
-        "stopGTFSID": "RAIL_WTL_Up",
+        "stopGTFSID": "RAIL_donric_WTL_Up",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -6593,7 +6593,7 @@
       {
         "originalName": "Yarraman_Down",
         "fullStopName": "Yarraman Railway Station",
-        "stopGTFSID": "RAIL_77941",
+        "stopGTFSID": "RAIL_donric_77941",
         "location": {
           "type": "Point",
           "coordinates": [
@@ -6610,7 +6610,7 @@
       {
         "originalName": "Yarraman_Up",
         "fullStopName": "Yarraman Railway Station",
-        "stopGTFSID": "RAIL_78184",
+        "stopGTFSID": "RAIL_donric_78184",
         "location": {
           "type": "Point",
           "coordinates": [

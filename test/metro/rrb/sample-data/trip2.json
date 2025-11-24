@@ -189,5 +189,6 @@
   "departureTime": "14:12",
   "destination": "Cheltenham Railway Station",
   "destinationArrivalTime": "14:55",
-  "headsign": "S1"
+  "headsign": "S1",
+  "flags": { "operator": "donric" }
 }

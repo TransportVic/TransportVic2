@@ -170,5 +170,6 @@
   "destination": "Westall Railway Station",
   "destinationArrivalTime": "16:55",
   "runID": "RRB-D82F9A38",
-  "headsign": "S4"
+  "headsign": "S4",
+  "flags": { "operator": "donric" }
 }

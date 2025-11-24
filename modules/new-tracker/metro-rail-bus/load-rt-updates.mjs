@@ -11,6 +11,7 @@ import _ from '../../../init-loggers.mjs'
 import fs from 'fs/promises'
 import discordIntegration from '../../discord-integration.js'
 import { hostname } from 'os'
+import { MTMRailStop } from '../../../load-gtfs/metro-rail-bus/loaders/MTMRailStopLoader.mjs'
 
 export async function getRailBusUpdates(db, ptvAPI) {
   let tripUpdates = await ptvAPI.metroSite.getRailBusUpdates()
@@ -55,7 +56,7 @@ export async function getRailBusUpdates(db, ptvAPI) {
     }
 
     for (let stop of trip.stopTimings) {
-      let stopData = await MetroTripUpdater.getStop(db, stop.stopGTFSID)
+      let stopData = await MetroTripUpdater.getStop(db, MTMRailStop.transformStopID(dbTrip.flags.operator, stop.stopGTFSID))
       if (!stopData) {
         tripData = null
         break

@@ -363,7 +363,7 @@ export default [{
     {
       originalName: 'Frankston_Up',
       fullStopName: 'Frankston Railway Station',
-      stopGTFSID: 'RAIL_78019',
+      stopGTFSID: 'RAIL_donric_78019',
       location: { type: 'Point', coordinates: [ 145.126664, -38.143208 ] },
       stopNumber: null,
       mode: 'metro train',
@@ -376,7 +376,7 @@ export default [{
     {
       originalName: 'Frankston_Down',
       fullStopName: 'Frankston Railway Station',
-      stopGTFSID: 'RAIL_77776',
+      stopGTFSID: 'RAIL_donric_77776',
       location: { type: 'Point', coordinates: [ 145.126007, -38.144172 ] },
       stopNumber: null,
       mode: 'metro train',
@@ -389,7 +389,7 @@ export default [{
     {
       originalName: 'FrankstonUP',
       fullStopName: 'Frankston Railway Station',
-      stopGTFSID: 'RAIL_FKN_Up',
+      stopGTFSID: 'RAIL_donric_FKN_Up',
       location: {
         type: 'Point',
         coordinates: [ 145.1265970836107, -38.14333560225963 ]
@@ -415,7 +415,7 @@ export default [{
     {
       originalName: 'Frankston',
       fullStopName: 'Frankston Railway Station',
-      stopGTFSID: 'RAIL_FKN_Down',
+      stopGTFSID: 'RAIL_donric_FKN_Down',
       location: {
         type: 'Point',
         coordinates: [ 145.1265233228628, -38.14352545447771 ]
@@ -612,7 +612,7 @@ export default [{
     {
       originalName: 'Darling_Up',
       fullStopName: 'Darling Railway Station',
-      stopGTFSID: 'RAIL_78001',
+      stopGTFSID: 'RAIL_donric_78001',
       location: { type: 'Point', coordinates: [ 145.060382, -37.868885 ] },
       stopNumber: null,
       mode: 'metro train',
@@ -625,7 +625,7 @@ export default [{
     {
       originalName: 'Darling_Down',
       fullStopName: 'Darling Railway Station',
-      stopGTFSID: 'RAIL_77759',
+      stopGTFSID: 'RAIL_donric_77759',
       location: { type: 'Point', coordinates: [ 145.062256, -37.868819 ] },
       stopNumber: null,
       mode: 'metro train',
@@ -638,7 +638,7 @@ export default [{
     {
       originalName: 'Darling_Down',
       fullStopName: 'Darling Railway Station',
-      stopGTFSID: 'RAIL_77758',
+      stopGTFSID: 'RAIL_donric_77758',
       location: { type: 'Point', coordinates: [ 145.060019, -37.868613 ] },
       stopNumber: null,
       mode: 'metro train',
@@ -781,7 +781,7 @@ export default [{
     {
       originalName: 'Sandown Park_Up',
       fullStopName: 'Sandown Park Railway Station',
-      stopGTFSID: 'RAIL_78146',
+      stopGTFSID: 'RAIL_donric_78146',
       location: { type: 'Point', coordinates: [ 145.162592, -37.956805 ] },
       stopNumber: null,
       mode: 'metro train',
@@ -794,7 +794,7 @@ export default [{
     {
       originalName: 'Sandown Park_Down',
       fullStopName: 'Sandown Park Railway Station',
-      stopGTFSID: 'RAIL_77903',
+      stopGTFSID: 'RAIL_donric_77903',
       location: { type: 'Point', coordinates: [ 145.162822, -37.956879 ] },
       stopNumber: null,
       mode: 'metro train',
@@ -807,7 +807,7 @@ export default [{
     {
       originalName: 'Sandown Park',
       fullStopName: 'Sandown Park Railway Station',
-      stopGTFSID: 'RAIL_SNP_Down',
+      stopGTFSID: 'RAIL_donric_SNP_Down',
       location: { type: 'Point', coordinates: [ 145.162822, -37.956879 ] },
       stopNumber: null,
       mode: 'metro train',
@@ -830,7 +830,7 @@ export default [{
     {
       originalName: 'Sandown ParkUP',
       fullStopName: 'Sandown Park Railway Station',
-      stopGTFSID: 'RAIL_SNP_Up',
+      stopGTFSID: 'RAIL_donric_SNP_Up',
       location: { type: 'Point', coordinates: [ 145.1625055, -37.95673625 ] },
       stopNumber: null,
       mode: 'metro train',

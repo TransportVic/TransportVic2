@@ -184,6 +184,7 @@ export default class MTMRailTripLoader extends TripLoader {
       routeIDMap,
       processTrip: (trip, rawTrip) => {
         if (rawTrip.getCalendarName().match(/unplanned/i)) return null
+        trip.flags = { operator: this.#operator }
         return trip
       }
     })

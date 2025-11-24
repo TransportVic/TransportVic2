@@ -116,7 +116,7 @@
     {
       "originalName": "AspendaleUP (Nepean Hwy)",
       "fullStopName": "Aspendale Railway Station",
-      "stopGTFSID": "RAIL_ASP_Up",
+      "stopGTFSID": "RAIL_donric_ASP_Up",
       "location": {
         "type": "Point",
         "coordinates": [
@@ -133,7 +133,7 @@
     {
       "originalName": "Aspendale",
       "fullStopName": "Aspendale Railway Station",
-      "stopGTFSID": "RAIL_ASP_Down",
+      "stopGTFSID": "RAIL_donric_ASP_Down",
       "location": {
         "type": "Point",
         "coordinates": [
@@ -150,7 +150,7 @@
     {
       "originalName": "Aspendale_Up",
       "fullStopName": "Aspendale Railway Station",
-      "stopGTFSID": "RAIL_77950",
+      "stopGTFSID": "RAIL_donric_77950",
       "location": {
         "type": "Point",
         "coordinates": [
@@ -167,7 +167,7 @@
     {
       "originalName": "Aspendale_Down",
       "fullStopName": "Aspendale Railway Station",
-      "stopGTFSID": "RAIL_77707",
+      "stopGTFSID": "RAIL_donric_77707",
       "location": {
         "type": "Point",
         "coordinates": [
