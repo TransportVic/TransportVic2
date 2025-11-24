@@ -77,6 +77,7 @@ export async function createAlert(db, payload) {
     type: messageType,
     specificData,
     text,
+    date: trip.operationDays,
     runID: trip.runID
   })
 }

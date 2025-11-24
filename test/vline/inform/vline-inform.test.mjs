@@ -45,6 +45,7 @@ describe('The V/Line inform module', () => {
       toDate: +utils.parseTime('2025-11-23T07:00:00.000Z').add(15, 'minutes') / 1000,
 
       type: 'reduction',
+      date: '20251123',
       runID: '8141',
       text: 'The 17:15 Southern Cross to Bacchus Marsh will run at a reduced capacity of 3 VLocity carriages.',
       specificData: [{
