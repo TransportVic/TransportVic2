@@ -247,6 +247,12 @@ module.exports = {
 
     return dates
   },
+  adjustPTHHMM: time => {
+    const parts = time.slice(0, 5).split(':')
+    const [ hours, minutes ] = parts
+    if (hours < 3) return `${parseInt(hours) + 24}:${minutes}`
+    return time
+  },
   getMomentFromMinutesPastMidnight: (minutes, day) => {
     return day.clone().startOf('day').set('hours', Math.floor(minutes / 60)).set('minutes', minutes % 60)
   },

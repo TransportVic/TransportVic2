@@ -15,13 +15,24 @@ export async function matchService(db, serviceData) {
   const liveTimetables = db.getCollection('live timetables')
   const timetables = db.getCollection('timetables')
   const now = utils.now()
-  const operationDay = utils.getPTYYYYMMDD(now)
+  
+  const isPostMidnightTrip = !!serviceData.departureTime.match(/^0[012]/)
+  const isAfter10pm = !!serviceData.departureTime.match(/^2[23]/)
+
+  const isInAmbiguousRegion = now.get('hours') < 4
+  const isBefore3am = now.get('hours') < 3
+
+  const operationDay = isInAmbiguousRegion ? (
+    (isAfter10pm || isPostMidnightTrip) ? (
+      isBefore3am ? utils.getPTYYYYMMDD(now) : utils.getPTYYYYMMDD(now.add(-1, 'day'))
+     ) : utils.getYYYYMMDD(now)
+  ) : utils.getPTYYYYMMDD(now) 
 
   const query = {
     mode: 'regional train',
     origin: `${serviceData.origin} Railway Station`,
     destination: `${serviceData.destination} Railway Station`,
-    departureTime: serviceData.departureTime
+    departureTime: isPostMidnightTrip ? utils.adjustPTHHMM(serviceData.departureTime) : serviceData.departureTime
   }
 
   const liveTrip = await liveTimetables.findDocument({

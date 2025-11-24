@@ -5,6 +5,9 @@ import { createAlert, matchService } from '../../../modules/vline/vline-inform.m
 import chaiExclude from 'chai-exclude'
 import tdn8141 from './sample-data/tdn-8141.mjs'
 import nsp8141 from './sample-data/nsp-8141.mjs'
+import tdn8821 from './sample-data/tdn-8821.mjs'
+import tdn8400 from './sample-data/tdn-8400.mjs'
+import tdn8459 from './sample-data/tdn-8459.mjs'
 
 use(chaiExclude)
 
@@ -91,6 +94,126 @@ describe('The V/Line inform module', () => {
     expect(service).to.exist
     expect(service.operationDays).to.equal('20251123')
     expect(service.runID).to.equal('8141')
+  })
+
+  it('Matches trips after midnight', async () => {
+    utils.now = () => utils.parseTime('2025-11-24T12:23:00.000Z') // 11.23pm
+
+    const database = new LokiDatabaseConnection()
+    const liveTimetables = database.getCollection('live timetables')
+    await liveTimetables.createDocument(clone(tdn8821))
+
+    const service = await matchService(database, {
+      "departureTime": "01:15",
+      "origin": "Southern Cross",
+      "destination": "Waurn Ponds",
+      "line": "Warrnambool",
+      "matchedText": "01:15 Southern Cross to Waurn Ponds"
+    })
+
+    expect(service).to.exist
+    expect(service.operationDays).to.equal('20251124')
+    expect(service.runID).to.equal('8821')
+  })
+
+  it('Uses the current PT day for trips departing after midnight when receving a message before 3am', async () => {
+    utils.now = () => utils.parseTime('2025-11-24T15:23:00.000Z') // 20251125 2.23am
+
+    const database = new LokiDatabaseConnection()
+    const liveTimetables = database.getCollection('live timetables')
+    await liveTimetables.createDocument(clone(tdn8821))
+
+    const service = await matchService(database, {
+      "departureTime": "01:15",
+      "origin": "Southern Cross",
+      "destination": "Waurn Ponds",
+      "line": "Warrnambool",
+      "matchedText": "01:15 Southern Cross to Waurn Ponds"
+    })
+
+    expect(service).to.exist
+    expect(service.operationDays).to.equal('20251124')
+    expect(service.runID).to.equal('8821')
+  })
+
+  it('Uses the previous PT day for trips departing after midnight when receving a message after 3am but before 4am', async () => {
+    utils.now = () => utils.parseTime('2025-11-24T16:23:00.000Z') // 20251125 3.23am
+
+    const database = new LokiDatabaseConnection()
+    const liveTimetables = database.getCollection('live timetables')
+    await liveTimetables.createDocument(clone(tdn8821))
+
+    const service = await matchService(database, {
+      "departureTime": "01:15",
+      "origin": "Southern Cross",
+      "destination": "Waurn Ponds",
+      "line": "Warrnambool",
+      "matchedText": "01:15 Southern Cross to Waurn Ponds"
+    })
+
+    expect(service).to.exist
+    expect(service.operationDays).to.equal('20251124')
+    expect(service.runID).to.equal('8821')
+  })
+
+  it('Uses the previous PT day for trips departing after 10pm but before midnight when receving a message after 3am but before 4am', async () => {
+    utils.now = () => utils.parseTime('2025-11-20T16:23:00.000Z') // 20251121 3.23am
+
+    const database = new LokiDatabaseConnection()
+    const liveTimetables = database.getCollection('live timetables')
+    await liveTimetables.createDocument(clone(tdn8459))
+
+    const service = await matchService(database, {
+      "departureTime": "23:59",
+      "origin": "Southern Cross",
+      "destination": "Traralgon",
+      "line": "Gippsland",
+      "matchedText": "23:30 Southern Cross to Traralgon"
+    })
+
+    expect(service).to.exist
+    expect(service.operationDays).to.equal('20251120')
+    expect(service.runID).to.equal('8459')
+  })
+
+  it('Uses the following PT day for trips departing after 3am when receving a message before 3am', async () => {
+    utils.now = () => utils.parseTime('2025-11-23T15:23:00.000Z') // 20251124 2.23am
+
+    const database = new LokiDatabaseConnection()
+    const liveTimetables = database.getCollection('live timetables')
+    await liveTimetables.createDocument(clone(tdn8400))
+
+    const service = await matchService(database, {
+      "departureTime": "04:24",
+      "origin": "Traralgon",
+      "destination": "Southern Cross",
+      "line": "Gippsland",
+      "matchedText": "04:24 Traralgon to Southern Cross"
+    })
+
+    expect(service).to.exist
+    expect(service.operationDays).to.equal('20251124')
+    expect(service.runID).to.equal('8400')
+  })
+
+  it('Uses the current PT day for trips departing after 3am when receving a message after 3am and before 4am', async () => {
+    utils.now = () => utils.parseTime('2025-11-23T16:23:00.000Z') // 20251124 3.23am
+
+    const database = new LokiDatabaseConnection()
+    const liveTimetables = database.getCollection('live timetables')
+    await liveTimetables.createDocument(clone(tdn8400))
+
+    const service = await matchService(database, {
+      "departureTime": "04:24",
+      "origin": "Traralgon",
+      "destination": "Southern Cross",
+      "line": "Gippsland",
+      "matchedText": "04:24 Traralgon to Southern Cross"
+    })
+
+    expect(service).to.exist
+    expect(service.operationDays).to.equal('20251124')
+    expect(service.runID).to.equal('8400')
   })
 
   afterEach(() => {
