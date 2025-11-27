@@ -9,7 +9,10 @@ mixin stopRow(stop)
       if trip.cancelled || stop.cancelled
         span.info.cancelled CANCELLED
       else if stop.platform
-        span.platform=`Platform ${stop.platform}`
+        if stop.doorSide
+          span.platform=`Platform ${stop.platform} (${stop.doorSide === 'L' ? 'Left' : 'Right'})`
+        else
+          span.platform=`Platform ${stop.platform}`
     div(class=`timing ${stop.headwayDevianceClass}`)
       span=stop.pretyTimeToDeparture
       span=stop.departureTime || stop.arrivalTime

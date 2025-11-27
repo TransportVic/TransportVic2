@@ -1,6 +1,7 @@
 import express from 'express'
 import utils from '../../../utils.js'
 import { tripCrossesCity, checkIsCHLFormingCCLSpecialCase, getFormedByTripData, getFormingTripData } from '../../../modules/metro-trains/get-forming-trip.mjs'
+import appendDoorsData from '../../../transportvic-data/sample/get-doors.mjs'
 
 const router = new express.Router()
 
@@ -94,8 +95,6 @@ function addStopTimingData(isLive, operationDay, trip) {
 }
 
 async function getTripData(req, res) {
-  let liveTimetables = res.db.getCollection('live timetables')
-
   let tripData = await pickBestTrip(req.params, res.db)
   if (!tripData) return null
 
@@ -107,6 +106,7 @@ async function getTripData(req, res) {
   }
 
   addStopTimingData(isLive, operationDay, trip)
+  appendDoorsData(trip)
 
   let formedBy = await getFormedByTripData(trip, isLive, res.db)
   let forming = await getFormingTripData(trip, isLive, res.db)
@@ -137,11 +137,13 @@ async function getTripData(req, res) {
   if (showFormedBy) {
     trip.formedByTrip = showFormedBy
     addStopTimingData(isLive, operationDay, showFormedBy)
+    appendDoorsData(showFormedBy)
   }
 
   if (showForming) {
     trip.formingTrip = showForming
     addStopTimingData(isLive, operationDay, showForming)
+    appendDoorsData(showFormedBy)
   }
 
   return trip
