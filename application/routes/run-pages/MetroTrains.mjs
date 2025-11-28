@@ -143,7 +143,7 @@ async function getTripData(req, res) {
   if (showForming) {
     trip.formingTrip = showForming
     addStopTimingData(isLive, operationDay, showForming)
-    appendDoorsData(showFormedBy)
+    appendDoorsData(showForming)
   }
 
   return trip
