@@ -265,9 +265,22 @@ router.get('/highlights', async (req, res) => {
   }).sort({departureTime: 1, origin: 1}).toArray())
     .map(trip => adjustTrip(trip, date, date, minutesPastMidnightNow))
 
+  const unsureBusRegos = await busRegos.findDocuments({ fleetNumber: /\?$/ }).toArray()
+  const unsureBuses = (await busTrips.findDocuments({
+    date,
+    consist: { $in: unsureBusRegos.map(bus => bus.rego) }
+  }).sort({departureTime: 1, origin: 1}).toArray())
+    .map(trip => adjustTrip(trip, date, date, minutesPastMidnightNow))
+    .map(trip => {
+      const busData = unsureBusRegos.find(bus => bus.rego === trip.consist[0])
+      trip.fleetNumber = '#' + busData.fleetNumber
+      return trip
+    })
+
   res.render('tracker/bus/highlights', {
     highlights,
-    unknownBuses
+    unknownBuses,
+    unsureBuses
   })
 })
 

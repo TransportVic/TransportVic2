@@ -31,3 +31,9 @@ block content
     for trip in unknownBuses
       div(class=`trip ${trip.active ? '' : 'inactive'}`)
         a(href=trip.url) #{trip.consist[0]}: #{trip.departureTime} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]} #{trip.routeNumber}
+
+  if unsureBuses.length
+    h1.title Buses Pending Verification
+    for trip in unsureBuses
+      div(class=`trip ${trip.active ? '' : 'inactive'}`)
+        a(href=trip.url) #{trip.fleetNumber}: #{trip.departureTime} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]} #{trip.routeNumber}
