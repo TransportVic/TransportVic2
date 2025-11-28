@@ -49,7 +49,7 @@ export default class Tracker {
       .map(trip => this.setTripData(trip, date === this.getDefaultDay(), utils.now()))
   }
 
-  getFleetQuery(consist, options) {
+  async getFleetQuery(consist, options) {
     return {
       consist
     }
@@ -57,10 +57,10 @@ export default class Tracker {
 
   async getTripsByFleet(consist, options) {
     const date = this.getDate(options)
-    return await this.searchWithDate(this.getFleetQuery(consist, options), date)
+    return await this.searchWithDate(await this.getFleetQuery(consist, options), date)
   }
 
-  getRouteQuery(routeNumber, options) {
+  async getRouteQuery(routeNumber, options) {
     return {
       routeNumber
     }
@@ -68,7 +68,7 @@ export default class Tracker {
 
   async getTripsByRoute(routeNumber, options) {
     const date = this.getDate(options)
-    return await this.searchWithDate(this.getRouteQuery(routeNumber, options), date)
+    return await this.searchWithDate(await this.getRouteQuery(routeNumber, options), date)
   }
 
   async getHistoryDates(query) {
