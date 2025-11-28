@@ -32,7 +32,8 @@ export default class BusTracker extends Tracker {
 
   async getTripsByFleet(consist, options) {
     const queryConsist = await this.getBusRego(consist) || consist
-    return await super.getTripsByFleet(queryConsist, options)
+    return (await super.getTripsByFleet(queryConsist, options))
+      .map(trip => this.setPrettyStopNames(trip))
   }
 
   async getTripsByRoute(routeNumber, options) {

@@ -16,8 +16,8 @@ export default class Tracker {
 
   getDefaultDay() { return utils.getPTYYYYMMDD(utils.now()) }
 
-  getDate({ date = this.getDefaultDay() } = {}) {
-    return date
+  getDate({ date } = {}) {
+    return date || this.getDefaultDay()
   }
 
   getURLStopName(stopName) {
