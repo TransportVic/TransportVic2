@@ -39,7 +39,7 @@ export default [
   { path: '/jmss-screens/big-screen', router: 'jmss-screens/BigScreen.mjs', enable: modules.jmssScreen },
 
   { path: '/smartrak', router: 'SmartrakIDs.mjs' },
-  { path: '/bus/tracker', router: 'tracker/BusTracker.js' },
+  { path: '/bus/tracker', router: 'tracker/bus/BusTracker.js' },
   { path: '/tram/tracker', router: 'tracker/TramTracker.js' },
   { path: '/vline/tracker', router: 'tracker/VLineTracker.js' },
   { path: '/metro/tracker', router: 'tracker/MetroTracker.js' },

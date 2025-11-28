@@ -1,0 +1,4 @@
+mixin history(baseURL, days)
+  for day in days
+    a(href=`${baseURL}&date=${day.date}`).pastDeployment #{day.humanDate} - #{day.data.join(', ')}
+    br

@@ -1,23 +1,23 @@
 const async = require('async')
 const express = require('express')
-const utils = require('../../../utils')
+const utils = require('../../../../utils.js')
 const url = require('url')
 const querystring = require('querystring')
 const moment = require('moment')
-const busDestinations = require('../../../additional-data/bus-destinations')
+const busDestinations = require('../../../../additional-data/bus-destinations.json')
 const router = new express.Router()
 
-const highlightData = require('../../../additional-data/bus-tracker/highlights')
+const highlightData = require('../../../../additional-data/bus-tracker/highlights.js')
 
-const depotAllocations = require('../../../additional-data/bus-tracker/depot-allocations.json')
-const smartrakDepots = require('../../../transportvic-data/excel/bus/depots/bus-depots.json')
+const depotAllocations = require('../../../../additional-data/bus-tracker/depot-allocations.json')
+const smartrakDepots = require('../../../../transportvic-data/excel/bus/depots/bus-depots.json')
 
 const smartrakDepotLookup = Object.keys(smartrakDepots).reduce((acc, depotID) => ({
   ...acc,
   [smartrakDepots[depotID]]: depotID
 }), {})
 
-const operatorCodes = require('../../../additional-data/bus-tracker/operators')
+const operatorCodes = require('../../../../additional-data/bus-tracker/operators.json')
 
 let crossDepotQuery = null
 
@@ -161,7 +161,7 @@ router.get('/fleet', async (req, res) => {
     return {
       date,
       humanDate,
-      services: services.sort((a, b) => parseInt(a) - parseInt(b) || a.localeCompare(b))
+      data: services.sort((a, b) => parseInt(a) - parseInt(b) || a.localeCompare(b))
     }
   })
 
@@ -184,11 +184,11 @@ router.get('/service', async (req, res) => {
 
   let today = utils.getYYYYMMDDNow()
 
-  let {service, date} = querystring.parse(url.parse(req.url).query)
+  let {service: routeNumber, date} = querystring.parse(url.parse(req.url).query)
   if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
   else date = today
 
-  if (!service) {
+  if (!routeNumber) {
     return res.render('tracker/bus/by-service', {
       tripsToday: [],
       busesByDay: {},
@@ -197,20 +197,9 @@ router.get('/service', async (req, res) => {
     })
   }
 
-  let routeQuery = {
-    $in: [
-      service,
-      service + 'A',
-      service + 'B',
-      service + 'C',
-      service + 'D',
-      service + 'F'
-    ]
-  }
-
   let rawTripsToday = await busTrips.findDocuments({
     date,
-    routeNumber: routeQuery
+    routeNumber
   }).sort({departureTime: 1, origin: 1}).toArray()
 
   const d = async r => {
@@ -225,24 +214,24 @@ router.get('/service', async (req, res) => {
     return trip
   })).map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
 
-  let allDates = (await busTrips.distinct('date', { routeNumber: routeQuery })).reverse().slice(0, 60)
+  let allDates = (await busTrips.distinct('date', { routeNumber })).reverse().slice(0, 60)
 
   let busesByDay = await async.map(allDates, async date => {
     let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
 
-    let buses = await busTrips.distinct('consist', { routeNumber: routeQuery, date })
+    let buses = await busTrips.distinct('consist', { routeNumber, date })
 
     return {
       date,
       humanDate,
-      buses: (await async.map(buses, d)).sort((a, b) => a.replace(/[^\d]/g, '') - b.replace(/[^\d]/g, ''))
+      data: (await async.map(buses, d)).sort((a, b) => a.replace(/[^\d]/g, '') - b.replace(/[^\d]/g, ''))
     }
   })
 
   res.render('tracker/bus/by-service', {
     tripsToday,
     busesByDay,
-    service,
+    service: routeNumber,
     date: utils.parseTime(date, 'YYYYMMDD')
   })
 })
@@ -488,7 +477,7 @@ router.get('/operator-unknown', async (req, res) => {
     return {
       date,
       humanDate,
-      buses
+      data: buses
     }
   })
 
@@ -501,7 +490,7 @@ router.get('/operator-unknown', async (req, res) => {
   })
 })
 
-router.use('/locator', require('./BusLocator'))
+router.use('/locator', require('../BusLocator'))
 
 module.exports = router
 module.exports.initDB = async (db, tripDB) => {
