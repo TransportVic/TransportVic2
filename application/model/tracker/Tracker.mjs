@@ -14,7 +14,9 @@ export default class Tracker {
   static getTrackerCollection(db) { throw new Error() }
   static getURLMode() { throw new Error() }
 
-  getDate({ date = utils.getPTYYYYMMDD() } = {}) {
+  getDefaultDay() { return utils.getPTYYYYMMDD(utils.now()) }
+
+  getDate({ date = this.getDefaultDay() } = {}) {
     return date
   }
 
@@ -22,7 +24,7 @@ export default class Tracker {
     return utils.encodeName(stopName)
   }
   
-  setTripData(trip) {
+  setTripData(trip, checkActive, currentTime) {
     const tripURL = '/' + [
       this.constructor.getURLMode(), 'run',
       this.getURLStopName(trip.origin), trip.departureTime,
@@ -35,7 +37,8 @@ export default class Tracker {
 
     return {
       ...trip,
-      tripURL, destinationArrivalMoment
+      tripURL, destinationArrivalMoment,
+      active: checkActive ? destinationArrivalMoment >= currentTime : true
     }
   }
 
@@ -43,7 +46,7 @@ export default class Tracker {
     return (await this.#coll.findDocuments({ date, ...query })
       .sort({ departureTime: 1 })
       .toArray())
-      .map(trip => this.setTripData(trip))
+      .map(trip => this.setTripData(trip, date === this.getDefaultDay(), utils.now()))
   }
 
   getFleetQuery(consist, options) {

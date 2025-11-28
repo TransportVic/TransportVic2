@@ -14,6 +14,8 @@ class BusTracker extends Tracker {
 }
 
 describe('The Tracker class', () => {
+  const originalNow = utils.now
+
   it('Searches by consist number', async () => {
     const db = new LokiDatabaseConnection()
     const coll = db.getCollection('bus trips')
@@ -65,4 +67,32 @@ describe('The Tracker class', () => {
     expect(trips[0].tripURL).to.equal('/bus/run/huntingdale-railway-station-haughton-road/11:00/monash-university-bus-loop/11:07/20251128')
     expect(trips[0].destinationArrivalMoment.toISOString()).to.equal('2025-11-28T00:07:00.000Z') // 11.07am
   })
+
+  it('Marks trips as inactive if they are completed and on the current day', async () => {
+    utils.now = () => utils.parseTime('2025-11-28T00:30:00.000Z') // 11.30am
+    const db = new LokiDatabaseConnection()
+    const coll = db.getCollection('bus trips')
+    await coll.createDocuments(clone(busTrips))
+
+    const tracker = new BusTracker(db)
+    const trips = await tracker.searchWithDate({ routeNumber: '601' }, '20251128')
+    // Ends 11.23am
+    expect(trips.find(trip => trip.runID === '49-601--MF-1602310').active).to.be.false
+
+    // Ends 11.47am
+    expect(trips.find(trip => trip.runID === '49-601--MF-1591610').active).to.be.true
+  })
+
+  it('Does not mark trips as inactive if they are on a different day', async () => {
+    utils.now = () => utils.parseTime('2025-11-28T00:30:00.000Z') //20251128
+    const db = new LokiDatabaseConnection()
+    const coll = db.getCollection('bus trips')
+    await coll.createDocuments(clone(busTrips))
+
+    const tracker = new BusTracker(db)
+    const trips = await tracker.searchWithDate({ routeNumber: '601' }, '20251127')
+    expect(trips.find(trip => !trip.active)).to.not.exist
+  })
+
+  afterEach(() => utils.now = originalNow)
 })
