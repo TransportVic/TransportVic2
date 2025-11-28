@@ -14,7 +14,10 @@ block style
   link(rel='stylesheet' href=`${staticBase}/static/css/tracker/results.css`)
 
 block content
-  h1.title Tracking Bus #{fleet}#{rego ? ` (${rego})` : ''} on #{date.format('dddd, MMMM Do YYYY')}
+  if regoData
+    h1.title Tracking Bus #{regoData.fleetNumber} (#{regoData.rego}) on #{date.format('dddd, MMMM Do YYYY')}
+  else
+    h1.title Tracking Bus #{query} on #{date.format('dddd, MMMM Do YYYY')}
   for trip in tripsToday
     div(class=`trip ${trip.active ? '' : 'inactive'}`)
       a(href=trip.tripURL) #{trip.departureTime} #{trip.origin} - #{trip.destination} #{trip.routeNumber}
@@ -22,4 +25,4 @@ block content
   h1.title Past deployments:
   div#pastDeployments
     include ./history
-    +history(`/bus/tracker/fleet?fleet=${bus ? fleet.slice(1) : rego}`, servicesByDay)
+    +history(`/bus/tracker/fleet?fleet=${query}`, servicesByDay)

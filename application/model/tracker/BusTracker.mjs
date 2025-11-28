@@ -14,8 +14,14 @@ export default class BusTracker extends Tracker {
   static getURLMode() { return 'bus' }
 
   async getBusRego(fleetNumber) {
+    if (!fleetNumber) return null
     const busData = await this.#regos.findDocument({ fleetNumber })
     return busData ? busData.rego : null
+  }
+
+  async getBusData(query) {
+    if (!query) return null
+    return await this.#regos.findDocument({ rego: query }) || await this.#regos.findDocument({ fleetNumber: query })
   }
 
   setPrettyStopNames(trip) {

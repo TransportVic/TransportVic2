@@ -113,81 +113,19 @@ router.get('/fleet', async (req, res) => {
 
   const tracker = new BusTracker(res.tripDB)
   const trips = await tracker.getTripsByFleet(fleetNum, { date })
-  const regoData = await tracker.getBusRego(fleetNum)
+  const regoData = await tracker.getBusData(fleetNum)
+
+  const servicesByDay = await tracker.getHistory(
+    await tracker.getFleetQuery(fleetNum),
+    'routeNumber'
+  )
 
   return res.render('tracker/bus/by-fleet', {
     tripsToday: trips,
-    servicesByDay: {},
-    fleet: fleetNum,
-    rego: regoData ? regoData.rego : null,
-    date: date ? utils.parseDate(date) : utils.now()
-  })
-
-  // let busTrips = tripDB.getCollection('bus trips')
-  // let busRegos = tripDB.getCollection('bus regos')
-
-  // let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
-
-  // let today = utils.getYYYYMMDDNow()
-
-  // let {fleet, date} = querystring.parse(url.parse(req.url).query)
-  // if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
-  // else date = today
-
-  // if (!fleet) {
-  //   return res.render('tracker/bus/by-fleet', {
-  //     tripsToday: [],
-  //     servicesByDay: {},
-  //     bus: null,
-  //     fleet: '?',
-  //     smartrakID: '?',
-  //     date: utils.parseTime(date, 'YYYYMMDD')
-  //   })
-  // }
-
-  // let bus = await busRegos.findDocument({ fleetNumber: fleet })
-  // let query = { date }
-
-  // let rego
-
-  // if (bus) {
-  //   rego = bus.rego
-  //   fleet = `#${fleet}`
-  // } else {
-  //   rego = fleet
-  //   bus = await getBusFromRego(busRegos, rego)
-  //   if (bus) {
-  //     fleet = `#${bus.fleetNumber}`
-  //   }
-  // }
-
-  // query.consist = rego
-  // let tripsToday = await busTrips.findDocuments(query)
-  //   .sort({departureTime: 1}).toArray()
-
-  // tripsToday = tripsToday.map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
-
-  // let allDates = (await busTrips.distinct('date', { consist: rego })).reverse().slice(0, 60)
-
-  // let servicesByDay = await async.map(allDates, async date => {
-  //   let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
-
-  //   let services = await busTrips.distinct('routeNumber', { consist: rego, date })
-
-  //   return {
-  //     date,
-  //     humanDate,
-  //     data: services.sort((a, b) => parseInt(a) - parseInt(b) || a.localeCompare(b))
-  //   }
-  // })
-
-  res.render('tracker/bus/by-fleet', {
-    tripsToday,
     servicesByDay,
-    bus,
-    fleet,
-    rego: rego,
-    date: utils.parseTime(date, 'YYYYMMDD')
+    regoData,
+    query: fleetNum,
+    date: date ? utils.parseDate(date) : utils.now()
   })
 })
 
