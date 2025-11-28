@@ -518,5 +518,18 @@ export default [
     consist: [ '8216AO' ],
     routeNumber: '630',
     depot: '49'
+  },
+  {
+    date: '20251127',
+    routeGTFSID: '4-384',
+    routeName: 'Kinglake - Whittlesea',
+    runID: '42-384--MF-8',
+    origin: 'Kinglake Police Station/Whittlesea-Kinglake Road',
+    destination: 'Walnut Street/Church Street',
+    departureTime: '11:55',
+    destinationArrivalTime: '12:35',
+    consist: [ 'BS02HB' ],
+    routeNumber: '384',
+    depot: '42'
   }
 ]
