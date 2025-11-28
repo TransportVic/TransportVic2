@@ -512,12 +512,13 @@ module.exports = {
   getProperStopName: ptvStopName => {
     return module.exports.adjustRawStopName(stopNameModifier(module.exports.adjustStopName(ptvStopName.trim().replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, ''))))
   },
+  getShortName: stopName => stopName.replace('Shopping Centre', 'SC').replace('Railway Station', 'Station'),
   getDestinationName: stopName => {
-    stopName = stopName.replace('Shopping Centre', 'SC').replace('Railway Station', 'Station')
+    let shortName = module.exports.getShortName(stopName)
 
-    let shortName = module.exports.getStopName(stopName)
-    if (module.exports.isStreet(shortName)) return stopName
-    else return shortName
+    let primaryStopName = module.exports.getStopName(shortName)
+    if (module.exports.isStreet(primaryStopName)) return shortName
+    else return primaryStopName
   },
   getRunID: ptvRunID => {
     let parts
@@ -708,8 +709,8 @@ module.exports = {
   },
   getPrettyStopName: (stopName, destinations, { routeNumber, routeGTFSID } = {}) => {
     const keyStopName = module.exports.getDestinationName(stopName)
-    const primaryStopname = module.exports.getStopName(stopName)
+    const primaryStopName = module.exports.getShortName(module.exports.getStopName(stopName))
     const serviceData = destinations.service[routeGTFSID] || destinations.service[routeNumber] || {}
-    return (serviceData[keyStopName] || destinations.generic[keyStopName] || primaryStopname)
+    return (serviceData[keyStopName] || destinations.generic[keyStopName] || primaryStopName)
   }
 }

@@ -76,6 +76,16 @@ describe('The BusTracker class', () => {
     expect(trips[0].destination).to.equal('Whittlesea')
   })
 
+  it('Shortens Railway Station and Shopping Centre', async () => {
+    const db = new LokiDatabaseConnection()
+    const tripsColl = db.getCollection('bus trips')
+    await tripsColl.createDocuments(clone(busTrips))
+
+    const tracker = new BusTracker(db)
+    const trips = await tracker.getTripsByRoute('601', { date: '20251127' })
+    expect(trips[0].origin).to.equal('Huntingdale Station')
+  })
+
   it('Removes secondary stop names on origin and destinations', async () => {
     const db = new LokiDatabaseConnection()
     const tripsColl = db.getCollection('bus trips')
@@ -90,7 +100,7 @@ describe('The BusTracker class', () => {
     expect(trips[0].destination).to.equal('Monash Uni Clayton')
   })
 
-  it('Sets rego data on ths history where possible', async () => {
+  it('Sets rego data on the history where possible', async () => {
     const db = new LokiDatabaseConnection()
     const tripsColl = db.getCollection('bus trips')
     const regosColl = db.getCollection('bus regos')
