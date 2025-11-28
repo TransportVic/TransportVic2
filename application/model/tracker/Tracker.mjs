@@ -12,8 +12,17 @@ export default class Tracker {
 
   static getTrackerCollection(db) { return null }
 
-  async getByFleet(fleet, { date = utils.getPTYYYYMMDD() } = {}) {
+  async getByFleet(consist, { date = utils.getPTYYYYMMDD() } = {}) {
+    const query = {
+      date,
+      consist
+    }
 
+    const tripsToday = await this.#coll.findDocuments(query)
+      .sort({departureTime: 1})
+      .toArray()
+
+    return tripsToday
   }
 
 }
