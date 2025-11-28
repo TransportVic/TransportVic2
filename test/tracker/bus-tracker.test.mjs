@@ -62,6 +62,6 @@ describe('The BusTracker class', () => {
     const tracker = new BusTracker(db)
     const trips = await tracker.getTripsByRoute('601', { date: '20251127' })
     const trip1 = trips.find(t => t.runID === '49-601--MF-1602110')
-    expect(trip1.displayConsist).to.equal('@7509AO')
+    expect(trip1.displayConsist).to.equal('7509AO')
   })
 })

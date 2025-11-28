@@ -10,9 +10,13 @@ export default class BusTracker extends Tracker {
 
   static getTrackerCollection(db) { return db.getCollection('bus trips') }
 
+  async getBusRego(fleetNumber) {
+    const busData = await this.#regos.findDocument({ fleetNumber })
+    return busData ? busData.rego : null
+  }
+
   async getTripsByFleet(consist, options) {
-    const busData = await this.#regos.findDocument({ fleetNumber: consist })
-    const queryConsist = busData ? busData.rego : consist
+    const queryConsist = await this.getBusRego(consist) || consist
     return await super.getTripsByFleet(queryConsist, options)
   }
 
@@ -26,7 +30,7 @@ export default class BusTracker extends Tracker {
 
     return trips.map(trip => ({
       ...trip,
-      displayConsist: busData[trip.consist[0]] ? `#${busData[trip.consist[0]]}` : `@${trip.consist[0]}`
+      displayConsist: busData[trip.consist[0]] ? `#${busData[trip.consist[0]]}` : trip.consist[0]
     }))
   }
 
