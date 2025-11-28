@@ -10,6 +10,7 @@ const clone = o => JSON.parse(JSON.stringify(o))
 
 class BusTracker extends Tracker {
   static getTrackerCollection(db) { return db.getCollection('bus trips') }
+  static getURLMode() { return 'bus' }
 }
 
 describe('The Tracker class', () => {
@@ -51,5 +52,17 @@ describe('The Tracker class', () => {
       humanDate: '27/11/2025',
       data: ['7509AO', 'BS05JA']
     }])
+  })
+
+  it('Sets the trip data', async () => {
+    const db = new LokiDatabaseConnection()
+    const coll = db.getCollection('bus trips')
+    await coll.createDocuments(clone(busTrips))
+
+    const tracker = new BusTracker(db)
+    const trips = await tracker.searchWithDate({ routeNumber: '601' }, '20251128')
+    expect(trips[0].runID).to.equal('49-601--MF-1602110')
+    expect(trips[0].tripURL).to.equal('/bus/run/huntingdale-railway-station-haughton-road/11:00/monash-university-bus-loop/11:07/20251128')
+    expect(trips[0].destinationArrivalMoment.toISOString()).to.equal('2025-11-28T00:07:00.000Z') // 11.07am
   })
 })

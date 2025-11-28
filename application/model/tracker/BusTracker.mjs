@@ -11,6 +11,7 @@ export default class BusTracker extends Tracker {
   }
 
   static getTrackerCollection(db) { return db.getCollection('bus trips') }
+  static getURLMode() { return 'bus' }
 
   async getBusRego(fleetNumber) {
     const busData = await this.#regos.findDocument({ fleetNumber })

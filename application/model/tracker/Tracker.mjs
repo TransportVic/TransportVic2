@@ -11,16 +11,39 @@ export default class Tracker {
     this.#coll = this.constructor.getTrackerCollection(db)
   }
 
-  static getTrackerCollection(db) { return null }
+  static getTrackerCollection(db) { throw new Error() }
+  static getURLMode() { throw new Error() }
 
   getDate({ date = utils.getPTYYYYMMDD() } = {}) {
     return date
   }
 
+  getURLStopName(stopName) {
+    return utils.encodeName(stopName)
+  }
+  
+  setTripData(trip) {
+    const tripURL = '/' + [
+      this.constructor.getURLMode(), 'run',
+      this.getURLStopName(trip.origin), trip.departureTime,
+      this.getURLStopName(trip.destination), trip.destinationArrivalTime,
+      trip.date
+    ].join('/')
+
+    const arrivalMinutes = utils.getMinutesPastMidnightFromHHMM(trip.destinationArrivalTime)
+    const destinationArrivalMoment = utils.parseDate(trip.date).add(arrivalMinutes, 'minutes')
+
+    return {
+      ...trip,
+      tripURL, destinationArrivalMoment
+    }
+  }
+
   async searchWithDate(query, date) {
-    return await this.#coll.findDocuments({ date, ...query })
+    return (await this.#coll.findDocuments({ date, ...query })
       .sort({ departureTime: 1 })
-      .toArray()
+      .toArray())
+      .map(trip => this.setTripData(trip))
   }
 
   getFleetQuery(consist, options) {
