@@ -16,4 +16,18 @@ export default class BusTracker extends Tracker {
     return await super.getTripsByFleet(queryConsist, options)
   }
 
+  async getTripsByRoute(routeNumber, options) {
+    const trips = await super.getTripsByRoute(routeNumber, options)
+    const uniqueRegos = Array.from(new Set(trips.flatMap(trip => trip.consist)))
+    const busData = (await this.#regos.findDocuments({ rego: { $in: uniqueRegos } }).toArray()).reduce((acc, bus) => ({
+      ...acc,
+      [bus.rego]: bus.fleetNumber
+    }), {})
+
+    return trips.map(trip => ({
+      ...trip,
+      displayConsist: busData[trip.consist[0]] ? `#${busData[trip.consist[0]]}` : `@${trip.consist[0]}`
+    }))
+  }
+
 }
