@@ -12,24 +12,36 @@ export default class Tracker {
 
   static getTrackerCollection(db) { return null }
 
-  async getByFleet(consist, { date = utils.getPTYYYYMMDD() } = {}) {
-    const query = {
+  getFleetQuery(consist, date, options) {
+    return {
       date,
       consist
     }
+  }
 
-    return await this.#coll.findDocuments(query)
+  destructureOptions({ date = utils.getPTYYYYMMDD() } = {}) {
+    return {
+      date
+    }
+  }
+
+  async getByFleet(consist, options) {
+    const { date } = this.destructureOptions(options)
+    return await this.#coll.findDocuments(this.getFleetQuery(consist, date, options))
       .sort({departureTime: 1})
       .toArray()
   }
 
-  async getByRoute(routeNumber, { date = utils.getPTYYYYMMDD() } = {}) {
-    const query = {
+  getRouteQuery(routeNumber, date, options) {
+    return {
       date,
       routeNumber
     }
+  }
 
-    return await this.#coll.findDocuments(query)
+  async getByRoute(routeNumber, options) {
+    const { date } = this.destructureOptions(options)
+    return await this.#coll.findDocuments(this.getRouteQuery(routeNumber, date, options))
       .sort({departureTime: 1})
       .toArray()
   }
