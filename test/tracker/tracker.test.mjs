@@ -23,4 +23,15 @@ describe('The Tracker class', () => {
     expect(trips[0].runID).to.equal('49-601--MF-1591010')
     expect(trips[1].runID).to.equal('49-601--MF-1591110')
   })
+
+  it('Searches by route number', async () => {
+    const db = new LokiDatabaseConnection()
+    const coll = db.getCollection('bus trips')
+    await coll.createDocuments(clone(busTrips))
+
+    const tracker = new BusTracker(db)
+    const trips = await tracker.getByRoute('601', { date: '20251128' })
+    expect(trips[0].runID).to.equal('49-601--MF-1602110')
+    expect(trips[1].runID).to.equal('49-601--MF-1591010')
+  })
 })

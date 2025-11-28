@@ -18,11 +18,19 @@ export default class Tracker {
       consist
     }
 
-    const tripsToday = await this.#coll.findDocuments(query)
+    return await this.#coll.findDocuments(query)
       .sort({departureTime: 1})
       .toArray()
-
-    return tripsToday
   }
 
+  async getByRoute(routeNumber, { date = utils.getPTYYYYMMDD() } = {}) {
+    const query = {
+      date,
+      routeNumber
+    }
+
+    return await this.#coll.findDocuments(query)
+      .sort({departureTime: 1})
+      .toArray()
+  }
 }
