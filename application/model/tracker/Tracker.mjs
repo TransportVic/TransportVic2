@@ -29,7 +29,6 @@ export default class Tracker {
     }
   }
 
-
   async getTripsByFleet(consist, options) {
     const date = this.getDate(options)
     return await this.searchWithDate(this.getFleetQuery(consist, options), date)
