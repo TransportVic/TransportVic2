@@ -45,4 +45,7 @@ export default class Tracker {
       .sort({departureTime: 1})
       .toArray()
   }
+
+  async getHistory(query, field) {
+  }
 }

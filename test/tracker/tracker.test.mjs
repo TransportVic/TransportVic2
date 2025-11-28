@@ -34,4 +34,22 @@ describe('The Tracker class', () => {
     expect(trips[0].runID).to.equal('49-601--MF-1602110')
     expect(trips[1].runID).to.equal('49-601--MF-1591010')
   })
+
+  it('Gets the history based on a query', async () => {
+    const db = new LokiDatabaseConnection()
+    const coll = db.getCollection('bus trips')
+    await coll.createDocuments(clone(busTrips))
+
+    const tracker = new BusTracker(db)
+    const history = await tracker.getHistory({ routeNumber: '601' }, 'consist')
+    expect(history).to.deep.equal([{
+      date: '20251128',
+      humanDate: '28/11/2025',
+      data: ['1013AO', 'BS05JA']
+    }, {
+      date: '20251127',
+      humanDate: '27/11/2025',
+      data: ['7509AO', 'BS05JA']
+    }])
+  })
 })
