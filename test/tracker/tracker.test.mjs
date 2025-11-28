@@ -19,7 +19,7 @@ describe('The Tracker class', () => {
     await coll.createDocuments(clone(busTrips))
 
     const tracker = new BusTracker(db)
-    const trips = await tracker.getByFleet('BS05JA', { date: '20251128' })
+    const trips = await tracker.getTripsByFleet('BS05JA', { date: '20251128' })
     expect(trips[0].runID).to.equal('49-601--MF-1591010')
     expect(trips[1].runID).to.equal('49-601--MF-1591110')
   })
@@ -30,7 +30,7 @@ describe('The Tracker class', () => {
     await coll.createDocuments(clone(busTrips))
 
     const tracker = new BusTracker(db)
-    const trips = await tracker.getByRoute('601', { date: '20251128' })
+    const trips = await tracker.getTripsByRoute('601', { date: '20251128' })
     expect(trips[0].runID).to.equal('49-601--MF-1602110')
     expect(trips[1].runID).to.equal('49-601--MF-1591010')
   })

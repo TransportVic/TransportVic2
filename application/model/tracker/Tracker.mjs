@@ -13,38 +13,37 @@ export default class Tracker {
 
   static getTrackerCollection(db) { return null }
 
-  getFleetQuery(consist, date, options) {
+  getDate({ date = utils.getPTYYYYMMDD() } = {}) {
+    return date
+  }
+
+  async searchWithDate(query, date) {
+    return await this.#coll.findDocuments({ date, ...query })
+      .sort({ departureTime: 1 })
+      .toArray()
+  }
+
+  getFleetQuery(consist, options) {
     return {
-      date,
       consist
     }
   }
 
-  destructureOptions({ date = utils.getPTYYYYMMDD() } = {}) {
-    return {
-      date
-    }
+
+  async getTripsByFleet(consist, options) {
+    const date = this.getDate(options)
+    return await this.searchWithDate(this.getFleetQuery(consist, options), date)
   }
 
-  async getByFleet(consist, options) {
-    const { date } = this.destructureOptions(options)
-    return await this.#coll.findDocuments(this.getFleetQuery(consist, date, options))
-      .sort({departureTime: 1})
-      .toArray()
-  }
-
-  getRouteQuery(routeNumber, date, options) {
+  getRouteQuery(routeNumber, options) {
     return {
-      date,
       routeNumber
     }
   }
 
-  async getByRoute(routeNumber, options) {
-    const { date } = this.destructureOptions(options)
-    return await this.#coll.findDocuments(this.getRouteQuery(routeNumber, date, options))
-      .sort({departureTime: 1})
-      .toArray()
+  async getTripsByRoute(routeNumber, options) {
+    const date = this.getDate(options)
+    return await this.searchWithDate(this.getRouteQuery(routeNumber, options), date)
   }
 
   async getHistoryDates(query) {
@@ -63,6 +62,5 @@ export default class Tracker {
         data: distinct.sort((a, b) => parseInt(a) - parseInt(b) || a.localeCompare(b))
       }
     })
-  
   }
 }
