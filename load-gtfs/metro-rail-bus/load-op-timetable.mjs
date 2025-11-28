@@ -37,6 +37,8 @@ export async function loadOperationalTT(mongoDB, operationDay) {
     tripGroups[routeGroups[trip.routeName]].push(trip)
   }
 
+  let tripIDsSeen = activeTrips.map(trip => trip.tripID)
+
   for (let group of Object.keys(tripGroups)) {
     let trips = tripGroups[group]
     if (!trips.length) continue
@@ -53,6 +55,8 @@ export async function loadOperationalTT(mongoDB, operationDay) {
         }
       }
     })
+
+    tripIDsSeen.push(...hasRealtimeData)
 
     let replacementTrips = trips.filter(trip => !hasRealtimeData.includes(trip.tripID))
     let bulkWrite = replacementTrips.map(trip => ({
@@ -80,4 +84,12 @@ export async function loadOperationalTT(mongoDB, operationDay) {
     })
     await liveTimetables.bulkWrite(bulkWrite)
   }
+
+  await liveTimetables.deleteDocuments({
+    mode: 'metro train',
+    operationDays: opDayFormat,
+    isRailReplacementBus: true,
+    routeGTFSID: '2-RRB',
+    tripID: { $not: { $in: tripIDsSeen } }
+  })
 }
