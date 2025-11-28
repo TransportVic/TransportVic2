@@ -1,4 +1,5 @@
 import utils from '../../../utils.js'
+import async from 'async'
 
 export default class Tracker {
 
@@ -46,6 +47,22 @@ export default class Tracker {
       .toArray()
   }
 
+  async getHistoryDates(query) {
+    return (await this.#coll.distinct('date', query)).sort((a, b) => b.localeCompare(a))
+  }
+
   async getHistory(query, field) {
+    const allDates = await this.getHistoryDates(query)
+    return await async.map(allDates, async date => {
+      const humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
+      const distinct = await this.#coll.distinct(field, { date, ...query })
+
+      return {
+        date,
+        humanDate,
+        data: distinct.sort((a, b) => parseInt(a) - parseInt(b) || a.localeCompare(b))
+      }
+    })
+  
   }
 }
