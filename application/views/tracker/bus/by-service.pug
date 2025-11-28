@@ -17,7 +17,7 @@ block content
   h1.title Tracking Bus Service #{service} on #{date.format('dddd, MMMM Do YYYY')}
   for trip in tripsToday
     div(class=`trip ${trip.active ? '' : 'inactive'}`)
-      a(href=trip.url) #{trip.fleetNumber}: #{trip.departureTime} #{trip.origin.split('/')[0]} - #{trip.destination.split('/')[0]}
+      a(href=trip.tripURL) #{trip.displayConsist}: #{trip.departureTime} #{trip.origin} - #{trip.destination}
 
   h1.title Past deployments:
   div#pastDeployments

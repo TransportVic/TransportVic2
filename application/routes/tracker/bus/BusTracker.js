@@ -130,63 +130,23 @@ router.get('/fleet', async (req, res) => {
 })
 
 router.get('/service', async (req, res) => {
-  let { tripDB } = res
-  let busTrips = tripDB.getCollection('bus trips')
-  let busRegos = tripDB.getCollection('bus regos')
+  const searchParams = req.urlData.searchParams
+  const routeNumber = searchParams.get('service')
+  const date = searchParams.get('date')
 
-  let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
+  const tracker = new BusTracker(res.tripDB)
+  const trips = await tracker.getTripsByRoute(routeNumber, { date })
 
-  let today = utils.getYYYYMMDDNow()
+  const busesByDay = await tracker.setRegosOnHistory(await tracker.getHistory(
+    await tracker.getRouteQuery(routeNumber),
+    'consist'
+  ))
 
-  let {service: routeNumber, date} = querystring.parse(url.parse(req.url).query)
-  if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
-  else date = today
-
-  if (!routeNumber) {
-    return res.render('tracker/bus/by-service', {
-      tripsToday: [],
-      busesByDay: {},
-      service: '',
-      date: utils.parseTime(date, 'YYYYMMDD')
-    })
-  }
-
-  let rawTripsToday = await busTrips.findDocuments({
-    date,
-    routeNumber
-  }).sort({departureTime: 1, origin: 1}).toArray()
-
-  const d = async r => {
-    let {fleetNumber} = await getBusFromRego(busRegos, r) || {}
-
-    return fleetNumber ? '#' + fleetNumber : r
-  }
-
-  let tripsToday = (await async.map(rawTripsToday, async trip => {
-    trip.fleetNumber = await d(trip.consist[0])
-
-    return trip
-  })).map(trip => adjustTrip(trip, date, today, minutesPastMidnightNow))
-
-  let allDates = (await busTrips.distinct('date', { routeNumber })).reverse().slice(0, 60)
-
-  let busesByDay = await async.map(allDates, async date => {
-    let humanDate = date.slice(6, 8) + '/' + date.slice(4, 6) + '/' + date.slice(0, 4)
-
-    let buses = await busTrips.distinct('consist', { routeNumber, date })
-
-    return {
-      date,
-      humanDate,
-      data: (await async.map(buses, d)).sort((a, b) => a.replace(/[^\d]/g, '') - b.replace(/[^\d]/g, ''))
-    }
-  })
-
-  res.render('tracker/bus/by-service', {
-    tripsToday,
+  return res.render('tracker/bus/by-service', {
+    tripsToday: trips,
     busesByDay,
     service: routeNumber,
-    date: utils.parseTime(date, 'YYYYMMDD')
+    date: date ? utils.parseDate(date) : utils.now()
   })
 })
 

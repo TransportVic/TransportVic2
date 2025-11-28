@@ -89,4 +89,25 @@ describe('The BusTracker class', () => {
     expect(trips[0].origin).to.equal('St. Kilda Street')
     expect(trips[0].destination).to.equal('Monash Uni Clayton')
   })
+
+  it('Sets rego data on ths history where possible', async () => {
+    const db = new LokiDatabaseConnection()
+    const tripsColl = db.getCollection('bus trips')
+    const regosColl = db.getCollection('bus regos')
+    await tripsColl.createDocuments(clone(busTrips))
+    await regosColl.createDocuments(clone(busRegos))
+
+    const tracker = new BusTracker(db)
+    const history = await tracker.setRegosOnHistory(await tracker.getHistory({ routeNumber: '601' }, 'consist'))
+    expect(history).to.deep.equal([{
+      date: '20251128',
+      humanDate: '28/11/2025',
+      data: [ 'CO13', 'CO171' ]
+    },
+    {
+      date: '20251127',
+      humanDate: '27/11/2025',
+      data: [ '7509AO', 'CO171' ]
+    }])
+  })
 })

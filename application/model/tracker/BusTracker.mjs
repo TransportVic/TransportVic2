@@ -47,18 +47,30 @@ export default class BusTracker extends Tracker {
       .map(trip => this.setPrettyStopNames(trip))
   }
 
-  async getTripsByRoute(routeNumber, options) {
-    const trips = await super.getTripsByRoute(routeNumber, options)
-    const uniqueRegos = Array.from(new Set(trips.flatMap(trip => trip.consist)))
-    const busData = (await this.#regos.findDocuments({ rego: { $in: uniqueRegos } }).toArray()).reduce((acc, bus) => ({
+  async bulkSearchRegos(regos) {
+    const uniqueRegos = Array.from(new Set(regos))
+    return (await this.#regos.findDocuments({ rego: { $in: uniqueRegos } }).toArray()).reduce((acc, bus) => ({
       ...acc,
       [bus.rego]: bus.fleetNumber
     }), {})
+  }
+
+  async getTripsByRoute(routeNumber, options) {
+    const trips = await super.getTripsByRoute(routeNumber, options)
+    const busData = await this.bulkSearchRegos(trips.flatMap(trip => trip.consist))
 
     return trips.map(trip => ({
       ...trip,
       displayConsist: busData[trip.consist[0]] ? `#${busData[trip.consist[0]]}` : trip.consist[0]
     })).map(trip => this.setPrettyStopNames(trip))
+  }
+
+  async setRegosOnHistory(history) {
+    const busData = await this.bulkSearchRegos(history.flatMap(day => day.data))
+    return history.map(day => ({
+      ...day,
+      data: day.data.map(rego => busData[rego] || rego).sort((a, b) => a.localeCompare(b))
+    }))
   }
 
 }
