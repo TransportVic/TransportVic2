@@ -1,4 +1,6 @@
 import Tracker from './Tracker.mjs'
+import utils from '../../../utils.js'
+import busDestinations from '../../../additional-data/bus-destinations.json' with { type: 'json' }
 
 export default class BusTracker extends Tracker {
 
@@ -13,6 +15,18 @@ export default class BusTracker extends Tracker {
   async getBusRego(fleetNumber) {
     const busData = await this.#regos.findDocument({ fleetNumber })
     return busData ? busData.rego : null
+  }
+
+  setPrettyStopNames(trip) {
+    const tripRoute = { routeNumber: trip.routeNumber, routeGTFSID: trip.routeGTFSID }
+    const origin = utils.getPrettyStopName(trip.origin, busDestinations, tripRoute)
+    const destination = utils.getPrettyStopName(trip.destination, busDestinations, tripRoute)
+
+    return {
+      ...trip,
+      origin,
+      destination
+    }
   }
 
   async getTripsByFleet(consist, options) {
@@ -31,7 +45,7 @@ export default class BusTracker extends Tracker {
     return trips.map(trip => ({
       ...trip,
       displayConsist: busData[trip.consist[0]] ? `#${busData[trip.consist[0]]}` : trip.consist[0]
-    }))
+    })).map(trip => this.setPrettyStopNames(trip))
   }
 
 }

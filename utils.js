@@ -705,5 +705,11 @@ module.exports = {
       if (nodeEnv) process.env.NODE_ENV = nodeEnv[1].trim()
     } catch (e) {
     }
+  },
+  getPrettyStopName: (stopName, destinations, { routeNumber, routeGTFSID } = {}) => {
+    const keyStopName = module.exports.getDestinationName(stopName)
+    const primaryStopname = module.exports.getStopName(stopName)
+    const serviceData = destinations.service[routeGTFSID] || destinations.service[routeNumber] || {}
+    return (serviceData[keyStopName] || destinations.generic[keyStopName] || primaryStopname)
   }
 }

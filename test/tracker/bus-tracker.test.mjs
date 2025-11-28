@@ -87,6 +87,6 @@ describe('The BusTracker class', () => {
     const tracker = new BusTracker(db)
     const trips = await tracker.getTripsByRoute('999', { date: '20251128' })
     expect(trips[0].origin).to.equal('St. Kilda Street')
-    expect(trips[0].destination).to.equal('Monash Uni Bus Loop')
+    expect(trips[0].destination).to.equal('Monash Uni Clayton')
   })
 })
