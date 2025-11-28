@@ -14,6 +14,7 @@ const gtfsFolder = path.join(__dirname, '..', '..', 'gtfs', 'mtm-rail')
 
 export async function loadTrips(mongoDB, routeIDMap) {
   let mongoStops = await mongoDB.getCollection('stops')
+  let mongoGTFSTimetables = await mongoDB.getCollection('gtfs timetables')
 
   let start = new Date()
   console.log('Start', start)
@@ -29,15 +30,24 @@ export async function loadTrips(mongoDB, routeIDMap) {
   for (let operator of operators) {
     const operatorFolder = path.join(gtfsFolder, operator)
     const calendarFile = path.join(operatorFolder, 'calendar.txt')
+    const calendarDatesFile = path.join(operatorFolder, 'calendar_dates.txt')
     const tripsFile = path.join(operatorFolder, 'trips.txt')
     const stopTimesFile = path.join(operatorFolder, 'stop_times.txt')
 
     try {
+      console.log('Deleting old trips for', operator)
+      await mongoGTFSTimetables.deleteDocuments({
+        mode: GTFS_CONSTANTS.TRANSIT_MODES.metroTrain,
+        routeGTFSID: '2-RRB',
+        'flags.operator': operator
+      })
+
       console.log('Loading trips for', operator)
       let tripLoader = new MTMRailTripLoader({
         tripsFile: tripsFile,
         stopTimesFile: stopTimesFile,
         calendarFile: calendarFile,
+        calendarDatesFile: calendarDatesFile
       }, operator, mongoDB)
 
       await tripLoader.loadTrips(routeIDMap)
