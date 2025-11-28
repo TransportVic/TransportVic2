@@ -39,27 +39,9 @@ function determineStopType(stop) {
 }
 
 async function pickBestTrip(data, db, tripDB) {
-  let tripDay = utils.parseTime(data.operationDays, 'YYYYMMDD')
-  let departureTimeParts = data.departureTime.split(':')
-  if (parseInt(departureTimeParts[0]) > 23) {
-    let rawHours = parseInt(departureTimeParts[0]) - 24
-    departureTimeParts[0] = `0${rawHours}`
-  }
-  
-  let arrivalTimeParts = data.destinationArrivalTime.split(':')
-  if (parseInt(arrivalTimeParts[0]) > 23) {
-    let rawHours = parseInt(arrivalTimeParts[0]) - 24
-    arrivalTimeParts[0] = `0${rawHours}`
-  }
-  
-  let tripStartTime = utils.parseTime(`${data.operationDays} ${departureTimeParts.join(':')}`, 'YYYYMMDD HH:mm')
-  let tripStartMinutes = utils.getPTMinutesPastMidnight(tripStartTime)
-  let tripEndTime = utils.parseTime(`${data.operationDays} ${arrivalTimeParts.join(':')}`, 'YYYYMMDD HH:mm')
-  let tripEndMinutes = utils.getPTMinutesPastMidnight(tripEndTime)
-
-  if (tripEndMinutes < tripStartMinutes) tripEndMinutes += 1440
-  // if (tripStartMinutes >= 1440) tripDay.add(-1, 'day')
-  // if (tripEndTime < tripStartTime) tripEndTime.add(1, 'day') // Because we don't have date stamps on start and end this is required
+  const operationDay = utils.parseDate(data.operationDays)
+  const tripStartTime = operationDay.clone().add(utils.getMinutesPastMidnightFromHHMM(data.departureTime), 'minutes')
+  const tripEndTime = operationDay.clone().add(utils.getMinutesPastMidnightFromHHMM(data.destinationArrivalTime), 'minutes')
 
   let dbStops = db.getCollection('stops')
 
@@ -175,7 +157,7 @@ async function pickBestTrip(data, db, tripDB) {
     if (!ptvRunID) return null // Available options to get ptvRunID unsuccessful - trip does not exist
 
     let trip = await getStoppingPattern({
-      ptvRunID: gtfsTrip.tripID,
+      ptvRunID: referenceTrip.tripID,
       referenceTrip: gtfsTrip
     }, db)
 

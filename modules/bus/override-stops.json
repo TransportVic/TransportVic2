@@ -1,26 +1,2 @@
 {
-  "18552": {
-    "stop_suburb": "Ringwood",
-    "stop_name": "Ringwood Railway Station/Maroondah Hwy",
-    "stop_latitude": -37.815080163896,
-    "stop_longitude": 145.22988517169,
-    "route_type": 2,
-    "stop_id": 18552
-  },
-  "18553": {
-    "stop_suburb": "Ringwood",
-    "stop_name": "Ringwood Railway Station/Maroondah Hwy",
-    "stop_latitude": -37.815080163896,
-    "stop_longitude": 145.22988517169,
-    "route_type": 2,
-    "stop_id": 18553
-  },
-  "18558": {
-    "stop_suburb": "Laverton",
-    "stop_name": "Laverton Railway Station",
-    "stop_latitude": -37.86431665,
-    "stop_longitude": 144.7707565,
-    "route_type": 2,
-    "stop_id": 18558
-  }
 }

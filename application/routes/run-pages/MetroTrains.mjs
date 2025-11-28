@@ -20,7 +20,8 @@ const CITY_LOOP = [
 
 async function pickBestTrip(data, db) {
   const operationDay = utils.parseDate(data.operationDays)
-  let tripStartTime = utils.parseTime(`${data.operationDays} ${data.departureTime}`, 'YYYYMMDD HH:mm')
+  const departureTimeMinutes = utils.getMinutesPastMidnightFromHHMM(data.departureTime)
+  const tripStartTime = operationDay.clone().add(departureTimeMinutes, 'minutes')
 
   let originStop = await db.getCollection('stops').findDocument({
     cleanName: data.origin + '-railway-station',
@@ -106,7 +107,7 @@ async function getTripData(req, res) {
   }
 
   addStopTimingData(isLive, operationDay, trip)
-  appendDoorsData(trip)
+  if (!trip.isRailReplacementBus) appendDoorsData(trip) 
 
   let formedBy = await getFormedByTripData(trip, isLive, res.db)
   let forming = await getFormingTripData(trip, isLive, res.db)
@@ -137,13 +138,13 @@ async function getTripData(req, res) {
   if (showFormedBy) {
     trip.formedByTrip = showFormedBy
     addStopTimingData(isLive, operationDay, showFormedBy)
-    appendDoorsData(showFormedBy)
+    if (!showFormedBy.isRailReplacementBus) appendDoorsData(showFormedBy)
   }
 
   if (showForming) {
     trip.formingTrip = showForming
     addStopTimingData(isLive, operationDay, showForming)
-    appendDoorsData(showForming)
+    if (!showForming.isRailReplacementBus) appendDoorsData(showForming)
   }
 
   return trip

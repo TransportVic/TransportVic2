@@ -53,7 +53,7 @@ async function loadDepartures(req, res) {
 
     departure.tripURL = `/bus/run/${utils.encodeName(departure.trip.origin)}/${departure.trip.departureTime}/`
       + `${utils.encodeName(departure.trip.destination)}/${departure.trip.destinationArrivalTime}/`
-      + `${operationDate}#stop-${stopGTFSID}`
+      + `${departure.trip.operationDays}#stop-${stopGTFSID}`
 
     let destination = utils.getDestinationName(departure.trip.destination)
 
