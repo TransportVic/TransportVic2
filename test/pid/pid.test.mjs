@@ -60,19 +60,19 @@ await (await cfdDB.getCollection('stops')).createDocuments(clone(fknStops))
 
 describe('The PID getPIDDepartures function', () => {
   it('Returns a list of departures', async () => {
-    const departures = await getPIDDepartures('Alamein', almDB, almDepartureTime)
+    const departures = await getPIDDepartures('alamein', almDB, almDepartureTime)
     expect(departures).to.exist
     expect(departures.length).to.be.greaterThan(0)
   })
 
   it('Fails gracefully with non-existent stations', async () => {
-    const departures = await getPIDDepartures('Lol', almDB, almDepartureTime)
+    const departures = await getPIDDepartures('lol', almDB, almDepartureTime)
     expect(departures).to.exist
     expect(departures.length).to.be.equal(0)
   })
 
   it('Provides basic departure data', async () => {
-    const departures = await getPIDDepartures('Alamein', almDB, almDepartureTime)
+    const departures = await getPIDDepartures('alamein', almDB, almDepartureTime)
     expect(departures[0].platform).to.equal('1')
     expect(departures[0].cancelled).to.be.false
     expect(departures[0].routeName).to.equal('Alamein')
@@ -81,7 +81,7 @@ describe('The PID getPIDDepartures function', () => {
   })
 
   it('Returns a list of stops to display on the screen', async () => {
-    const departures = await getPIDDepartures('Alamein', almDB, almDepartureTime)
+    const departures = await getPIDDepartures('alamein', almDB, almDepartureTime)
     const stops = departures[0].stops
     expect(stops).to.exist
     expect(stops[0]).to.deep.equal({ name: 'Alamein', stops: true })
@@ -90,7 +90,7 @@ describe('The PID getPIDDepartures function', () => {
   })
 
   it('Returns express stops on the list of stops', async () => {
-    const departures = await getPIDDepartures('Alamein', almDB, almDepartureTime)
+    const departures = await getPIDDepartures('alamein', almDB, almDepartureTime)
     const stops = departures[1].stops
     expect(stops).to.exist
     expect(stops[0]).to.deep.equal({ name: 'Alamein', stops: true })
@@ -100,7 +100,7 @@ describe('The PID getPIDDepartures function', () => {
   })
 
   it('Removes city loop stops if not needed', async () => {
-    const departures = await getPIDDepartures('South Yarra', crossCityNoFormingDB, crossCityDepartureTime_SYR)
+    const departures = await getPIDDepartures('south-yarra', crossCityNoFormingDB, crossCityDepartureTime_SYR)
     const stops = departures[0].stops
 
     expect(stops).to.exist
@@ -110,7 +110,7 @@ describe('The PID getPIDDepartures function', () => {
   })
 
   it('Appends stops from the next trip onto the PID', async () => {
-    const departures = await getPIDDepartures('South Yarra', crossCityDB, crossCityDepartureTime_SYR)
+    const departures = await getPIDDepartures('south-yarra', crossCityDB, crossCityDepartureTime_SYR)
     const stops = departures[0].stops
 
     expect(stops).to.exist
@@ -122,7 +122,7 @@ describe('The PID getPIDDepartures function', () => {
   })
 
   it('Checks express running on the forming trip', async () => {
-    const departures = await getPIDDepartures('Caulfield', cfdDB, cfdDepartureTime)
+    const departures = await getPIDDepartures('caulfield', cfdDB, cfdDepartureTime)
     const stops = departures[0].stops
 
     expect(stops).to.exist
@@ -136,14 +136,14 @@ describe('The PID getPIDDepartures function', () => {
   })
 
   it('Contains a stopping pattern and types on an SAS train', async () => {
-    const departures = await getPIDDepartures('Alamein', almDB, almDepartureTime)
+    const departures = await getPIDDepartures('alamein', almDB, almDepartureTime)
     expect(departures[0].stoppingPattern).to.equal('Stops All Stations')
     expect(departures[0].stoppingType).to.equal('Stops All')
     expect(departures[0].extendedStoppingType).to.equal('Stopping All Stations')
   })
 
   it('Contains a stopping pattern and types on a cross city train', async () => {
-    const departures = await getPIDDepartures('South Yarra', crossCityDB, { departureTime: new Date('2025-06-11T06:49:00.000Z') })
+    const departures = await getPIDDepartures('south-yarra', crossCityDB, { departureTime: new Date('2025-06-11T06:49:00.000Z') })
     expect(departures[0].stoppingPattern).to.equal('Stops All Stations to Southern Cross, then Runs Express to Williamstown')
     expect(departures[0].stoppingType).to.equal('Express')
     expect(departures[0].extendedStoppingType).to.equal('Express Southern Cross -- Williamstown')

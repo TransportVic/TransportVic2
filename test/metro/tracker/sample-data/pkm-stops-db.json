@@ -5290,6 +5290,7 @@
   },
   {
     "stopName": "South Yarra Railway Station",
+    "cleanName": "south-yarra-railway-station",
     "bays": [
       {
         "originalName": "South Yarra Railway Station",

@@ -35,11 +35,12 @@ const extendedStoppingType = {
   expressAToB: 'Express {0} -- {1}'
 }
 
-export async function getPIDDepartures(stationName, db, { departureTime = new Date() } = {}) {
+export async function getPIDDepartures(cleanName, db, { departureTime = new Date() } = {}) {
   const stops = await db.getCollection('stops')
-  const stationData = await stops.findDocument({ stopName: `${stationName} Railway Station` })
+  const stationData = await stops.findDocument({ cleanName: `${cleanName}-railway-station` })
   if (!stationData) return []
 
+  const stationName = stationData.stopName.slice(0, -16)
   const metroDepartures = await getMetroDepartures(stationData, db, false, false, departureTime)
 
   return metroDepartures.map(departure => {
