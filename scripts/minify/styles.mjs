@@ -26,24 +26,34 @@ async function walkDir(dir) {
   return await walk(dir)
 }
 
-let originalPath = path.join(__dirname, '..', '..', 'application', 'static', 'css')
-const allCSSFiles = await walkDir(originalPath)
-const publicPath = path.join(__dirname, '..', '..', 'public', 'static', 'css')
-await fs.mkdir(publicPath)
+async function run(inFolder, outFolder) {
+  const allCSSFiles = await walkDir(inFolder)
+  await fs.mkdir(outFolder)
 
-for (let folder of allCSSFiles.filter(f => !f.file)) {
-  let newFolder = path.join(publicPath, folder.path.slice(originalPath.length + 1))
-  await fs.mkdir(newFolder)
-}
+  for (let folder of allCSSFiles.filter(f => !f.file)) {
+    let newFolder = path.join(outFolder, folder.path.slice(inFolder.length + 1))
+    await fs.mkdir(newFolder)
+  }
 
-for (let file of allCSSFiles.filter(f => f.file)) {
-  let newFile = path.join(publicPath, file.path.slice(originalPath.length + 1))
+  for (let file of allCSSFiles.filter(f => f.file)) {
+    let newFile = path.join(outFolder, file.path.slice(inFolder.length + 1))
 
-  if (file.path.endsWith('.css') && !file.path.includes('vendor')) {
-    let content = await fs.readFile(file.path)
-    let minified = new CleanCSS().minify(content.toString())
-    await fs.writeFile(newFile, minified.styles)
-  } else {
-    await fs.copyFile(file.path, newFile)
+    if (file.path.endsWith('.css') && !file.path.includes('vendor')) {
+      let content = await fs.readFile(file.path)
+      let minified = new CleanCSS().minify(content.toString())
+      await fs.writeFile(newFile, minified.styles)
+    } else {
+      await fs.copyFile(file.path, newFile)
+    }
   }
 }
+
+await run(
+  path.join(__dirname, '..', '..', 'application', 'static', 'css'),
+  path.join(__dirname, '..', '..', 'public', 'static', 'css')
+)
+
+await run(
+  path.join(__dirname, '..', '..', 'vic-pid', 'static', 'css'),
+  path.join(__dirname, '..', '..', 'public', 'mockups', 'static', 'css')
+)

@@ -26,24 +26,34 @@ async function walkDir(dir) {
   return await walk(dir)
 }
 
-let originalPath = path.join(__dirname, '..', '..', 'application', 'static', 'scripts')
-const allJSFiles = await walkDir(originalPath)
-const publicPath = path.join(__dirname, '..', '..', 'public', 'static', 'scripts')
-await fs.mkdir(publicPath)
+async function run(inFolder, outFolder) {
+  const allJSFiles = await walkDir(inFolder)
+  await fs.mkdir(outFolder)
 
-for (let folder of allJSFiles.filter(f => !f.file)) {
-  let newFolder = path.join(publicPath, folder.path.slice(originalPath.length + 1))
-  await fs.mkdir(newFolder)
-}
+  for (let folder of allJSFiles.filter(f => !f.file)) {
+    let newFolder = path.join(outFolder, folder.path.slice(inFolder.length + 1))
+    await fs.mkdir(newFolder)
+  }
 
-for (let file of allJSFiles.filter(f => f.file)) {
-  let newFile = path.join(publicPath, file.path.slice(originalPath.length + 1))
+  for (let file of allJSFiles.filter(f => f.file)) {
+    let newFile = path.join(outFolder, file.path.slice(inFolder.length + 1))
 
-  if (file.path.endsWith('.js') && !file.path.includes('vendor')) {
-    let content = await fs.readFile(file.path)
-    let minified = UglifyJS.minify(content.toString())
-    await fs.writeFile(newFile, minified.code)
-  } else {
-    await fs.copyFile(file.path, newFile)
+    if ((file.path.endsWith('.js') || file.path.endsWith('.mjs')) && !file.path.includes('vendor')) {
+      let content = await fs.readFile(file.path)
+      let minified = UglifyJS.minify(content.toString())
+      await fs.writeFile(newFile, minified.code)
+    } else {
+      await fs.copyFile(file.path, newFile)
+    }
   }
 }
+
+await run(
+  path.join(__dirname, '..', '..', 'application', 'static', 'scripts'),
+  path.join(__dirname, '..', '..', 'public', 'static', 'scripts')
+)
+
+await run(
+  path.join(__dirname, '..', '..', 'vic-pid', 'static', 'scripts'),
+  path.join(__dirname, '..', '..', 'public', 'mockups', 'static', 'scripts')
+)
