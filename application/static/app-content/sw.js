@@ -175,6 +175,7 @@ self.addEventListener('install', event => {
       '/pid/metro-lcd/full-pid',
       '/pid/metro-lcd/half-platform',
       '/pid/metro-lcd/half-platform-bold',
+
       '/mockups/static/scripts/util.js',
       '/mockups/static/scripts/dayjs.js',
       '/mockups/static/scripts/pid-utils.mjs',
