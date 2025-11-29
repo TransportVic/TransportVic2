@@ -21,7 +21,7 @@ export default class PIDRender {
 
   async render(name, extraScripts=[], options={}) {
     this.#res.status(200)
-    this.#res.setHeader('Content-Type', 'text/html')
+    this.#res.setHeader('Content-Type', 'text/html; charset=utf-8')
     this.#res.write('')
 
     const compiled = pug.compileFile(path.join(PID_VIEW, name + '.pug'))({

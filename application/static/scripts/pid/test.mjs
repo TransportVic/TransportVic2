@@ -18,6 +18,7 @@ function updateBody() {
       platform: decodeURIComponent(search.hash.p)
     }
   }, (err, status, body) => {
+    if (err || status !== 200) return pid.showAnnouncementsMessage()
     pid.updateServices(body)
   })
 }
