@@ -2,10 +2,11 @@ doctype strict
 html
   head
     link(rel='stylesheet' href=`${staticBase}/static/css/mockups/summary.css`)
+    input(type='hidden' name='station-name' value=station)
     script(src=`${staticBase}/static/scripts/util.js`)
+    script(src=`${staticBase}/static/scripts/mockups/summary.js`)
   body
     - let verticalPIDs = ['concourse-interchange', 'fss-escalator', 'pre-platform-vertical']
-    input(type='hidden' name='station-name' value=station)
     div.container
       - for (let i = 1; i <= stationPlatformData.platforms; i++) {
       -
@@ -34,4 +35,3 @@ html
           a(href=url)=`/${stationCode}/platform/${i}`
         iframe(src=url)
       - }
-    script(src=`${staticBase}/static/scripts/mockups/summary.js`)

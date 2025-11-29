@@ -1,4 +1,4 @@
-const version = '143i'
+const version = '144'
 const cacheName = `transportvic-${version}`
 
 async function cacheFiles(files) {
@@ -168,7 +168,28 @@ self.addEventListener('install', event => {
       '/links',
       '/nearby',
       '/search',
-      '/railmap'
+      '/railmap',
+
+
+
+      '/pid/metro-lcd/full-pid',
+      '/mockups/static/scripts/util.js',
+      '/mockups/static/scripts/dayjs.js',
+      '/mockups/static/scripts/pid-utils.mjs',
+      '/mockups/static/scripts/pid.mjs',
+
+      '/mockups/static/scripts/metro-lcd/full-pid-base.mjs',
+      '/mockups/static/scripts/metro-lcd/stopping-pattern.mjs',
+      '/mockups/static/scripts/metro-lcd/platform.mjs',
+      '/mockups/static/scripts/metro-lcd/pre-plat-portrait.mjs',
+      '/mockups/static/scripts/metro-lcd/pre-plat-landscape.mjs',
+
+      '/mockups/static/css/pid-base.css',
+      '/mockups/static/css/colours.css',
+      '/mockups/static/css/metro-lcd/full-pid-base.css',
+      '/mockups/static/css/metro-lcd/platform.css',
+      '/mockups/static/css/metro-lcd/pre-plat-portrait.css',
+      '/mockups/static/css/metro-lcd/stopping-pattern.css',
     ])
   )
 })

@@ -20,9 +20,7 @@ export default class PIDRender {
   }
 
   async render(name, extraScripts=[], options={}) {
-    this.#res.status(200)
     this.#res.setHeader('Content-Type', 'text/html; charset=utf-8')
-    this.#res.write('')
 
     const compiled = pug.compileFile(path.join(PID_VIEW, name + '.pug'))({
       ...options,
@@ -30,7 +28,7 @@ export default class PIDRender {
       extraScripts: extraScripts.map(src => ({ src: this.#res.locals.staticBase + src }))
     })
 
-    this.#res.end(compiled)
+    this.#res.send(compiled)
   }
 
 }

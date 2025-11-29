@@ -1,13 +1,75 @@
 let stationName = $('[name=station-name]').value
 
+let newChildren = {}
+let childrenRequests = {}
+let hasNewChildren = false
+
 let children = []
 let pidTypes = {}
 
 let csrf
 let lastRequestData = {}
 
+function handleNewInit(event) {
+  const { platform, station } = event.data
+
+  const pid = {
+    platform,
+    window: event.source
+  }
+
+  if (!newChildren[station]) {
+    newChildren[station] = [ pid ]
+    newFetchStation(station)
+  } else {
+    newChildren[station].push(pid)
+
+    if (childrenRequests[station]) {
+      newSendPIDData(pid, childrenRequests[station])
+    }
+  }
+
+  if (!hasNewChildren) { // The first child to register
+    setTimeout(() => {
+      newFetchData()
+      setInterval(newFetchData, 1000 * 30)
+    }, 30000 - (+new Date() % 30000))
+  }
+  
+
+  hasNewChildren = true
+}
+
+function newSendPIDData(pid, departures) {
+  pid.window.postMessage({
+    type: 'departure-data',
+    body: departures.filter(dep => dep.platform === pid.platform)
+  })
+}
+
+function newFetchStation(station) {
+  $.ajax({
+    method: 'POST',
+    url: '/pid/data',
+    data: {
+      station
+    }
+  }, (err, status, departures) => {
+    for (const pid of newChildren[station]) {
+      newSendPIDData(pid, departures)
+    }
+    childrenRequests[station] = departures
+  })
+}
+
+function newFetchData() {
+  Object.keys(newChildren).forEach(station => newFetchStation(station))
+}
+
 window.addEventListener('message', event => {
   if (event.origin !== location.origin) return
+  if (event.data.type === 'init-new') return handleNewInit(event)
+
   if (event.data.type !== 'init') return
 
   let { pidType, urlPattern, platform } = event.data
