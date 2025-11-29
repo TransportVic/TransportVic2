@@ -1,6 +1,8 @@
-let plat = (p, t) =>  ({ platform: p, type: t })
-let conc = (t, q) =>  ({ concourse: true, type: t, query: q })
-let platr = (c, e, t) => Array(c).fill(0).map((_, p) => plat(p + 1, t)).filter(p => !e.includes(p.platform))
+const plat = (p, t) =>  ({ platform: p, type: t })
+const conc = (t, q) =>  ({ concourse: true, type: t, query: q })
+const platr = (c, e, t) => Array(c).fill(0).map((_, p) => plat(p + 1, t)).filter(p => !e.includes(p.platform))
+
+const sl = (t, l) => ({ stationList: true, type: t, location: l || null })
 
 module.exports = {
   "Dingee": [],
@@ -102,7 +104,7 @@ module.exports = {
   "Flinders Street": [...platr(14, [11], 'fss-platform'), ...platr(14, [11], 'fss-escalator'), plat(null, 'trains-from-fss')],
   "Parliament": [...platr(4, [], 'platform'), conc('interchange')],
   "Jolimont": [...platr(2, [], 'half-platform-bold')],
-  "Richmond": [...platr(10, [], 'platform'), conc('interchange')],
+  "Richmond": [...platr(10, [], 'platform'), sl('concourse-left'), sl('concourse-right'), sl('line-group-portrait')],
   "Melbourne Central": [...platr(4, [], 'platform')],
   "South Yarra": [...platr(6, [], 'platform'), conc('up-down', 'd=up'), conc('up-down', 'd=down')],
   "Prahran": [...platr(2, [], 'half-platform')],

@@ -43,7 +43,7 @@ function handleNewInit(event) {
 function newSendPIDData(pid, departures) {
   pid.window.postMessage({
     type: 'departure-data',
-    body: departures.filter(dep => dep.platform === pid.platform)
+    body: departures.filter(dep => pid.platform ? dep.platform === pid.platform : true)
   })
 }
 

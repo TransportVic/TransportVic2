@@ -71,7 +71,7 @@ function updateBodyFromParent() {
     if (event.origin !== location.origin) return
     if (event.data.type !== 'departure-data') return
 
-    pid.updateServices(event.data.body)
+    for (const { pid, filter } of allPIDs) pid.updateServices(event.data.body.filter(filter))
   })
 }
 

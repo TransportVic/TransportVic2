@@ -18,6 +18,14 @@ html
             div.title
               a(href=url)=`/${stationCode}/concourse/${pid.type}`
             iframe(src=url)
+        else if pid.stationList
+          -
+            let url = `/pid/metro-lcd/service-list#s=${station}&t=${pid.type}`
+            console.log(url)
+          div(class=`pid ${pid.type.includes('portrait') ? 'vertical' : 'horizontal'}`)
+            div.title
+              a(href=url)=`/${stationCode}/concourse/${pid.type}`
+            iframe(src=url)
         else
           
           -
