@@ -34,7 +34,7 @@ router.post('/data', async (req, res) => {
   const relevantDepartures = (platform && platform !== '*') ? departures.filter(dep => dep.platform === platform) : departures
 
   res.send(relevantDepartures.map(departure => ({
-    schTime: departure.scheduledDepartureTime.format('HH:mma'),
+    schTime: departure.scheduledDepartureTime.format('H:mma'),
     estTime: Math.round((departure.actualDepartureTime - now) / 1000 / 60),
     destination: departure.formingDestination || departure.destination,
     summary: departure.stoppingType,
