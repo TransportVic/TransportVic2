@@ -1,4 +1,5 @@
 const isCityService = dep => dep.destination === 'City Loop' || dep.destination === 'Flinders Street'
+const hasStop = (stopName, dep) => dep.stops.some(stop => stop.name === stopName && stop.stops)
 
 export default {
   'melbourne-central': {
@@ -58,13 +59,13 @@ export default {
         return {
           pids: [{
             pid: SSS,
-            filter: dep => dep.direction === 'Up' && dep.stops.some(stop => stop.name === 'Southern Cross')
+            filter: dep => dep.direction === 'Up' && hasStop('Southern Cross', dep)
           }, {
             pid: FSS,
-            filter: dep => dep.direction === 'Up' && dep.stops.some(stop => stop.name === 'Flinders Street')
+            filter: dep => dep.direction === 'Up' && hasStop('Flinders Street', dep)
           }, {
             pid: CLP,
-            filter: dep => dep.direction === 'Up' && dep.stops.some(stop => stop.name === 'Parliament')
+            filter: dep => dep.direction === 'Up' && hasStop('Parliament', dep)
           }, {
             pid: NOR,
             filter: dep => !isCityService(dep) && ['craigieburn', 'sunbury', 'upfield'].includes(dep.line)
@@ -152,10 +153,10 @@ export default {
         return {
           pids: [{
             pid: FSS,
-            filter: dep => dep.direction === 'Up' && dep.stops.some(stop => stop.name === 'Flinders Street')
+            filter: dep => dep.direction === 'Up' && hasStop('Flinders Street', dep)
           }, {
             pid: CLP,
-            filter: dep => dep.direction === 'Up' && dep.stops.some(stop => stop.name === 'Parliament')
+            filter: dep => dep.direction === 'Up' && hasStop('Parliament', dep)
           }],
           header,
           area
@@ -180,10 +181,10 @@ export default {
         return {
           pids: [{
             pid: FSS,
-            filter: dep => dep.direction === 'Up' && dep.stops.some(stop => stop.name === 'Flinders Street')
+            filter: dep => dep.direction === 'Up' && hasStop('Flinders Street', dep)
           }, {
             pid: CLP,
-            filter: dep => dep.direction === 'Up' && dep.stops.some(stop => stop.name === 'Parliament')
+            filter: dep => dep.direction === 'Up' && hasStop('Parliament', dep)
           }, {
             pid: BLY,
             filter: dep => !isCityService(dep) && ['lilydale', 'belgrave', 'alamein', 'glen-waverley'].includes(dep.line)
@@ -286,19 +287,19 @@ export default {
             filter: dep => dep.direction === 'Down' && ['vline'].includes(dep.line)
           }, {
             pid: SSS,
-            filter: dep => dep.line !== 'vline' && dep.stops.some(stop => stop.name === 'Southern Cross')
+            filter: dep => dep.line !== 'vline' && hasStop('Southern Cross', dep)
           }, {
             pid: CLP,
-            filter: dep => dep.stops.some(stop => stop.name === 'Parliament')
+            filter: dep => dep.stops.some(stop => stop.name === 'Parliament' && stop.stops)
           }, {
             pid: RMD,
-            filter: dep => dep.stops.some(stop => stop.name === 'Richmond')
+            filter: dep => dep.stops.some(stop => stop.name === 'Richmond' && stop.stops)
           }, {
             pid: NME,
-            filter: dep => dep.stops.some(stop => stop.name === 'North Melbourne')
+            filter: dep => dep.stops.some(stop => stop.name === 'North Melbourne' && stop.stops)
           }, {
             pid: JLI,
-            filter: dep => dep.stops.some(stop => stop.name === 'Jolimont')
+            filter: dep => dep.stops.some(stop => stop.name === 'Jolimont' && stop.stops)
           }],
           header,
           area
