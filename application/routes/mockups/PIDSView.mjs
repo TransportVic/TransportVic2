@@ -28,6 +28,8 @@ router.get('/', async (req, res, next) => {
     let codedStationName = utils.encodeName(stationName)
     let stationPID = stationPIDs[codedStationName]
 
+    if (!stationName) return res.render('mockups/summary-known', {stationPID: [], station: codedStationName, stationCode, getURL: PIDBackend.getURL})
+
     res.render('mockups/summary-known', {stationPID, station: codedStationName, stationCode, getURL: PIDBackend.getURL})
   }
 })

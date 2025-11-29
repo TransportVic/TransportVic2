@@ -314,5 +314,11 @@ module.exports = {
   "Nagambie": [],
   "Mooroopna": [],
   "Wangaratta": [],
-  "Morwell": []
+  "Morwell": [],
+
+  "Anzac": [...platr(2, [], 'platform')],
+  "Town Hall": [...platr(2, [], 'platform')],
+  "State Library": [...platr(2, [], 'platform')],
+  "Parkville": [...platr(2, [], 'platform')],
+  "Arden": [...platr(2, [], 'platform')]
 }
