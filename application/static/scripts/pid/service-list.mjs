@@ -47,8 +47,6 @@ function updateBody() {
     }
   }, (err, status, body) => {
     for (const { pid, filter } of allPIDs) pid.updateServices(body.filter(filter))
-    // if (err || status !== 200) return pid.showAnnouncementsMessage()
-    // pid.updateServices(body)
   })
 }
 

@@ -161,6 +161,149 @@ export default {
           area
         }
       }
+    },
+    'line-group-portrait': {
+      orientation: 'portrait',
+      getComponents: () => {
+        const FSS = new MiniCompactMultiServiceList('Flinders Street', '', 2)
+        const CLP = new MiniCompactMultiServiceList('City Loop', 'via Flagstaff, Melbourne Central and Parliament', 2)
+        const BLY = new MiniCompactServiceList('Lilydale, Belgrave, Alamein & Glen Waverley Lines', 'lilydale', 3)
+        const CCY = new MiniCompactServiceList('Frankston, Werribee, Williamstown Lines', 'frankston', 3)
+        const DNG = new MiniCompactServiceList('Cranbourne & Pakenham Lines', 'cranbourne', 2)
+        const SHM = new MiniCompactServiceList('Sandringham Line', 'sandringham', 1)
+        const VLP = new MiniCompactServiceList('Regional Services', 'vline', 1)
+
+        const area = new ServiceListArea([
+          FSS, CLP, BLY, CCY, DNG, SHM, VLP
+        ])
+
+        return {
+          pids: [{
+            pid: FSS,
+            filter: dep => dep.direction === 'Up' && dep.stops.some(stop => stop.name === 'Flinders Street')
+          }, {
+            pid: CLP,
+            filter: dep => dep.direction === 'Up' && dep.stops.some(stop => stop.name === 'Parliament')
+          }, {
+            pid: BLY,
+            filter: dep => !isCityService(dep) && ['lilydale', 'belgrave', 'alamein', 'glen-waverley'].includes(dep.line)
+          }, {
+            pid: CCY,
+            filter: dep => !isCityService(dep) && ['frankston', 'williamstown', 'werribee'].includes(dep.line)
+          }, {
+            pid: DNG,
+            filter: dep => !isCityService(dep) && ['cranbourne', 'pakenham'].includes(dep.line)
+          }, {
+            pid: SHM,
+            filter: dep => !isCityService(dep) && ['sandringham'].includes(dep.line)
+          }, {
+            pid: VLP,
+            filter: dep => dep.direction === 'Down' && ['vline'].includes(dep.line)
+          }],
+          area
+        }
+      }
+    }
+  },
+  'flinders-street': {
+    'concourse-left': {
+      orientation: 'landscape',
+      headerStyle: {
+        height: '0.08',
+        margin: '0.016'
+      },
+      getComponents: () => {
+        const CHL = new CompactServiceList('Mernda & Hurstbridge Lines', 'mernda', 4)
+        const BLY = new CompactServiceList('Lilydale, Belgrave, Alamein & Glen Waverley Lines', 'lilydale', 4)
+        const CCY = new CompactServiceList('Frankston, Werribee, Williamstown & Altona Lines', 'frankston', 4)
+        const DNG = new CompactServiceList('Cranbourne & Pakenham Lines', 'cranbourne', 4)
+
+        const header = new Header('Trains from Flinders Street to:')
+        const area = new ServiceListArea([
+          new HalfServiceListArea([
+            CHL, BLY
+          ], 'left'),
+          new HalfServiceListArea([
+            DNG, CCY
+          ], 'right')
+        ])
+
+        return {
+          pids: [{
+            pid: CHL,
+            filter: dep => !isCityService(dep) && ['mernda', 'hurstbridge'].includes(dep.line)
+          }, {
+            pid: BLY,
+            filter: dep => !isCityService(dep) && ['lilydale', 'belgrave', 'alamein', 'glen-waverley'].includes(dep.line)
+          }, {
+            pid: CCY,
+            filter: dep => !isCityService(dep) && ['frankston', 'williamstown', 'werribee'].includes(dep.line)
+          }, {
+            pid: DNG,
+            filter: dep => !isCityService(dep) && ['cranbourne', 'pakenham'].includes(dep.line)
+          }],
+          header,
+          area
+        }
+      }
+    },
+    'concourse-right': {
+      orientation: 'landscape',
+      headerStyle: {
+        height: '0.08',
+        margin: '0.016'
+      },
+      getComponents: () => {
+        const NOR = new CompactServiceList('Craigieburn, Sunbury & Upfield Lines', 'craigieburn', 3)
+        const SHM = new CompactServiceList('Sandringham Line', 'sandringham', 2)
+        const VLP = new CompactServiceList('Regional Services', 'vline', 1)
+
+        const SSS = new MiniCompactMultiServiceList('Southern Cross', '', 2)
+        const CLP = new MiniCompactMultiServiceList('City Loop', 'Flagstaff, Melbourne Central and Parliament', 2)
+        const RMD = new MiniCompactMultiServiceList('Richmond', '', 2)
+        const NME = new MiniCompactMultiServiceList('North Melbourne', '', 1)
+        const JLI = new MiniCompactMultiServiceList('Jolimont', '', 1)
+
+        const header = new Header('Trains from Flinders Street to:')
+        const area = new ServiceListArea([
+          new HalfServiceListArea([
+            NOR, SHM, VLP
+          ], 'left'),
+          new HalfServiceListArea([
+            SSS, CLP, RMD, NME, JLI
+          ], 'right')
+        ])
+
+        return {
+          pids: [{
+            pid: NOR,
+            filter: dep => ['craigieburn', 'sunbury', 'upfield'].includes(dep.line)
+          }, {
+            pid: SHM,
+            filter: dep => ['sandringham'].includes(dep.line)
+          }, {
+            pid: VLP,
+            filter: dep => dep.direction === 'Down' && ['vline'].includes(dep.line)
+          }, {
+            pid: SSS,
+            filter: dep => dep.line !== 'vline' && dep.stops.some(stop => stop.name === 'Southern Cross')
+          }, {
+            pid: CLP,
+            filter: dep => dep.stops.some(stop => stop.name === 'Parliament')
+          }, {
+            pid: RMD,
+            filter: dep => dep.stops.some(stop => stop.name === 'Richmond')
+          }, {
+            pid: NME,
+            filter: dep => dep.stops.some(stop => stop.name === 'North Melbourne')
+          }, {
+            pid: JLI,
+            filter: dep => dep.stops.some(stop => stop.name === 'Jolimont')
+          }],
+          header,
+          area
+        }
+      }
     }
   }
 }
