@@ -74,7 +74,7 @@ export function getScreenStopsAndExpress(screenStops, trip) {
   const rawRouteStops = getLineStops(trip.routeName)
   const routeStops = trip.direction === 'Down' ? rawRouteStops : rawRouteStops.toReversed()
   const startIndex = routeStops.indexOf(screenStops[0])
-  const endIndex = routeStops.indexOf(screenStops[screenStops.length - 1])
+  const endIndex = routeStops.lastIndexOf(screenStops[screenStops.length - 1])
 
   // Need to handle city loop
   const isCityTrip = screenStops[0] === 'Flinders Street' || screenStops[screenStops.length - 1] === 'Flinders Street'

@@ -8,6 +8,7 @@ import { LokiDatabaseConnection } from '@transportme/database'
 import crossCityThroughRunning from '../departures/sample-data/cross-city-through-running.json' with { type: 'json' }
 import fknStops from './sample-data/fkn-stops.mjs'
 import pkmStops from '../metro/tracker/sample-data/pkm-stops-db.json' with { type: 'json' }
+import cclTrips from '../metro/tracker/sample-data/ccl-0735-0737-sch.json' with { type: 'json' }
 
 use(chaiExclude)
 
@@ -57,6 +58,12 @@ await (await cfdDB.getCollection('live timetables')).createDocuments(clone(mtpTh
   return trip
 }))
 await (await cfdDB.getCollection('stops')).createDocuments(clone(fknStops))
+
+const cclDepartureTime = { departureTime: new Date('2025-06-14T01:10:00.000Z') }
+const cclDB = new LokiDatabaseConnection()
+await (await cclDB.getCollection('live timetables')).createDocuments(clone(cclTrips))
+await (await cclDB.getCollection('stops')).createDocuments(clone(pkmStops))
+await (await cclDB.getCollection('stops')).createDocuments(clone(fknStops))
 
 describe('The PID getPIDDepartures function', () => {
   it('Returns a list of departures', async () => {
@@ -147,5 +154,19 @@ describe('The PID getPIDDepartures function', () => {
     expect(departures[0].stoppingPattern).to.equal('Stops All Stations to Southern Cross, then Runs Express to Williamstown')
     expect(departures[0].stoppingType).to.equal('Express')
     expect(departures[0].extendedStoppingType).to.equal('Express Southern Cross -- Williamstown')
+  })
+
+  it('Correctly shows a City Circle service', async () => {
+    const departures = await getPIDDepartures('flinders-street', cclDB, cclDepartureTime)
+    expect(departures[0].stoppingPattern).to.equal('Stops All Stations')
+    const stops = departures[0].stops
+
+    expect(stops).to.exist
+    expect(stops[0]).to.deep.equal({ name: 'Flinders Street', stops: true })
+    expect(stops[1]).to.deep.equal({ name: 'Southern Cross', stops: true })
+    expect(stops[2]).to.deep.equal({ name: 'Flagstaff', stops: true })
+    expect(stops[3]).to.deep.equal({ name: 'Melbourne Central', stops: true })
+    expect(stops[4]).to.deep.equal({ name: 'Parliament', stops: true })
+    expect(stops[5]).to.deep.equal({ name: 'Flinders Street', stops: true })
   })
 })
