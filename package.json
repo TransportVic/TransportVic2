@@ -13,7 +13,7 @@
     "@transportme/database": "^1.0.51",
     "@transportme/load-ptv-gtfs": "^1.4.36",
     "@transportme/logger": "^1.0.1",
-    "@transportme/ptv-api": "^1.0.33",
+    "@transportme/ptv-api": "^1.0.34",
     "@transportme/server-template": "^1.0.8",
     "@transportme/transportvic-utils": "^1.0.4",
     "@transportme/vline-nsp-reader": "^1.0.0",

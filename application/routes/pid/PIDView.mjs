@@ -6,6 +6,7 @@ import utils from '../../../utils.js'
 const router = new express.Router()
 
 const PID_CONTROL = '/static/scripts/pid/test.mjs'
+const SERVICE_LIST_CONTROL = '/static/scripts/pid/service-list.mjs'
 
 router.get('/metro-lcd/full-pid', (req, res) => {
   new PIDRender(req, res).render('metro-lcd/full-pid-base', [ PID_CONTROL ])
@@ -17,6 +18,10 @@ router.get('/metro-lcd/half-platform', (req, res) => {
 
 router.get('/metro-lcd/half-platform-bold', (req, res) => {
   new PIDRender(req, res).render('metro-lcd/half-platform-bold', [ PID_CONTROL ])
+})
+
+router.get('/metro-lcd/service-list', (req, res) => {
+  new PIDRender(req, res).render('metro-lcd/service-list-template', [ SERVICE_LIST_CONTROL ])
 })
 
 router.post('/data', async (req, res) => {
@@ -37,7 +42,8 @@ router.post('/data', async (req, res) => {
     platform: departure.platform,
     stops: departure.stops,
     disruptions: [],
-    isArrival: departure.isArrival
+    isArrival: departure.isArrival,
+    direction: departure.direction
   })))
 })
 
