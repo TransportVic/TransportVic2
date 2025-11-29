@@ -65,6 +65,12 @@ describe('The PID getPIDDepartures function', () => {
     expect(departures.length).to.be.greaterThan(0)
   })
 
+  it('Fails gracefully with non-existent stations', async () => {
+    const departures = await getPIDDepartures('Lol', almDB, almDepartureTime)
+    expect(departures).to.exist
+    expect(departures.length).to.be.equal(0)
+  })
+
   it('Provides basic departure data', async () => {
     const departures = await getPIDDepartures('Alamein', almDB, almDepartureTime)
     expect(departures[0].platform).to.equal('1')

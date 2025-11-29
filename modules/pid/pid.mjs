@@ -38,6 +38,8 @@ const extendedStoppingType = {
 export async function getPIDDepartures(stationName, db, { departureTime = new Date() } = {}) {
   const stops = await db.getCollection('stops')
   const stationData = await stops.findDocument({ stopName: `${stationName} Railway Station` })
+  if (!stationData) return []
+
   const metroDepartures = await getMetroDepartures(stationData, db, false, false, departureTime)
 
   return metroDepartures.map(departure => {
