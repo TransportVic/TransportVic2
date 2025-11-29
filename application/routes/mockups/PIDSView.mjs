@@ -34,7 +34,7 @@ router.get('/', async (req, res, next) => {
 
 router.use((req, res, next) => {
   if (filter(req, next)) {
-    if (req.url.startsWith('/mockups/')) {
+    if (req.url.startsWith('/mockups/') || req.url.startsWith('/pids/')) {
       next()
     } else {
       next(new Error('404'))
