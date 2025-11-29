@@ -1,4 +1,4 @@
-const version = '144'
+const version = '144a'
 const cacheName = `transportvic-${version}`
 
 async function cacheFiles(files) {
@@ -190,6 +190,7 @@ self.addEventListener('install', event => {
       '/mockups/static/css/metro-lcd/platform.css',
       '/mockups/static/css/metro-lcd/pre-plat-portrait.css',
       '/mockups/static/css/metro-lcd/stopping-pattern.css',
+      '/mockups/static/css/metro-lcd/templates/next-service-header.css',
     ])
   )
 })

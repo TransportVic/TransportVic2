@@ -616,11 +616,12 @@ export function getURL(station, pid) {
   if (pid.type === 'fss-platform') pidURL = `/pid/metro-lcd/full-pid#s=${station}&p=${pid.platform}&t=platform`
   if (pid.type === 'pre-platform-vertical') pidURL = `/pid/metro-lcd/full-pid#s=${station}&p=${pid.platform}&t=pre-plat-portrait`
   if (pid.type === 'fss-escalator') pidURL = `/pid/metro-lcd/full-pid#s=${station}&p=${pid.platform}&t=pre-plat-portrait`
-
+  if (pid.type === 'half-platform-bold') pidURL = `/pid/metro-lcd/half-platform-bold#s=${station}&p=${pid.platform}`
+  if (pid.type === 'half-platform') pidURL = `/pid/metro-lcd/half-platform#s=${station}&p=${pid.platform}`
 
   if (pid.type === 'trains-from-fss') pidURL = '/mockups/fss/trains-from-fss'
-  if (pid.type === 'half-platform-bold') pidURL = `/mockups/metro-lcd/${station}/${pid.platform}/half-platform-bold`
-  if (pid.type === 'half-platform') pidURL = `/mockups/metro-lcd/${station}/${pid.platform}/half-platform`
+  // if (pid.type === 'half-platform-bold') pidURL = `/mockups/metro-lcd/${station}/${pid.platform}/half-platform-bold`
+  // if (pid.type === 'half-platform') pidURL = `/mockups/metro-lcd/${station}/${pid.platform}/half-platform`
   // if (pid.type === 'platform') pidURL = `/mockups/metro-lcd/${station}/${pid.platform}/platform`
   // if (pid.type === 'pre-platform-vertical') pidURL = `/mockups/metro-lcd/${station}/${pid.platform}/pre-platform-vertical`
   if (pid.type === 'vline-half-platform') pidURL = `/mockups/vline/${station}/${pid.platform}`

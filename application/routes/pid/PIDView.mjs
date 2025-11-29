@@ -5,10 +5,18 @@ import utils from '../../../utils.js'
 
 const router = new express.Router()
 
+const PID_CONTROL = '/static/scripts/pid/test.mjs'
+
 router.get('/metro-lcd/full-pid', (req, res) => {
-  new PIDRender(req, res).render('metro-lcd/full-pid-base', [
-    '/static/scripts/pid/test.mjs'
-  ])
+  new PIDRender(req, res).render('metro-lcd/full-pid-base', [ PID_CONTROL ])
+})
+
+router.get('/metro-lcd/half-platform', (req, res) => {
+  new PIDRender(req, res).render('metro-lcd/half-platform', [ PID_CONTROL ])
+})
+
+router.get('/metro-lcd/half-platform-bold', (req, res) => {
+  new PIDRender(req, res).render('metro-lcd/half-platform-bold', [ PID_CONTROL ])
 })
 
 router.post('/data', async (req, res) => {
@@ -23,7 +31,7 @@ router.post('/data', async (req, res) => {
   res.send(relevantDepartures.map(departure => ({
     schTime: departure.scheduledDepartureTime.format('HH:mma'),
     estTime: Math.round((departure.actualDepartureTime - now) / 1000 / 60),
-    destination: departure.destination,
+    destination: departure.formingDestination || departure.destination,
     summary: departure.stoppingType,
     line: departure.cleanRouteName,
     platform: departure.platform,

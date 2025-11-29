@@ -4,6 +4,10 @@ function createPID(pidType) {
       return new PrePlatformLandscapePID()
     case 'pre-plat-portrait':
       return new PrePlatformPortraitPID()
+    case 'half-platform':
+      return new HalfPlatformPID()
+    case 'half-platform-bold':
+      return new HalfPlatformBoldPID()
     default:
       return new MetroLCDPlatformPID()
   }
@@ -50,7 +54,7 @@ function updateBodyFromParent() {
 }
 
 $.ready(() => {
-  const pid = createPID(search.hash.t)
+  const pid = createPID(search.hash.t || location.pathname.split('/').pop())
 
   window.pid = pid
   pid.updateServices([])
