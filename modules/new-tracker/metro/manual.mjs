@@ -15,7 +15,7 @@ export async function fetchTrips(db, tripDB, ptvAPI) {
     updatedTrips.push(await updateTDNFromPTV(db, tripDB, updatedTDN, ptvAPI, {}, 'manual'))
   }
 
-  return updatedTrips
+  return updatedTrips.filter(Boolean)
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
