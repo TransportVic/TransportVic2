@@ -123,14 +123,14 @@ export function getScreenStopsAndExpress(screenStops, trip) {
   for (let routeIndex = 0; routeIndex < relevantRouteStops.length; routeIndex++) {
     const stopName = relevantRouteStops[routeIndex]
     if (stopName === screenStops[tripIndex]) {
-      outputStops.push({ stopName, express: false })
+      outputStops.push({ name: stopName, stops: true })
       tripIndex++
       if (currentExpressSection.length) {
         expressSections.push(currentExpressSection)
         currentExpressSection = []
       }
     } else {
-      outputStops.push({ stopName, express: true })
+      outputStops.push({ name: stopName, stops: false })
       currentExpressSection.push(stopName)
     }
   }

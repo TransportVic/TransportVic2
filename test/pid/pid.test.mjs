@@ -78,19 +78,19 @@ describe('The PID getPIDDepartures function', () => {
     const departures = await getPIDDepartures('Alamein', almDB, almDepartureTime)
     const stops = departures[0].stops
     expect(stops).to.exist
-    expect(stops[0]).to.deep.equal({ stopName: 'Alamein', express: false })
-    expect(stops[1]).to.deep.equal({ stopName: 'Ashburton', express: false })
-    expect(stops[6]).to.deep.equal({ stopName: 'Camberwell', express: false })
+    expect(stops[0]).to.deep.equal({ name: 'Alamein', stops: true })
+    expect(stops[1]).to.deep.equal({ name: 'Ashburton', stops: true })
+    expect(stops[6]).to.deep.equal({ name: 'Camberwell', stops: true })
   })
 
   it('Returns express stops on the list of stops', async () => {
     const departures = await getPIDDepartures('Alamein', almDB, almDepartureTime)
     const stops = departures[1].stops
     expect(stops).to.exist
-    expect(stops[0]).to.deep.equal({ stopName: 'Alamein', express: false })
-    expect(stops[1]).to.deep.equal({ stopName: 'Ashburton', express: true })
-    expect(stops[2]).to.deep.equal({ stopName: 'Burwood', express: true })
-    expect(stops[6]).to.deep.equal({ stopName: 'Camberwell', express: false })
+    expect(stops[0]).to.deep.equal({ name: 'Alamein', stops: true })
+    expect(stops[1]).to.deep.equal({ name: 'Ashburton', stops: false })
+    expect(stops[2]).to.deep.equal({ name: 'Burwood', stops: false })
+    expect(stops[6]).to.deep.equal({ name: 'Camberwell', stops: true })
   })
 
   it('Removes city loop stops if not needed', async () => {
@@ -98,9 +98,9 @@ describe('The PID getPIDDepartures function', () => {
     const stops = departures[0].stops
 
     expect(stops).to.exist
-    expect(stops[0]).to.deep.equal({ stopName: 'South Yarra', express: false })
-    expect(stops[1]).to.deep.equal({ stopName: 'Richmond', express: false })
-    expect(stops[2]).to.deep.equal({ stopName: 'Flinders Street', express: false })
+    expect(stops[0]).to.deep.equal({ name: 'South Yarra', stops: true })
+    expect(stops[1]).to.deep.equal({ name: 'Richmond', stops: true })
+    expect(stops[2]).to.deep.equal({ name: 'Flinders Street', stops: true })
   })
 
   it('Appends stops from the next trip onto the PID', async () => {
@@ -108,11 +108,11 @@ describe('The PID getPIDDepartures function', () => {
     const stops = departures[0].stops
 
     expect(stops).to.exist
-    expect(stops[0]).to.deep.equal({ stopName: 'South Yarra', express: false })
-    expect(stops[1]).to.deep.equal({ stopName: 'Richmond', express: false })
-    expect(stops[2]).to.deep.equal({ stopName: 'Flinders Street', express: false })
-    expect(stops[3]).to.deep.equal({ stopName: 'Southern Cross', express: false })
-    expect(stops[4]).to.deep.equal({ stopName: 'North Melbourne', express: true })
+    expect(stops[0]).to.deep.equal({ name: 'South Yarra', stops: true })
+    expect(stops[1]).to.deep.equal({ name: 'Richmond', stops: true })
+    expect(stops[2]).to.deep.equal({ name: 'Flinders Street', stops: true })
+    expect(stops[3]).to.deep.equal({ name: 'Southern Cross', stops: true })
+    expect(stops[4]).to.deep.equal({ name: 'North Melbourne', stops: false })
   })
 
   it('Checks express running on the forming trip', async () => {
@@ -120,13 +120,13 @@ describe('The PID getPIDDepartures function', () => {
     const stops = departures[0].stops
 
     expect(stops).to.exist
-    expect(stops[0]).to.deep.equal({ stopName: 'Caulfield', express: false })
-    expect(stops[1]).to.deep.equal({ stopName: 'Malvern', express: true })
-    expect(stops[5]).to.deep.equal({ stopName: 'Anzac', express: false })
-    expect(stops[6]).to.deep.equal({ stopName: 'Town Hall', express: false })
-    expect(stops[7]).to.deep.equal({ stopName: 'State Library', express: false })
-    expect(stops[10]).to.deep.equal({ stopName: 'Footscray', express: true })
-    expect(stops[12]).to.deep.equal({ stopName: 'West Footscray', express: false })
+    expect(stops[0]).to.deep.equal({ name: 'Caulfield', stops: true })
+    expect(stops[1]).to.deep.equal({ name: 'Malvern', stops: false })
+    expect(stops[5]).to.deep.equal({ name: 'Anzac', stops: true })
+    expect(stops[6]).to.deep.equal({ name: 'Town Hall', stops: true })
+    expect(stops[7]).to.deep.equal({ name: 'State Library', stops: true })
+    expect(stops[10]).to.deep.equal({ name: 'Footscray', stops: false })
+    expect(stops[12]).to.deep.equal({ name: 'West Footscray', stops: true })
   })
 
   it('Contains a stopping pattern and types on an SAS train', async () => {

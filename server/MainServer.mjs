@@ -8,6 +8,7 @@ import routes from '../application/route-data.mjs'
 import config from '../config.json' with { type: 'json' }
 import modules from '../modules.json' with { type: 'json' }
 import { MongoDatabaseConnection } from '@transportme/database'
+import express from 'express'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -48,9 +49,13 @@ export default class MainServer {
   configMiddleware() {
     let app = this.app
 
-    let staticBase = config.staticBase || ''
+    const staticBase = config.staticBase || ''
+    const pidStaticBase = config.pidStaticBase || '/mockups/static'
+
     app.use((req, res, next) => {
       res.locals.staticBase = staticBase
+      res.locals.pidStaticBase = pidStaticBase
+
       res.setHeader('Served-By', hostname)
 
       const allowedOrigins = "'self' static.transportvic.me static.cloudflareinsights.com"
@@ -75,6 +80,11 @@ export default class MainServer {
 
   async configRoutes() {
     let app = this.app
+
+    const pidStaticDir = path.join(__dirname, '..', 'vic-pid', 'static')
+    app.use('/mockups/static', express.static(pidStaticDir, {
+      maxAge: 1000 * 60 * 60 * 24
+    }))
 
     app.post('/mockups', rateLimit({
       windowMs: 1 * 60 * 1000,

@@ -21,8 +21,8 @@ describe('The getScreenStopsAndExpress function', () => {
 
     expect(stops.length).to.equal(futureStops.length)
     for (let i = 0; i < stops.length; i++) {
-      expect(stops[i].stopName).to.equal(futureStops[i])
-      expect(stops[i].express).to.be.false
+      expect(stops[i].name).to.equal(futureStops[i])
+      expect(stops[i].stops).to.be.true
     }
   })
 
@@ -41,8 +41,8 @@ describe('The getScreenStopsAndExpress function', () => {
       'Camberwell'
     ], clone(almTrips[0]))
     expect(stops.length).to.equal(futureStops.length)
-    for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
-    for (let i = 1; i < stops.length - 1; i++) expect(stops[i].express).to.be.true
+    for (let i = 0; i < stops.length; i++) expect(stops[i].name).to.equal(futureStops[i])
+    for (let i = 1; i < stops.length - 1; i++) expect(stops[i].stops).to.be.false
   })
 
   describe('City loop permutations', () => {
@@ -55,7 +55,7 @@ describe('The getScreenStopsAndExpress function', () => {
       ]
       const { stops } = getScreenStopsAndExpress(futureStops, { routeName: 'Alamein', direction: 'Up' })
       expect(stops.length).to.equal(futureStops.length)
-      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+      for (let i = 0; i < stops.length; i++) expect(stops[i].name).to.equal(futureStops[i])
     })
 
     it('Keeps city loop stops if running RMD Loop FSS', async () => {
@@ -72,7 +72,7 @@ describe('The getScreenStopsAndExpress function', () => {
 
       const { stops } = getScreenStopsAndExpress(futureStops, { routeName: 'Alamein', direction: 'Up' })
       expect(stops.length).to.equal(futureStops.length)
-      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+      for (let i = 0; i < stops.length; i++) expect(stops[i].name).to.equal(futureStops[i])
     })
 
     it('Keeps city loop stops if running RMD Loop (with express) FSS', async () => {
@@ -92,9 +92,9 @@ describe('The getScreenStopsAndExpress function', () => {
         'Flinders Street'
       ], { routeName: 'Alamein', direction: 'Up' })
       expect(stops.length).to.equal(futureStops.length)
-      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
-      expect(stops[2].express).to.be.true
-      expect(stops[3].express).to.be.true
+      for (let i = 0; i < stops.length; i++) expect(stops[i].name).to.equal(futureStops[i])
+      expect(stops[2].stops).to.be.false
+      expect(stops[3].stops).to.be.false
     })
 
     it('Keeps city loop stops if running FSS Loop RMD', async () => {
@@ -109,7 +109,7 @@ describe('The getScreenStopsAndExpress function', () => {
 
       const { stops } = getScreenStopsAndExpress(futureStops, { routeName: 'Alamein', direction: 'Down' })
       expect(stops.length).to.equal(futureStops.length)
-      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+      for (let i = 0; i < stops.length; i++) expect(stops[i].name).to.equal(futureStops[i])
     })
 
     it('Keeps city loop stops if running FSS Loop (with express) RMD', async () => {
@@ -131,7 +131,7 @@ describe('The getScreenStopsAndExpress function', () => {
       ], { routeName: 'Alamein', direction: 'Down' })
 
       expect(stops.length).to.equal(futureStops.length)
-      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+      for (let i = 0; i < stops.length; i++) expect(stops[i].name).to.equal(futureStops[i])
     })
 
     it('Filters out city loop stops if running FSS RMD', async () => {
@@ -142,7 +142,7 @@ describe('The getScreenStopsAndExpress function', () => {
 
       const { stops } = getScreenStopsAndExpress(futureStops, { routeName: 'Alamein', direction: 'Down' })
       expect(stops.length).to.equal(futureStops.length)
-      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+      for (let i = 0; i < stops.length; i++) expect(stops[i].name).to.equal(futureStops[i])
     })
 
     it('Filters out MURL stops if running FSS SSS NME', async () => {
@@ -154,7 +154,7 @@ describe('The getScreenStopsAndExpress function', () => {
 
       const { stops } = getScreenStopsAndExpress(futureStops, { routeName: 'Craigieburn', direction: 'Down' })
       expect(stops.length).to.equal(futureStops.length)
-      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+      for (let i = 0; i < stops.length; i++) expect(stops[i].name).to.equal(futureStops[i])
     })
 
     it('Keeps MURL stops if running FSS Loop NME', async () => {
@@ -168,7 +168,7 @@ describe('The getScreenStopsAndExpress function', () => {
 
       const { stops } = getScreenStopsAndExpress(futureStops, { routeName: 'Craigieburn', direction: 'Down' })
       expect(stops.length).to.equal(futureStops.length)
-      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+      for (let i = 0; i < stops.length; i++) expect(stops[i].name).to.equal(futureStops[i])
     })
 
     it('Keeps MURL stops if running NME Loop (with express) FSS', async () => {
@@ -187,9 +187,9 @@ describe('The getScreenStopsAndExpress function', () => {
       ], { routeName: 'Craigieburn', direction: 'Up' })
 
       expect(stops.length).to.equal(futureStops.length)
-      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
-      expect(stops[1].express).to.be.true
-      expect(stops[3].express).to.be.true
+      for (let i = 0; i < stops.length; i++) expect(stops[i].name).to.equal(futureStops[i])
+      expect(stops[1].stops).to.be.false
+      expect(stops[3].stops).to.be.false
     })
 
     it('Keeps MURL stops if running NME Loop FSS', async () => {
@@ -203,7 +203,7 @@ describe('The getScreenStopsAndExpress function', () => {
 
       const { stops } = getScreenStopsAndExpress(futureStops, { routeName: 'Craigieburn', direction: 'Up' })
       expect(stops.length).to.equal(futureStops.length)
-      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+      for (let i = 0; i < stops.length; i++) expect(stops[i].name).to.equal(futureStops[i])
     })
 
     it('Filters out MURL stops if running SSS NME', async () => {
@@ -215,7 +215,7 @@ describe('The getScreenStopsAndExpress function', () => {
 
       const { stops } = getScreenStopsAndExpress(futureStops, { routeName: 'Craigieburn', direction: 'Down' })
       expect(stops.length).to.equal(futureStops.length)
-      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+      for (let i = 0; i < stops.length; i++) expect(stops[i].name).to.equal(futureStops[i])
     })
 
     it('Filters out MURL stops if running NME SSS', async () => {
@@ -227,7 +227,7 @@ describe('The getScreenStopsAndExpress function', () => {
 
       const { stops } = getScreenStopsAndExpress(futureStops, { routeName: 'Craigieburn', direction: 'Up' })
       expect(stops.length).to.equal(futureStops.length)
-      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+      for (let i = 0; i < stops.length; i++) expect(stops[i].name).to.equal(futureStops[i])
     })
   })
 
@@ -246,9 +246,9 @@ describe('The getScreenStopsAndExpress function', () => {
         'Laverton'
       ], { routeName: 'Werribee', direction: 'Down' })
       expect(stops.length).to.equal(futureStops.length)
-      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
-      expect(stops[1].express).to.be.true
-      expect(stops[2].express).to.be.true
+      for (let i = 0; i < stops.length; i++) expect(stops[i].name).to.equal(futureStops[i])
+      expect(stops[1].stops).to.be.false
+      expect(stops[2].stops).to.be.false
     })
 
     it('Filters out altona loop stops if running direct LAV NPT', async () => {
@@ -264,9 +264,9 @@ describe('The getScreenStopsAndExpress function', () => {
         'Newport'
       ], { routeName: 'Werribee', direction: 'Up' })
       expect(stops.length).to.equal(futureStops.length)
-      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
-      expect(stops[1].express).to.be.true
-      expect(stops[2].express).to.be.true
+      for (let i = 0; i < stops.length; i++) expect(stops[i].name).to.equal(futureStops[i])
+      expect(stops[1].stops).to.be.false
+      expect(stops[2].stops).to.be.false
     })
 
     it('Filters out mainline stops if running NPT ALT LAV', async () => {
@@ -286,7 +286,7 @@ describe('The getScreenStopsAndExpress function', () => {
         'Laverton'
       ], { routeName: 'Werribee', direction: 'Down' })
       expect(stops.length).to.equal(futureStops.length)
-      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+      for (let i = 0; i < stops.length; i++) expect(stops[i].name).to.equal(futureStops[i])
     })
 
     it('Filters out mainline stops if running NPT ALT (with express) LAV', async () => {
@@ -304,7 +304,7 @@ describe('The getScreenStopsAndExpress function', () => {
         'Laverton'
       ], { routeName: 'Werribee', direction: 'Down' })
       expect(stops.length).to.equal(futureStops.length)
-      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+      for (let i = 0; i < stops.length; i++) expect(stops[i].name).to.equal(futureStops[i])
     })
   })
 
@@ -372,7 +372,7 @@ describe('The getScreenStopsAndExpress function', () => {
         'Town Hall'
       ], { routeName: 'Pakenham', direction: 'Up' })
       expect(stops.length).to.equal(futureStops.length)
-      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+      for (let i = 0; i < stops.length; i++) expect(stops[i].name).to.equal(futureStops[i])
     })
 
     it('Returns MTP stops if going via the tunnel THL WFY', async () => {
@@ -394,7 +394,7 @@ describe('The getScreenStopsAndExpress function', () => {
         'West Footscray'
       ], { routeName: 'Sunbury', direction: 'Down' })
       expect(stops.length).to.equal(futureStops.length)
-      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+      for (let i = 0; i < stops.length; i++) expect(stops[i].name).to.equal(futureStops[i])
     })
 
     it('Returns CLP stops if going via the city loop', async () => {
@@ -424,7 +424,7 @@ describe('The getScreenStopsAndExpress function', () => {
         'Flinders Street'
       ], { routeName: 'Pakenham', direction: 'Up' })
       expect(stops.length).to.equal(futureStops.length)
-      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+      for (let i = 0; i < stops.length; i++) expect(stops[i].name).to.equal(futureStops[i])
     })
 
     it('Filters both MTP and CLP stops if going direct RMD FSS', async () => {
@@ -446,7 +446,7 @@ describe('The getScreenStopsAndExpress function', () => {
         'Flinders Street'
       ], { routeName: 'Pakenham', direction: 'Up' })
       expect(stops.length).to.equal(futureStops.length)
-      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+      for (let i = 0; i < stops.length; i++) expect(stops[i].name).to.equal(futureStops[i])
     })
 
     it('Filters both MTP and CLP stops if going direct NME FSS', async () => {
@@ -462,7 +462,7 @@ describe('The getScreenStopsAndExpress function', () => {
         'Flinders Street'
       ], { routeName: 'Sunbury', direction: 'Up' })
       expect(stops.length).to.equal(futureStops.length)
-      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+      for (let i = 0; i < stops.length; i++) expect(stops[i].name).to.equal(futureStops[i])
     })
 
     it('Returns CLP stops if going NME MURL FSS', async () => {
@@ -480,7 +480,7 @@ describe('The getScreenStopsAndExpress function', () => {
         'Flinders Street'
       ], { routeName: 'Sunbury', direction: 'Up' })
       expect(stops.length).to.equal(futureStops.length)
-      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+      for (let i = 0; i < stops.length; i++) expect(stops[i].name).to.equal(futureStops[i])
     })
 
     it('Filters MTP and CLP stops if going RMD CFD', async () => {
@@ -500,7 +500,7 @@ describe('The getScreenStopsAndExpress function', () => {
         'Caulfield'
       ], { routeName: 'Cranbourne', direction: 'Down' })
       expect(stops.length).to.equal(futureStops.length)
-      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+      for (let i = 0; i < stops.length; i++) expect(stops[i].name).to.equal(futureStops[i])
     })
 
     it('Filters MTP and CLP stops if going SSS NME FSY', async () => {
@@ -517,7 +517,7 @@ describe('The getScreenStopsAndExpress function', () => {
         'Footscray'
       ], { routeName: 'Sunbury', direction: 'Down' })
       expect(stops.length).to.equal(futureStops.length)
-      for (let i = 0; i < stops.length; i++) expect(stops[i].stopName).to.equal(futureStops[i])
+      for (let i = 0; i < stops.length; i++) expect(stops[i].name).to.equal(futureStops[i])
     })
   })
 })

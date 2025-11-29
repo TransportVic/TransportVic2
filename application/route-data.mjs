@@ -23,6 +23,8 @@ export default [
   { path: '/bus/run', router: 'run-pages/Bus.mjs' },
   { path: '/', router: 'run-pages/Generic.mjs' },
 
+  { path: '/pid', router: 'pid/PIDView.mjs' },
+
   { path: '/mockups', router: 'mockups/Index.mjs' },
   { path: '/mockups/fss', router: 'mockups/fss/FlindersStreet.mjs' },
   { path: '/mockups/metro-lcd/concourse', router: 'mockups/metro-lcd/Concourse-PIDS.mjs' },
