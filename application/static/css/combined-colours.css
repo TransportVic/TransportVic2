@@ -150,6 +150,15 @@
   background-color: #2491c4 !important;
 }
 
+.metro-tunnel-line, .metro-tunnel {
+  background-color: #279FD5 !important;
+  --operator-text: #1E1E1E;
+}
+
+:nth-child(even) > .metro-tunnel-line, :nth-child(even) > .metro-tunnel {
+  background-color: #2491c4 !important;
+}
+
 .sandringham-line {
   background-color: #F178AF !important;
   --operator-text: #1E1E1E;
