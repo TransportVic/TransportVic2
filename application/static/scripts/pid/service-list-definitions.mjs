@@ -1,6 +1,40 @@
 const isCityService = dep => dep.destination === 'City Loop' || dep.destination === 'Flinders Street'
 const hasStop = (stopName, dep) => dep.stops.some(stop => stop.name === stopName && stop.stops)
 
+const MTP_ConcourseTrains = name => ({
+  orientation: 'landscape',
+  headerStyle: {
+    height: '0.08',
+    margin: '0.016'
+  },
+  getComponents: () => {
+    const SUY = new CompactServiceList('towards Sunbury', 'metro-tunnel', 4)
+    const DNG = new CompactServiceList('towards Pakenham and Cranbourne', 'metro-tunnel', 4)
+
+    const header = new Header(`Trains from ${name}`)
+    const area = new ServiceListArea([
+      new HalfServiceListArea([
+        SUY
+      ], 'left'),
+      new HalfServiceListArea([
+        DNG
+      ], 'right')
+    ])
+
+    return {
+      pids: [{
+        pid: SUY,
+        filter: dep => hasStop('West Footscray', dep) || hasStop('Footscray', dep)
+      }, {
+        pid: DNG,
+        filter: dep => hasStop('Caulfield', dep) || hasStop('Oakleigh', dep)
+      }],
+      header,
+      area
+    }
+  }
+})
+
 export default {
   'melbourne-central': {
     'line-group-portrait': {
@@ -306,5 +340,20 @@ export default {
         }
       }
     }
+  },
+  'arden': {
+    'concourse-trains': MTP_ConcourseTrains('Arden')
+  },
+  'parkville': {
+    'concourse-trains': MTP_ConcourseTrains('Parkville')
+  },
+  'state-library': {
+    'concourse-trains': MTP_ConcourseTrains('State Library')
+  },
+  'town-hall': {
+    'concourse-trains': MTP_ConcourseTrains('Town Hall')
+  },
+  'anzac': {
+    'concourse-trains': MTP_ConcourseTrains('Anzac')
   }
 }

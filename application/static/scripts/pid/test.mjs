@@ -1,4 +1,4 @@
-function createPID(pidType) {
+function createPID(pidType, capacity) {
   switch (pidType) {
     case 'pre-plat-landscape':
       return new PrePlatformLandscapePID()
@@ -8,9 +8,10 @@ function createPID(pidType) {
       return new HalfPlatformPID()
     case 'half-platform-bold':
       return new HalfPlatformBoldPID()
-    default:
-      return new MetroLCDPlatformPID()
   }
+
+  if (typeof capacity !== 'undefined') return new CapMetroLCDPlatformPID(parseInt(capacity))
+  return new MetroLCDPlatformPID()
 }
 
 function updateBody() {
@@ -54,7 +55,10 @@ function updateBodyFromParent() {
 }
 
 $.ready(() => {
-  const pid = createPID(search.hash.t || location.pathname.split('/').pop())
+  const pid = createPID(
+    search.hash.t || location.pathname.split('/').pop(),
+    search.hash.cap
+  )
 
   window.pid = pid
   pid.updateServices([])

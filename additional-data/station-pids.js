@@ -318,9 +318,9 @@ module.exports = {
   "Wangaratta": [],
   "Morwell": [],
 
-  "Anzac": [...platr(2, [], 'platform')],
-  "Town Hall": [...platr(2, [], 'platform')],
-  "State Library": [...platr(2, [], 'platform')],
-  "Parkville": [...platr(2, [], 'platform')],
-  "Arden": [...platr(2, [], 'platform')]
+  "Anzac": [...platr(2, [], 'platform'), sl('concourse-trains')],
+  "Town Hall": [...platr(2, [], 'platform'), sl('concourse-trains')],
+  "State Library": [...platr(2, [], 'platform'), sl('concourse-trains')],
+  "Parkville": [...platr(2, [], 'platform'), sl('concourse-trains')],
+  "Arden": [...platr(2, [], 'platform'), sl('concourse-trains')]
 }
