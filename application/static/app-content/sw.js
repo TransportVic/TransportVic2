@@ -1,11 +1,11 @@
-const version = '147'
+const version = '148'
 const cacheName = `transportvic-${version}`
 
 async function cacheFiles(files) {
   let server = await (await fetch('/static-server')).text()
 
   let serverMappedFiles = files.map(file => {
-    if (file.startsWith('/static')) return server + file
+    if (file.startsWith('/static') || file.startsWith('/mockups/static')) return server + file
     return file
   })
 
@@ -175,6 +175,7 @@ self.addEventListener('install', event => {
       '/pid/metro-lcd/full-pid',
       '/pid/metro-lcd/half-platform',
       '/pid/metro-lcd/half-platform-bold',
+      '/pid/metro-lcd/platform-screen-door',
 
       '/mockups/static/scripts/util.js',
       '/mockups/static/scripts/dayjs.js',
