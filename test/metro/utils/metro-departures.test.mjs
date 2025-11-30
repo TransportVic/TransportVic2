@@ -419,7 +419,7 @@ describe('The metro departures class', () => {
     expect(departures[0].trueDestination).to.equal('Town Hall')
 
     expect(departures[0].routeName).to.equal('Pakenham')
-    expect(departures[0].cleanRouteName).to.equal('pakenham')
+    expect(departures[0].cleanRouteName).to.equal('metro-tunnel')
     expect(departures[0].formingDestination).to.equal('West Footscray')
     expect(departures[0].formingRunID).to.equal('Z101')
     expect(departures[0].futureFormingStops).to.deep.equal([
@@ -556,6 +556,7 @@ describe('The metro departures class', () => {
     const departures = await getDepartures(sss, db, null, null, new Date('2025-12-05T22:50:00.000Z'))
     expect(departures[0].formingRunID).to.equal('Z001')
     expect(departures[0].formingDestination).to.equal('Sunbury')
+    expect(departures[0].cleanRouteName).to.equal('metro-tunnel')
   })
 
   afterEach(() => {

@@ -81,11 +81,13 @@ export default async function getMetroDepartures(station, db, filter, backwards,
     }
 
     let routeName = (formingTrip && formingType === 'CITY_LOOP') ? formingTrip.routeName : trip.routeName
+    let cleanRouteName = utils.encodeName(routeName)
+    if (trip.stopTimings.some(stop => stop.stopName === 'Town Hall Railway Station')) cleanRouteName = 'metro-tunnel'
 
     outputDepartures.push({
       ...departure,
       routeName,
-      cleanRouteName: utils.encodeName(routeName),
+      cleanRouteName,
       fleetNumber: trip.vehicle ? trip.vehicle.consist : null,
       vehicle: trip.vehicle || null,
       runID: trip.runID,
