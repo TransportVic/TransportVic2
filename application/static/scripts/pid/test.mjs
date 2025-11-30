@@ -8,6 +8,8 @@ function createPID(pidType, capacity) {
       return new HalfPlatformPID()
     case 'half-platform-bold':
       return new HalfPlatformBoldPID()
+    case 'platform-screen-door':
+      return new PlatformScreenDoorPID(parseInt(capacity))
   }
 
   if (typeof capacity !== 'undefined') return new CapMetroLCDPlatformPID(parseInt(capacity))

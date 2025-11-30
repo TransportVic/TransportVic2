@@ -24,11 +24,16 @@ router.get('/metro-lcd/service-list', (req, res) => {
   new PIDRender(req, res).render('metro-lcd/service-list-template', [ SERVICE_LIST_CONTROL ])
 })
 
+router.get('/metro-lcd/platform-screen-door', (req, res) => {
+  new PIDRender(req, res).render('metro-lcd/platform-screen-door', [ PID_CONTROL ])
+})
+
 router.post('/data', async (req, res) => {
   const { station, platform } = req.body
   if (!station) res.end([])
 
   const departures = await getPIDDepartures(station, res.db)
+
   const now = utils.now()
 
   const relevantDepartures = (platform && platform !== '*') ? departures.filter(dep => dep.platform === platform) : departures

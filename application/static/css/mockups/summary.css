@@ -90,7 +90,7 @@ div.vertical {
   --width: calc(min(14vw + 14vh, 400px));
 }
 
-div.horizontal, div.half, div.two-line-led {
+div.horizontal, div.half, div.two-line-led, div.psd {
   --width: calc(min(20vw + 20vh, 300px));
 }
 
@@ -108,4 +108,8 @@ div.vertical iframe {
 
 div.two-line-led iframe {
   height: calc(var(--width) / 2.7) !important;
+}
+
+div.psd iframe {
+  height: calc(var(--width) * 9 / 48) !important;
 }

@@ -618,6 +618,7 @@ export function getURL(station, pid) {
   if (pid.type === 'fss-escalator') pidURL = `/pid/metro-lcd/full-pid#s=${station}&p=${pid.platform}&t=pre-plat-portrait`
   if (pid.type === 'half-platform-bold') pidURL = `/pid/metro-lcd/half-platform-bold#s=${station}&p=${pid.platform}`
   if (pid.type === 'half-platform') pidURL = `/pid/metro-lcd/half-platform#s=${station}&p=${pid.platform}`
+  if (pid.type === 'psd') pidURL = `/pid/metro-lcd/platform-screen-door#s=${station}&p=${pid.platform}&cap=${pid.capacity}`
 
   if (pid.type === 'trains-from-fss') pidURL = '/mockups/fss/trains-from-fss'
   // if (pid.type === 'half-platform-bold') pidURL = `/mockups/metro-lcd/${station}/${pid.platform}/half-platform-bold`

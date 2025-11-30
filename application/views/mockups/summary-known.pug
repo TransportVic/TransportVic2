@@ -21,10 +21,15 @@ html
         else if pid.stationList
           -
             let url = `/pid/metro-lcd/service-list#s=${station}&t=${pid.type}`
-            console.log(url)
           div(class=`pid ${pid.type.includes('portrait') ? 'vertical' : 'horizontal'}`)
             div.title
               a(href=url)=`/${stationCode}/concourse/${pid.type}`
+            iframe(src=url)
+        else if pid.type === 'psd'
+          - const url = getURL(station, pid)
+          div(class=`pid psd`)
+            div.title
+              a(href=url) /#{stationCode}/psd/#{pid.platform}/#{pid.capacity + 1}
             iframe(src=url)
         else
           

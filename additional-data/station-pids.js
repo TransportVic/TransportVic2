@@ -10,6 +10,11 @@ const capPIDs = [
   plat(2, 'platform'), plat_c(2, 0), plat_c(2, 9)  
 ]
 
+const psdPID = p => Array(10).fill(0).map((_, pos) => ({ type: 'psd', platform: p, capacity: pos }))
+const psdPIDs = [
+  ...psdPID(1), ...psdPID(2)
+]
+
 module.exports = {
   "Dingee": [],
   "Pyramid": [],
@@ -324,9 +329,9 @@ module.exports = {
   "Wangaratta": [],
   "Morwell": [],
 
-  "Anzac": [...capPIDs, sl('concourse-trains')],
-  "Town Hall": [...capPIDs, sl('concourse-trains')],
-  "State Library": [...capPIDs, sl('concourse-trains')],
-  "Parkville": [...capPIDs, sl('concourse-trains')],
-  "Arden": [...capPIDs, sl('concourse-trains')]
+  "Anzac": [...capPIDs, ...psdPIDs, sl('concourse-trains')],
+  "Town Hall": [...capPIDs, ...psdPIDs, sl('concourse-trains')],
+  "State Library": [...capPIDs, ...psdPIDs, sl('concourse-trains')],
+  "Parkville": [...capPIDs, ...psdPIDs, sl('concourse-trains')],
+  "Arden": [...capPIDs, ...psdPIDs, sl('concourse-trains')]
 }
