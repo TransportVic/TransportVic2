@@ -3,6 +3,12 @@ const conc = (t, q) =>  ({ concourse: true, type: t, query: q })
 const platr = (c, e, t) => Array(c).fill(0).map((_, p) => plat(p + 1, t)).filter(p => !e.includes(p.platform))
 
 const sl = (t, l) => ({ stationList: true, type: t, location: l || null })
+const plat_c = (p, pos) => ({ platform: p, type: 'platform', capacity: pos })
+
+const capPIDs = [
+  plat(1, 'platform'), plat_c(1, 0), plat_c(1, 9),
+  plat(2, 'platform'), plat_c(2, 0), plat_c(2, 9)  
+]
 
 module.exports = {
   "Dingee": [],
@@ -318,9 +324,9 @@ module.exports = {
   "Wangaratta": [],
   "Morwell": [],
 
-  "Anzac": [...platr(2, [], 'platform'), sl('concourse-trains')],
-  "Town Hall": [...platr(2, [], 'platform'), sl('concourse-trains')],
-  "State Library": [...platr(2, [], 'platform'), sl('concourse-trains')],
-  "Parkville": [...platr(2, [], 'platform'), sl('concourse-trains')],
-  "Arden": [...platr(2, [], 'platform'), sl('concourse-trains')]
+  "Anzac": [...capPIDs, sl('concourse-trains')],
+  "Town Hall": [...capPIDs, sl('concourse-trains')],
+  "State Library": [...capPIDs, sl('concourse-trains')],
+  "Parkville": [...capPIDs, sl('concourse-trains')],
+  "Arden": [...capPIDs, sl('concourse-trains')]
 }
