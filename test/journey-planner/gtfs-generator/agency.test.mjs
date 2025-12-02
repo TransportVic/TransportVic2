@@ -4,6 +4,12 @@ import AgencyGenerator from '../../../modules/journey-planner/gtfs-generator/gen
 import StopGenerator from '../../../modules/journey-planner/gtfs-generator/generators/StopGenerator.mjs'
 import caulfield from './sample-data/caulfield.mjs'
 import { WritableStream } from 'memory-streams'
+import CalendarGenerator from '../../../modules/journey-planner/gtfs-generator/generators/CalendarGenerator.mjs'
+import path from 'path'
+import url from 'url'
+
+const __filename = url.fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
 
 const clone = o => JSON.parse(JSON.stringify(o))
 
@@ -68,10 +74,63 @@ describe('The StopGenerator', () => {
     const header = lines[0], body = lines.slice(1)
 
     expect(header).to.equal(`stop_id,stop_name,stop_lat,stop_lon,location_type,parent_station,platform_code`)
-    console.log(lines)
+
     const stationParent = body.filter(row => row.startsWith('"vic:rail:CFD"'))
     expect(stationParent).to.exist
     expect(stationParent.length).to.equal(1)
     expect(stationParent[0]).to.equal(`"vic:rail:CFD","Caulfield Railway Station","-37.87745946","145.04252478","1","",""`)
+  })
+})
+
+
+describe('The CalendarGenerator', () => {
+  it('Combines calendar.txt data, adding the mode prefix to the front', async () => {
+    const db = new LokiDatabaseConnection()
+    const dbStops = await db.getCollection('stops')
+    await dbStops.createDocument(clone(caulfield))
+
+    const generator = new CalendarGenerator(db, path.join(__dirname, 'sample-data', 'calendars'))
+
+    const calendarStream = new WritableStream()
+    const calendarDateStream = new WritableStream()
+    await generator.generateFileContents(calendarStream, calendarDateStream)
+
+    const calLines = calendarStream.toString().split('\n')
+    const calHeader = calLines[0], calBody = calLines.slice(1)
+  
+    expect(calHeader).to.equal(`service_id,monday,tuesday,wednesday,thursday,friday,saturday,sunday,start_date,end_date`)
+
+    const vlineT2 = calBody.find(row => row.includes('1_T2'))
+    expect(vlineT2).to.exist
+    expect(vlineT2).to.equal(`"1_T2","0","0","0","0","0","1","0","20251129","20251129"`)
+
+    const metroT2 = calBody.find(row => row.includes('2_T2'))
+    expect(metroT2).to.exist
+    expect(metroT2).to.equal(`"2_T2","0","0","0","0","0","1","0","20251128","20251204"`)
+  })
+
+  it.only('Combines calendar_dates.txt data, adding the mode prefix to the front', async () => {
+    const db = new LokiDatabaseConnection()
+    const dbStops = await db.getCollection('stops')
+    await dbStops.createDocument(clone(caulfield))
+
+    const generator = new CalendarGenerator(db, path.join(__dirname, 'sample-data', 'calendars'))
+
+    const calendarStream = new WritableStream()
+    const calendarDateStream = new WritableStream()
+    await generator.generateFileContents(calendarStream, calendarDateStream)
+
+    const calDateLines = calendarDateStream.toString().split('\n')
+    const calDateHeader = calDateLines[0], calDateBody = calDateLines.slice(1)
+
+    expect(calDateHeader).to.equal(`service_id,date,exception_type`)
+
+    const vlineException = calDateBody.find(row => row.includes('1_T0_11'))
+    expect(vlineException).to.exist
+    expect(vlineException).to.equal(`"1_T0_11","20251225","2"`)
+
+    const metroException = calDateBody.find(row => row.includes('2_UH'))
+    expect(metroException).to.exist
+    expect(metroException).to.equal(`"2_UH","20251215","2"`)
   })
 })
