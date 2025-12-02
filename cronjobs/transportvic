@@ -76,9 +76,9 @@
   # Bus Tracker
   # Regular trips everyday 0400 - 2359
   *     4-5   *     *     *     node /home/transportvic/TransportVic/Server/modules/new-tracker/bus.mjs
-  */2   6-8   *     *     *     node /home/transportvic/TransportVic/Server/modules/new-tracker/bus.mjs
+  *     6-8   *     *     *     node /home/transportvic/TransportVic/Server/modules/new-tracker/bus.mjs
   *     9-14  *     *     *     node /home/transportvic/TransportVic/Server/modules/new-tracker/bus.mjs
-  */2   15-19 *     *     *     node /home/transportvic/TransportVic/Server/modules/new-tracker/bus.mjs
+  *     15-19 *     *     *     node /home/transportvic/TransportVic/Server/modules/new-tracker/bus.mjs
   *     20-23 *     *     *     node /home/transportvic/TransportVic/Server/modules/new-tracker/bus.mjs
   # Regular weeknights until 2530 (1.30am). This is effectively Tuesday 12-1.30am - Friday 12-1.30am
   *     0     *     *     2-5   node /home/transportvic/TransportVic/Server/modules/new-tracker/bus.mjs

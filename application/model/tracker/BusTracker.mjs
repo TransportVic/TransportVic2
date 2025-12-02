@@ -69,7 +69,11 @@ export default class BusTracker extends Tracker {
     const busData = await this.bulkSearchRegos(history.flatMap(day => day.data))
     return history.map(day => ({
       ...day,
-      data: day.data.map(rego => busData[rego] || rego).sort((a, b) => a.localeCompare(b))
+      data: (() => {
+        const fleetBuses = day.data.filter(rego => busData[rego]).map(rego => busData[rego])
+        const regoBuses = day.data.filter(rego => !busData[rego])
+        return regoBuses.sort((a, b) => a.localeCompare(b)).concat(fleetBuses.sort((a, b) => parseInt(a.match(/(\d+)/)[0]) - parseInt(b.match(/(\d+)/)[0])))
+      })()
     }))
   }
 
