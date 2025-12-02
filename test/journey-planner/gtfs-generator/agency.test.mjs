@@ -3,6 +3,7 @@ import { LokiDatabaseConnection } from '@transportme/database'
 import AgencyGenerator from '../../../modules/journey-planner/gtfs-generator/generators/AgencyGenerator.mjs'
 import StopGenerator from '../../../modules/journey-planner/gtfs-generator/generators/StopGenerator.mjs'
 import caulfield from './sample-data/caulfield.mjs'
+import { WritableStream } from 'memory-streams'
 
 const clone = o => JSON.parse(JSON.stringify(o))
 
@@ -11,8 +12,10 @@ describe('The AgencyGenerator', () => {
     const db = new LokiDatabaseConnection()
     const generator = new AgencyGenerator(db)
 
-    const output = await generator.generateFileContents()
-    const lines = output.split('\n')
+    const stream = new WritableStream()
+    await generator.generateFileContents(stream)
+
+    const lines = stream.toString().split('\n')
     expect(lines[0]).to.equal(`agency_id,agency_name,agency_url,agency_timezone`)
     expect(lines[1]).to.equal(`0,TransportVic,https://transportvic.me,Australia/Melbourne`)
   })
@@ -26,8 +29,10 @@ describe('The StopGenerator', () => {
 
     const generator = new StopGenerator(db)
 
-    const output = await generator.generateFileContents()
-    const lines = output.split('\n')
+    const stream = new WritableStream()
+    await generator.generateFileContents(stream)
+
+    const lines = stream.toString().split('\n')
     const header = lines[0], body = lines.slice(1)
   
     expect(header).to.equal(`stop_id,stop_name,stop_lat,stop_lon,location_type,parent_station,platform_code`)
@@ -56,8 +61,10 @@ describe('The StopGenerator', () => {
 
     const generator = new StopGenerator(db)
 
-    const output = await generator.generateFileContents()
-    const lines = output.split('\n')
+    const stream = new WritableStream()
+    await generator.generateFileContents(stream)
+
+    const lines = stream.toString().split('\n')
     const header = lines[0], body = lines.slice(1)
 
     expect(header).to.equal(`stop_id,stop_name,stop_lat,stop_lon,location_type,parent_station,platform_code`)
