@@ -55,7 +55,7 @@ export async function fetchGTFSRTrips(db, tripDB, existingTrips) {
   const trips = await getUpcomingTrips(makePBRequest)
 
   global.loggers.trackers.bus.debug('Fetching trip data from DB')
-  const newRunIDs = trips.filter(trip => !existingTrips[trip.runID])
+  const newRunIDs = trips.filter(trip => !existingTrips[BusTripUpdater.getTripCacheValue(trip)])
   const groupedRuns = newRunIDs.reduce((acc, trip) => {
     if (!acc[trip.operationDays]) acc[trip.operationDays] = []
     acc[trip.operationDays].push(trip)

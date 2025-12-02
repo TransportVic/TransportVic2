@@ -9,7 +9,6 @@ import fs from 'fs/promises'
 import BusTripUpdater from '../../bus/trip-updater.mjs'
 import async from 'async'
 import { LiveTimetable } from '../../schema/live-timetable.mjs'
-import utils from '../../../utils.js'
 
 export async function getFleetData(tripDB, gtfsrAPI) {
   let tripData = await gtfsrAPI('bus/vehicle-positions')
@@ -45,7 +44,7 @@ export async function fetchGTFSRFleet(db, tripDB, existingTrips) {
   const trips = await getFleetData(tripDB, makePBRequest)
 
   global.loggers.trackers.bus.debug('Fetching trip data from DB')
-  const newRunIDs = trips.filter(trip => !existingTrips[trip.runID])
+  const newRunIDs = trips.filter(trip => !existingTrips[BusTripUpdater.getTripCacheValue(trip)])
   const groupedRuns = newRunIDs.reduce((acc, trip) => {
     if (!acc[trip.operationDays]) acc[trip.operationDays] = []
     acc[trip.operationDays].push(trip)

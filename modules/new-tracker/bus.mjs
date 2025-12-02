@@ -10,7 +10,6 @@ import discordIntegration from '../discord-integration.js'
 import { hostname } from 'os'
 import BusTripUpdater from '../bus/trip-updater.mjs'
 import { fetchGTFSRTrips } from './bus/bus-gtfsr-trips.mjs'
-import utils from '../../utils.js'
 
 async function writeUpdatedTrips(db, tripDB, updatedTrips) {
   const tripBulkOperations = updatedTrips.map(timetable => (timetable.stops.length ? {

@@ -289,7 +289,7 @@ export default class TripUpdater {
 
     timetable.setModificationSource(dataSource)
     this.setUpTimetable(timetable, trip)
-    
+
     if (!skipWrite) {
       const liveTimetables = db.getCollection('live timetables')
       await liveTimetables.updateDocument(timetable.getDBKey(), {
@@ -298,6 +298,8 @@ export default class TripUpdater {
 
       await this.updateTrackerData(tripDB, timetable)
     }
+
+    existingTrips[this.getTripCacheValue(trip)] = timetable
 
     return timetable
   }
