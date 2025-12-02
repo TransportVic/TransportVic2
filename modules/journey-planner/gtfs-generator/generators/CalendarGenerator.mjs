@@ -27,32 +27,24 @@ export default class CalendarGenerator extends Generator {
         const calendarFile = path.join(this.#gtfsFolder, folder, 'calendar.txt')
         const calendarDateFile = path.join(this.#gtfsFolder, folder, 'calendar_dates.txt')
 
-        const calendarReader = new CSVLineReader(calendarFile)
-        await calendarReader.open()
-        while (calendarReader.available()) {
-          const line = await calendarReader.nextLine()
-          calendarStream.write('"')
-          calendarStream.write(calendarHeaderParts.map(column => 
-            column === 'service_id' ? `${folder}_${line[column]}` : line[column]
-          ).join('","'))
-          calendarStream.write('"\n')
-        }
-        await calendarReader.close()
-
-        const calendarDateReader = new CSVLineReader(calendarDateFile)
-        await calendarDateReader.open()
-        while (calendarDateReader.available()) {
-          const line = await calendarDateReader.nextLine()
-          calendarDateStream.write('"')
-          calendarDateStream.write(calendarDateHeaderParts.map(column => 
-            column === 'service_id' ? `${folder}_${line[column]}` : line[column]
-          ).join('","'))
-          calendarDateStream.write('"\n')
-        }
-        await calendarDateReader.close()
+        await this.#streamAndModifyFile(calendarStream, folder, new CSVLineReader(calendarFile), calendarHeaderParts)
+        await this.#streamAndModifyFile(calendarDateStream, folder, new CSVLineReader(calendarDateFile), calendarDateHeaderParts)
       } catch (e) {
       }
     }
+  }
+
+  async #streamAndModifyFile(stream, folder, reader, headers) {
+    await reader.open()
+    while (reader.available()) {
+      const line = await reader.nextLine()
+      stream.write('"')
+      stream.write(headers.map(column => 
+        column === 'service_id' ? `${folder}_${line[column]}` : line[column]
+      ).join('","'))
+      stream.write('"\n')
+    }
+    await reader.close()
   }
 
 }
