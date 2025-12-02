@@ -1607,5 +1607,64 @@ describe('The trip updater module', () => {
       expect(trip.destination).to.equal('Showgrounds Railway Station')
       expect(trip.stopTimings[0].stopName).to.equal('Southern Cross Railway Station')
     })
+
+    it('Does not replace a full trip with a skeleton trip if passed in existingTrips', async () => {
+      const database = new LokiDatabaseConnection('test-db')
+      const stops = await database.createCollection('stops')
+      const routes = await database.createCollection('routes')
+      const liveTimetables = await database.createCollection('live timetables')
+      await stops.createDocuments(clone(pkmStops))
+
+      await routes.createDocument({
+        "mode" : "metro train",
+        "routeName" : "Flemington Racecourse",
+        "cleanName" : "flemington-racecourse",
+        "routeNumber" : null,
+        "routeGTFSID" : "2-RCE",
+        "operators" : [
+          "Metro"
+        ],
+        "cleanName" : "flemington-racecourse"
+      })
+      const timetable = clone(tdR205)
+      await liveTimetables.createDocument(timetable)
+
+      const existingTrips = {
+        [MetroTripUpdater.getTripCacheValue(timetable)]: LiveTimetable.fromDatabase(timetable)
+      }
+
+      await MetroTripUpdater.updateTrip(database, database, {
+        operationDays: '20240224',
+        runID: 'R205',
+        routeGTFSID: '2-RCE',
+        stops: [{
+          stopName: 'Southern Cross Railway Station',
+          platform: '16'
+        }],
+        cancelled: false,
+      }, {
+        skipWrite: true,
+        skipStopCancellation: true,
+        existingTrips
+      })
+
+      await MetroTripUpdater.updateTrip(database, database, {
+        operationDays: '20240224',
+        runID: 'R205',
+        routeGTFSID: '2-RCE',
+        stops: [],
+        cancelled: false,
+        consist: ['9001', '9101', '9201', '9301', '9701', '9801', '9901']
+      }, {
+        skipWrite: true,
+        skipStopCancellation: true,
+        existingTrips
+      })
+
+      const trip = Object.values(existingTrips)[0].toDatabase()
+      expect(trip.vehicle.consist[0]).to.equal('9001')
+      expect(trip.stopTimings[0].stopName).to.equal('Southern Cross Railway Station')
+      expect(trip.stopTimings[0].platform).to.equal('16')
+    })
   })
 })

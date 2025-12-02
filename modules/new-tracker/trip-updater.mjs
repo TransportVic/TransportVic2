@@ -42,11 +42,14 @@ export default class TripUpdater {
 
   static async getTripSkeleton(db, runID, date) {
     let liveTimetables = db.getCollection('live timetables')
-    return await liveTimetables.findDocument({
+    const trip = await liveTimetables.findDocument({
       mode: this.getMode(),
       runID,
       operationDays: date
     }, { stopTimings: 0 })
+    if (!trip) return null
+
+    return LiveTimetable.fromDatabase(trip)
   }
 
   static async getStop(db, stopID) {
@@ -279,22 +282,22 @@ export default class TripUpdater {
     return !(trip.stops && trip.stops.length > 0)
   }
 
-  static async updateNonStopData(db, tripDB, trip, { dataSource, updateTime }) {
-    let dbTrip = await this.getTripSkeleton(db, trip.runID, trip.operationDays)
-    if (!dbTrip) return null
-    let liveTimetables = db.getCollection('live timetables')
-
-    let timetable = LiveTimetable.fromDatabase(dbTrip)
+  static async updateNonStopData(db, tripDB, trip, { dataSource, updateTime, existingTrips, skipWrite }) {
+    const timetable = existingTrips[this.getTripCacheValue(trip)] || await this.getTripSkeleton(db, trip.runID, trip.operationDays)
+    if (!timetable) return null
     if (updateTime) timetable.lastUpdated = updateTime
 
     timetable.setModificationSource(dataSource)
     this.setUpTimetable(timetable, trip)
+    
+    if (!skipWrite) {
+      const liveTimetables = db.getCollection('live timetables')
+      await liveTimetables.updateDocument(timetable.getDBKey(), {
+        $set: timetable.toDatabase()
+      })
 
-    await liveTimetables.updateDocument(timetable.getDBKey(), {
-      $set: timetable.toDatabase()
-    })
-
-    await this.updateTrackerData(tripDB, timetable)
+      await this.updateTrackerData(tripDB, timetable)
+    }
 
     return timetable
   }
@@ -313,8 +316,8 @@ export default class TripUpdater {
     existingTrips = {},
     propagateDelay = false
   } = {}) {
-    if (this.isNonStopUpdate(trip) && !skipWrite) {
-      return await this.updateNonStopData(db, tripDB, trip, { dataSource, updateTime })
+    if (this.isNonStopUpdate(trip)) {
+      return await this.updateNonStopData(db, tripDB, trip, { dataSource, updateTime, existingTrips, skipWrite })
     }
 
     let timetable = existingTrips[this.getTripCacheValue(trip)] || await this.getTimetable(db, trip.runID, trip.operationDays)

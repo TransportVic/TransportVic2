@@ -9,39 +9,33 @@ import fs from 'fs/promises'
 import BusTripUpdater from '../../bus/trip-updater.mjs'
 import async from 'async'
 import { LiveTimetable } from '../../schema/live-timetable.mjs'
+import utils from '../../../utils.js'
 
 export async function getFleetData(tripDB, gtfsrAPI) {
   let tripData = await gtfsrAPI('bus/vehicle-positions')
   let busRegos = tripDB.getCollection('bus regos')
 
-  let trips = {}
+  let trips = []
 
-  let regosSeen = {}
-  let goodRegos = new Set()
+  const badRegos = (await busRegos.findDocuments({
+    trackedRego: {
+      $in: tripData.entity.map(trip => trip.vehicle.vehicle.id)
+    }
+  }).toArray()).reduce((acc, bus) => {
+    acc[bus.trackedRego] = bus.rego
+    return acc
+  }, {})
 
   for (let trip of tripData.entity) {
     let gtfsrTripData = GTFSRTrip.parse(trip.vehicle.trip)
-    const trackedRego = trip.vehicle.vehicle.id
-    let trueRego = trackedRego
+    const rego = badRegos[trip.vehicle.vehicle.id] || trip.vehicle.vehicle.id
 
-    if (!goodRegos.has(trackedRego)) {
-      const busData = regosSeen[trackedRego] || await busRegos.findDocument({ trackedRego })
-      if (busData) {
-        regosSeen[trackedRego] = busData
-        trueRego = busData.rego
-      } else {
-        goodRegos.add(trackedRego)
-      }
-    }
-
-    let tripData = {
+    trips.push({
       operationDays: gtfsrTripData.getOperationDay(),
       runID: gtfsrTripData.getTDN(),
       routeGTFSID: gtfsrTripData.getRouteID(),
-      consist: [ trueRego ]
-    }
-
-    trips[tripData.runID] = tripData
+      consist: [ rego ]
+    })
   }
 
   return trips
@@ -49,22 +43,31 @@ export async function getFleetData(tripDB, gtfsrAPI) {
 
 export async function fetchGTFSRFleet(db, tripDB, existingTrips) {
   const trips = await getFleetData(tripDB, makePBRequest)
-  const relevantTrips = Object.values(trips)
 
-  const newRunIDs = Object.keys(trips).filter(runID => !existingTrips[runID])
+  global.loggers.trackers.bus.debug('Fetching trip data from DB')
+  const newRunIDs = trips.filter(trip => !existingTrips[trip.runID])
+  const groupedRuns = newRunIDs.reduce((acc, trip) => {
+    if (!acc[trip.operationDays]) acc[trip.operationDays] = []
+    acc[trip.operationDays].push(trip)
+
+    return acc
+  }, {})
+
   const tripData = await db.getCollection('live timetables').findDocuments({
     mode: 'bus',
-    $or: newRunIDs.map(runID => ({
-      operationDays: trips[runID].operationDays,
-      runID
+    $or: Object.keys(groupedRuns).map(operationDay => ({
+      operationDays: operationDay,
+      runID: { $in: groupedRuns[operationDay].map(run => run.runID) }
     }))
-  }).toArray()
+  }, { stopTimings: 0 }).toArray()
 
   for (let trip of tripData) existingTrips[BusTripUpdater.getTripCacheValue(trip)] = LiveTimetable.fromDatabase(trip)
+  global.loggers.trackers.bus.debug('Fetched trip data from DB')
 
-  global.loggers.trackers.bus.log('GTFSR Updater: Fetched', relevantTrips.length, 'trips')
+  global.loggers.trackers.bus.log('GTFSR Updater: Fetched', trips.length, 'trips')
 
-  await async.forEachLimit(relevantTrips, 400, async tripUpdateData => {
+  global.loggers.trackers.bus.debug('Updating fleet data in memory')
+  await async.forEachLimit(trips, 400, async tripUpdateData => {
     try {
       await BusTripUpdater.updateTrip(db, tripDB, tripUpdateData, {
         dataSource: 'gtfsr-vehicle-update',
@@ -75,8 +78,9 @@ export async function fetchGTFSRFleet(db, tripDB, existingTrips) {
       console.error('Error while updating trip', e)
     }
   })
+  global.loggers.trackers.bus.debug('Updated fleet data in memory')
 
-  return relevantTrips
+  return trips
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {

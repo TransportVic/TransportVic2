@@ -13,7 +13,8 @@ import { LiveTimetable } from '../../schema/live-timetable.mjs'
 export async function getUpcomingTrips(gtfsrAPI) {
   let tripData = await gtfsrAPI('bus/trip-updates')
   
-  let trips = {}
+  let trips = []
+  let seen = new Set()
 
   for (let trip of tripData.entity) {
     let gtfsrTripData = GTFSRTrip.parse(trip.trip_update.trip)
@@ -41,30 +42,42 @@ export async function getUpcomingTrips(gtfsrAPI) {
       tripData.stops.push(tripStop)
     }
 
-    if (!trips[tripData.runID]) trips[tripData.runID] = tripData
+    if (!seen.has(tripData.runID)) {
+      trips.push(tripData)
+      seen.add(tripData.runID)
+    }
   }
 
-  return Object.values(trips)
+  return trips
 }
 
 export async function fetchGTFSRTrips(db, tripDB, existingTrips) {
   const trips = await getUpcomingTrips(makePBRequest)
-  const relevantTrips = Object.values(trips)
 
-  const newRunIDs = Object.keys(trips).filter(runID => !existingTrips[runID])
+  global.loggers.trackers.bus.debug('Fetching trip data from DB')
+  const newRunIDs = trips.filter(trip => !existingTrips[trip.runID])
+  const groupedRuns = newRunIDs.reduce((acc, trip) => {
+    if (!acc[trip.operationDays]) acc[trip.operationDays] = []
+    acc[trip.operationDays].push(trip)
+
+    return acc
+  }, {})
+
   const tripData = await db.getCollection('live timetables').findDocuments({
     mode: 'bus',
-    $or: newRunIDs.map(runID => ({
-      operationDays: trips[runID].operationDays,
-      runID
+    $or: Object.keys(groupedRuns).map(operationDay => ({
+      operationDays: operationDay,
+      runID: { $in: groupedRuns[operationDay].map(run => run.runID) }
     }))
   }).toArray()
 
   for (let trip of tripData) existingTrips[BusTripUpdater.getTripCacheValue(trip)] = LiveTimetable.fromDatabase(trip)
+  global.loggers.trackers.bus.debug('Fetched trip data from DB')
 
-  global.loggers.trackers.bus.log('GTFSR Updater: Fetched', relevantTrips.length, 'trips')
+  global.loggers.trackers.bus.log('GTFSR Updater: Fetched', trips.length, 'trips')
 
-  await async.forEachLimit(relevantTrips, 400, async tripUpdateData => {
+  global.loggers.trackers.bus.debug('Updating trip data in memory')
+  await async.forEachLimit(trips, 400, async tripUpdateData => {
     await BusTripUpdater.updateTrip(db, tripDB, tripUpdateData, {
       dataSource: 'gtfsr-trip-update',
       existingTrips,
@@ -73,8 +86,9 @@ export async function fetchGTFSRTrips(db, tripDB, existingTrips) {
       propagateDelay: true
     })
   })
+  global.loggers.trackers.bus.debug('Updated trip data in memory')
 
-  return relevantTrips
+  return trips
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {

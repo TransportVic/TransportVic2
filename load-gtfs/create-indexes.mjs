@@ -256,6 +256,11 @@ async function createBusTripIndex(busTrips) {
     date: 1,
     consist: 1
   })
+
+  await busTrips.createIndex({
+    date: 1,
+    runID: 1
+  })
 }
 
 async function createSmartrakIndex(smartrakIDs) {

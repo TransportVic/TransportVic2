@@ -10,13 +10,25 @@ import discordIntegration from '../discord-integration.js'
 import { hostname } from 'os'
 import BusTripUpdater from '../bus/trip-updater.mjs'
 import { fetchGTFSRTrips } from './bus/bus-gtfsr-trips.mjs'
+import utils from '../../utils.js'
 
 async function writeUpdatedTrips(db, tripDB, updatedTrips) {
-  const tripBulkOperations = updatedTrips.map(timetable => ({
+  const tripBulkOperations = updatedTrips.map(timetable => (timetable.stops.length ? {
     replaceOne: {
       filter: timetable.getDBKey(),
       replacement: timetable.toDatabase(),
       upsert: true
+    }
+  } : {
+    updateOne: {
+      filter: timetable.getDBKey(),
+      update: {
+        $set: (tt => ({
+          vehicle: tt.vehicle,
+          changes: tt.changes,
+          lastUpdated: tt.lastUpdated
+        }))(timetable.toDatabase())
+      }
     }
   }))
 
@@ -46,14 +58,17 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
 
   let existingTrips = {}
 
-  await fetchGTFSRFleet(database, tripDatabase, existingTrips)
+  global.loggers.trackers.bus.log('Start')
   await fetchGTFSRTrips(database, tripDatabase, existingTrips)
+  global.loggers.trackers.bus.log('Finished trip, starting fleet')  
+  await fetchGTFSRFleet(database, tripDatabase, existingTrips)
+  global.loggers.trackers.bus.log('Finished fleet')  
 
+  global.loggers.trackers.bus.log('Writing')  
   await writeUpdatedTrips(database, tripDatabase, Object.values(existingTrips))
+  global.loggers.trackers.bus.log('Done writing')  
 
   global.loggers.trackers.bus.log('GTFSR Updater: Updated', Object.values(existingTrips).length, 'trips')
-
-  await discordIntegration('taskLogging', `Bus Trip Updater: ${hostname()} completed loading`)
 
   process.exit(0)
 }
