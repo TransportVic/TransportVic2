@@ -109,7 +109,7 @@ describe('The CalendarGenerator', () => {
     expect(metroT2).to.equal(`"2_T2","0","0","0","0","0","1","0","20251128","20251204"`)
   })
 
-  it.only('Combines calendar_dates.txt data, adding the mode prefix to the front', async () => {
+  it('Combines calendar_dates.txt data, adding the mode prefix to the front', async () => {
     const db = new LokiDatabaseConnection()
     const dbStops = await db.getCollection('stops')
     await dbStops.createDocument(clone(caulfield))

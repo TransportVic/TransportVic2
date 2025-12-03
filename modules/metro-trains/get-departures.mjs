@@ -38,12 +38,12 @@ export default async function getMetroDepartures(station, db, filter, backwards,
     let origin, trueOrigin, destination, trueDestination
     let isUpTrain = trip.direction === 'Up'
 
-    trueOrigin = trip.stopTimings.find(stop => !stop.additional).stopName.slice(0, -16)
-    trueDestination = trip.stopTimings.findLast(stop => !stop.additional).stopName.slice(0, -16)
+    trueOrigin = (trip.stopTimings.find(stop => !stop.additional) || trip.stopTimings[0]).stopName.slice(0, -16)
+    trueDestination = (trip.stopTimings.findLast(stop => !stop.additional) || trip.stopTimings[trip.stopTimings.length - 1]).stopName.slice(0, -16)
     if (!isWithinCityLoop && trueDestination === 'Flinders Street' && isUpTrain && !!par) trueDestination = 'City Loop'
 
-    let updatedOrigin = trip.stopTimings.find(stop => !stop.cancelled).stopName.slice(0, -16)
-    let destinationStop = trip.stopTimings.findLast(stop => !stop.cancelled)
+    let updatedOrigin = (trip.stopTimings.find(stop => !stop.cancelled) || trip.stopTimings[0]).stopName.slice(0, -16)
+    let destinationStop = (trip.stopTimings.findLast(stop => !stop.cancelled) || trip.stopTimings[trip.stopTimings.length - 1])
     let updatedDestination = destinationStop.stopName.slice(0, -16)
 
     if (!isWithinCityLoop && updatedDestination === 'Flinders Street' && isUpTrain && !!par && !par.cancelled) updatedDestination = 'City Loop'
