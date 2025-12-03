@@ -17,15 +17,24 @@ import { updateRelatedTrips } from './metro/check-new-updates.mjs'
 import fs from 'fs/promises'
 import MetroTripUpdater from '../metro-trains/trip-updater.mjs'
 import { isPrimary } from '../replication.mjs'
-import discordIntegration from '../discord-integration.js'
-import { hostname } from 'os'
 
 export async function writeUpdatedTrips(db, tripDB, updatedTrips) {
-  const tripBulkOperations = updatedTrips.map(timetable => ({
+  const tripBulkOperations = updatedTrips.map(timetable => (timetable.stops.length ? {
     replaceOne: {
       filter: timetable.getDBKey(),
       replacement: timetable.toDatabase(),
       upsert: true
+    }
+  } : {
+    updateOne: {
+      filter: timetable.getDBKey(),
+      update: {
+        $set: (tt => ({
+          vehicle: tt.vehicle,
+          changes: tt.changes,
+          lastUpdated: tt.lastUpdated
+        }))(timetable.toDatabase())
+      }
     }
   }))
 
@@ -37,8 +46,8 @@ export async function writeUpdatedTrips(db, tripDB, updatedTrips) {
     }
   })).filter(op => !!op.replaceOne.filter)
 
-  if (tripBulkOperations.length) await db.getCollection('live timetables').bulkWrite(tripBulkOperations)
-  if (consistBulkOperations.length && await isPrimary()) await tripDB.getCollection(MetroTripUpdater.getTrackerDB()).bulkWrite(consistBulkOperations)
+  if (tripBulkOperations.length) await db.getCollection('live timetables').bulkWrite(tripBulkOperations, { ordered: false })
+  if (consistBulkOperations.length && await isPrimary()) await tripDB.getCollection(MetroTripUpdater.getTrackerDB()).bulkWrite(consistBulkOperations, { ordered: false })
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {

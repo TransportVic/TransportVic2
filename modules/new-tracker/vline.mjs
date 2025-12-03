@@ -16,11 +16,22 @@ import { fetchGTFSRFleet } from './vline/vline-gtfsr-fleet.mjs'
 import utils from '../../utils.js'
 
 async function writeUpdatedTrips(db, tripDB, updatedTrips) {
-  const tripBulkOperations = updatedTrips.map(timetable => ({
+  const tripBulkOperations = updatedTrips.map(timetable => (timetable.stops.length ? {
     replaceOne: {
       filter: timetable.getDBKey(),
       replacement: timetable.toDatabase(),
       upsert: true
+    }
+  } : {
+    updateOne: {
+      filter: timetable.getDBKey(),
+      update: {
+        $set: (tt => ({
+          vehicle: tt.vehicle,
+          changes: tt.changes,
+          lastUpdated: tt.lastUpdated
+        }))(timetable.toDatabase())
+      }
     }
   }))
 
