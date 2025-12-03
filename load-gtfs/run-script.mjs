@@ -21,6 +21,8 @@ export default async function runCommands(commands) {
   }
 
   return await async.reduce(commands, 0, async (prev, command) => {
-    return Math.max(prev, await runNode(command[0], command.slice(1)))
+    const exitCode = await runNode(command[0], command.slice(1))
+    if (exitCode !== 0) console.warn(`WARN: ${command} exited uncleanly with exit code ${exitCode}`)
+    return Math.max(prev, exitCode)
   })
 }

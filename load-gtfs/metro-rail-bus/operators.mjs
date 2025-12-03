@@ -1,1 +1,1 @@
-export default ['donric', 'dysons', 'kinetic']
+export default ['dysons', 'kinetic']

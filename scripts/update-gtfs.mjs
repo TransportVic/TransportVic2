@@ -105,8 +105,10 @@ if (lastModified.toISOString() !== lastLastModified) {
     try {
       if (modules.timetableExtract) await generateTimetableExtract()
     } catch (e) {
-      console.log('Failed to generate offline timetable extract')
+      LOGGER.err('Failed to generate offline timetable extract', e)
     }
+  } else {
+    LOGGER.err('Unclean error code detected during timetable load process')
   }
 } else {
   LOGGER.log('Timetables all good')
