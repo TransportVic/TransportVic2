@@ -316,9 +316,10 @@ export default class TripUpdater {
     ignoreMissingStops = [],
     updateTime = null,
     existingTrips = {},
-    propagateDelay = false
+    propagateDelay = false,
+    fullTrip = false
   } = {}) {
-    if (this.isNonStopUpdate(trip)) {
+    if (this.isNonStopUpdate(trip) && !fullTrip) {
       return await this.updateNonStopData(db, tripDB, trip, { dataSource, updateTime, existingTrips, skipWrite })
     }
 

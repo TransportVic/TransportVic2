@@ -31,7 +31,8 @@ export async function updateTDNFromPTV(db, tripDB, runID, ptvAPI, ptvAPIOptions,
     ignoreMissingStops: PTV_BAD_STOPS,
     updateTime: new Date(),
     skipWrite,
-    existingTrips
+    existingTrips,
+    fullTrip: true
   })
 }
 

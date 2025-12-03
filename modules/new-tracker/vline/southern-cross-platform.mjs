@@ -52,7 +52,8 @@ export async function fetchSSSPlatforms(operationDay, db, tripDB, ptvAPI, existi
       skipStopCancellation: true,
       dataSource: 'vline-platform-arrivals-sss',
       skipWrite: true,
-      existingTrips
+      existingTrips,
+      fullTrip: true
     })
   }
 

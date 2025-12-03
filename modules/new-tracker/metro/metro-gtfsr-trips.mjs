@@ -64,7 +64,11 @@ export async function fetchGTFSRTrips(db, tripDB, routeFilter = '') {
     // GTFSR data currently does not support platform changes
     tripData.stops.forEach(stop => { delete stop.platform })
 
-    await MetroTripUpdater.updateTrip(db, tripDB, tripData, { skipStopCancellation: true, dataSource: 'gtfsr-trip-update' })
+    await MetroTripUpdater.updateTrip(db, tripDB, tripData, {
+      skipStopCancellation: true,
+      dataSource: 'gtfsr-trip-update',
+      fullTrip: true
+    })
   }
 }
 

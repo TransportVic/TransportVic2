@@ -45,7 +45,8 @@ export async function fetchTrips(db, tripDB, ptvAPI, {
       dataSource: 'ptv-departure',
       ignoreMissingStops: MTP_STOPS,
       skipWrite: true,
-      existingTrips
+      existingTrips,
+      fullTrip: true
     }))
   }
 

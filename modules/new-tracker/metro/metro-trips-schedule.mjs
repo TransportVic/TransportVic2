@@ -52,7 +52,8 @@ export async function fetchTrips(ptvAPI, db, tripDB, lines=Object.values(ptvAPI.
       tripObjects[trip.tdn] = await MetroTripUpdater.updateTrip(db, tripDB, tripData, {
         skipWrite: true,
         skipStopCancellation: true,
-        dataSource: 'mtm-op-timetable'
+        dataSource: 'mtm-op-timetable',
+        fullTrip: true
       })
     }
 

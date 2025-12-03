@@ -79,7 +79,11 @@ async function getStation(station, code) {
       }]
     }
 
-    await VLineTripUpdater.updateTrip(database, tripDatabase, tripData, { skipStopCancellation: true, dataSource: 'vline-secret-page' })
+    await VLineTripUpdater.updateTrip(database, tripDatabase, tripData, {
+      skipStopCancellation: true,
+      dataSource: 'vline-secret-page',
+      fullTrip: true
+    })
   }
 }
 

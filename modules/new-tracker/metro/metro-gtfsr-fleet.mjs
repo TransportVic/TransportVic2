@@ -39,7 +39,8 @@ export async function fetchGTFSRFleet(db, tripDB, existingTrips = {}) {
     await MetroTripUpdater.updateTrip(db, tripDB, tripData, {
       dataSource: 'gtfsr-vehicle-update',
       existingTrips,
-      skipWrite: true
+      skipWrite: true,
+      fullTrip: true
     })
   }
 }

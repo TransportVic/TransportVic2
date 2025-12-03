@@ -102,7 +102,8 @@ export async function fetchGTFSRTrips(db, tripDB, gtfsrAPI, existingTrips) {
         dataSource: 'gtfsr-trip-update',
         skipWrite: true,
         existingTrips,
-        propagateDelay: true
+        propagateDelay: true,
+        fullTrip: true
       })
     } catch (e) {
       global.loggers.trackers.vline.err('Failed to update TDN', tripData.runID)

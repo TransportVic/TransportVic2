@@ -71,7 +71,8 @@ export async function fetchMetroSiteDepartures(db, tripDB, ptvAPI, existingTrips
       dataSource: 'mtm-departures',
       updateTime: new Date(),
       existingTrips,
-      skipWrite: true
+      skipWrite: true,
+      fullTrip: true
     })
   }
 }

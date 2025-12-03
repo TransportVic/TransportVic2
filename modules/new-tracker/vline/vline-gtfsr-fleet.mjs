@@ -37,7 +37,8 @@ export async function fetchGTFSRFleet(db, tripDB, gtfsrAPI, existingTrips) {
     await VLineTripUpdater.updateTrip(db, tripDB, tripData, {
       dataSource: 'gtfsr-vehicle-update',
       skipWrite: true,
-      existingTrips
+      existingTrips,
+      fullTrip: true
     })
   }
 
