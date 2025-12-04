@@ -7,7 +7,7 @@ await database.connect()
 const timetables = await database.getCollection('live timetables')
 const affectedTrips = (await timetables.findDocuments({
   mode: 'metro train',
-  operationDays: '20251201',
+  operationDays: '20251204',
   routeGTFSID: {
     $in: ['2-PKM', '2-CBE', '2-SUY']
   },
