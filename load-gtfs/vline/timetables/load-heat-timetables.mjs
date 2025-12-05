@@ -81,10 +81,10 @@ let allRuns = []
 for (let file of heatTTFiles.filter(file => allRouteData[file.line])) {
  console.log('Reading', file)
   let runs = await file.extractRuns()
-  allRuns.push(...runs.filter(train => train.type === 'Train' && train.stops.length > 3 && !train.flags.match(/[A-Z]/)).map(train => ({
+  allRuns.push(...runs.filter(train => train.type === 'Train' && train.stops.length > 3).map(train => ({
     ...train,
     lineHint: file.line,
-    type: file.type
+    type: file.type.toLowerCase()
   })))
 }
 
@@ -147,7 +147,8 @@ for (const run of allRuns) {
   }  
 }
 
-let bulkWrite = []
+let bulkWrite = {}
+
 for (let { run, stopTimings, operationDays } of Object.values(runs)) {
   // const lineData = allRouteData[run.lineHint]
   const originStop = stopTimings[0]
@@ -257,7 +258,10 @@ for (let { run, stopTimings, operationDays } of Object.values(runs)) {
 
   delete timetable._id
 
-  bulkWrite.push({
+  let id = `${timetable.runID}-${timetable.operationDays[0]}-${timetable.type}`
+  if (bulkWrite[id] && bulkWrite[id].replaceOne.replacement.stopTimings.length > timetable.stopTimings.length) continue
+
+  bulkWrite[id] = {
     replaceOne: {
       filter: {
         mode: timetable.mode,
@@ -268,8 +272,8 @@ for (let { run, stopTimings, operationDays } of Object.values(runs)) {
       replacement: timetable,
       upsert: true
     }
-  })
+  }
 }
 
-await heatTimetables.bulkWrite(bulkWrite)
+await heatTimetables.bulkWrite(Object.values(bulkWrite))
 process.exit(0)

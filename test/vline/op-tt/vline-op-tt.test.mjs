@@ -552,5 +552,7 @@ describe('The loadOperationalTT function', () => {
     expect(trip).to.exist
     expect(trip.departureTime).to.equal('12:26')
     expect(trip.destinationArrivalTime).to.equal('15:07')
+
+    expect(trip.flags).to.deep.equal({ heatTT: '36 degrees' })
   })
 })

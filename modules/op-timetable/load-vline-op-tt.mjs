@@ -371,6 +371,7 @@ export default async function loadOperationalTT(db, tripDB, operationDay, ptvAPI
       let liveTrip = convertToLive(tripData, operationDay)
       liveTrip.runID = vlineTrip.tdn
       liveTrip.direction = vlineTrip.direction
+      liveTrip.flags = { heatTT: tripData.type }
 
       newTrips.push({ liveTrip, vlineTrip })
       outputTrips.push({
