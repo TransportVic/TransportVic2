@@ -235,7 +235,7 @@ for (let { run, stopTimings, operationDays } of Object.values(runs)) {
   }
 
   if (!matchingTrips.length) {
-    console.log(run, operationDays, stopTimings)
+    // console.log(run, operationDays, stopTimings)
     continue
   }
 
