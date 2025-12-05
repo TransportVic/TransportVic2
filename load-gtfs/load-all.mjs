@@ -11,6 +11,8 @@ let commandsA = [
   ['vline/api-integration/load-vnet-station-names.mjs'],
   ['vline/timetables/download-vline-timetables.mjs'],
   ['vline/timetables/load-vline-timetables.mjs'],
+  ['vline/timetables/download-heat-timetables.mjs'],
+  ['vline/timetables/load-heat-timetables.mjs'],
 
   ['bus/load-788-stop-numbers.mjs'],
   ['/bus/mildura/load-mildura-routes.mjs'],
