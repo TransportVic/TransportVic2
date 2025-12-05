@@ -15,6 +15,7 @@ html(lang='en-GB')
     -
       let description = 'A transport app for Victoria'
       let title = 'TransportVic'
+      let keywords = ''
       
     block head
     block style
@@ -38,7 +39,7 @@ html(lang='en-GB')
     meta(name='twitter:description' content=description)
     meta(name='description' content=description)
 
-    meta(name='keywords' content='tram,vline,train,next 5,public transport,bus,metro,transport,victora,ferry,train times,bus times,coach,coach times,ptv')
+    meta(name='keywords' content=`tram,vline,train,next 5,public transport,bus,metro,transport,victora,ferry,train times,bus times,coach,coach times,ptv${keywords ? ',' + keywords : ''}`)
     meta(name='author' content='TransportVic')
     meta(name='application-name' content='TransportVic')
     meta(name='viewport' content='initial-scale=1.0, maximum-scale=1.0, user-scalable=no, width=device-width, height=device-height')

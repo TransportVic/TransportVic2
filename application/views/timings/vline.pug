@@ -2,8 +2,19 @@ extends ../textbar-layout
 
 block head
   -
-    let stationName = station.stopName.slice(0, -16)
+    const stationName = station.stopName.slice(0, -16)
+    const regionalTowns = [
+      'Geelong', 'Ballarat', 'Bendigo', 'Seymour', 'Traralgon',
+      'Warrnambool', 'Ararat', 'Maryborough', 'Swan Hill', 'Echuca', 'Shepparton', 'Albury', 'Bairnsdale'
+    ]
+
     title = `TransportVic - ${stationName}`
+
+    keywords = `${stationName} train times,vline ${stationName},${station} vline times`
+    const townText = town => `${town} to Melbourne,Melbourne to ${town},vline from ${town},vline to ${town}`
+    if (regionalTowns.includes(stationName)) keywords += townText(stationName)
+    else if (stationName === 'Southern Cross') keywords += regionalTowns.map(townText).join(',')
+
     description = `Viewing the Next 3 hours of V/Line train departures from ${stationName}`
     themeColour = '#6b4d9e'
     
