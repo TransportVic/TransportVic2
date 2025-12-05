@@ -17,6 +17,7 @@ import utils from '../../../utils.js'
 import td8457GTFS from './sample-data/td8457-gtfs.mjs'
 import dstStartNo2amTripsGTFS from './sample-data/dst-start-no2am-trips.mjs'
 import td8469Live from './sample-data/td8469-live.mjs'
+import heatServices from './sample-data/heat-timetable/services.mjs'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -41,6 +42,20 @@ const dstStartTripSat = (await fs.readFile(path.join(__dirname, 'sample-data', '
 const dstStartTripSun = (await fs.readFile(path.join(__dirname, 'sample-data', 'dst-start-no2am-sun.xml'))).toString()
 
 const vlineTripsTD8469_WTL = (await fs.readFile(path.join(__dirname, 'sample-data', 'vline-trips-td8469-wtl.xml'))).toString()
+
+const heatDay = utils.parseDate('20251205')
+const heatTimetableTemplate = (await fs.readFile(path.join(__dirname, 'sample-data', 'heat-timetable', 'template.xml'))).toString()
+const heatResponseBody = heatServices.map(service => 
+  heatTimetableTemplate
+    .replace('{0}', heatDay.clone().add(service.stopTimings[0].departureTimeMinutes, 'minutes').format('YYYYMMDDTHH:mm:ss'))
+    .replace('{1}', heatDay.clone().add(service.stopTimings[service.stopTimings.length - 1].departureTimeMinutes, 'minutes').format('YYYYMMDDTHH:mm:ss'))
+    .replace('{2}', service.runID)
+)
+const heatResponse = `<GetPlatformDeparturesResponse xmlns="http://tempuri.org/">
+<GetPlatformDeparturesResult xmlns:a="http://schemas.datacontract.org/2004/07/VLine.JourneyPlanner.Entities" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+${heatResponseBody.join('')}
+</GetPlatformDeparturesResult>
+</GetPlatformDeparturesResponse>`
 
 const clone = o => JSON.parse(JSON.stringify(o))
 
@@ -490,7 +505,6 @@ describe('The loadOperationalTT function', () => {
     let database = new LokiDatabaseConnection()
     let stops = database.getCollection('stops')
     let routes = database.getCollection('routes')
-    let timetables = database.getCollection('live timetables')
     let liveTimetables = database.getCollection('live timetables')
 
     await liveTimetables.createDocument(clone(td8469Live))
@@ -503,7 +517,7 @@ describe('The loadOperationalTT function', () => {
     ptvAPI.addVLine(stubAPI)
 
     await loadOperationalTT(database, database, utils.parseDate('20251005'), ptvAPI)
-    let trip = await timetables.findDocument({})
+    let trip = await liveTimetables.findDocument({})
 
     expect(trip.runID).to.equal('8469')
     expect(trip.origin).to.equal('Southern Cross Railway Station')
@@ -514,5 +528,35 @@ describe('The loadOperationalTT function', () => {
 
     trip.stopTimings.slice(1, 5).forEach(stop => expect(stop.cancelled, `Expected ${stop.stopName} to be cancelled`).to.be.true)
     trip.stopTimings.slice(5).forEach(stop => expect(stop.cancelled).to.be.false)
+  })
+
+  it.only('Attempts to load from an extreme heat timetable when many trips do not match', async () => {
+    let database = new LokiDatabaseConnection()
+    let stops = database.getCollection('stops')
+    let routes = database.getCollection('routes')
+    let heatTimetables = database.getCollection('heat timetables')
+    let liveTimetables = database.getCollection('live timetables')
+
+    await heatTimetables.createDocuments(clone(heatServices))
+    await stops.createDocuments(clone(allStops))
+    await routes.createDocuments(clone(allRoutes))
+
+    let stubAPI = new StubVLineAPI()
+    stubAPI.setResponses([ heatResponse, vlineTripsEmpty ])
+    let ptvAPI = new PTVAPI(stubAPI)
+    ptvAPI.addVLine(stubAPI)
+
+    await loadOperationalTT(database, database, utils.parseDate('20251205'), ptvAPI)
+    let trip = await timetables.findDocument({})
+
+    // expect(trip.runID).to.equal('8469')
+    // expect(trip.origin).to.equal('Southern Cross Railway Station')
+    // expect(trip.departureTime).to.equal('18:23')
+
+    // expect(trip.destination).to.equal('Traralgon Railway Station')
+    // expect(trip.destinationArrivalTime).to.equal('20:50')
+
+    // trip.stopTimings.slice(1, 5).forEach(stop => expect(stop.cancelled, `Expected ${stop.stopName} to be cancelled`).to.be.true)
+    // trip.stopTimings.slice(5).forEach(stop => expect(stop.cancelled).to.be.false)
   })
 })

@@ -1,0 +1,26 @@
+<a:PlatformService>
+<a:ActualArrivalTime i:nil="true"/>
+<a:ActualDestinationArrivalTime i:nil="true"/>
+<a:Consist i:nil="true"/>
+<a:ConsistCount>1</a:ConsistCount>
+<a:ConsistDescription>VLocity trains are equipped with six accessible spaces, an accessible toilet, luggage racks and often designated bike storage.</a:ConsistDescription>
+<a:ConsistSubType>VLocity</a:ConsistSubType>
+<a:ConsistType>VLocity</a:ConsistType>
+<a:ConsistUrl>https://www.vline.com.au/Fares-general-info/On-board?accordianitem=vlocity</a:ConsistUrl>
+<a:ConsistVehicles i:nil="true"/>
+<a:DesignatedAccessibilitySpaceCount>6</a:DesignatedAccessibilitySpaceCount>
+<a:DesignatedBikeSpaceCount>6</a:DesignatedBikeSpaceCount>
+<a:Destination>Melbourne, Southern Cross</a:Destination>
+<a:Direction>U</a:Direction>
+<a:IsAccessibleAvailable>true</a:IsAccessibleAvailable>
+<a:IsBikeAvailable>true</a:IsBikeAvailable>
+<a:IsBuffetAvailable>false</a:IsBuffetAvailable>
+<a:IsLiveConsistInfo>true</a:IsLiveConsistInfo>
+<a:LocationName/>
+<a:Origin>Traralgon Station: Princes Hwy</a:Origin>
+<a:Platform i:nil="true"/>
+<a:ScheduledDepartureTime>{0}</a:ScheduledDepartureTime>
+<a:ScheduledDestinationArrivalTime>{1}</a:ScheduledDestinationArrivalTime>
+<a:ServiceIdentifier>{2}</a:ServiceIdentifier>
+<a:ServiceStatus>Planned</a:ServiceStatus>
+</a:PlatformService>
