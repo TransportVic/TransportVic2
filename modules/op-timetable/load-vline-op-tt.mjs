@@ -34,9 +34,7 @@ async function getScheduledTripByTDN(opDayFormat, vlineTrip, db) {
   })
 }
 
-export async function matchTrip(opDayFormat, operationDay, vlineTrip, db) {
-  let gtfsTimetables = await db.getCollection('gtfs timetables')
-
+export async function matchTrip(opDayFormat, operationDay, vlineTrip, db, timetables, threshold=20) {
   let stops = await db.getCollection('stops')
   let originStop = await getStopFromVNetName(stops, vlineTrip.origin)
   let destinationStop = await getStopFromVNetName(stops, vlineTrip.destination)
@@ -66,8 +64,8 @@ export async function matchTrip(opDayFormat, operationDay, vlineTrip, db) {
         $elemMatch: {
           stopName: originStop.stopName,
           departureTimeMinutes: {
-            $gte: departureTimeMinutes - 20,
-            $lte: departureTimeMinutes + 20,
+            $gte: departureTimeMinutes - threshold,
+            $lte: departureTimeMinutes + threshold,
           },
         }
       }
@@ -76,18 +74,18 @@ export async function matchTrip(opDayFormat, operationDay, vlineTrip, db) {
         $elemMatch: {
           stopName: destinationStop.stopName,
           arrivalTimeMinutes: {
-            $gte: arrivalTimeMinutes - 20,
-            $lte: arrivalTimeMinutes + 20
+            $gte: arrivalTimeMinutes - threshold,
+            $lte: arrivalTimeMinutes + threshold
           }
         }
       }
     }]
   }
 
-  return await gtfsTimetables.findDocument({
+  return await timetables.findDocument({
     ...baseQuery,
     runID: vlineTrip.tdn
-  }) || await gtfsTimetables.findDocument(baseQuery)
+  }) || await timetables.findDocument(baseQuery)
 }
 
 async function deduplicateStops(tripPattern, nspTrip, db) {
@@ -315,6 +313,8 @@ export default async function loadOperationalTT(db, tripDB, operationDay, ptvAPI
   let opDayFormat = utils.getYYYYMMDD(operationDay)
   let dayOfWeek = utils.getDayOfWeek(operationDay) // Technically should use public holiday thing
   let liveTimetables = db.getCollection('live timetables')
+  let heatTimetables = db.getCollection('heat timetables')
+  let gtfsTimetables = db.getCollection('gtfs timetables')
 
   let outputTrips = []
 
@@ -331,7 +331,7 @@ export default async function loadOperationalTT(db, tripDB, operationDay, ptvAPI
       continue
     }
 
-    let matchingTrip = await matchTrip(opDayFormat, operationDay, vlineTrip, db)
+    let matchingTrip = await matchTrip(opDayFormat, operationDay, vlineTrip, db, gtfsTimetables)
     let nspTrip = await VLineUtils.getNSPTrip(dayOfWeek, vlineTrip.tdn, db)
 
     if (matchingTrip) {
@@ -355,6 +355,33 @@ export default async function loadOperationalTT(db, tripDB, operationDay, ptvAPI
       continue
     }
     tripsNeedingFetch.push({ opDayFormat, vlineTrip, nspTrip })
+  }
+
+  // Try and load heat TT
+  if (tripsNeedingFetch.length > 20) {
+    let unmatched = []
+    for (const trip of tripsNeedingFetch) {
+      const { vlineTrip } = trip
+      let tripData = await matchTrip(utils.getDayOfWeek(operationDay), operationDay, vlineTrip, db, heatTimetables, 2)
+      if (!tripData) {
+        unmatched.push(trip)
+        continue
+      }
+
+      let liveTrip = convertToLive(tripData, operationDay)
+      liveTrip.runID = vlineTrip.tdn
+      liveTrip.direction = vlineTrip.direction
+
+      newTrips.push({ liveTrip, vlineTrip })
+      outputTrips.push({
+        replaceOne: {
+          filter: { mode: GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain, operationDays: opDayFormat, runID: liveTrip.runID },
+          replacement: liveTrip,
+          upsert: true
+        }
+      })
+    }
+    tripsNeedingFetch = unmatched
   }
 
   let missingPatternTrips = tripsNeedingFetch.slice(15)

@@ -82,7 +82,7 @@ describe('The matchTrip function', () => {
     expect(departures[0].departureTime.toUTC().toISO()).to.equal('2025-07-18T01:30:00.000Z')
     expect(departures[0].arrivalTime.toUTC().toISO()).to.equal('2025-07-18T02:48:00.000Z')
 
-    let matchingTrip = await matchTrip('20250718', utils.parseDate('20250718'), departures[0], database)
+    let matchingTrip = await matchTrip('20250718', utils.parseDate('20250718'), departures[0], database, database.getCollection('gtfs timetables'))
     expect(matchingTrip).to.exist
     expect(matchingTrip.tripID).to.equal('48.T0.1-GEL-mjp-8.11.H')
   })
@@ -105,7 +105,7 @@ describe('The matchTrip function', () => {
     expect(departures[0]).to.be.instanceOf(VLinePlatformService)
     expect(departures[0].tdn).to.equal('8741')
 
-    let matchingTrip = await matchTrip('20250718', utils.parseDate('20250718'), departures[0], database)
+    let matchingTrip = await matchTrip('20250718', utils.parseDate('20250718'), departures[0], database, database.getCollection('gtfs timetables'))
     expect(matchingTrip).to.not.exist
 
     let pattern = await downloadTripPattern('20250718', departures[0], null, database)
@@ -140,7 +140,7 @@ describe('The matchTrip function', () => {
     expect(departures[1]).to.be.instanceOf(VLinePlatformService)
     expect(departures[1].tdn).to.equal('8007')
 
-    let matchingTrip = await matchTrip('20250726', utils.parseDate('20250726'), departures[1], database)
+    let matchingTrip = await matchTrip('20250726', utils.parseDate('20250726'), departures[1], database, database.getCollection('gtfs timetables'))
     expect(matchingTrip).to.not.exist
 
     let nspTrip = await VLineUtils.getNSPTrip('Sat', departures[2].tdn, database)
@@ -177,7 +177,7 @@ describe('The matchTrip function', () => {
     expect(departures[2]).to.be.instanceOf(VLinePlatformService)
     expect(departures[2].tdn).to.equal('8007')
 
-    let matchingTrip = await matchTrip('20250726', utils.parseDate('20250726'), departures[2], database)
+    let matchingTrip = await matchTrip('20250726', utils.parseDate('20250726'), departures[2], database, database.getCollection('gtfs timetables'))
     expect(matchingTrip).to.not.exist
 
     let nspTrip = await VLineUtils.getNSPTrip('Sat', departures[2].tdn, database)
@@ -530,7 +530,7 @@ describe('The loadOperationalTT function', () => {
     trip.stopTimings.slice(5).forEach(stop => expect(stop.cancelled).to.be.false)
   })
 
-  it.only('Attempts to load from an extreme heat timetable when many trips do not match', async () => {
+  it('Attempts to load from an extreme heat timetable when many trips do not match', async () => {
     let database = new LokiDatabaseConnection()
     let stops = database.getCollection('stops')
     let routes = database.getCollection('routes')
@@ -547,16 +547,10 @@ describe('The loadOperationalTT function', () => {
     ptvAPI.addVLine(stubAPI)
 
     await loadOperationalTT(database, database, utils.parseDate('20251205'), ptvAPI)
-    let trip = await timetables.findDocument({})
+    let trip = await liveTimetables.findDocument({ runID: '8430' })
 
-    // expect(trip.runID).to.equal('8469')
-    // expect(trip.origin).to.equal('Southern Cross Railway Station')
-    // expect(trip.departureTime).to.equal('18:23')
-
-    // expect(trip.destination).to.equal('Traralgon Railway Station')
-    // expect(trip.destinationArrivalTime).to.equal('20:50')
-
-    // trip.stopTimings.slice(1, 5).forEach(stop => expect(stop.cancelled, `Expected ${stop.stopName} to be cancelled`).to.be.true)
-    // trip.stopTimings.slice(5).forEach(stop => expect(stop.cancelled).to.be.false)
+    expect(trip).to.exist
+    expect(trip.departureTime).to.equal('12:26')
+    expect(trip.destinationArrivalTime).to.equal('15:07')
   })
 })

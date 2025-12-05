@@ -296,6 +296,15 @@ export default [
         stopName: 'Flinders Street Railway Station',
         stopGTFSID: 'vic:rail:FSS',
         suburb: 'Melbourne',
+        arrivalTime: '07:28',
+        arrivalTimeMinutes: 448,
+        departureTime: '07:28',
+        departureTimeMinutes: 448
+      },
+      {
+        stopName: 'Southern Cross Railway Station',
+        stopGTFSID: 'vic:rail:SSS',
+        suburb: 'Melbourne',
         arrivalTime: '07:29',
         arrivalTimeMinutes: 449,
         departureTime: '07:29',
@@ -305,7 +314,7 @@ export default [
     direction: 'Up',
     origin: 'Traralgon Railway Station',
     departureTime: '05:19',
-    destination: 'Flinders Street Railway Station',
+    destination: 'Southern Cross Railway Station',
     destinationArrivalTime: '07:29',
     type: '36 degrees'
   },
