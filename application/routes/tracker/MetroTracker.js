@@ -5,13 +5,6 @@ const url = require('url')
 const querystring = require('querystring')
 const rawLineRanges = require('../../../additional-data/metro-tracker/line-ranges')
 
-const rateLimit = require('express-rate-limit')
-
-router.use(rateLimit({
-  windowMs: 1 * 60 * 1000,
-  max: 15
-}))
-
 let lineRanges = {}
 
 Object.keys(rawLineRanges).forEach(line => {

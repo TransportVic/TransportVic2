@@ -27,13 +27,7 @@ let manualRoutes = {
   "CW": ["4-150", "4-151", "4-153", "4-160", "4-161", "4-166", "4-167", "4-170", "4-180", "4-181", "4-190", "4-191", "4-192", "4-400", "4-411", "4-412", "4-414", "4-415", "4-417", "4-439", "4-441", "4-443", "4-494", "4-495", "4-496", "4-497", "4-498", "4-606"],
 }
 
-const rateLimit = require('express-rate-limit')
 const { default: BusTracker } = require('../../../model/tracker/BusTracker.mjs')
-
-router.use(rateLimit({
-  windowMs: 1 * 60 * 1000,
-  max: 15
-}))
 
 async function generateCrossDepotQuery(busRegos) {
   if (crossDepotQuery) return

@@ -10,7 +10,7 @@ import path from 'path'
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const collections = ['stops', 'routes', 'gtfs timetables', 'timetables', 'heat-timetables']
+const collections = ['stops', 'routes', 'gtfs timetables', 'timetables', 'heat timetables']
 
 let start = new Date()
 

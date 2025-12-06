@@ -60,7 +60,7 @@
 
   # Metro RRB Tracker
   # Daily from 4am to 10pm. Offset by 1min to allow data to load in on MTM's end. Runs hourly
-  1     4-22  *     *     *     node /home/transportvic/TransportVic/Server/load-gtfs/metro-rail-bus/load.mjs
+  1     *     *     *     *     node /home/transportvic/TransportVic/Server/load-gtfs/metro-rail-bus/load.mjs
   # Daily from 4am to 2am. Runs every minute
   *     4-23  *     *     *     node /home/transportvic/TransportVic/Server/modules/new-tracker/metro-rail-bus/load-rt-updates.mjs
   *     0-1   *     *     *     node /home/transportvic/TransportVic/Server/modules/new-tracker/metro-rail-bus/load-rt-updates.mjs

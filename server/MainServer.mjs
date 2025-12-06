@@ -3,7 +3,6 @@ import os from 'os'
 import url from 'url'
 import path from 'path'
 import _loggers from '../init-loggers.mjs'
-import rateLimit from 'express-rate-limit'
 import routes from '../application/route-data.mjs'
 import config from '../config.json' with { type: 'json' }
 import modules from '../modules.json' with { type: 'json' }
@@ -84,11 +83,6 @@ export default class MainServer {
     const pidStaticDir = path.join(__dirname, '..', 'vic-pid', 'static')
     app.use('/mockups/static', express.static(pidStaticDir, {
       maxAge: 1000 * 60 * 60 * 24
-    }))
-
-    app.post('/mockups', rateLimit({
-      windowMs: 1 * 60 * 1000,
-      max: 10
     }))
 
     let routePromises = []

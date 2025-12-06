@@ -7,12 +7,6 @@ const moment = require('moment')
 const router = new express.Router()
 
 const highlightData = require('../../../additional-data/bus-tracker/highlights')
-const rateLimit = require('express-rate-limit')
-
-router.use(rateLimit({
-  windowMs: 1 * 60 * 1000,
-  max: 15
-}))
 
 router.get('/', (req, res) => {
   res.render('tracker/busminder/index')
