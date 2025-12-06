@@ -16,7 +16,7 @@ import { generateTimetableExtract } from '../modules/offline-trips/generate-data
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const GTFS_COLLECTIONS = ['gtfs-stops', 'gtfs-routes', 'gtfs-gtfs timetables', 'gtfs-timetables']
+const GTFS_COLLECTIONS = ['gtfs-stops', 'gtfs-routes', 'gtfs-gtfs timetables', 'gtfs-timetables', 'gtfs-heat timetables']
 const LAST_MODIFIED_FILE = path.join(__dirname, '..', 'gtfs', 'last-modified')
 const LOGGER = await createLogger('gtfs-updater', 'GTFS-UPDATE')
 

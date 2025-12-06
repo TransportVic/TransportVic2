@@ -8,10 +8,6 @@ import getTripUpdateData from '../../metro-trains/get-ptv-departures.mjs'
 import _ from '../../../init-loggers.mjs'
 import fs from 'fs/promises'
 
-const MTP_STOPS = [
-  'Anzac', 'Town Hall', 'State Library', 'Parkville', 'Arden'
-].map(stop => stop + ' Railway Station')
-
 function shuffleArray(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -43,7 +39,6 @@ export async function fetchTrips(db, tripDB, ptvAPI, {
       skipStopCancellation: type === 'stop',
       updatedTime: type === 'trip' ? new Date() : null,
       dataSource: 'ptv-departure',
-      ignoreMissingStops: MTP_STOPS,
       skipWrite: true,
       existingTrips,
       fullTrip: true

@@ -11,7 +11,6 @@ import _ from '../../../init-loggers.mjs'
 import fs from 'fs/promises'
 
 const PTV_BAD_STOPS = [
-  'Anzac', 'Town Hall', 'State Library', 'Parkville', 'Arden',
   'Showgrounds', 'Flemington Racecourse'
 ].map(stop => stop + ' Railway Station')
 
