@@ -359,7 +359,7 @@ export default {
       }
     },
     'line-group-portrait-chl': ConcourseLineGroup('Mernda & Hurstbridge Lines', ['mernda', 'hurstbridge'], 3, 4),
-    'line-group-portrait-bly': ConcourseLineGroup('Lilydale, Belgrave, Alamein & Glen Waverley', ['lilydale', 'belgrave', 'alamein', 'glen-waverley'], 3, 4),
+    'line-group-portrait-bly': ConcourseLineGroup('Lilydale, Belgrave, Alamein & Glen Waverley Lines', ['lilydale', 'belgrave', 'alamein', 'glen-waverley'], 3, 4),
     'line-group-portrait-nor': ConcourseLineGroup('Craigieburn, Sunbury & Upfield Lines', ['craigieburn', 'sunbury', 'upfield'], 3, 4),
     'line-group-portrait-dng': ConcourseLineGroup('Cranbourne & Pakenham Lines', ['cranbourne', 'pakenham'], 3, 4),
     'line-group-portrait-ccy': ConcourseLineGroup('Frankston, Werribee & Williamstown Lines', ['frankston', 'werribee', 'williamstown'], 3, 4),
