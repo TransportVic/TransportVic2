@@ -91,7 +91,7 @@ div.vertical {
 }
 
 div.horizontal, div.half, div.two-line-led, div.psd {
-  --width: calc(min(20vw + 20vh, 300px));
+  --width: calc(min(20vw + 20vh, 400px));
 }
 
 div.pid, div.pid * {

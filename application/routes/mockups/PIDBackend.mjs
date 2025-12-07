@@ -613,6 +613,8 @@ export function getURL(station, pid) {
   }
 
   if (pid.type === 'platform') pidURL = `/pid/metro-lcd/full-pid#s=${station}&p=${pid.platform}&t=platform${typeof pid.capacity !== 'undefined' ? `&cap=${pid.capacity}` : ''}`
+  if (pid.type === 'pre-plat-landscape') pidURL = `/pid/metro-lcd/full-pid#s=${station}&p=${pid.platform}&t=pre-plat-landscape`
+  if (pid.type === 'pre-plat-portrait') pidURL = `/pid/metro-lcd/full-pid#s=${station}&p=${pid.platform}&t=pre-plat-portrait`
   if (pid.type === 'fss-platform') pidURL = `/pid/metro-lcd/full-pid#s=${station}&p=${pid.platform}&t=platform`
   if (pid.type === 'pre-platform-vertical') pidURL = `/pid/metro-lcd/full-pid#s=${station}&p=${pid.platform}&t=pre-plat-portrait`
   if (pid.type === 'fss-escalator') pidURL = `/pid/metro-lcd/full-pid#s=${station}&p=${pid.platform}&t=pre-plat-portrait`
