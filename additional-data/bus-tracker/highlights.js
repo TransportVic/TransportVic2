@@ -10,7 +10,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'Ventura Specials',
-  track: ['V234', 'V238', 'V250', 'V292', 'V293', 'V344', 'V355', 'V588', 'V591', 'V592', 'V895', 'V1141', 'V8239'],
+  track: ['V234', 'V238', 'V250', 'V292', 'V293', 'V344', 'V355', 'V588', 'V591', 'V592', 'V766', 'V895', 'V1141', 'V8239'],
   routes: [],
   type: 'exclude'
 }, {
