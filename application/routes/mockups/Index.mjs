@@ -89,12 +89,26 @@ router.get('/get', async (req, res) => {
     }
   } else if (type === 'bus-int-pids') {
     let {bay} = query
-    let m = value.match(/\/bus\/timings(\/.+)/)
-    if (m) {
+    let m
+    if (m = value.match(/\/bus\/timings(\/.+)/)) {
       m = m[1]
       bay = bay || '*'
       return res.redirect('/mockups/bus-int-pids/half' + m + '/' + bay)
-    } else {
+    } else if (m = value.match(/^\d+$/)) {
+      const stop = await stops.findDocument({
+        bays: {
+          $elemMatch: {
+            stopGTFSID: value,
+            mode: 'bus'
+          }
+        }
+      })
+
+      if (stop) {
+        const bay = stop.bays.find(bay => bay.mode === 'bus' && bay.stopGTFSID === value)
+        return res.redirect(`/mockups/bus-int-pids/half/${stop.cleanSuburbs[0]}/${stop.cleanNames[0]}/${bay.platform?.split(' ')[1] || '*'}`)
+      }
+
       errorMessage = `${value} is an invalid bus stop`
     }
   } else if (type === 'summary') {
