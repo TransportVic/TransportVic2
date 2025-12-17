@@ -34,6 +34,11 @@ div.infoRow.depot > span.tripID {
   font-size: calc(1.3vw + 1.3vh);
 }
 
+div.infoRow.heat-timetable {
+  background-color: #ff4800;
+  color: #000000;
+}
+
 div.vehicle {
   display: flex;
   flex-direction: row;

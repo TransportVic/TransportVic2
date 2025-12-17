@@ -28,6 +28,9 @@ if trip.runID
     div.liveConsist
       span.header Live Tracking
       span.consist #{vehicle.consist.join('-')} (Note: Only leading carriage shown)
+if trip.flags && trip.flags.heatTT
+  div.infoRow.heat-timetable
+    span Extreme Heat Timetable Today
 div.timing-list
   for stop in trip.stopTimings
     div.timingRow(id='stop-' + stop.stopGTFSID)

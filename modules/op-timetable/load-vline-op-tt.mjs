@@ -338,6 +338,7 @@ export default async function loadOperationalTT(db, tripDB, operationDay, ptvAPI
     if (!matchingTrip && (matchingTrip = await matchTrip(utils.getDayOfWeek(operationDay), operationDay, vlineTrip, db, heatTimetables, 2))) {
       flags = { heatTT: matchingTrip.type }
       allowNSP = false
+      matchingTrip.vehicle = null
     } else if (!matchingTrip) {
       matchingTrip = await matchTrip(opDayFormat, operationDay, vlineTrip, db, gtfsTimetables, 20)
     }
