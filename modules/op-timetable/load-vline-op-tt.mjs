@@ -331,13 +331,23 @@ export default async function loadOperationalTT(db, tripDB, operationDay, ptvAPI
       continue
     }
 
-    let matchingTrip = await matchTrip(opDayFormat, operationDay, vlineTrip, db, gtfsTimetables)
-    let nspTrip = await VLineUtils.getNSPTrip(dayOfWeek, vlineTrip.tdn, db)
+    let matchingTrip = await matchTrip(opDayFormat, operationDay, vlineTrip, db, gtfsTimetables, 2)
+    let flags = null
+    let allowNSP = true
 
+    if (!matchingTrip && (matchingTrip = await matchTrip(utils.getDayOfWeek(operationDay), operationDay, vlineTrip, db, heatTimetables, 2))) {
+      flags = { heatTT: matchingTrip.type }
+      allowNSP = false
+    } else if (!matchingTrip) {
+      matchingTrip = await matchTrip(opDayFormat, operationDay, vlineTrip, db, gtfsTimetables, 20)
+    }
+
+    let nspTrip = allowNSP ? await VLineUtils.getNSPTrip(dayOfWeek, vlineTrip.tdn, db) : null
     if (matchingTrip) {
       let liveTrip = convertToLive(matchingTrip, operationDay)
       liveTrip.runID = vlineTrip.tdn
       liveTrip.direction = vlineTrip.direction
+      if (flags) liveTrip.flags = flags
       if (nspTrip) {
         liveTrip.formedBy = nspTrip.formedBy
         liveTrip.forming = nspTrip.forming
@@ -355,34 +365,6 @@ export default async function loadOperationalTT(db, tripDB, operationDay, ptvAPI
       continue
     }
     tripsNeedingFetch.push({ opDayFormat, vlineTrip, nspTrip })
-  }
-
-  // Try and load heat TT
-  if (tripsNeedingFetch.length > 20) {
-    let unmatched = []
-    for (const trip of tripsNeedingFetch) {
-      const { vlineTrip } = trip
-      let tripData = await matchTrip(utils.getDayOfWeek(operationDay), operationDay, vlineTrip, db, heatTimetables, 2)
-      if (!tripData) {
-        unmatched.push(trip)
-        continue
-      }
-
-      let liveTrip = convertToLive(tripData, operationDay)
-      liveTrip.runID = vlineTrip.tdn
-      liveTrip.direction = vlineTrip.direction
-      liveTrip.flags = { heatTT: tripData.type }
-
-      newTrips.push({ liveTrip, vlineTrip })
-      outputTrips.push({
-        replaceOne: {
-          filter: { mode: GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain, operationDays: opDayFormat, runID: liveTrip.runID },
-          replacement: liveTrip,
-          upsert: true
-        }
-      })
-    }
-    tripsNeedingFetch = unmatched
   }
 
   let missingPatternTrips = tripsNeedingFetch.slice(15)
