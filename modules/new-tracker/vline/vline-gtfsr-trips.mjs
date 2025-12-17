@@ -27,8 +27,12 @@ export async function getUpcomingTrips(db, gtfsrAPI) {
       routeGTFSID: gtfsrTripData.getRouteID(),
       stops: [],
       cancelled: gtfsrTripData.getScheduleRelationship() === GTFSRTrip.SR_CANCELLED,
-      additional: gtfsrTripData.getScheduleRelationship() === GTFSRTrip.SR_ADDED,
-      scheduledStartTime: gtfsrTripData.getStartTime()
+      additional: gtfsrTripData.getScheduleRelationship() === GTFSRTrip.SR_ADDED
+    }
+
+    let dbTrip = await VLineTripUpdater.getTrip(db, tripData.runID, tripData.operationDays)
+    if (!(dbTrip && dbTrip.flags && dbTrip.flags.heatTT)) {
+      tripData.scheduledStartTime = gtfsrTripData.getStartTime()
     }
 
     let previousStopData = null
@@ -67,9 +71,9 @@ export async function getUpcomingTrips(db, gtfsrAPI) {
     } else if (lastStopEPH && lastStop.cancelled) lastStop.cancelled = false
 
     let ephStop = (firstStopEPH && !firstStop.platform) ? firstStop : ((lastStopEPH && !lastStop.platform) ? lastStop : null)
-    let dbTrip
+    
 
-    if (ephStop && (dbTrip = await VLineTripUpdater.getTrip(db, tripData.runID, tripData.operationDays))) {
+    if (ephStop && dbTrip) {
       let tripEPH = firstStopEPH ? dbTrip.stopTimings[0] : dbTrip.stopTimings[dbTrip.stopTimings.length - 1]
       let ephSchTime = utils.parseTime(tripEPH.scheduledDepartureTime)
       let ephSchLower = ephSchTime.clone().add(-5, 'minutes')
