@@ -4,7 +4,7 @@ if trip.runID
     -
       let {vehicle} = trip
       let parts
-      if (vehicle) {
+      if (vehicle && vehicle.consist) {
         let { consist } = vehicle
 
         if (consist[0].startsWith('N')) {
