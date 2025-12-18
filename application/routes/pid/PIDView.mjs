@@ -8,25 +8,35 @@ const router = new express.Router()
 const PID_CONTROL = '/static/scripts/pid/test.mjs'
 const SERVICE_LIST_CONTROL = '/static/scripts/pid/service-list.mjs'
 
-router.get('/metro-lcd/full-pid', (req, res) => {
-  new PIDRender(req, res).render('metro-lcd/full-pid-base', [ PID_CONTROL ])
-})
+export const PID_DEFINITIONS = {
+  '/metro-lcd/full-pid': {
+    file: 'metro-lcd/full-pid-base',
+    scripts: [ PID_CONTROL ]
+  },
+  '/metro-lcd/half-platform': {
+    file: 'metro-lcd/half-platform',
+    scripts: [ PID_CONTROL ]
+  },
+  '/metro-lcd/half-platform-bold': {
+    file: 'metro-lcd/half-platform-bold',
+    scripts: [ PID_CONTROL ]
+  },
+  '/metro-lcd/service-list': {
+    file: 'metro-lcd/service-list-template',
+    scripts: [ SERVICE_LIST_CONTROL ]
+  },
+  '/metro-lcd/platform-screen-door': {
+    file: 'metro-lcd/platform-screen-door',
+    scripts: [ PID_CONTROL ]
+  }
+}
 
-router.get('/metro-lcd/half-platform', (req, res) => {
-  new PIDRender(req, res).render('metro-lcd/half-platform', [ PID_CONTROL ])
-})
-
-router.get('/metro-lcd/half-platform-bold', (req, res) => {
-  new PIDRender(req, res).render('metro-lcd/half-platform-bold', [ PID_CONTROL ])
-})
-
-router.get('/metro-lcd/service-list', (req, res) => {
-  new PIDRender(req, res).render('metro-lcd/service-list-template', [ SERVICE_LIST_CONTROL ])
-})
-
-router.get('/metro-lcd/platform-screen-door', (req, res) => {
-  new PIDRender(req, res).render('metro-lcd/platform-screen-door', [ PID_CONTROL ])
-})
+for (const urlPath of Object.keys(PID_DEFINITIONS)) {
+  const data = PID_DEFINITIONS[urlPath]
+  router.get(urlPath, (req, res) => {
+    new PIDRender(req, res).render(data.file, data.scripts)
+  })
+}
 
 router.post('/data', async (req, res) => {
   const { station, platform } = req.body
