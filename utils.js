@@ -12,7 +12,7 @@ const { spawn } = require('child_process')
 const util = require('util')
 const fetch = require('node-fetch')
 
-const daysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thur', 'Fri', 'Sat']
+const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const locks = {}, caches = {}
 
 let forceLongRequest = true
