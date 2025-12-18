@@ -1,3 +1,4 @@
+import utils from '../../../../utils.js'
 import Generator from './Generator.mjs'
 
 export default class TripGenerator extends Generator {
@@ -26,8 +27,8 @@ export default class TripGenerator extends Generator {
           stopTimesStream.write(
             `"` + [
               trip.tripID,
-              stop.arrivalTime + ':00',
-              stop.departureTime + ':00',
+              utils.getPTHHMMFromMinutesPastMidnight(stop.arrivalTimeMinutes) + ':00',
+              utils.getPTHHMMFromMinutesPastMidnight(stop.departureTimeMinutes) + ':00',
               stop.stopGTFSID,
               i,
               stop.stopConditions.pickup,

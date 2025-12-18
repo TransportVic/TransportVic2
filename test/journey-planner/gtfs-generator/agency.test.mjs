@@ -12,6 +12,7 @@ import ballarat from './sample-data/ballarat.mjs'
 import RouteGenerator from '../../../modules/journey-planner/gtfs-generator/generators/RouteGenerator.mjs'
 import alburyTrips from './sample-data/albury-trips.mjs'
 import TripGenerator from '../../../modules/journey-planner/gtfs-generator/generators/TripGenerator.mjs'
+import ballaratMidnightTrip from './sample-data/ballarat-midnight-trip.mjs'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -289,5 +290,38 @@ describe('The TripGenerator', () => {
     const albury6Trip = stopBody.filter(row => row.includes('01-ABY--6-T0-8605'))
     expect(albury6Trip.length).to.be.greaterThan(1)
     expect(albury6Trip[0]).to.equal(`"01-ABY--6-T0-8605","07:07:00","07:07:00","vic:rail:SSS","0","0","1"`)
+  })
+
+  it('Uses PT times past 23:59 for trips running past midnight', async () => {
+    const db = new LokiDatabaseConnection()
+    const dbRoutes = await db.getCollection('routes')
+    const dbTrips = await db.getCollection('gtfs timetables')
+    await dbRoutes.createDocument(clone(ballarat))
+    await dbTrips.createDocument(clone(ballaratMidnightTrip))
+
+    const routeGenerator = new RouteGenerator(db)
+
+    const routeStream = new WritableStream()
+    const shapeStream = new WritableStream()
+    await routeGenerator.generateFileContents(routeStream, shapeStream)
+
+    const shapeMapping = routeGenerator.getShapeMapping()
+
+    const tripGenerator = new TripGenerator(db, shapeMapping)
+
+    const tripStream = new WritableStream()
+    const stopTimesStream = new WritableStream()
+    await tripGenerator.generateFileContents(tripStream, stopTimesStream)
+
+    const stopLines = stopTimesStream.toString().split('\n')
+    const stopBody = stopLines.slice(1)
+  
+    expect(stopBody.length).to.be.greaterThan(1)
+    expect(stopBody[0]).to.equal(`"01-BAT--10-T3-8161","23:16:00","23:16:00","vic:rail:SSS","0","0","1"`)
+    expect(stopBody[1]).to.equal(`"01-BAT--10-T3-8161","23:24:00","23:24:00","vic:rail:FSY","1","0","1"`)
+    expect(stopBody[2]).to.equal(`"01-BAT--10-T3-8161","23:29:00","23:29:00","vic:rail:SUN","2","0","1"`)
+    expect(stopBody[8]).to.equal(`"01-BAT--10-T3-8161","23:54:00","23:54:00","vic:rail:MEL","8","0","0"`)
+    expect(stopBody[9]).to.equal(`"01-BAT--10-T3-8161","24:02:00","24:02:00","vic:rail:BAH","9","0","0"`)
+    expect(stopBody[10]).to.equal(`"01-BAT--10-T3-8161","24:20:00","24:20:00","vic:rail:BLN","10","0","0"`)
   })
 })
