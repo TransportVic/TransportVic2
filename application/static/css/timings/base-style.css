@@ -11,7 +11,6 @@
 }
 
 #content.map-enabled:has(div#textbar-container) {
-  --width: 0.5vw;
   --body-height: calc(100vh - var(--header-height) - var(--textbar-height));
 }
 
@@ -47,6 +46,27 @@ div#map .stopIcon {
   border-style: solid;
   border-radius: var(--size);
 }
+
+@media screen and (max-width: 800px) {
+  div#body-container {
+    flex-direction: column;
+  }
+
+  #content.map-enabled {
+    --width: 1vw;
+  }
+
+  #content.map-enabled div#body-container div.left {
+    width: 100vw;
+    height: calc(var(--body-height) * 0.6);
+  }
+
+  #content.map-enabled div#map {
+    width: 100vw;
+    height: calc(var(--body-height) * 0.4);
+  }
+}
+
 
 #mapLink, #clock, #bookmark {
   height: calc(2.1vw + 2.1vh);

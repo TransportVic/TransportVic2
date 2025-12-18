@@ -5,14 +5,9 @@ function setMap() {
   const main = $('div#map')
   if (!main) return
 
-  if (window.innerWidth > 800) {
-    const dataURL = $('#mapLink').href
-    $('main#content').classList.add('map-enabled')
-    generateMap('map', dataURL, true)
-  } else {
-    main.remove()
-    $('#departures').classList.remove('map')
-  }
+  const dataURL = $('#mapLink').href
+  $('main#content').classList.add('map-enabled')
+  generateMap('map', dataURL, true)
 }
 
 function getStopData(mode, suburb, stopName, callback) {

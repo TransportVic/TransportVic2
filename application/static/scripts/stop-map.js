@@ -16,6 +16,9 @@ function generateMap(mapID, dataURL, keyStopsOnly) {
   L.control.scale().addTo(map)
   L.control.locate().addTo(map)
 
+  const resizeObserver = new ResizeObserver(() => map.invalidateSize())
+  resizeObserver.observe($(`#${mapID}`))
+
   let stopCSSClasses = {
     'bus': 'busStop',
     'metro train': 'metroStation',
