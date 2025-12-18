@@ -148,7 +148,8 @@ describe('The RouteGenerator', () => {
     const generator = new RouteGenerator(db)
 
     const routeStream = new WritableStream()
-    await generator.generateFileContents(routeStream)
+    const shapeStream = new WritableStream()
+    await generator.generateFileContents(routeStream, shapeStream)
 
     const routeLines = routeStream.toString().split('\n')
     const routeHeader = routeLines[0], routeBody = routeLines.slice(1)
@@ -162,5 +163,31 @@ describe('The RouteGenerator', () => {
     const ballaratData = routeBody.find(row => row.includes('1-BAT'))
     expect(ballaratData).to.exist
     expect(ballaratData).to.equal(`"1-BAT","Ballarat","2"`)
+  })
+
+  it('Generates shapes.txt data, only generating one shape per duplicate', async () => {
+    const db = new LokiDatabaseConnection()
+    const dbRoutes = await db.getCollection('routes')
+    await dbRoutes.createDocument(clone(albury))
+    await dbRoutes.createDocument(clone(ballarat))
+
+    const generator = new RouteGenerator(db)
+
+    const routeStream = new WritableStream()
+    const shapeStream = new WritableStream()
+    await generator.generateFileContents(routeStream, shapeStream)
+
+    const shapeLines = shapeStream.toString().split('\n')
+    const shapeHeader = shapeLines[0], shapeBody = shapeLines.slice(1)
+  
+    expect(shapeHeader).to.equal(`shape_id,shape_pt_lat,shape_pt_lon,shape_pt_sequence`)
+
+    const albury10Data = shapeBody.filter(row => row.includes('1-ABY-mjp-10.1.H'))
+    expect(albury10Data.length).to.be.greaterThan(1)
+    expect(albury10Data[0]).to.equal(`"1-ABY-mjp-10.1.H","-37.81816407","144.95215219","0"`)
+    expect(albury10Data[1]).to.equal(`"1-ABY-mjp-10.1.H","-37.81807437","144.95208287","1"`)
+
+    const albury11Data = shapeBody.find(row => row.includes('1-ABY-mjp-11.1.H'))
+    expect(albury11Data).to.not.exist
   })
 })
