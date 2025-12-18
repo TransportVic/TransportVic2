@@ -10,6 +10,8 @@ import url from 'url'
 import albury from './sample-data/albury.mjs'
 import ballarat from './sample-data/ballarat.mjs'
 import RouteGenerator from '../../../modules/journey-planner/gtfs-generator/generators/RouteGenerator.mjs'
+import alburyTrips from './sample-data/albury-trips.mjs'
+import TripGenerator from '../../../modules/journey-planner/gtfs-generator/generators/TripGenerator.mjs'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -213,5 +215,79 @@ describe('The RouteGenerator', () => {
     expect(shapeMapping['1-ABY-mjp-11.2.R']).to.equal('1-ABY-mjp-10.2.R')
     expect(shapeMapping['1-ABY-mjp-16.2.R']).to.equal('1-ABY-mjp-10.2.R')
     expect(shapeMapping['1-ABY-mjp-9.2.R']).to.equal('1-ABY-mjp-10.2.R')
+  })
+})
+
+describe('The TripGenerator', () => {
+  it('Generates trip.txt data', async () => {
+    const db = new LokiDatabaseConnection()
+    const dbRoutes = await db.getCollection('routes')
+    const dbTrips = await db.getCollection('gtfs timetables')
+    await dbRoutes.createDocument(clone(albury))
+    await dbTrips.createDocuments(clone(alburyTrips))
+
+    const routeGenerator = new RouteGenerator(db)
+
+    const routeStream = new WritableStream()
+    const shapeStream = new WritableStream()
+    await routeGenerator.generateFileContents(routeStream, shapeStream)
+
+    const shapeMapping = routeGenerator.getShapeMapping()
+
+    const tripGenerator = new TripGenerator(db, shapeMapping)
+
+    const tripStream = new WritableStream()
+    const stopTimesStream = new WritableStream()
+    await tripGenerator.generateFileContents(tripStream, stopTimesStream)
+
+    const tripLines = tripStream.toString().split('\n')
+    const tripHeader = tripLines[0], tripBody = tripLines.slice(1)
+  
+    expect(tripHeader).to.equal(`route_id,service_id,trip_id,block_id,shape_id`)
+
+    const albury10Trip = tripBody.find(row => row.includes('01-ABY--10-T3-8605'))
+    expect(albury10Trip).to.exist
+    expect(albury10Trip).to.equal(`"1-ABY","1_T3_1","01-ABY--10-T3-8605","","1-ABY-mjp-10.1.H"`)
+
+    const albury6Trip = tripBody.find(row => row.includes('01-ABY--6-T0-8605'))
+    expect(albury6Trip).to.exist
+    expect(albury6Trip).to.equal(`"1-ABY","1_T0_2","01-ABY--6-T0-8605","","1-ABY-mjp-10.1.H"`)
+  })
+
+  it('Generates stop_times.txt data', async () => {
+    const db = new LokiDatabaseConnection()
+    const dbRoutes = await db.getCollection('routes')
+    const dbTrips = await db.getCollection('gtfs timetables')
+    await dbRoutes.createDocument(clone(albury))
+    await dbTrips.createDocuments(clone(alburyTrips))
+
+    const routeGenerator = new RouteGenerator(db)
+
+    const routeStream = new WritableStream()
+    const shapeStream = new WritableStream()
+    await routeGenerator.generateFileContents(routeStream, shapeStream)
+
+    const shapeMapping = routeGenerator.getShapeMapping()
+
+    const tripGenerator = new TripGenerator(db, shapeMapping)
+
+    const tripStream = new WritableStream()
+    const stopTimesStream = new WritableStream()
+    await tripGenerator.generateFileContents(tripStream, stopTimesStream)
+
+    const stopLines = stopTimesStream.toString().split('\n')
+    const stopHeader = stopLines[0], stopBody = stopLines.slice(1)
+  
+    expect(stopHeader).to.equal(`trip_id,arrival_time,departure_time,stop_id,stop_sequence,pickup_type,drop_off_type`)
+
+    const albury10Trip = stopBody.filter(row => row.includes('01-ABY--10-T3-8605'))
+    expect(albury10Trip.length).to.be.greaterThan(1)
+    expect(albury10Trip[0]).to.equal(`"01-ABY--10-T3-8605","07:07:00","07:07:00","vic:rail:SSS","0","0","1"`)
+    expect(albury10Trip[1]).to.equal(`"01-ABY--10-T3-8605","07:35:00","07:35:00","vic:rail:BMS","1","0","1"`)
+    expect(albury10Trip[2]).to.equal(`"01-ABY--10-T3-8605","08:24:00","08:26:00","vic:rail:SER","2","0","0"`)
+
+    const albury6Trip = stopBody.filter(row => row.includes('01-ABY--6-T0-8605'))
+    expect(albury6Trip.length).to.be.greaterThan(1)
+    expect(albury6Trip[0]).to.equal(`"01-ABY--6-T0-8605","07:07:00","07:07:00","vic:rail:SSS","0","0","1"`)
   })
 })
