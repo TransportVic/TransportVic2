@@ -12,6 +12,8 @@ export default class RouteGenerator extends Generator {
 
   #db
 
+  #SHAPE_MAPPING = {}
+
   constructor(db) {
     super(db)
     this.#db = db
@@ -31,9 +33,13 @@ export default class RouteGenerator extends Generator {
           shape.path.coordinates.forEach((coord, i) => {
             shapeStream.write(`"${shapeID}","${coord[1]}","${coord[0]}","${i}"\n`)
           })
+
+          for (const duplicateShapeID of shape.fullGTFSIDs) this.#SHAPE_MAPPING[duplicateShapeID] = shapeID
         }
       }
     })
   }
+
+  getShapeMapping() { return this.#SHAPE_MAPPING }
 
 }

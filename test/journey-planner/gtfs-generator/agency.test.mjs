@@ -190,4 +190,28 @@ describe('The RouteGenerator', () => {
     const albury11Data = shapeBody.find(row => row.includes('1-ABY-mjp-11.1.H'))
     expect(albury11Data).to.not.exist
   })
+
+  it('Returns a mapping of duplicate shape IDs', async () => {
+    const db = new LokiDatabaseConnection()
+    const dbRoutes = await db.getCollection('routes')
+    await dbRoutes.createDocument(clone(albury))
+    await dbRoutes.createDocument(clone(ballarat))
+
+    const generator = new RouteGenerator(db)
+
+    const routeStream = new WritableStream()
+    const shapeStream = new WritableStream()
+    await generator.generateFileContents(routeStream, shapeStream)
+
+    const shapeMapping = generator.getShapeMapping()
+    expect(shapeMapping['1-ABY-mjp-10.1.H']).to.equal('1-ABY-mjp-10.1.H')
+    expect(shapeMapping['1-ABY-mjp-11.1.H']).to.equal('1-ABY-mjp-10.1.H')
+    expect(shapeMapping['1-ABY-mjp-16.1.H']).to.equal('1-ABY-mjp-10.1.H')
+    expect(shapeMapping['1-ABY-mjp-9.1.H']).to.equal('1-ABY-mjp-10.1.H')
+
+    expect(shapeMapping['1-ABY-mjp-10.2.R']).to.equal('1-ABY-mjp-10.2.R')
+    expect(shapeMapping['1-ABY-mjp-11.2.R']).to.equal('1-ABY-mjp-10.2.R')
+    expect(shapeMapping['1-ABY-mjp-16.2.R']).to.equal('1-ABY-mjp-10.2.R')
+    expect(shapeMapping['1-ABY-mjp-9.2.R']).to.equal('1-ABY-mjp-10.2.R')
+  })
 })
