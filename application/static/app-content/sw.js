@@ -1,4 +1,4 @@
-const version = '154a'
+const version = '155'
 const cacheName = `transportvic-${version}`
 
 async function cacheFiles(files) {
@@ -52,6 +52,9 @@ self.addEventListener('install', event => {
       '/static/css/smartrak.css',
       '/static/css/textbar-style.css',
 
+      '/static/css/vendor/leaflet-1.6.0.css',
+      '/static/css/vendor/leaflet-locate-0.85.1.css',
+
       '/static/css/mockups/16-9-pids-base.css',
       '/static/css/mockups/32-9-pids-base.css',
       '/static/css/mockups/actual-line-colours.css',
@@ -86,6 +89,10 @@ self.addEventListener('install', event => {
       '/static/images/decals/bookmark-filled.svg',
       '/static/images/decals/map.svg',
       '/static/images/decals/nosleep.svg',
+
+      '/static/images/decals/locate.svg',
+      '/static/images/decals/locate-active.svg',
+      '/static/images/decals/locate-following.svg',
 
       '/static/images/clear-icons/bus.svg',
       '/static/images/clear-icons/coach.svg',
@@ -158,11 +165,15 @@ self.addEventListener('install', event => {
       '/static/scripts/smartrak.js',
       '/static/scripts/stats.js',
       '/static/scripts/stop-preview.js',
+      '/static/scripts/stop-map.js',
       '/static/scripts/sw-load.js',
       '/static/scripts/timings.js',
       '/static/scripts/run.js',
       '/static/scripts/util.js',
       '/static/scripts/index.js',
+
+      '/static/scripts/vendor/leaflet-locate-0.85.1.js',
+      '/static/scripts/vendor/leaflet-1.6.0.js',
 
       '/',
       '/links',
