@@ -112,7 +112,8 @@ router.get('/get', async (req, res) => {
       errorMessage = `${value} is an invalid bus stop`
     }
   } else if (type === 'summary') {
-    return res.redirect(`/mockups/summary/${station}?type=${value}`)
+    const nameFromCode = utils.encodeName(stationCodes[station.toUpperCase()] || '')
+    return res.redirect(`/mockups/summary/${nameFromCode || station}?type=${value}`)
   } else {
     let url = PIDBackend.getURL(station, {
       type,
