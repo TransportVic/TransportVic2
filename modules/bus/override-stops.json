@@ -1,2 +1,18 @@
 {
+  "18558": {
+    "stop_suburb": "Laverton",
+    "stop_name": "Laverton Railway Station",
+    "stop_latitude": -37.86431665,
+    "stop_longitude": 144.7707565,
+    "route_type": 2,
+    "stop_id": 18558
+  },
+  "32151": {
+    "stop_suburb": "Narre Warren",
+    "stop_name": "Narre Warren South College",
+    "stop_latitude": -38.05024062,
+    "stop_longitude": 145.28538849,
+    "route_type": 2,
+    "stop_id": 32151
+  }
 }

@@ -74,8 +74,15 @@ let LAV = {
   stop_longitude: 144.77075650
 }
 
+let NWA = {
+  stop_suburb: 'Narre Warren',
+  stop_name: 'Narre Warren South College',
+  stop_latitude: -38.05024062,
+  stop_longitude: 145.28538849
+}
+
 let allStops = [
-  RWD, MONASH, CSA, TNT, HLM, MELB, DONC, GLO_SHOW, ELT, LAV
+  RWD, MONASH, CSA, TNT, HLM, MELB, DONC, GLO_SHOW, ELT, LAV, NWA
 ]
 
 let failedStops = []
@@ -102,7 +109,8 @@ async function check(stopID) {
 }
 
 async function main() {
-  for (let stopID = 18550; stopID <= 18570; stopID++) await check(stopID)
+  for (let stopID = 18555; stopID <= 18559; stopID++) await check(stopID)
+  for (let stopID = 32140; stopID <= 32160; stopID++) await check(stopID)
   
   await fs.writeFile(__dirname + '/override-stops.json', JSON.stringify(stops, null, 2))
   if (failedStops.length) await updateDiscord()
