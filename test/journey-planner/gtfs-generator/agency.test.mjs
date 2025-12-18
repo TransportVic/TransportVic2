@@ -15,6 +15,8 @@ import TripGenerator from '../../../modules/journey-planner/gtfs-generator/gener
 import ballaratMidnightTrip from './sample-data/ballarat-midnight-trip.mjs'
 import PathwayGenerator from '../../../modules/journey-planner/gtfs-generator/generators/PathwayGenerator.mjs'
 import TransferGenerator from '../../../modules/journey-planner/gtfs-generator/generators/TransferGenerator.mjs'
+import tripStops from './sample-data/trip-stops.mjs'
+import alameinTrip from './sample-data/alamein-trip.mjs'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -226,8 +228,10 @@ describe('The TripGenerator', () => {
     const db = new LokiDatabaseConnection()
     const dbRoutes = await db.getCollection('routes')
     const dbTrips = await db.getCollection('gtfs timetables')
+    const dbStops = await db.getCollection('stops')
     await dbRoutes.createDocument(clone(albury))
     await dbTrips.createDocuments(clone(alburyTrips))
+    await dbStops.createDocuments(clone(tripStops))
 
     const routeGenerator = new RouteGenerator(db)
 
@@ -261,8 +265,10 @@ describe('The TripGenerator', () => {
     const db = new LokiDatabaseConnection()
     const dbRoutes = await db.getCollection('routes')
     const dbTrips = await db.getCollection('gtfs timetables')
+    const dbStops = await db.getCollection('stops')
     await dbRoutes.createDocument(clone(albury))
     await dbTrips.createDocuments(clone(alburyTrips))
+    await dbStops.createDocuments(clone(tripStops))
 
     const routeGenerator = new RouteGenerator(db)
 
@@ -285,21 +291,23 @@ describe('The TripGenerator', () => {
 
     const albury10Trip = stopBody.filter(row => row.includes('01-ABY--10-T3-8605'))
     expect(albury10Trip.length).to.be.greaterThan(1)
-    expect(albury10Trip[0]).to.equal(`"01-ABY--10-T3-8605","07:07:00","07:07:00","vic:rail:SSS","0","0","1"`)
-    expect(albury10Trip[1]).to.equal(`"01-ABY--10-T3-8605","07:35:00","07:35:00","vic:rail:BMS","1","0","1"`)
-    expect(albury10Trip[2]).to.equal(`"01-ABY--10-T3-8605","08:24:00","08:26:00","vic:rail:SER","2","0","0"`)
+    expect(albury10Trip[0]).to.equal(`"01-ABY--10-T3-8605","07:07:00","07:07:00","20043","0","0","1"`)
+    expect(albury10Trip[1]).to.equal(`"01-ABY--10-T3-8605","07:35:00","07:35:00","22254","1","0","1"`)
+    expect(albury10Trip[2]).to.equal(`"01-ABY--10-T3-8605","08:24:00","08:26:00","20342","2","0","0"`)
 
     const albury6Trip = stopBody.filter(row => row.includes('01-ABY--6-T0-8605'))
     expect(albury6Trip.length).to.be.greaterThan(1)
-    expect(albury6Trip[0]).to.equal(`"01-ABY--6-T0-8605","07:07:00","07:07:00","vic:rail:SSS","0","0","1"`)
+    expect(albury6Trip[0]).to.equal(`"01-ABY--6-T0-8605","07:07:00","07:07:00","20043","0","0","1"`)
   })
 
   it('Uses PT times past 23:59 for trips running past midnight', async () => {
     const db = new LokiDatabaseConnection()
     const dbRoutes = await db.getCollection('routes')
     const dbTrips = await db.getCollection('gtfs timetables')
+    const dbStops = await db.getCollection('stops')
     await dbRoutes.createDocument(clone(ballarat))
     await dbTrips.createDocument(clone(ballaratMidnightTrip))
+    await dbStops.createDocuments(clone(tripStops))
 
     const routeGenerator = new RouteGenerator(db)
 
@@ -319,12 +327,36 @@ describe('The TripGenerator', () => {
     const stopBody = stopLines.slice(1)
   
     expect(stopBody.length).to.be.greaterThan(1)
-    expect(stopBody[0]).to.equal(`"01-BAT--10-T3-8161","23:16:00","23:16:00","vic:rail:SSS","0","0","1"`)
-    expect(stopBody[1]).to.equal(`"01-BAT--10-T3-8161","23:24:00","23:24:00","vic:rail:FSY","1","0","1"`)
-    expect(stopBody[2]).to.equal(`"01-BAT--10-T3-8161","23:29:00","23:29:00","vic:rail:SUN","2","0","1"`)
-    expect(stopBody[8]).to.equal(`"01-BAT--10-T3-8161","23:54:00","23:54:00","vic:rail:MEL","8","0","0"`)
-    expect(stopBody[9]).to.equal(`"01-BAT--10-T3-8161","24:02:00","24:02:00","vic:rail:BAH","9","0","0"`)
-    expect(stopBody[10]).to.equal(`"01-BAT--10-T3-8161","24:20:00","24:20:00","vic:rail:BLN","10","0","0"`)
+    expect(stopBody[0]).to.equal(`"01-BAT--10-T3-8161","23:16:00","23:16:00","20043","0","0","1"`) // SSS
+    expect(stopBody[1]).to.equal(`"01-BAT--10-T3-8161","23:24:00","23:24:00","22240","1","0","1"`) // FSY
+    expect(stopBody[2]).to.equal(`"01-BAT--10-T3-8161","23:29:00","23:29:00","22241","2","0","1"`) // SUN
+    expect(stopBody[8]).to.equal(`"01-BAT--10-T3-8161","23:54:00","23:54:00","19980","8","0","0"`) // MEL
+    expect(stopBody[9]).to.equal(`"01-BAT--10-T3-8161","24:02:00","24:02:00","20290","9","0","0"`) // BAH
+    expect(stopBody[10]).to.equal(`"01-BAT--10-T3-8161","24:20:00","24:20:00","20292","10","0","0"`) // BLN
+  })
+
+  it('Picks the platform stop where available', async () => {
+    const db = new LokiDatabaseConnection()
+    const dbTrips = await db.getCollection('gtfs timetables')
+    const dbStops = await db.getCollection('stops')
+    await dbTrips.createDocument(clone(alameinTrip))
+    await dbStops.createDocuments(clone(tripStops))
+
+    const shapeMapping = { '2-ALM-vpt-1.1.R': '2-ALM-vpt-1.1.R' }
+
+    const tripGenerator = new TripGenerator(db, shapeMapping)
+
+    const tripStream = new WritableStream()
+    const stopTimesStream = new WritableStream()
+    await tripGenerator.generateFileContents(tripStream, stopTimesStream)
+
+    const stopLines = stopTimesStream.toString().split('\n')
+    const stopBody = stopLines.slice(1)
+  
+    expect(stopBody.length).to.be.greaterThan(1)
+    expect(stopBody[0]).to.equal(`"02-ALM--1-T2-2302","04:57:00","04:57:00","11197","0","0","1"`) // ALM 1
+    expect(stopBody[1]).to.equal(`"02-ALM--1-T2-2302","04:58:00","04:58:00","11198","1","0","0"`) // ASH 1
+    expect(stopBody[6]).to.equal(`"02-ALM--1-T2-2302","05:08:00","05:08:00","11208","6","1","0"`) // CAM 2
   })
 })
 
