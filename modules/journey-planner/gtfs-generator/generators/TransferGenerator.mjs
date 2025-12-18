@@ -8,7 +8,7 @@ export default class TransferGenerator extends CopyGenerator {
   processColumn(column, folder, line) {
     const data = line[column]
     if (column === 'from_route_id' || column === 'to_route_id') {
-      return data.replace(/aus:vic:vic-0?/, '').replace(/-mjp-\d+/, '')
+      return data.replace(/aus:vic:vic-0?(\d+-\w+).+/, '$1').replace(/-mjp-\d+/, '')
     }
 
     return data

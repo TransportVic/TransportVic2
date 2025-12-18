@@ -384,8 +384,8 @@ describe('The TransferGenerator', () => {
 
     expect(transferHeader).to.equal(`from_stop_id,to_stop_id,from_route_id,to_route_id,from_trip_id,to_trip_id,transfer_type,min_transfer_time`)
 
-    expect(transferBody[0]).to.equal(`"11212","11212","2-MDD:","2-HBE:","02-MDD--28-T6-1180","02-HBE--28-T6-1311","4",""`)
-    expect(transferBody[1]).to.equal(`"11212","11212","2-HBE:","2-MDD:","02-HBE--28-T2-7182","02-MDD--28-T2-7701","4",""`)
+    expect(transferBody[0]).to.equal(`"11212","11212","2-MDD","2-HBE","02-MDD--28-T6-1180","02-HBE--28-T6-1311","4",""`)
+    expect(transferBody[1]).to.equal(`"11212","11212","2-HBE","2-MDD","02-HBE--28-T2-7182","02-MDD--28-T2-7701","4",""`)
 
     const bus = transferBody.find(line => line.includes('6-a20'))
     expect(bus).to.equal(`"37552","37552","6-a20","6-a20","14.T0.6-a20-mjp-1.5.H","30.T0.6-a20-mjp-1.8.R","4",""`)
