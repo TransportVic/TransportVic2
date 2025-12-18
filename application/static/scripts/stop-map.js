@@ -14,7 +14,9 @@ function generateMap(mapID, dataURL, keyStopsOnly) {
   }).addTo(map)
 
   L.control.scale().addTo(map)
-  L.control.locate().addTo(map)
+  L.control.locate({
+    showPopup: false
+  }).addTo(map)
 
   const resizeObserver = new ResizeObserver(() => map.invalidateSize())
   resizeObserver.observe($(`#${mapID}`))
