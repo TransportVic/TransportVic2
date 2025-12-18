@@ -7,6 +7,7 @@ function setMap() {
 
   if (window.innerWidth > 800) {
     const dataURL = $('#mapLink').href
+    $('main#content').classList.add('map-enabled')
     generateMap('map', dataURL, true)
   } else {
     main.remove()

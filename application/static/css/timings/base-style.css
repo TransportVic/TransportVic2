@@ -3,14 +3,14 @@
   --height: 1vh;
 }
 
-#content:has(div#map) {
+#content.map-enabled {
   --width: 0.5vw;
   --header-height: calc(4vw + 4vh);
   --textbar-height: calc(5vh + 5vw);
   --body-height: calc(100vh - var(--header-height));
 }
 
-#content:has(div#map):has(div#textbar-container) {
+#content.map-enabled:has(div#textbar-container) {
   --width: 0.5vw;
   --body-height: calc(100vh - var(--header-height) - var(--textbar-height));
 }
@@ -24,17 +24,17 @@ div.left {
   width: 100vw;
 }
 
-div#body-container:has(div#map) div.left {
+#content.map-enabled div#body-container div.left {
   overflow-y: scroll;
   width: 50vw;
 }
 
-div#map {
+#content.map-enabled div#map {
   width: 50vw;
   height: var(--body-height);
 }
 
-div#departures.map div.errorPage {
+#content.map-enabled div#departures.map div.errorPage {
   height: var(--body-height);
 }
 
