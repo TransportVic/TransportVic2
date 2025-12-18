@@ -13,6 +13,12 @@ await mongoDB.connect()
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
+function correctStopTimes(stop) {
+  if (stop.arr === '13:39' && stop.dep === '17:45') {
+    stop.arr = '17:41'
+  }
+}
+
 /**
   'Monday to Friday', 'Saturday',
   'Sunday',           'M-F',
@@ -98,6 +104,8 @@ for (const run of allRuns) {
     const cleanName = stop.name.replace(/station/i, '').replace(/ stn/i, '').trim().toUpperCase()
     const station = railStations[cleanName]
     const stationPlatform = station.bays.find(bay => bay.mode === GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain && !bay.parentStopGTFSID)
+
+    correctStopTimes(stop)
 
     return {
       stopName: stationPlatform.fullStopName,
