@@ -3,6 +3,46 @@
   --height: 1vh;
 }
 
+#content:has(div#map) {
+  --width: 0.5vw;
+}
+
+div#body-container {
+  display: flex;
+  --header-height: calc(4vw + 4vh);
+  --textbar-height: calc(5vh + 5vw);
+  --body-height: calc(100vh - var(--header-height) - var(--textbar-height));
+  height: var(--body-height);
+}
+
+div.left {
+  width: 100vw;
+}
+
+div#body-container:has(div#map) div.left {
+  overflow-y: scroll;
+  width: 50vw;
+}
+
+div#map {
+  width: 50vw;
+  height: var(--body-height);
+}
+
+div#departures.map div.errorPage {
+  height: var(--body-height);
+}
+
+div#map .stopIcon {
+  --size: calc(3vw + 3vh);
+  width: var(--size);
+  height: var(--size);
+  background-color: white;
+  border-width: calc(0.3vw + 0.3vh);
+  border-style: solid;
+  border-radius: var(--size);
+}
+
 #mapLink, #clock, #bookmark {
   height: calc(2.1vw + 2.1vh);
   width: unset;

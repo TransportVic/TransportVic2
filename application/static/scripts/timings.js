@@ -1,6 +1,19 @@
 let stopDataCache
 let departureTime = null
 
+function setMap() {
+  const main = $('div#map')
+  if (!main) return
+
+  if (window.innerWidth > 800) {
+    const dataURL = $('#mapLink').href
+    generateMap('map', dataURL, true)
+  } else {
+    main.remove()
+    $('#departures').classList.remove('map')
+  }
+}
+
 function getStopData(mode, suburb, stopName, callback) {
   if (stopDataCache) return callback(stopDataCache)
   $.ajax({
@@ -230,4 +243,6 @@ $.ready(() => {
 
   setInterval(updateBody, 30 * 1000)
   checkFocus()
+
+  setMap()
 })
