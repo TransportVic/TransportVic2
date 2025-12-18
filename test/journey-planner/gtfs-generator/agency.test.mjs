@@ -7,6 +7,9 @@ import { WritableStream } from 'memory-streams'
 import CalendarGenerator from '../../../modules/journey-planner/gtfs-generator/generators/CalendarGenerator.mjs'
 import path from 'path'
 import url from 'url'
+import albury from './sample-data/albury.mjs'
+import ballarat from './sample-data/ballarat.mjs'
+import RouteGenerator from '../../../modules/journey-planner/gtfs-generator/generators/RouteGenerator.mjs'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -132,5 +135,32 @@ describe('The CalendarGenerator', () => {
     const metroException = calDateBody.find(row => row.includes('2_UH'))
     expect(metroException).to.exist
     expect(metroException).to.equal(`"2_UH","20251215","2"`)
+  })
+})
+
+describe('The RouteGenerator', () => {
+  it('Generates route.txt data', async () => {
+    const db = new LokiDatabaseConnection()
+    const dbRoutes = await db.getCollection('routes')
+    await dbRoutes.createDocument(clone(albury))
+    await dbRoutes.createDocument(clone(ballarat))
+
+    const generator = new RouteGenerator(db)
+
+    const routeStream = new WritableStream()
+    await generator.generateFileContents(routeStream)
+
+    const routeLines = routeStream.toString().split('\n')
+    const routeHeader = routeLines[0], routeBody = routeLines.slice(1)
+  
+    expect(routeHeader).to.equal(`route_id,route_short_name,route_type`)
+
+    const alburyData = routeBody.find(row => row.includes('1-ABY'))
+    expect(alburyData).to.exist
+    expect(alburyData).to.equal(`"1-ABY","Albury","2"`)
+
+    const ballaratData = routeBody.find(row => row.includes('1-BAT'))
+    expect(ballaratData).to.exist
+    expect(ballaratData).to.equal(`"1-BAT","Ballarat","2"`)
   })
 })
