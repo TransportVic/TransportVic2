@@ -13,6 +13,8 @@ import RouteGenerator from '../../../modules/journey-planner/gtfs-generator/gene
 import alburyTrips from './sample-data/albury-trips.mjs'
 import TripGenerator from '../../../modules/journey-planner/gtfs-generator/generators/TripGenerator.mjs'
 import ballaratMidnightTrip from './sample-data/ballarat-midnight-trip.mjs'
+import PathwayGenerator from '../../../modules/journey-planner/gtfs-generator/generators/PathwayGenerator.mjs'
+import TransferGenerator from '../../../modules/journey-planner/gtfs-generator/generators/TransferGenerator.mjs'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -323,5 +325,66 @@ describe('The TripGenerator', () => {
     expect(stopBody[8]).to.equal(`"01-BAT--10-T3-8161","23:54:00","23:54:00","vic:rail:MEL","8","0","0"`)
     expect(stopBody[9]).to.equal(`"01-BAT--10-T3-8161","24:02:00","24:02:00","vic:rail:BAH","9","0","0"`)
     expect(stopBody[10]).to.equal(`"01-BAT--10-T3-8161","24:20:00","24:20:00","vic:rail:BLN","10","0","0"`)
+  })
+})
+
+describe('The PathwayGenerator', () => {
+  it('Copies pathway data from the GTFS folder', async () => {
+    const db = new LokiDatabaseConnection()
+    const dbStops = await db.getCollection('stops')
+    await dbStops.createDocument(clone(caulfield))
+
+    const generator = new PathwayGenerator(db, path.join(__dirname, 'sample-data', 'misc'))
+
+    const pathwayStream = new WritableStream()
+    await generator.generateFileContents(pathwayStream)
+
+    const pathLines = pathwayStream.toString().split('\n')
+    const pathHeader = pathLines[0], pathBody = pathLines.slice(1)
+
+    expect(pathHeader).to.equal(`pathway_id,from_stop_id,to_stop_id,pathway_mode,is_bidirectional,traversal_time`)
+
+    expect(pathBody[0]).to.equal(`"vic:rail:CFD_BR1_vic:rail:CFD_EN4_walkway_1","vic:rail:CFD_BR1","vic:rail:CFD_EN4","1","1","72"`)
+    expect(pathBody[1]).to.equal(`"vic:rail:CFD_BR1_vic:rail:CFD_EN6_walkway_1","vic:rail:CFD_BR1","vic:rail:CFD_EN6","1","1","36"`)
+  })
+
+  it('Removes duplicate lines from the various modes', async () => {
+    const db = new LokiDatabaseConnection()
+    const dbStops = await db.getCollection('stops')
+    await dbStops.createDocument(clone(caulfield))
+
+    const generator = new PathwayGenerator(db, path.join(__dirname, 'sample-data', 'misc'))
+
+    const pathwayStream = new WritableStream()
+    await generator.generateFileContents(pathwayStream)
+
+    const pathLines = pathwayStream.toString().split('\n')
+    const pathHeader = pathLines[0], pathBody = pathLines.slice(1)
+
+    expect(pathHeader).to.equal(`pathway_id,from_stop_id,to_stop_id,pathway_mode,is_bidirectional,traversal_time`)
+
+    const walkway = pathBody.filter(line => line.includes('vic:rail:CFD_BR1_vic:rail:CFD_EN4_walkway_1'))
+    expect(walkway.length).to.equal(1)
+  })
+})
+
+describe('The TransferGenerator', () => {
+  it('Copies transfer data from the GTFS folder', async () => {
+    const db = new LokiDatabaseConnection()
+    const dbStops = await db.getCollection('stops')
+    await dbStops.createDocument(clone(caulfield))
+
+    const generator = new TransferGenerator(db, path.join(__dirname, 'sample-data', 'misc'))
+
+    const transferStream = new WritableStream()
+    await generator.generateFileContents(transferStream)
+
+    const transferLines = transferStream.toString().split('\n')
+    const transferHeader = transferLines[0], transferBody = transferLines.slice(1)
+
+    expect(transferHeader).to.equal(`from_stop_id,to_stop_id,from_route_id,to_route_id,from_trip_id,to_trip_id,transfer_type,min_transfer_time`)
+
+    expect(transferBody[0]).to.equal(`"11212","11212","aus:vic:vic-02-MDD:","aus:vic:vic-02-HBE:","02-MDD--28-T6-1180","02-HBE--28-T6-1311","4",""`)
+    expect(transferBody[1]).to.equal(`"11212","11212","aus:vic:vic-02-HBE:","aus:vic:vic-02-MDD:","02-HBE--28-T2-7182","02-MDD--28-T2-7701","4",""`)
   })
 })
