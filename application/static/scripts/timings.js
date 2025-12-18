@@ -166,79 +166,81 @@ $.ready(() => {
   const hasCombinedPicker = navigator.userAgent.includes('Chrome') || (navigator.userAgent.includes('Mobile') && navigator.userAgent.includes('Safari'))
   const clock = $('#clock')
   const dateTimePicker = $('#departureDateTime')
-  if (hasCombinedPicker && clock) {
-    clock.on('click', () => dateTimePicker.showPicker())
-    clock.on('keypress', e => {
-      if (e.key === 'Enter') dateTimePicker.showPicker()
-    })
+  if (dateTimePicker) {
+    if (hasCombinedPicker && clock) {
+      clock.on('click', () => dateTimePicker.showPicker())
+      clock.on('keypress', e => {
+        if (e.key === 'Enter') dateTimePicker.showPicker()
+      })
 
-    dateTimePicker.on('change', () => {
-      departureTime = new Date(dateTimePicker.value)
-      updateBody()
-    })
-  } else {
-    const dropdown = $('#clockDropdown')
-    const datePicker = $('#departureDate')
-    const timePicker = $('#departureTime')
+      dateTimePicker.on('change', () => {
+        departureTime = new Date(dateTimePicker.value)
+        updateBody()
+      })
+    } else {
+      const dropdown = $('#clockDropdown')
+      const datePicker = $('#departureDate')
+      const timePicker = $('#departureTime')
 
-    dateTimePicker.style.display = 'none'
+      dateTimePicker.style.display = 'none'
 
-    const now = new Date()
-    datePicker.value = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${(now.getDate()).toString().padStart(2, '0')}`
-    timePicker.value = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`
+      const now = new Date()
+      datePicker.value = `${now.getFullYear()}-${(now.getMonth() + 1).toString().padStart(2, '0')}-${(now.getDate()).toString().padStart(2, '0')}`
+      timePicker.value = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`
 
-    let dropdownOpen = false
-    const openClock = () => {
-      if (dropdownOpen) return
-      dropdown.classList.add('showing')
-      dropdownOpen = true
+      let dropdownOpen = false
+      const openClock = () => {
+        if (dropdownOpen) return
+        dropdown.classList.add('showing')
+        dropdownOpen = true
 
-      setTimeout(() => {
-        const bodyClick = e => {
-          let elem = e.target
+        setTimeout(() => {
+          const bodyClick = e => {
+            let elem = e.target
 
-          for (let i = 0; i < 3; i++) {
-            if (!elem) break
-            else if (elem === dropdown) return
-            elem = elem.parentElement
+            for (let i = 0; i < 3; i++) {
+              if (!elem) break
+              else if (elem === dropdown) return
+              elem = elem.parentElement
+            }
+
+            cleanup()
           }
 
-          cleanup()
-        }
+          const escape = e => {
+            if (e.key === 'Escape') cleanup()
+          }
 
-        const escape = e => {
-          if (e.key === 'Escape') cleanup()
-        }
+          const update = () => {
+            const departureDateParts = datePicker.value.match(/^(\d+)-(\d+)-(\d+)$/)
+            const departureTimeParts = timePicker.value.match(/^(\d+):(\d+)$/)
 
-        const update = () => {
-          const departureDateParts = datePicker.value.match(/^(\d+)-(\d+)-(\d+)$/)
-          const departureTimeParts = timePicker.value.match(/^(\d+):(\d+)$/)
+            if (!departureDateParts || !departureTimeParts) return
 
-          if (!departureDateParts || !departureTimeParts) return
+            const [ year, month, day ] = departureDateParts.slice(1).map(v => parseInt(v))
+            const [ hours, minutes ] = departureTimeParts.slice(1).map(v => parseInt(v))
 
-          const [ year, month, day ] = departureDateParts.slice(1).map(v => parseInt(v))
-          const [ hours, minutes ] = departureTimeParts.slice(1).map(v => parseInt(v))
+            departureTime = new Date(year, month - 1, day, hours, minutes)
+            cleanup()
+            updateBody()
+          }
 
-          departureTime = new Date(year, month - 1, day, hours, minutes)
-          cleanup()
-          updateBody()
-        }
+          const listeners = [ ['body', 'click', bodyClick], ['body', 'keydown', escape], ['#confirmTime', 'click', update] ]
+          for (const [target, type, fn] of listeners) $(target).on(type, fn)
 
-        const listeners = [ ['body', 'click', bodyClick], ['body', 'keydown', escape], ['#confirmTime', 'click', update] ]
-        for (const [target, type, fn] of listeners) $(target).on(type, fn)
+          const cleanup = () => {
+            dropdown.classList.remove('showing')
+            dropdownOpen = false
+            for (const [target, type, fn] of listeners) $(target).removeEventListener(type, fn)
+          }
+        }, 10)
+      }
 
-        const cleanup = () => {
-          dropdown.classList.remove('showing')
-          dropdownOpen = false
-          for (const [target, type, fn] of listeners) $(target).removeEventListener(type, fn)
-        }
-      }, 10)
+      clock.on('click', openClock)
+      clock.on('keypress', e => {
+        if (e.key === 'Enter') openClock()
+      })
     }
-
-    clock.on('click', openClock)
-    clock.on('keypress', e => {
-      if (e.key === 'Enter') openClock()
-    })
   }
 
   setInterval(updateBody, 30 * 1000)

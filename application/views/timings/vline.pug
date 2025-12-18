@@ -37,17 +37,24 @@ block header-right
   +header(station)
 
 block scripts
+  script(src=`${staticBase}/static/scripts/vendor/leaflet-1.6.0.js`)
   script(src=`${staticBase}/static/scripts/timings.js` async)
+  script(src=`${staticBase}/static/scripts/stop-map.js`)
 
 append style
   link(rel='stylesheet' href=`${staticBase}/static/css/timings/base-style.css`)
+  link(rel='stylesheet' href=`${staticBase}/static/css/vendor/leaflet-1.6.0.css`)
 
 append postStyle
   link(rel='stylesheet' href=`${staticBase}/static/css/site-colours.css`)
   link(rel='stylesheet' href=`${staticBase}/static/css/combined-colours.css`)
+  link(rel='stylesheet' href=`${staticBase}/static/css/constant-colours.css`)
 
 append content
   - let currentMode = 'regional train'
-  include mode-switch
-  div#departures
-    include ./templates/vline
+  div#body-container
+    div.left
+      include mode-switch
+      div#departures.map
+        include ./templates/vline
+    div#map.right
