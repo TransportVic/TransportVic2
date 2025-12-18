@@ -442,6 +442,10 @@ div.departure.groupedTimings a.timing span {
   width: calc(3.4 * var(--width) + 3.4 * var(--height));
 }
 
+div.departure.groupedTimings a.timing:has(span.rego):has(span.est-time.empty) span.sch-time {
+  margin-block: 0.7em;
+}
+
 div.departure.noNumber a.timing span.rego {
   top: calc(0.5 * var(--width) + 0.5 * var(--height));
 }

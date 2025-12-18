@@ -42,8 +42,8 @@ if services.length
                     img(src=`${staticBase}/static/images/decals/ac.svg`)
                   if departure.vehicle.attributes.lf
                     img(src=`${staticBase}/static/images/decals/wheelchair.svg`)
-              span #{departure.pretyTimeToDeparture}
-              span #{departure.scheduledDepartureTime.format('HH:mm')}
+              span(class=`est-time ${departure.pretyTimeToDeparture.length ? '' : 'empty'}`) #{departure.pretyTimeToDeparture}
+              span.sch-time #{departure.scheduledDepartureTime.format('HH:mm')}
               if departure.vehicle
                 if departure.vehicle.name.length >= 6
                   span.rego.small #{departure.vehicle.name}
