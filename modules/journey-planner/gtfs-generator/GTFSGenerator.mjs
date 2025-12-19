@@ -57,7 +57,8 @@ export default class GTFSGenerator {
     const pathwayGenerator = new PathwayGenerator(this.#db, this.#gtfsFolder)
     await pathwayGenerator.generateFileContents(streams.pathways)
 
-    const transferGenerator = new TransferGenerator(this.#db, this.#gtfsFolder)
+    const tripsSeen = tripGenerator.getTripsSeen()
+    const transferGenerator = new TransferGenerator(this.#db, tripsSeen, this.#gtfsFolder)
     await transferGenerator.generateFileContents(streams.transfers)
   }
 
