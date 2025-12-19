@@ -17,6 +17,7 @@ import PathwayGenerator from '../../../modules/journey-planner/gtfs-generator/ge
 import TransferGenerator from '../../../modules/journey-planner/gtfs-generator/generators/TransferGenerator.mjs'
 import tripStops from './sample-data/trip-stops.mjs'
 import alameinTrip from './sample-data/alamein-trip.mjs'
+import utils from '../../../utils.js'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -224,6 +225,15 @@ describe('The RouteGenerator', () => {
 })
 
 describe('The TripGenerator', () => {
+  const originalNow = utils.now
+  beforeEach(() => {
+    utils.now = () => utils.parseDate('20251205')
+  })
+
+  after(() => {
+    utils.now = originalNow
+  })
+
   it('Generates trip.txt data', async () => {
     const db = new LokiDatabaseConnection()
     const dbRoutes = await db.getCollection('routes')
@@ -339,7 +349,10 @@ describe('The TripGenerator', () => {
     const db = new LokiDatabaseConnection()
     const dbTrips = await db.getCollection('gtfs timetables')
     const dbStops = await db.getCollection('stops')
-    await dbTrips.createDocument(clone(alameinTrip))
+    await dbTrips.createDocument({
+      ...clone(alameinTrip),
+      operationDays: [ '20251210' ]
+    })
     await dbStops.createDocuments(clone(tripStops))
 
     const shapeMapping = { '2-ALM-vpt-1.1.R': '2-ALM-vpt-1.1.R' }
@@ -357,6 +370,27 @@ describe('The TripGenerator', () => {
     expect(stopBody[0]).to.equal(`"02-ALM--1-T2-2302","04:57:00","04:57:00","11197","0","0","1"`) // ALM 1
     expect(stopBody[1]).to.equal(`"02-ALM--1-T2-2302","04:58:00","04:58:00","11198","1","0","0"`) // ASH 1
     expect(stopBody[6]).to.equal(`"02-ALM--1-T2-2302","05:08:00","05:08:00","11208","6","1","0"`) // CAM 2
+  })
+
+  it('Only picks 3 weeks of data', async () => {
+    const db = new LokiDatabaseConnection()
+    const dbTrips = await db.getCollection('gtfs timetables')
+    const dbStops = await db.getCollection('stops')
+
+    await dbTrips.createDocument(clone(alameinTrip))
+    await dbStops.createDocuments(clone(tripStops))
+
+    const shapeMapping = { '2-ALM-vpt-1.1.R': '2-ALM-vpt-1.1.R' }
+
+    const tripGenerator = new TripGenerator(db, shapeMapping)
+
+    const tripStream = new WritableStream()
+    const stopTimesStream = new WritableStream()
+    await tripGenerator.generateFileContents(tripStream, stopTimesStream)
+
+    const stopLines = stopTimesStream.toString().trim().split('\n')
+    const stopBody = stopLines.slice(1)
+    expect(stopBody.length).to.equal(0)
   })
 })
 
@@ -406,7 +440,16 @@ describe('The TransferGenerator', () => {
     const dbStops = await db.getCollection('stops')
     await dbStops.createDocument(clone(caulfield))
 
-    const generator = new TransferGenerator(db, path.join(__dirname, 'sample-data', 'misc'))
+    const tripsSeen = new Set([
+      '02-MDD--28-T6-1180',
+      '02-HBE--28-T6-1311',
+      '02-HBE--28-T2-7182',
+      '02-MDD--28-T2-7701',
+      '14.T0.6-a20-mjp-1.5.H',
+      '30.T0.6-a20-mjp-1.8.R'
+    ])
+
+    const generator = new TransferGenerator(db, tripsSeen, path.join(__dirname, 'sample-data', 'misc'))
 
     const transferStream = new WritableStream()
     await generator.generateFileContents(transferStream)
@@ -421,5 +464,33 @@ describe('The TransferGenerator', () => {
 
     const bus = transferBody.find(line => line.includes('6-a20'))
     expect(bus).to.equal(`"37552","37552","6-a20","6-a20","14.T0.6-a20-mjp-1.5.H","30.T0.6-a20-mjp-1.8.R","4",""`)
+  })
+
+  it('Discards trips that were not seen before', async () => {
+    const db = new LokiDatabaseConnection()
+    const dbStops = await db.getCollection('stops')
+    await dbStops.createDocument(clone(caulfield))
+
+    const tripsSeen = new Set([
+      '02-MDD--28-T6-1180',
+      '02-HBE--28-T6-1311',
+      '02-HBE--28-T2-7182',
+      '02-MDD--28-T2-7701',
+      '14.T0.6-a20-mjp-1.5.H',
+      '30.T0.6-a20-mjp-1.8.R'
+    ])
+
+    const generator = new TransferGenerator(db, tripsSeen, path.join(__dirname, 'sample-data', 'misc'))
+
+    const transferStream = new WritableStream()
+    await generator.generateFileContents(transferStream)
+
+    const transferLines = transferStream.toString().split('\n')
+    const transferHeader = transferLines[0], transferBody = transferLines.slice(1)
+
+    expect(transferHeader).to.equal(`from_stop_id,to_stop_id,from_route_id,to_route_id,from_trip_id,to_trip_id,transfer_type,min_transfer_time`)
+
+    const trip = transferBody.find(line => line.includes('02-HBE--28-T3-1250'))
+    expect(trip).to.not.exist
   })
 })

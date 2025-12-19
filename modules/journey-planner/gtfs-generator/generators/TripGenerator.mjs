@@ -7,6 +7,7 @@ export default class TripGenerator extends Generator {
 
   #SHAPE_MAPPING = {}
   #STOP_MAPPING = {}
+  #TRIPS_SEEN = new Set()
 
   constructor(db, shapeMapping) {
     super(db)
@@ -40,6 +41,11 @@ export default class TripGenerator extends Generator {
     }
   }
 
+  getDateRange() {
+    const startDate = utils.now()
+    return Array(21).fill(0).map((_, i) => utils.getYYYYMMDD(startDate.clone().add(i, 'days')))
+  }
+
   async generateFileContents(tripStream, stopTimesStream) {
     await this.setParentStops()
 
@@ -48,9 +54,15 @@ export default class TripGenerator extends Generator {
     tripStream.write(`route_id,service_id,trip_id,block_id,shape_id\n`)
     stopTimesStream.write(`trip_id,arrival_time,departure_time,stop_id,stop_sequence,pickup_type,drop_off_type\n`)
 
-    await dbTimetables.batchQuery({}, 100, trips => {
+    await dbTimetables.batchQuery({
+      operationDays: {
+        $in: this.getDateRange()
+      }
+    }, 100, trips => {
       for (const trip of trips) {
         const mode = trip.routeGTFSID.split('-')[0]
+
+        this.#TRIPS_SEEN.add(trip.tripID)
         tripStream.write(`"${trip.routeGTFSID}","${mode}_${trip.calendarID}","${trip.tripID}","${trip.block || ''}","${this.#SHAPE_MAPPING[trip.shapeID]}"\n`)
         trip.stopTimings.forEach((stop, i) => {
           const stopGTFSID = this.#STOP_MAPPING[this.getCode(stop.stopGTFSID, stop.platform || '')] || stop.stopGTFSID
@@ -71,5 +83,7 @@ export default class TripGenerator extends Generator {
       }
     })
   }
+
+  getTripsSeen() { return this.#TRIPS_SEEN }
 
 }
