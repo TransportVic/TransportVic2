@@ -27,7 +27,23 @@ export default class StopGenerator extends Generator {
         for (const bay of stop.bays) {
           if (baysSeen.has(bay.stopGTFSID)) continue
           baysSeen.add(bay.stopGTFSID)
-          stream.write(`"${bay.stopGTFSID}","${bay.fullStopName}","${bay.location.coordinates[1]}","${bay.location.coordinates[0]}","${this.#STOP_TYPE[bay.stopType]}","${bay.parentStopGTFSID || ''}","${bay.platform || ''}"\n`)
+
+          const stopType = ['metro train', 'regional train'].includes(bay.mode) ? 
+            this.#STOP_TYPE[bay.stopType]
+            : '0'
+
+          stream.write(
+            `"` + [
+              bay.stopGTFSID,
+              bay.fullStopName,
+              bay.location.coordinates[1],
+              bay.location.coordinates[0],
+              stopType,
+              bay.parentStopGTFSID || '',
+              bay.platform || ''
+            ].join('","')
+            + `"\n`
+          )
         }
       }
     })
