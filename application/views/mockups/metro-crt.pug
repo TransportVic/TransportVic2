@@ -7,7 +7,12 @@ html
     link(rel='stylesheet' href=`${staticBase}/static/css/mockups/metro-crt.css`)
     
     link(rel='preload' as='style' href=`${staticBase}/static/css/mockups/base-style.css`)
-  body
+    - let bodyStyle = ''
+    - if (query.background) bodyStyle += `background-color: ${query.background};`
+    - if (query.color) bodyStyle += ` color: ${query.color};`
+    - let departStyle = ''
+    - if (query.hideDepart) departStyle += `display: none;`
+    body(style=bodyStyle)
     div.crt.leftCRT
       div.destination
         span --
@@ -15,7 +20,7 @@ html
         div.scheduled
           span SCHEDULED
           span.scheduledDepartureTime --
-        div.actual
+        div.actual(style=departStyle)
           span DEPARTING
           span.departingMinutes -- 
           span.min MIN
