@@ -37,16 +37,16 @@ async function prioritySearch(db, query) {
   const searchedWords = queryWords.filter(word => word.length >= 4)
   const shortWords = queryWords.filter(word => word.length < 4)
 
-  const stations = await stops.findDocuments({
+  const stations = searchedWords.length ? await stops.findDocuments({
     $and: [
       ...(searchedWords.map(name => ({ textQuery: name }))),
       {
         mergeName: /Railway Station/
       }
     ]
-  }).limit(6).toArray()
+  }).limit(6).toArray() : []
 
-  let priorityStopsByName = (await stops.findDocuments({
+  let priorityStopsByName = searchedWords.length ? (await stops.findDocuments({
     $and: [
       ...(searchedWords.map(name => ({ textQuery: name }))),
       {
@@ -66,7 +66,10 @@ async function prioritySearch(db, query) {
         }]
       }
     ]
-  }).limit(6).toArray()).filter(stop => shortWords.every(word => stop.stopName.toLowerCase().includes(word))).sort((a, b) => a.stopName.length - b.stopName.length)
+  }).limit(6).toArray())
+    .filter(stop => shortWords.every(word => stop.stopName.toLowerCase().includes(word)))
+    .sort((a, b) => a.stopName.length - b.stopName.length)
+    : []
 
   let gtfsMatch = await stops.findDocuments({
     'bays.stopGTFSID': query
