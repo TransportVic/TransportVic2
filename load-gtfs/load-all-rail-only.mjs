@@ -8,6 +8,9 @@ let commands = [
   ['load-ptv-stops.mjs'],
   ['load-all-stops-routes.mjs', '1', '2', '5', '10'],
 
+  ['vline/load-extra-data.mjs'],
+  ['metro/load-extra-data.mjs'],
+
   ['vline/api-integration/load-vnet-station-names.mjs'],
   ['vline/timetables/download-vline-timetables.mjs'],
   ['vline/timetables/load-vline-timetables.mjs'],
@@ -16,7 +19,6 @@ let commands = [
 
   ['load-all-trips.mjs', '1', '2', '5', '10'],
 
-  ['metro/load-extra-data.mjs'],
   ['metro/download-metro-timetables.mjs'],
   ['metro/load-metro-timetables.mjs'],
 

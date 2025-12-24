@@ -103,6 +103,10 @@ for (const run of allRuns) {
   const stopTimings = run.stops.map(stop => {
     const cleanName = stop.name.replace(/station/i, '').replace(/ stn/i, '').trim().toUpperCase()
     const station = railStations[cleanName]
+    if (!station) {
+      console.log('Missing stop data', stop, cleanName)
+      return null
+    }
     const stationPlatform = station.bays.find(bay => bay.mode === GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain && !bay.parentStopGTFSID)
 
     correctStopTimes(stop)
@@ -116,7 +120,12 @@ for (const run of allRuns) {
       departureTime: stop.dep,
       departureTimeMinutes: utils.getMinutesPastMidnightFromHHMM(stop.dep)
     }
-  })
+  }).filter(Boolean)
+
+  if (!stopTimings.length) {
+    console.log('Discarded empty run', run)
+    continue
+  }
 
   let operationDay = simplifyOperationDays(run.operationDay)
 

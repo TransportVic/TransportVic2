@@ -37,7 +37,7 @@ let mongoTimetables = await mongoDB.getCollection('gtfs-gtfs timetables')
 let start = new Date()
 console.log('Start', start)
 
-await mongoTimetables.deleteDocuments({})
+// await mongoTimetables.deleteDocuments({})
 
 console.log('Loading timetables now\n')
 
