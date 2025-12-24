@@ -89,6 +89,8 @@ async function prioritySearch(db, query) {
 async function findStops(db, rawQuery) {
   let stops = db.getCollection('stops')
 
+  if (!rawQuery.length) return []
+
   let prioritySearchResults = await prioritySearch(db, rawQuery)
   let excludedIDs = prioritySearchResults.map(stop => stop._id)
 
