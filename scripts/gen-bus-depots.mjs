@@ -29,7 +29,8 @@ await database.connect()
 
 const busTrips = await database.getCollection('bus trips')
 const busRegos = await database.getCollection('bus regos')
-const activeBuses = await busTrips.distinct('consist', { date: { $in: days } })
+// const activeBuses = await busTrips.distinct('consist', { date: { $in: days } })
+const activeBuses = ['BS07VL']
 const allBuses = (await busRegos.findDocuments({ rego: { $in: activeBuses } }, { rego: 1, fleetNumber: 1 }).toArray()).reduce((acc, bus) => ({
   ...acc, [bus.rego]: bus.fleetNumber
 }), {})
@@ -79,7 +80,7 @@ for (const rego of activeBuses) {
     const multiDepot = depotIDs.length >= 2 && orbitalsRun >= 5
     const singleDepotOrbital = orbitalsRun > 5 || (nonOrbitalsRun <= 2 && orbitalsRun >= 1)
     const isOrbital = multiDepot || singleDepotOrbital
-
+    if (rego == 'BS07VL') console.log(multiDepot, depotIDs, orbitalsRun, serviceCounts)
     if (!isOrbital && existingData[rego] === 'Kinetic (Orbital)' && tripsRun < 5) continue
     else if (isOrbital) mostCommonDepotName = 'Kinetic (Orbital)'
   }
