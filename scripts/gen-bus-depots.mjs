@@ -13,7 +13,7 @@ const __dirname = path.dirname(__filename)
 const depotFile = path.join(__dirname, '..', 'additional-data', 'bus-tracker', 'depot-allocations.json')
 
 const today = utils.now().startOf('day')
-const threshold = 7
+const threshold = 3
 const days = Array(threshold).fill(0).map((_, i) => utils.getYYYYMMDD(today.clone().add(-i, 'days')))
 
 const sort = (obj) => Object.keys(obj).sort((a, b) => {
