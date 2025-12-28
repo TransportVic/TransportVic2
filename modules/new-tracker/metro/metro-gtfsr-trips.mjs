@@ -8,14 +8,14 @@ import MetroTripUpdater from '../../metro-trains/trip-updater.mjs'
 import _ from '../../../init-loggers.mjs'
 import fs from 'fs/promises'
 
-export async function getUpcomingTrips(db, gtfsrAPI, routeFilter = '') {
+export async function getUpcomingTrips(db, gtfsrAPI) {
   let tripData = await gtfsrAPI('metro/trip-updates')
 
   let trips = {}
 
   for (let trip of tripData.entity) {
     let gtfsrTripData = GTFSRTrip.parse(trip.trip_update.trip)
-    if (!gtfsrTripData.getRouteID().includes(routeFilter) && gtfsrTripData.getScheduleRelationship() !== GTFSRTrip.SR_CANCELLED) continue
+    // if (!gtfsrTripData.getRouteID().includes(routeFilter) && gtfsrTripData.getScheduleRelationship() !== GTFSRTrip.SR_CANCELLED) continue
 
     let tripData = {
       operationDays: gtfsrTripData.getOperationDay(),
@@ -36,7 +36,6 @@ export async function getUpcomingTrips(db, gtfsrAPI, routeFilter = '') {
         // cancelled: stop.schedule_relationship === 1
       }
 
-      if (stop.schedule_relationship === 1) tripStop.cancelled = true
       if (stop.arrival) tripStop.estimatedArrivalTime = new Date(stop.arrival.time * 1000)
       if (stop.departure) tripStop.estimatedDepartureTime = new Date(stop.departure.time * 1000)
 
@@ -52,8 +51,8 @@ export async function getUpcomingTrips(db, gtfsrAPI, routeFilter = '') {
   return Object.values(trips)
 }
 
-export async function fetchGTFSRTrips(db, tripDB, routeFilter = '') {
-  let relevantTrips = await getUpcomingTrips(db, makePBRequest, routeFilter)
+export async function fetchGTFSRTrips(db, tripDB, existingTrips) {
+  let relevantTrips = await getUpcomingTrips(db, makePBRequest)
   global.loggers.trackers.metro.log('GTFSR Updater: Fetched', relevantTrips.length, 'trips')
 
   for (let tripData of relevantTrips) {
@@ -67,6 +66,8 @@ export async function fetchGTFSRTrips(db, tripDB, routeFilter = '') {
     await MetroTripUpdater.updateTrip(db, tripDB, tripData, {
       skipStopCancellation: true,
       dataSource: 'gtfsr-trip-update',
+      existingTrips,
+      skipWrite: true,
       fullTrip: true
     })
   }
