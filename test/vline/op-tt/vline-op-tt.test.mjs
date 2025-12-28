@@ -569,6 +569,7 @@ describe('The loadOperationalTT function', () => {
 
     expect(trip.stopTimings[5].stopName).to.equal('Westall Railway Station')
     expect(trip.stopTimings[5].stopGTFSID).to.equal('vic:rail:WTL')
+    expect(trip.stopTimings[5].platform).to.equal('3?')
 
     trip.stopTimings.slice(0, 5).forEach(stop => expect(stop.cancelled, `Expected ${stop.stopName} to be cancelled`).to.be.true)
     trip.stopTimings.slice(5).forEach(stop => expect(stop.cancelled).to.be.false)

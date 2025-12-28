@@ -317,17 +317,22 @@ async function updateExistingTrip(db, tripDB, existingTrip, vlineTrip) {
 
   if (!originStop || !destinationStop) return null
 
+  const isWTL = stop => stop.stopName === 'Westall Railway Station'
+
   if (!vlineTrip.origin) {
+    const platform = isWTL(originStop) ? '3?' : null
+
     await VLineTripUpdater.addStopToTrip(
       db, tripDB, existingTrip.operationDays, existingTrip.runID, {
-      stopName: originStop.stopName, scheduledDepartureTime: new Date(vlineTrip.departureTime.toISO())
+      stopName: originStop.stopName, scheduledDepartureTime: new Date(vlineTrip.departureTime.toISO()), platform
     }, 'vline-op-tt')
   }
 
   if (!vlineTrip.destination) {
+    const platform = isWTL(destinationStop) ? '3?' : null
     await VLineTripUpdater.addStopToTrip(
       db, tripDB, existingTrip.operationDays, existingTrip.runID, {
-      stopName: destinationStop.stopName, scheduledDepartureTime: new Date(vlineTrip.arrivalTime.toISO())
+      stopName: destinationStop.stopName, scheduledDepartureTime: new Date(vlineTrip.arrivalTime.toISO()), platform
     }, 'vline-op-tt')
   }
 
