@@ -288,9 +288,9 @@ async function findMatchingTrip(opDay, opDayFormat, scheduledTDN, vlineTrip, db)
 }
 
 async function updateExistingTrip(db, tripDB, existingTrip, vlineTrip) {
-  let stops = db.getCollection('stops')
-  let originStop = await getStopFromVNetName(stops, vlineTrip.origin)
-  let destinationStop = await getStopFromVNetName(stops, vlineTrip.destination)
+  const stops = db.getCollection('stops')
+  const originStop = await getStopFromVNetName(stops, vlineTrip.origin)
+  const destinationStop = await getStopFromVNetName(stops, vlineTrip.destination)
 
   if (!originStop || !destinationStop) return null
 
@@ -299,13 +299,26 @@ async function updateExistingTrip(db, tripDB, existingTrip, vlineTrip) {
     originStop.stopName, destinationStop.stopName, 'vline-op-tt'
   )
 
-  let originOffset = vlineTrip.departureTime - new Date(existingTrip.stopTimings[0].scheduledDepartureTime)
-  let destinationOffset = vlineTrip.arrivalTime - new Date(existingTrip.stopTimings[existingTrip.stopTimings.length - 1].scheduledDepartureTime)
-  if (originOffset !== 0 && Math.abs(originOffset - destinationOffset) <= 5 * 60 * 1000) {
-    await VLineTripUpdater.setTripTimeOffset(
-      db, tripDB, existingTrip.operationDays, existingTrip.runID,
-      originOffset, 'vline-op-tt'
-    )
+  const originStopIDs = originStop.bays
+    .filter(bay => [GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain, GTFS_CONSTANTS.TRANSIT_MODES.metroTrain].includes(bay.mode))
+    .map(bay => bay.stopGTFSID)
+  const destStopIDs = destinationStop.bays
+    .filter(bay => [GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain, GTFS_CONSTANTS.TRANSIT_MODES.metroTrain].includes(bay.mode))
+    .map(bay => bay.stopGTFSID)
+
+  const tripOriginStop = existingTrip.stopTimings.find(stop => originStopIDs.includes(stop.stopGTFSID))
+  const tripDestStop = existingTrip.stopTimings.find(stop => destStopIDs.includes(stop.stopGTFSID))
+
+  if (tripOriginStop && tripDestStop) {
+    const originOffset = vlineTrip.departureTime - new Date(tripOriginStop.scheduledDepartureTime)
+    const destinationOffset = vlineTrip.arrivalTime - new Date(tripDestStop.scheduledDepartureTime)
+
+    if (originOffset !== 0 && Math.abs(originOffset - destinationOffset) <= 5 * 60 * 1000) {
+      await VLineTripUpdater.setTripTimeOffset(
+        db, tripDB, existingTrip.operationDays, existingTrip.runID,
+        originOffset, 'vline-op-tt'
+      )
+    }
   }
 }
 

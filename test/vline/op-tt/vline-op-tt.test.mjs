@@ -312,8 +312,8 @@ describe('The loadOperationalTT function', () => {
     expect(trip.stopTimings[1].cancelled).to.be.false
 
     expect(trip.stopTimings[3].stopName).to.equal('Geelong Railway Station')
-    expect(trip.stopTimings[11].departureTime).to.equal('14:35')
-    expect(trip.stopTimings[11].cancelled).to.be.false
+    expect(trip.stopTimings[3].departureTime).to.equal('14:35')
+    expect(trip.stopTimings[3].cancelled).to.be.false
   })
 
   it('Updates the trip timing when an existing TDN matches but the times have been shifted', async () => {
