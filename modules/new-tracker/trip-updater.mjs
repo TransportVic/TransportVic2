@@ -146,7 +146,10 @@ export default class TripUpdater {
     }
 
     if (!platformBay) {
-      platformBay = stopData.bays.find(bay => bay.mode === mode && bay.stopType == 'station')
+      platformBay = stopData.bays.find(bay => 
+        bay.mode === mode && bay.stopType == 'station')
+        || stopData.bays.find(bay => bay.stopType == 'station'
+      )
     }
 
     if (!platformBay) return {}

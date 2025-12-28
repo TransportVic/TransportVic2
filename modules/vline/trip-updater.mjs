@@ -103,4 +103,19 @@ export default class VLineTripUpdater extends TripUpdater {
     })
   }
 
+  static async addStopToTrip(db, tripDB, operationDay, runID, stopData, dataSource) {
+    let timetables = db.getCollection('live timetables')
+    let trip = await this.getTripByTDN(timetables, runID, operationDay)
+    if (!trip) return null
+
+    return await this.updateTrip(db, tripDB, {
+      operationDays: operationDay,
+      runID,
+      stops: [stopData]
+    }, {
+      skipStopCancellation: true,
+      dataSource
+    })
+  }
+
 }

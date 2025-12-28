@@ -3178,6 +3178,236 @@
     "cleanName": "waurn-ponds-railway-station"
   },
   {
+    "stopName": "Westall Railway Station",
+    "bays": [
+      {
+        "originalName": "Westall Railway Station",
+        "fullStopName": "Westall Railway Station",
+        "stopGTFSID": "vic:rail:WTL",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.13883263,
+            -37.93849121
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Clayton South",
+        "stopType": "station",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Westall Station",
+        "fullStopName": "Westall Railway Station",
+        "stopGTFSID": "13716",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.1381497,
+            -37.93804784
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Clayton South",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:WTL",
+        "platform": "1"
+      },
+      {
+        "originalName": "Westall Station",
+        "fullStopName": "Westall Railway Station",
+        "stopGTFSID": "13717",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.13823114,
+            -37.93797703
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Clayton South",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:WTL",
+        "platform": "2"
+      },
+      {
+        "originalName": "Westall Railway Station",
+        "fullStopName": "Westall Railway Station",
+        "stopGTFSID": "26310",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.13847296,
+            -37.93786371
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Clayton South",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:WTL",
+        "platform": "RRB"
+      },
+      {
+        "originalName": "Westall Station",
+        "fullStopName": "Westall Railway Station",
+        "stopGTFSID": "26539",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.13769723,
+            -37.93749095
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Clayton South",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:WTL",
+        "platform": "3"
+      },
+      {
+        "originalName": "Westall_Down",
+        "fullStopName": "Westall Railway Station",
+        "stopGTFSID": "77938",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.138335,
+            -37.937597
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Clayton South",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Westall_Up",
+        "fullStopName": "Westall Railway Station",
+        "stopGTFSID": "78181",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.138473,
+            -37.937861
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Clayton South",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Westall",
+        "fullStopName": "Westall Railway Station",
+        "stopGTFSID": "WTL_Down",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.138335,
+            -37.937597
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Clayton South",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "WestallUP",
+        "fullStopName": "Westall Railway Station",
+        "stopGTFSID": "WTL_Up",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.1383793,
+            -37.93778316
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Clayton South",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Westall_Down",
+        "fullStopName": "Westall Railway Station",
+        "stopGTFSID": "RAIL_donric_77938",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.138335,
+            -37.937597
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Clayton South",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Westall_Up",
+        "fullStopName": "Westall Railway Station",
+        "stopGTFSID": "RAIL_donric_78181",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.138473,
+            -37.937861
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Clayton South",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Westall",
+        "fullStopName": "Westall Railway Station",
+        "stopGTFSID": "RAIL_donric_WTL_Down",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.138335,
+            -37.937597
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Clayton South",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "WestallUP",
+        "fullStopName": "Westall Railway Station",
+        "stopGTFSID": "RAIL_donric_WTL_Up",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.1383793,
+            -37.93778316
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Clayton South",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ]
+  },
+  {
     "stopName": "Wyndham Vale Railway Station",
     "suburb": [
       "Manor Lakes"

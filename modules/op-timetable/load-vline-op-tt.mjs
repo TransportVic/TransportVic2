@@ -4,7 +4,7 @@ import utils from '../../utils.js'
 import { convertToLive } from '../departures/sch-to-live.js'
 import config from '../../config.json' with { type: 'json' }
 import { GetPlatformServicesAPI, PTVAPI, PTVAPIInterface, VLineAPIInterface } from '@transportme/ptv-api'
-import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
+import { dateUtils, GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 import { LiveTimetable } from '../schema/live-timetable.mjs'
 import VLineUtils from '../vline/vline-utils.mjs'
 import VLineTripUpdater from '../vline/trip-updater.mjs'
@@ -287,12 +287,49 @@ async function findMatchingTrip(opDay, opDayFormat, scheduledTDN, vlineTrip, db)
   return timetable
 }
 
+async function matchStopFromNSP(stops, stopTime, nspTrip) {
+  const timeHHMM = dateUtils.toHHMM(stopTime)
+  const matchingStop = nspTrip.stopTimings.find(stop => stop.departureTime.startsWith(timeHHMM))
+  if (matchingStop) {
+    return await stops.findDocument({
+      'bays.stopGTFSID': matchingStop.stopGTFSID
+    })
+  }
+}
+
 async function updateExistingTrip(db, tripDB, existingTrip, vlineTrip) {
   const stops = db.getCollection('stops')
-  const originStop = await getStopFromVNetName(stops, vlineTrip.origin)
-  const destinationStop = await getStopFromVNetName(stops, vlineTrip.destination)
+  const timetables = db.getCollection('timetables')
+
+  const nspTrip = await timetables.findDocument({
+    mode: GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain,
+    operationDays: utils.getDayOfWeek(utils.parseDate(existingTrip.operationDays)),
+    runID: vlineTrip.tdn
+  })
+
+  const originStop = vlineTrip.origin
+    ? await getStopFromVNetName(stops, vlineTrip.origin)
+    : await matchStopFromNSP(stops, vlineTrip.departureTime, nspTrip)
+
+  const destinationStop = vlineTrip.destination
+    ? await getStopFromVNetName(stops, vlineTrip.destination)
+    : await matchStopFromNSP(stops, vlineTrip.arrivalTime, nspTrip)
 
   if (!originStop || !destinationStop) return null
+
+  if (!vlineTrip.origin) {
+    await VLineTripUpdater.addStopToTrip(
+      db, tripDB, existingTrip.operationDays, existingTrip.runID, {
+      stopName: originStop.stopName, scheduledDepartureTime: new Date(vlineTrip.departureTime.toISO())
+    }, 'vline-op-tt')
+  }
+
+  if (!vlineTrip.destination) {
+    await VLineTripUpdater.addStopToTrip(
+      db, tripDB, existingTrip.operationDays, existingTrip.runID, {
+      stopName: destinationStop.stopName, scheduledDepartureTime: new Date(vlineTrip.arrivalTime.toISO())
+    }, 'vline-op-tt')
+  }
 
   await VLineTripUpdater.updateTripOriginDestination(
     db, tripDB, existingTrip.operationDays, existingTrip.runID,
@@ -337,7 +374,7 @@ export default async function loadOperationalTT(db, tripDB, operationDay, ptvAPI
 
   let tripsNeedingFetch = []
 
-  for (let vlineTrip of departures.concat(arrivals).filter(trip => trip.origin && trip.destination)) {
+  for (let vlineTrip of departures.concat(arrivals)) {
     let existingTrip = await VLineTripUpdater.getTripByTDN(liveTimetables, vlineTrip.tdn, opDayFormat)
     if (existingTrip) {
       await updateExistingTrip(db, tripDB, existingTrip, vlineTrip)

@@ -15,7 +15,7 @@
     "@transportme/logger": "^1.0.1",
     "@transportme/ptv-api": "^1.0.38",
     "@transportme/server-template": "^1.0.8",
-    "@transportme/transportvic-utils": "^1.0.4",
+    "@transportme/transportvic-utils": "^1.0.5",
     "@transportme/vline-mail-server": "^1.0.5",
     "@transportme/vline-nsp-reader": "^1.0.7",
     "@turf/turf": "^5.1.6",
