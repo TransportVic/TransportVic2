@@ -30,7 +30,7 @@ export default {
       scheduledDepartureTime: '2025-10-05T07:23:00.000Z',
       actualDepartureTimeMS: 1759649826000,
       platform: '15A',
-      cancelled: false,
+      cancelled: true,
       additional: false,
       stopConditions: { pickup: 0, dropoff: 1 },
       stopDistance: 0

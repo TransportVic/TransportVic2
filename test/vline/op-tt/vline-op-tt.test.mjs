@@ -17,8 +17,9 @@ import VLineUtils from '../../../modules/vline/vline-utils.mjs'
 import utils from '../../../utils.js'
 import td8457GTFS from './sample-data/td8457-gtfs.mjs'
 import dstStartNo2amTripsGTFS from './sample-data/dst-start-no2am-trips.mjs'
-import td8469Live from './sample-data/td8469-live.mjs'
+import td8469Live from './sample-data/null-destination/td8469-live.mjs'
 import heatServices from './sample-data/heat-timetable/services.mjs'
+import td8469NSP from './sample-data/null-destination/td8469-nsp.mjs'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -45,7 +46,7 @@ const td8741 = (await fs.readFile(path.join(__dirname, 'sample-data', 'td8741-pa
 const dstStartTripSat = (await fs.readFile(path.join(__dirname, 'sample-data', 'dst-start-no2am-sat.xml'))).toString()
 const dstStartTripSun = (await fs.readFile(path.join(__dirname, 'sample-data', 'dst-start-no2am-sun.xml'))).toString()
 
-const vlineTripsTD8469_WTL = (await fs.readFile(path.join(__dirname, 'sample-data', 'vline-trips-td8469-wtl.xml'))).toString()
+const vlineTripsTD8469_WTL = (await fs.readFile(path.join(__dirname, 'sample-data', 'null-destination', 'vline-trips-td8469-wtl.xml'))).toString()
 
 const heatDay = utils.parseDate('20251205')
 const heatTimetableTemplate = (await fs.readFile(path.join(__dirname, 'sample-data', 'heat-timetable', 'template.xml'))).toString()
@@ -539,12 +540,14 @@ describe('The loadOperationalTT function', () => {
     expect(trip.stopTimings[trip.stopTimings.length - 1].arrivalTime).to.equal('19:20')
   })
 
-  it('Ignores trips with a null origin or destination', async () => {
+  it('Attempts to match a trip with a null origin using the NSP + the given time', async () => {
     let database = new LokiDatabaseConnection()
     let stops = database.getCollection('stops')
     let routes = database.getCollection('routes')
     let liveTimetables = database.getCollection('live timetables')
+    let timetables = database.getCollection('timetables')
 
+    await timetables.createDocument(clone(td8469NSP))
     await liveTimetables.createDocument(clone(td8469Live))
     await stops.createDocuments(clone(allStops))
     await routes.createDocuments(clone(allRoutes))
@@ -564,7 +567,10 @@ describe('The loadOperationalTT function', () => {
     expect(trip.destination).to.equal('Traralgon Railway Station')
     expect(trip.destinationArrivalTime).to.equal('20:50')
 
-    trip.stopTimings.slice(1, 5).forEach(stop => expect(stop.cancelled, `Expected ${stop.stopName} to be cancelled`).to.be.true)
+    expect(trip.stopTimings[5].stopName).to.equal('Westall Railway Station')
+    expect(trip.stopTimings[5].stopGTFSID).to.equal('vic:rail:WTL')
+
+    trip.stopTimings.slice(0, 5).forEach(stop => expect(stop.cancelled, `Expected ${stop.stopName} to be cancelled`).to.be.true)
     trip.stopTimings.slice(5).forEach(stop => expect(stop.cancelled).to.be.false)
   })
 
