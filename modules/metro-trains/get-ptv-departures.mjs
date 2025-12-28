@@ -44,14 +44,13 @@ export default async function getTripUpdateData(db, stop, ptvAPI, { skipTDN = []
     })
 
     if (timetable) {
-      let tripData = {
+      const tripData = {
         operationDays: timetable.operationDays,
         runID: departure.runData.tdn,
         routeGTFSID: timetable.routeGTFSID,
         stops: [{
           stopName: stop.stopName,
-          platform: departure.platform,
-          cancelled: false
+          platform: departure.platform
         }],
         cancelled: departure.runData.cancelled,
       }

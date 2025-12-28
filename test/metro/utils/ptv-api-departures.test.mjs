@@ -60,11 +60,11 @@ describe('The getTripUpdateData function', () => {
     expect(data.forming).to.equal('3511')
 
     expect(data.stops.length).to.equal(1)
+    expect(data.stops[0].cancelled, 'Cancelled should not be set on single stop data to ensure it does not wrongly uncancel a stop').to.not.exist
     expect(data.stops[0]).to.deep.equal({
       stopName: 'Ringwood Railway Station',
       platform: '2',
       estimatedDepartureTime: new Date('2025-06-09T22:07:43.000Z'),
-      cancelled: false
     })
 
     expect(data.consist).to.deep.equal([['913M', '1657T', '914M'], ['949M', '1675T', '950M']])
