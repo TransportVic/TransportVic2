@@ -22,7 +22,7 @@ let commandsA = [
   ['/bus/mildura/load-mildura-routes.mjs'],
 
   ['load-all-trips.mjs'],
-  
+
   ['restart-database.mjs'],
 
   ['bus/load-flexiride-data.mjs'],

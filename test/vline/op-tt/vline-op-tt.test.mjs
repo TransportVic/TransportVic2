@@ -7,6 +7,7 @@ import { GetPlatformServicesAPI, VLinePlatformService } from '@transportme/ptv-a
 import loadOperationalTT, { downloadTripPattern, matchTrip } from '../../../modules/op-timetable/load-vline-op-tt.mjs'
 import { LokiDatabaseConnection } from '@transportme/database'
 import td8741GTFS from './sample-data/td8741-gtfs.json' with { type: 'json' }
+import td8776GTFS from './sample-data/alterations/td8776-gtfs.mjs'
 import td8891Live from './sample-data/time-change/td8891-live.json' with { type: 'json' }
 import td8891GTFS from './sample-data/time-change/td8891-gtfs.json' with { type: 'json' }
 import td8007NSP from './sample-data/td8007-nsp.json' with { type: 'json' }
@@ -27,6 +28,9 @@ const td8457 = (await fs.readFile(path.join(__dirname, 'sample-data', 'td8457-pa
 
 const vlineTripsTD8741_Normal = (await fs.readFile(path.join(__dirname, 'sample-data', 'alterations', 'td8741-normal.xml'))).toString()
 const vlineTripsTD8741_Geelong = (await fs.readFile(path.join(__dirname, 'sample-data', 'alterations', 'td8741-terminate-geelong.xml'))).toString()
+
+const vlineTripsTD8776_Normal = (await fs.readFile(path.join(__dirname, 'sample-data', 'alterations', 'td8776-normal.xml'))).toString()
+const vlineTripsTD8776_Marshall = (await fs.readFile(path.join(__dirname, 'sample-data', 'alterations', 'td8776-terminate-marshall.xml'))).toString()
 
 const vlineTripsTD8891_Normal = (await fs.readFile(path.join(__dirname, 'sample-data', 'time-change', 'td8891-2235.xml'))).toString()
 const vlineTripsTD8891_Late = (await fs.readFile(path.join(__dirname, 'sample-data', 'time-change', 'td8891-2250.xml'))).toString()
@@ -246,7 +250,7 @@ describe('The loadOperationalTT function', () => {
     expect(trip.stopTimings[1].departureTime).to.equal('11:38')
   })
 
-  it('Shorts a trip when altered', async () => {
+  it('Shorts a trip when altered to terminate early', async () => {
     let database = new LokiDatabaseConnection()
     let stops = database.getCollection('stops')
     let routes = database.getCollection('routes')
@@ -276,6 +280,40 @@ describe('The loadOperationalTT function', () => {
     expect(trip.stopTimings[11].stopName).to.equal('South Geelong Railway Station')
     expect(trip.stopTimings[11].departureTime).to.equal('12:37')
     expect(trip.stopTimings[11].cancelled).to.be.true
+  })
+
+  it('Shorts a trip when altered to originate late', async () => {
+    let database = new LokiDatabaseConnection()
+    let stops = database.getCollection('stops')
+    let routes = database.getCollection('routes')
+    let gtfsTimetables = database.getCollection('gtfs timetables')
+    let liveTimetables = database.getCollection('live timetables')
+
+    await stops.createDocuments(clone(allStops))
+    await routes.createDocuments(clone(allRoutes))
+    await gtfsTimetables.createDocument(clone(td8776GTFS))
+
+    let stubAPI = new StubVLineAPI()
+    stubAPI.setResponses([ vlineTripsTD8776_Normal, vlineTripsEmpty, vlineTripsTD8776_Marshall, vlineTripsEmpty ])
+    let ptvAPI = new PTVAPI(stubAPI)
+    ptvAPI.addVLine(stubAPI)
+
+    await loadOperationalTT(database, database, utils.parseDate('20251228'), ptvAPI)
+    await loadOperationalTT(database, database, utils.parseDate('20251228'), ptvAPI)
+    let trip = await liveTimetables.findDocument({})
+
+    expect(trip.runID).to.equal('8776')
+    expect(trip.stopTimings[0].stopName).to.equal('Waurn Ponds Railway Station')
+    expect(trip.stopTimings[0].departureTime).to.equal('14:21')
+    expect(trip.stopTimings[0].cancelled).to.be.true
+
+    expect(trip.stopTimings[1].stopName).to.equal('Marshall Railway Station')
+    expect(trip.stopTimings[1].departureTime).to.equal('14:25')
+    expect(trip.stopTimings[1].cancelled).to.be.false
+
+    expect(trip.stopTimings[3].stopName).to.equal('Geelong Railway Station')
+    expect(trip.stopTimings[11].departureTime).to.equal('14:35')
+    expect(trip.stopTimings[11].cancelled).to.be.false
   })
 
   it('Updates the trip timing when an existing TDN matches but the times have been shifted', async () => {
