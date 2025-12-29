@@ -13,7 +13,7 @@ const __dirname = path.dirname(__filename)
 const depotFile = path.join(__dirname, '..', 'additional-data', 'bus-tracker', 'depot-allocations.json')
 
 const today = utils.now().startOf('day')
-const threshold = 3
+const threshold = 7
 const days = Array(threshold).fill(0).map((_, i) => utils.getYYYYMMDD(today.clone().add(-i, 'days')))
 
 const sort = (obj) => Object.keys(obj).sort((a, b) => {
@@ -29,8 +29,8 @@ await database.connect()
 
 const busTrips = await database.getCollection('bus trips')
 const busRegos = await database.getCollection('bus regos')
-// const activeBuses = await busTrips.distinct('consist', { date: { $in: days } })
-const activeBuses = ['BS07VL']
+const activeBuses = await busTrips.distinct('consist', { date: { $in: days } })
+
 const allBuses = (await busRegos.findDocuments({ rego: { $in: activeBuses } }, { rego: 1, fleetNumber: 1 }).toArray()).reduce((acc, bus) => ({
   ...acc, [bus.rego]: bus.fleetNumber
 }), {})
@@ -38,7 +38,7 @@ const allBuses = (await busRegos.findDocuments({ rego: { $in: activeBuses } }, {
 const busDepots = {}
 const existingData = await (async () => { try { return JSON.parse(await fs.readFile(depotFile)) } catch (e) { return {} } })()
 
-for (const rego of activeBuses) {
+for (const rego of activeBuses.filter(bus => allBuses[bus])) {
   const runIDCounts = await busTrips.aggregate([
     { $match: {
       date: { $in: days },
@@ -80,7 +80,7 @@ for (const rego of activeBuses) {
     const multiDepot = depotIDs.length >= 2 && orbitalsRun >= 5
     const singleDepotOrbital = orbitalsRun > 5 || (nonOrbitalsRun <= 2 && orbitalsRun >= 1)
     const isOrbital = multiDepot || singleDepotOrbital
-    if (rego == 'BS07VL') console.log(multiDepot, depotIDs, orbitalsRun, serviceCounts)
+
     if (!isOrbital && existingData[rego] === 'Kinetic (Orbital)' && tripsRun < 5) continue
     else if (isOrbital) mostCommonDepotName = 'Kinetic (Orbital)'
   }
