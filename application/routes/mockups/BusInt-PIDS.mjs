@@ -54,10 +54,7 @@ async function getData(req, res, full) {
     .sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
     .filter(departure => {
       if (bay !== '*') {
-        if (departure.bay) {
-          let bayID = departure.bay.slice(4)
-          if (!bay.includes(bayID)) return false
-        } else return false
+        if (departure.bay) return bay === departure.bay.slice(4)
       }
 
       let actual = departure.actualDepartureTime

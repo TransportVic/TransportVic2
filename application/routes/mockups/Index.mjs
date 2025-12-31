@@ -108,9 +108,9 @@ router.get('/get', async (req, res) => {
         const bay = stop.bays.find(bay => bay.mode === 'bus' && bay.stopGTFSID === value)
         return res.redirect(`/mockups/bus-int-pids/half/${stop.cleanSuburbs[0]}/${stop.cleanNames[0]}/${bay.platform?.split(' ')[1] || '*'}`)
       }
-
-      errorMessage = `${value} is an invalid bus stop`
     }
+
+    errorMessage = `${value} is an invalid bus stop`
   } else if (type === 'summary') {
     const nameFromCode = utils.encodeName(stationCodes[station.toUpperCase()] || '')
     return res.redirect(`/mockups/summary/${nameFromCode || station}?type=${value}`)
