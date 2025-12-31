@@ -140,8 +140,7 @@ describe('The GTFSR Tracker module', () => {
       stopName: 'Blackburn Railway Station',
       platform: '2',
       scheduledDepartureTime: null,
-      estimatedDepartureTime: new Date(1749599100 * 1000),
-      cancelled: true
+      estimatedDepartureTime: new Date(1749599100 * 1000)
     })
 
     expect(tripData[0].stops[1]).to.deep.equal({
@@ -149,8 +148,7 @@ describe('The GTFSR Tracker module', () => {
       platform: '1',
       scheduledDepartureTime: null,
       estimatedArrivalTime: new Date(1749599220 * 1000),
-      estimatedDepartureTime: new Date(1749599220 * 1000),
-      cancelled: true
+      estimatedDepartureTime: new Date(1749599220 * 1000)
     })
 
     expect(tripData[0].stops[2]).to.deep.equal({
@@ -158,8 +156,7 @@ describe('The GTFSR Tracker module', () => {
       platform: '2',
       scheduledDepartureTime: null,
       estimatedArrivalTime: new Date(1749599340 * 1000),
-      estimatedDepartureTime: new Date(1749599400 * 1000),
-      // cancelled: false
+      estimatedDepartureTime: new Date(1749599400 * 1000)
     })
   })
 })
