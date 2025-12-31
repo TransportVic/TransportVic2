@@ -5,7 +5,7 @@ import gtfsr733Positions from './sample-data/gtfsr-733-positions.mjs'
 
 const clone = o => JSON.parse(JSON.stringify(o))
 
-describe('The bus fleet tracker', () => {
+describe('The GTFSR bus fleet tracker', () => {
   it('Creates trip updates from the GTFSR data', async () => {
     let database = new LokiDatabaseConnection()
     const trips = Object.values(await getFleetData(database, () => gtfsr733Positions))

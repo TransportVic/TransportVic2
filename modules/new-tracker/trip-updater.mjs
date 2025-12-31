@@ -25,8 +25,8 @@ export default class TripUpdater {
     throw new Error('TripUpdater mode not defined')
   }
 
-  static async getTrip(db, runID, date) {
-    let liveTimetables = db.getCollection('live timetables')
+  static async getTrip(db, runID, date, routeGTFSID) {
+    const liveTimetables = db.getCollection('live timetables')
     return await liveTimetables.findDocument({
       mode: this.getMode(),
       runID,
@@ -34,9 +34,9 @@ export default class TripUpdater {
     })
   }
 
-  static async getTimetable(db, runID, date) {
-    const trip = await this.getTrip(db, runID, date)
-    if (trip) return LiveTimetable.fromDatabase(trip)
+  static async getTimetable(db, trip) {
+    const tripData = await this.getTrip(db, trip.runID, trip.operationDays, trip.routeGTFSID)
+    if (tripData) return LiveTimetable.fromDatabase(tripData)
     return null
   } 
 
@@ -326,7 +326,7 @@ export default class TripUpdater {
       return await this.updateNonStopData(db, tripDB, trip, { dataSource, updateTime, existingTrips, skipWrite })
     }
 
-    let timetable = existingTrips[this.getTripCacheValue(trip)] || await this.getTimetable(db, trip.runID, trip.operationDays)
+    let timetable = existingTrips[this.getTripCacheValue(trip)] || await this.getTimetable(db, trip)
     let liveTimetables = db.getCollection('live timetables')
 
     let stopVisits = {}
