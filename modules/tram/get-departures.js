@@ -16,6 +16,7 @@ function findScore(trip, stopGTFSID, departureTimeMinutes) {
 async function getDeparture(db, stopGTFSID, scheduledDepartureTimeMinutes, routeGTFSID, destination) {
   let trip
   let today = utils.now()
+  if (today.get('hours') < 3) today.add(-1, 'day')
   let query
 
   for (let i = 0; i <= 1; i++) {
