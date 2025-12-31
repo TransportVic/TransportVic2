@@ -127,7 +127,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'Seymour Specials',
-  track: ['SY68'],
+  track: ['SY44', 'SY68'],
   routes: [],
   type: 'exclude'
 }, {
