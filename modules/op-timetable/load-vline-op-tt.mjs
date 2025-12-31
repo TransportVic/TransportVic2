@@ -364,9 +364,7 @@ async function updateExistingTrip(db, tripDB, existingTrip, vlineTrip) {
   }
 }
 
-export default async function loadOperationalTT(db, tripDB, operationDay_, ptvAPI) {
-  // let opDayFormat = utils.getYYYYMMDD(operationDay)
-  // let dayOfWeek = utils.getDayOfWeek(operationDay) // Technically should use public holiday thing
+export default async function loadOperationalTT(db, tripDB, ptvAPI) {
   const liveTimetables = db.getCollection('live timetables')
   const heatTimetables = db.getCollection('heat timetables')
   const gtfsTimetables = db.getCollection('gtfs timetables')
@@ -487,10 +485,7 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let vlineAPIInterface = new VLineAPIInterface(config.vlineCallerID, config.vlineSignature)
   ptvAPI.addVLine(vlineAPIInterface)
 
-  let opDay = utils.now()
-  if (opDay.get('hours') < 3) opDay.add(-1, 'day')
-
-  const missingTrips = await loadOperationalTT(database, tripDatabase, opDay.startOf('day'), ptvAPI)
+  const missingTrips = await loadOperationalTT(database, tripDatabase, ptvAPI)
   if (missingTrips.length) {
     const tripData = `Missing V/Line trips (${missingTrips.length}):\n` + missingTrips.map(
       ({ vlineTrip }) => `TD${vlineTrip.tdn}: ${vlineTrip.departureTime.toFormat('HH:mm')} ${vlineTrip.origin} - ${vlineTrip.destination}`
