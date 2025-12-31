@@ -20,7 +20,7 @@ async function getDeparture(db, stopGTFSID, scheduledDepartureTimeMinutes, route
 
   for (let i = 0; i <= 1; i++) {
     let tripDay = today.clone().add(-i, 'days')
-    let departureTimeMinutes = scheduledDepartureTimeMinutes % 1440 + 1440 * i
+    let departureTimeMinutes = scheduledDepartureTimeMinutes + 1440 * i
     let variedDepartureTimeMinutes = {
       $gte: departureTimeMinutes - 4,
       $lte: departureTimeMinutes + 4
@@ -128,7 +128,7 @@ async function getDeparturesFromYT(stop, db, tripDB) {
 
       if (actualDepartureTime.diff(now, 'minutes') > 90) return
 
-      let scheduledDepartureTimeMinutes = utils.getMinutesPastMidnight(scheduledDepartureTime)
+      let scheduledDepartureTimeMinutes = utils.getPTMinutesPastMidnight(scheduledDepartureTime)
       let day = utils.getYYYYMMDD(scheduledDepartureTime)
 
       let coreRoute = HeadBoardRouteNo.replace(/[a-z]/, '')
@@ -164,7 +164,7 @@ async function getDeparturesFromYT(stop, db, tripDB) {
       if (tram) {
         let firstStop = trip.stopTimings[0]
         let currentStop = trip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
-        if (!currentStop) global.loggers.error.err(trip, stopGTFSID)
+        if (!currentStop) return global.loggers.error.err(trip, stopGTFSID)
         let minutesDiff = currentStop.departureTimeMinutes - firstStop.departureTimeMinutes
         let originDepartureTime = scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
 
