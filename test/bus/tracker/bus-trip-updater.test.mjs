@@ -8,7 +8,7 @@ import BusTripUpdater from '../../../modules/bus/trip-updater.mjs'
 const clone = o => JSON.parse(JSON.stringify(o))
 
 describe('The bus trips updater', () => {
-  it.only('Attempts to match a trip using just the run ID from any day if unable to match for today', async () => {
+  it('Attempts to match a trip using just the run ID from any day if unable to match for today', async () => {
     const database = new LokiDatabaseConnection()
     const gtfsTimetables = database.getCollection('gtfs timetables')
     const liveTimetables = database.getCollection('live timetables')

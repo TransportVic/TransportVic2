@@ -376,14 +376,18 @@ export default class TripUpdater {
     return timetable
   }
 
+  static createLiveTimetable(data) {
+    return new LiveTimetable(...data)
+  }
+
   static async createTrip(db, trip, updateTime, stopVisits, dataSource) {
-    let routeData = await this.getRoute(db, trip.routeGTFSID)
+    const routeData = await this.getRoute(db, trip.routeGTFSID)
     if (!routeData) {
       console.error('Invalid route', trip)
       return null
     }
 
-    let timetable = new LiveTimetable(
+    const timetable = this.createLiveTimetable([
       this.getMode(),
       trip.operationDays,
       routeData.routeName,
@@ -392,7 +396,7 @@ export default class TripUpdater {
       null,
       null,
       updateTime
-    )
+    ])
 
     timetable.setModificationSource(dataSource)
     timetable.logChanges = false
