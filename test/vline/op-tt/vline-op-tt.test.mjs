@@ -20,6 +20,7 @@ import dstStartNo2amTripsGTFS from './sample-data/dst-start-no2am-trips.mjs'
 import td8469Live from './sample-data/null-destination/td8469-live.mjs'
 import heatServices from './sample-data/heat-timetable/services.mjs'
 import td8469NSP from './sample-data/null-destination/td8469-nsp.mjs'
+import td8895 from './sample-data/midnight-trips/td8895.mjs'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -35,6 +36,8 @@ const vlineTripsTD8776_Marshall = (await fs.readFile(path.join(__dirname, 'sampl
 
 const vlineTripsTD8891_Normal = (await fs.readFile(path.join(__dirname, 'sample-data', 'time-change', 'td8891-2235.xml'))).toString()
 const vlineTripsTD8891_Late = (await fs.readFile(path.join(__dirname, 'sample-data', 'time-change', 'td8891-2250.xml'))).toString()
+
+const vlineTripsTD8895 = (await fs.readFile(path.join(__dirname, 'sample-data', 'midnight-trips', 'td8895.xml'))).toString()
 
 const vlineTripsEmpty = (await fs.readFile(path.join(__dirname, 'sample-data', 'vline-trips-empty.xml'))).toString()
 
@@ -65,6 +68,12 @@ ${heatResponseBody.join('')}
 const clone = o => JSON.parse(JSON.stringify(o))
 
 describe('The matchTrip function', () => {
+  const originalNow = utils.now
+
+  after(() => {
+    utils.now = originalNow
+  })
+
   it('Matches a V/Line API trip to a GTFS trip', async () => {
     let database = new LokiDatabaseConnection()
     let gtfsTimetables = database.getCollection('gtfs timetables')
@@ -599,5 +608,51 @@ describe('The loadOperationalTT function', () => {
     expect(trip.destinationArrivalTime).to.equal('15:07')
 
     expect(trip.flags).to.deep.equal({ heatTT: '36 degrees' })
+  })
+
+  it('Matches an already-created trip from the previous day between 12-3am', async () => {
+    let database = new LokiDatabaseConnection()
+    let stops = database.getCollection('stops')
+    let routes = database.getCollection('routes')
+    let liveTimetables = database.getCollection('live timetables')
+
+    await liveTimetables.createDocument(clone(td8895))
+    await stops.createDocuments(clone(allStops))
+    await routes.createDocuments(clone(allRoutes))
+
+    let stubAPI = new StubVLineAPI()
+    stubAPI.setResponses([ vlineTripsTD8895, vlineTripsEmpty ])
+    let ptvAPI = new PTVAPI(stubAPI)
+    ptvAPI.addVLine(stubAPI)
+
+    await loadOperationalTT(database, database, utils.parseDate('20251231'), ptvAPI)
+    let trip = await liveTimetables.findDocument({ runID: '8895' })
+
+    expect(trip).to.exist
+    expect(trip.departureTime).to.equal('25:50')
+  })
+
+  it('Matches an already-created trip from the previous day between 12-3am even after 3am', async () => {
+    utils.now = () => utils.parseTime('2025-12-31T16:00:01.000Z')
+
+    let database = new LokiDatabaseConnection()
+    let stops = database.getCollection('stops')
+    let routes = database.getCollection('routes')
+    let liveTimetables = database.getCollection('live timetables')
+
+    await liveTimetables.createDocument(clone(td8895))
+    await stops.createDocuments(clone(allStops))
+    await routes.createDocuments(clone(allRoutes))
+
+    let stubAPI = new StubVLineAPI()
+    stubAPI.setResponses([ vlineTripsTD8895, vlineTripsEmpty ])
+    let ptvAPI = new PTVAPI(stubAPI)
+    ptvAPI.addVLine(stubAPI)
+
+    await loadOperationalTT(database, database, utils.parseDate('20260101'), ptvAPI)
+    let trip = await liveTimetables.findDocument({ runID: '8895' })
+
+    expect(trip).to.exist
+    expect(trip.departureTime).to.equal('25:50')
   })
 })
