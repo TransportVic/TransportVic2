@@ -68,12 +68,6 @@ ${heatResponseBody.join('')}
 const clone = o => JSON.parse(JSON.stringify(o))
 
 describe('The matchTrip function', () => {
-  const originalNow = utils.now
-
-  after(() => {
-    utils.now = originalNow
-  })
-
   it('Matches a V/Line API trip to a GTFS trip', async () => {
     let database = new LokiDatabaseConnection()
     let gtfsTimetables = database.getCollection('gtfs timetables')
@@ -633,8 +627,6 @@ describe('The loadOperationalTT function', () => {
   })
 
   it('Matches an already-created trip from the previous day between 12-3am even after 3am', async () => {
-    utils.now = () => utils.parseTime('2025-12-31T16:00:01.000Z')
-
     let database = new LokiDatabaseConnection()
     let stops = database.getCollection('stops')
     let routes = database.getCollection('routes')

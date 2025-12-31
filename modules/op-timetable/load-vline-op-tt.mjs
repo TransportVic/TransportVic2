@@ -364,22 +364,29 @@ async function updateExistingTrip(db, tripDB, existingTrip, vlineTrip) {
   }
 }
 
-export default async function loadOperationalTT(db, tripDB, operationDay, ptvAPI) {
-  let opDayFormat = utils.getYYYYMMDD(operationDay)
-  let dayOfWeek = utils.getDayOfWeek(operationDay) // Technically should use public holiday thing
-  let liveTimetables = db.getCollection('live timetables')
-  let heatTimetables = db.getCollection('heat timetables')
-  let gtfsTimetables = db.getCollection('gtfs timetables')
+export default async function loadOperationalTT(db, tripDB, operationDay_, ptvAPI) {
+  // let opDayFormat = utils.getYYYYMMDD(operationDay)
+  // let dayOfWeek = utils.getDayOfWeek(operationDay) // Technically should use public holiday thing
+  const liveTimetables = db.getCollection('live timetables')
+  const heatTimetables = db.getCollection('heat timetables')
+  const gtfsTimetables = db.getCollection('gtfs timetables')
 
-  let outputTrips = []
+  const outputTrips = []
 
-  let departures = await ptvAPI.vline.getDepartures('', GetPlatformServicesAPI.BOTH, 1440)
-  let arrivals = await ptvAPI.vline.getArrivals('', GetPlatformServicesAPI.BOTH, 1440)
-  let newTrips = []
+  const departures = await ptvAPI.vline.getDepartures('', GetPlatformServicesAPI.BOTH, 1440)
+  const arrivals = await ptvAPI.vline.getArrivals('', GetPlatformServicesAPI.BOTH, 1440)
+  const newTrips = []
 
-  let tripsNeedingFetch = []
+  const tripsNeedingFetch = []
 
   for (let vlineTrip of departures.concat(arrivals)) {
+    // TODO: Cleanup with date library cleanup
+    const operationDay = utils.parseTime(vlineTrip.departureTime.toUTC().toISO())
+    if (operationDay.get('hours') < 3) operationDay.add(-1, 'day')
+
+    const opDayFormat = utils.getYYYYMMDD(operationDay)
+    const dayOfWeek = utils.getDayOfWeek(operationDay) // Technically should use public holiday thing
+
     let existingTrip = await VLineTripUpdater.getTripByTDN(liveTimetables, vlineTrip.tdn, opDayFormat)
     if (existingTrip) {
       await updateExistingTrip(db, tripDB, existingTrip, vlineTrip)
