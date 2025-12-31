@@ -29,21 +29,19 @@ Object.keys(rawLineRanges).forEach(line => {
 })
 
 export async function getDepartures(db, ptvAPI) {
-  let trips = await ptvAPI.metroSite.getDepartures()
-  let output = []
-  for (let trip of trips) {
-    let routeName = tdnToLine[trip.tdn]
+  const trips = await ptvAPI.metroSite.getDepartures()
+  const output = []
+  for (const trip of trips) {
+    const routeName = tdnToLine[trip.tdn]
     if (!routeName) {
       global.loggers.trackers.metro.warn('Could not determine route for TD' + trip.tdn)
-      continue
     }
 
-    let routeData = await MetroTripUpdater.getRouteByName(db, routeName)
+    const routeData = routeName ? await MetroTripUpdater.getRouteByName(db, routeName) : null
 
-    let tripData = {
+    const tripData = {
       operationDays: trip.operationalDate,
       runID: trip.tdn,
-      routeGTFSID: routeData.routeGTFSID,
       stops: trip.stops.map(stop => {
         let data = {
           stopName: stop.stationName + ' Railway Station',
@@ -56,6 +54,8 @@ export async function getDepartures(db, ptvAPI) {
         return data
       })
     }
+
+    if (routeData) tripData.routeGTFSID = routeData.routeGTFSID
     output.push(tripData)
   }
   return output
