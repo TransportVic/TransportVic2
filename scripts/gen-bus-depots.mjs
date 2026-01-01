@@ -38,7 +38,11 @@ const allBuses = (await busRegos.findDocuments({ rego: { $in: activeBuses } }, {
 const busDepots = {}
 const existingData = await (async () => { try { return JSON.parse(await fs.readFile(depotFile)) } catch (e) { return {} } })()
 
-for (const rego of activeBuses.filter(bus => allBuses[bus])) {
+const busesToCheck = activeBuses
+  .filter(bus => allBuses[bus])
+  .filter(bus => !['V', 'K'].includes(allBuses[bus][0]))
+
+for (const rego of busesToCheck) {
   const runIDCounts = await busTrips.aggregate([
     { $match: {
       date: { $in: days },
@@ -88,13 +92,10 @@ for (const rego of activeBuses.filter(bus => allBuses[bus])) {
   busDepots[allBuses[rego]] = mostCommonDepotName
 }
 
-for (const bus of Object.keys(manualOverrides)) {
-  busDepots[bus] = manualOverrides[bus]
-}
-
 await fs.writeFile(depotFile, JSON.stringify(sort({
   ...existingData,
-  ...busDepots
+  ...busDepots,
+  ...manualOverrides
 }), null, 2))
 
 database.close()
