@@ -1,4 +1,8 @@
 let bays = require('../../transportvic-data/excel/bus/bays/bus-bays.json')
 
-Object.keys(bays).forEach(stop => bays[stop] = `Bay ${bays[stop]}`)
-module.exports = bays
+module.exports = Object.keys(bays).reduce((acc, stopGTFSID) => ({
+  ...acc,
+  ...(bays[stopGTFSID].length ? {
+    [stopGTFSID]: `Bay ${bays[stopGTFSID]}`
+  }: {})
+}))
