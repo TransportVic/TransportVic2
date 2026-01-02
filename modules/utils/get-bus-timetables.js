@@ -262,7 +262,8 @@ async function getScheduledDepartures(stopGTFSIDs, db, mode, timeout, useLive, t
       operator,
       codedOperator: utils.encodeName(operator.replace(/ \(.+/, '')),
       loopDirection,
-      stopGTFSID: currentStop.stopGTFSID
+      stopGTFSID: currentStop.stopGTFSID,
+      operationDay
     }
   }).filter(Boolean).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
 }

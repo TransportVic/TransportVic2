@@ -7,8 +7,9 @@ import { TripLoader, ShapeLoader } from '@transportme/load-ptv-gtfs'
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 
 import routeIDMap from './routes.json' with { type: 'json' }
-import { createTripProcessor, getVLineRuleStats } from '../transportvic-data/gtfs/process.mjs'
+import { createTripProcessor } from '../transportvic-data/gtfs/process.mjs'
 import config from '../config.json' with { type: 'json' }
+import { getVLineRuleStats } from '../transportvic-data/gtfs/processors/trip/5/1-remove-duplicates.mjs'
 
 const { GTFS_MODES } = GTFS_CONSTANTS
 

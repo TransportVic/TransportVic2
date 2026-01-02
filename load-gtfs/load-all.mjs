@@ -19,7 +19,7 @@ let commandsA = [
   ['vline/timetables/load-heat-timetables.mjs'],
 
   ['bus/load-788-stop-numbers.mjs'],
-  ['/bus/mildura/load-mildura-routes.mjs'],
+  ['bus/mildura/load-mildura-routes.mjs'],
 
   ['load-all-trips.mjs'],
 

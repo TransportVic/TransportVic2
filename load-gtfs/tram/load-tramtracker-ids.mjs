@@ -39,9 +39,11 @@ let count = 0
 
 let closedStops = []
 
-let tramTrackerIDs = {
-  3813: 2013
+const manualTrackerIDs = {
+  3813: 2013, // Spring Street
 }
+
+let tramTrackerIDs = { ...manualTrackerIDs }
 
 let stopDirections = {
   '3813': [{
@@ -173,7 +175,9 @@ for (let tramTrackerID of sortedTramTrackerIDs) {
     }
   }
 
-  console.log('Failed to map stop ID', stopID, '- TT', tramTrackerID, stopNames[tramTrackerID], stopDirections[tramTrackerID], dbStop, ptvStop)
+  if (!manualTrackerIDs[tramTrackerID]) {
+    console.log('Failed to map stop ID', stopID, '- TT', tramTrackerID, stopNames[tramTrackerID], stopDirections[tramTrackerID], dbStop, ptvStop)
+  }
 }
 
 console.log('Completed loading in ' + count + ' tramtracker IDs using new method')
