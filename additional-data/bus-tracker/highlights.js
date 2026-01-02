@@ -90,8 +90,8 @@ module.exports = [{
   routes: [],
   type: 'exclude'
 }, {
-  name: 'Kastoria Specials',
-  track: ['K13', 'K14', 'K23', 'K24', 'K25', 'K26', 'K28', 'K5001', 'K5007', 'K5026'],
+  name: 'Transit Systems Specials',
+  track: ['TS56', 'TS57', 'TS58', 'TS59', 'TS60', 'TS155'],
   routes: [],
   type: 'exclude'
 }, {
