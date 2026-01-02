@@ -6,6 +6,7 @@ import rawStationPIDs from '../../../additional-data/station-pids.js'
 import url from 'url'
 import querystring from 'querystring'
 import PIDBackend from './PIDBackend.mjs'
+import busBays from '../../../additional-data/bus-data/bus-bays.js'
 
 const router = new express.Router()
 
@@ -106,7 +107,8 @@ router.get('/get', async (req, res) => {
 
       if (stop) {
         const bay = stop.bays.find(bay => bay.mode === 'bus' && bay.stopGTFSID === value)
-        return res.redirect(`/mockups/bus-int-pids/half/${stop.cleanSuburbs[0]}/${stop.cleanNames[0]}/${bay.platform?.split(' ')[1] || '*'}`)
+        const bayNumber = busBays[bay.stopGTFSID] ? busBays[bay.stopGTFSID].slice(4) : '*'
+        return res.redirect(`/mockups/bus-int-pids/half/${stop.cleanSuburbs[0]}/${stop.cleanNames[0]}/${bayNumber}`)
       }
     }
 
