@@ -120,7 +120,6 @@ module.exports = {
     plat(12, 'pre-plat-landscape'),
     plat(13, 'pre-plat-landscape'),
     plat(14, 'pre-plat-landscape'),
-    plat(null, 'trains-from-fss'),
     sl('concourse-left'),
     sl('concourse-right'),
     sl('line-group-portrait-chl'),
@@ -130,6 +129,7 @@ module.exports = {
     sl('line-group-portrait-ccy'),
     sl('line-group-portrait-shm-vlp'),
     sl('trains-from-fss-portrait'),
+    sl('trains-from-fss-landscape')
   ],
   "Parliament": [...platr(4, [], 'platform'), conc('interchange')],
   "Jolimont": [...platr(2, [], 'half-platform-bold')],

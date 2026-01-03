@@ -409,10 +409,44 @@ export default {
       },
       getComponents: () => {
         const header = new BoldLineHeader('Trains from Flinders Street to', 'no-line')
+
         const trainsFromFSS = FSSDestOverview('top')
+        const cityLoop = new CityLoop('FSS', 'width', true)
+
+        trainsFromFSS.area.addComponent(cityLoop)
 
         const area = new ServiceListArea([
-          trainsFromFSS.area
+          trainsFromFSS.area,
+          new MountableClock('h:mm:ss a')
+        ], 'no-border')
+
+        return {
+          pids: [
+            ...trainsFromFSS.pids
+          ],
+          area,
+          header
+        }
+      }
+    },
+    'trains-from-fss-landscape': {
+      orientation: 'landscape',
+      headerStyle: {
+        height: '0.08',
+        margin: '0.016'
+      },
+      getComponents: () => {
+        const header = new Header('Trains from Flinders Street to', 'no-line')
+
+        const trainsFromFSS = FSSDestOverview('left')
+        const cityLoop = new CityLoop('FSS', 'width')
+
+        const area = new ServiceListArea([
+          trainsFromFSS.area,
+          new HalfServiceListArea([
+            cityLoop,
+            new MountableClock('h:mm:ss a')
+          ], 'right'),
         ])
 
         return {
