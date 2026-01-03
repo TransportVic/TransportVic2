@@ -9,7 +9,11 @@ const router = new express.Router()
 
 const highlightData = require('../../../../additional-data/bus-tracker/highlights.js')
 
-const depotAllocations = require('../../../../additional-data/bus-tracker/depot-allocations.json')
+const depotAllocations = {
+  ...require('../../../../additional-data/bus-tracker/depot-allocations.json'),
+  ...require('../../../../additional-data/bus-tracker/manual-overrides.json')
+}
+
 const smartrakDepots = require('../../../../transportvic-data/excel/bus/depots/bus-depots.json')
 
 const smartrakDepotLookup = Object.keys(smartrakDepots).reduce((acc, depotID) => ({
