@@ -128,6 +128,8 @@ module.exports = {
     sl('line-group-portrait-nor'),
     sl('line-group-portrait-dng'),
     sl('line-group-portrait-ccy'),
+    sl('line-group-portrait-shm-vlp'),
+    sl('trains-from-fss-portrait'),
   ],
   "Parliament": [...platr(4, [], 'platform'), conc('interchange')],
   "Jolimont": [...platr(2, [], 'half-platform-bold')],

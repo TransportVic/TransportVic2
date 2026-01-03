@@ -53,6 +53,38 @@ const ConcourseLineGroup = (name, lineGroups, big, small) => ({
   }
 })
 
+const FSSDestOverview = side => {
+  const SSS = new MiniCompactMultiServiceList('Southern Cross', '', 2)
+  const CLP = new MiniCompactMultiServiceList('City Loop', 'Flagstaff, Melbourne Central and Parliament', 2)
+  const RMD = new MiniCompactMultiServiceList('Richmond', '', 2)
+  const NME = new MiniCompactMultiServiceList('North Melbourne', '', 1)
+  const JLI = new MiniCompactMultiServiceList('Jolimont', '', 1)
+
+  const area = new HalfServiceListArea([
+    SSS, CLP, RMD, NME, JLI
+  ], side)
+
+  return {
+    pids: [{
+      pid: SSS,
+      filter: dep => dep.line !== 'vline' && hasStop('Southern Cross', dep)
+    }, {
+      pid: CLP,
+      filter: dep => dep.stops.some(stop => stop.name === 'Parliament' && stop.stops)
+    }, {
+      pid: RMD,
+      filter: dep => dep.stops.some(stop => stop.name === 'Richmond' && stop.stops)
+    }, {
+      pid: NME,
+      filter: dep => dep.stops.some(stop => stop.name === 'North Melbourne' && stop.stops)
+    }, {
+      pid: JLI,
+      filter: dep => dep.stops.some(stop => stop.name === 'Jolimont' && stop.stops)
+    }],
+    area
+  }
+}
+
 export default {
   'melbourne-central': {
     'line-group-portrait': {
@@ -104,8 +136,12 @@ export default {
         const VLP = new MiniCompactServiceList('Regional Services', 'vline', 1)
         const RCE = new MiniCompactServiceList('Flemington Racecourse Line', 'flemington-racecourse', 1)
 
+        const topArea = new HalfServiceListArea([
+          SSS, FSS, CLP
+        ], 'top')
+
         const area = new ServiceListArea([
-          SSS, FSS, CLP, NOR, CCY, VLP, RCE
+          topArea, NOR, CCY, VLP, RCE
         ])
 
         return {
@@ -271,7 +307,7 @@ export default {
         const CCY = new CompactServiceList('Frankston, Werribee, Williamstown & Altona Lines', 'frankston', 4)
         const DNG = new CompactServiceList('Cranbourne & Pakenham Lines', 'cranbourne', 4)
 
-        const header = new Header('Trains from Flinders Street to:')
+        const header = new Header('Trains from Flinders Street')
         const area = new ServiceListArea([
           new HalfServiceListArea([
             CHL, BLY
@@ -311,20 +347,14 @@ export default {
         const SHM = new CompactServiceList('Sandringham Line', 'sandringham', 2)
         const VLP = new CompactServiceList('Regional Services', 'vline', 1)
 
-        const SSS = new MiniCompactMultiServiceList('Southern Cross', '', 2)
-        const CLP = new MiniCompactMultiServiceList('City Loop', 'Flagstaff, Melbourne Central and Parliament', 2)
-        const RMD = new MiniCompactMultiServiceList('Richmond', '', 2)
-        const NME = new MiniCompactMultiServiceList('North Melbourne', '', 1)
-        const JLI = new MiniCompactMultiServiceList('Jolimont', '', 1)
+        const trainsFromFSS = FSSDestOverview('right')
 
-        const header = new Header('Trains from Flinders Street to:')
+        const header = new Header('Trains from Flinders Street')
         const area = new ServiceListArea([
           new HalfServiceListArea([
             NOR, SHM, VLP
           ], 'left'),
-          new HalfServiceListArea([
-            SSS, CLP, RMD, NME, JLI
-          ], 'right')
+          trainsFromFSS.area
         ])
 
         return {
@@ -337,22 +367,7 @@ export default {
           }, {
             pid: VLP,
             filter: dep => dep.direction === 'Down' && ['vline'].includes(dep.line)
-          }, {
-            pid: SSS,
-            filter: dep => dep.line !== 'vline' && hasStop('Southern Cross', dep)
-          }, {
-            pid: CLP,
-            filter: dep => dep.stops.some(stop => stop.name === 'Parliament' && stop.stops)
-          }, {
-            pid: RMD,
-            filter: dep => dep.stops.some(stop => stop.name === 'Richmond' && stop.stops)
-          }, {
-            pid: NME,
-            filter: dep => dep.stops.some(stop => stop.name === 'North Melbourne' && stop.stops)
-          }, {
-            pid: JLI,
-            filter: dep => dep.stops.some(stop => stop.name === 'Jolimont' && stop.stops)
-          }],
+          }, ...trainsFromFSS.pids],
           header,
           area
         }
@@ -363,6 +378,52 @@ export default {
     'line-group-portrait-nor': ConcourseLineGroup('Craigieburn, Sunbury & Upfield Lines', ['craigieburn', 'sunbury', 'upfield'], 3, 4),
     'line-group-portrait-dng': ConcourseLineGroup('Cranbourne & Pakenham Lines', ['cranbourne', 'pakenham'], 3, 4),
     'line-group-portrait-ccy': ConcourseLineGroup('Frankston, Werribee & Williamstown Lines', ['frankston', 'werribee', 'williamstown'], 3, 4),
+    'line-group-portrait-shm-vlp': {
+      orientation: 'portrait',
+      getComponents: () => {
+        const shm = new LineGroupServiceList('Sandringham Line', 'sandringham', 1, 3, true)
+        const vlp = new LineGroupServiceList('Regional V/Line Services', 'vline', 1, 3, true)
+
+        const area = new ServiceListArea([
+          shm,
+          vlp
+        ])
+
+        return {
+          pids: [{
+            pid: shm,
+            filter: dep => ['sandringham'].includes(dep.line)
+          }, {
+            pid: vlp,
+            filter: dep => ['vline'].includes(dep.line)
+          }],
+          area
+        }
+      }
+    },
+    'trains-from-fss-portrait': {
+      orientation: 'portrait',
+      headerStyle: {
+        height: '0.04',
+        margin: '0.01'
+      },
+      getComponents: () => {
+        const header = new BoldLineHeader('Trains from Flinders Street to', 'no-line')
+        const trainsFromFSS = FSSDestOverview('top')
+
+        const area = new ServiceListArea([
+          trainsFromFSS.area
+        ])
+
+        return {
+          pids: [
+            ...trainsFromFSS.pids
+          ],
+          area,
+          header
+        }
+      }
+    },
   },
   'arden': {
     'concourse-trains': MTP_ConcourseTrains('Arden')
