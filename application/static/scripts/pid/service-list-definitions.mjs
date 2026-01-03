@@ -457,7 +457,7 @@ export default {
           header
         }
       }
-    },
+    }
   },
   'arden': {
     'concourse-trains': MTP_ConcourseTrains('Arden')
@@ -474,4 +474,8 @@ export default {
   'anzac': {
     'concourse-trains': MTP_ConcourseTrains('Anzac')
   }
+}
+
+export const minimumTimes = {
+  'flinders-street': 1
 }

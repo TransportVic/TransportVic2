@@ -1,4 +1,4 @@
-import serviceListDefinitions from './service-list-definitions.mjs'
+import serviceListDefinitions, { minimumTimes } from './service-list-definitions.mjs'
 
 let allPIDs = []
 
@@ -8,6 +8,11 @@ function getPIDDefinition() {
 
   if (!serviceListDefinitions[station]) return null
   return serviceListDefinitions[station][type]
+}
+
+function getMinimumTime() {
+  const station = decodeURIComponent(search.hash.s)
+  return minimumTimes[station] || -1
 }
 
 function createPID() {
@@ -38,6 +43,13 @@ function createPID() {
   allPIDs = pids
 }
 
+function setServices(services) {
+  const minimumTime = getMinimumTime()
+  const relevantServices = services.filter(service => service.estTime >= minimumTime)
+
+  for (const { pid, filter } of allPIDs) pid.updateServices(relevantServices.filter(filter))
+}
+
 function updateBody() {
   $.ajax({
     method: 'POST',
@@ -46,7 +58,7 @@ function updateBody() {
       station: decodeURIComponent(search.hash.s)
     }
   }, (err, status, body) => {
-    for (const { pid, filter } of allPIDs) pid.updateServices(body.filter(filter))
+    setServices(body)
   })
 }
 
@@ -71,7 +83,7 @@ function updateBodyFromParent() {
     if (event.origin !== location.origin) return
     if (event.data.type !== 'departure-data') return
 
-    for (const { pid, filter } of allPIDs) pid.updateServices(event.data.body.filter(filter))
+    setServices(event.data.body)
   })
 }
 
