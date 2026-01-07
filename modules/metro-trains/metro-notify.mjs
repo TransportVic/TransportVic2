@@ -3,7 +3,10 @@ import { NON_MTP_STOPS } from './line-groups.mjs'
 
 const { TRANSIT_MODES } = GTFS_CONSTANTS
 
-const isStationLevel = alert => alert.type === 'works' || alert.type === 'suspended' || alert.type === 'general'
+const isStationLevel = alert => alert.type === 'works'
+  || alert.type === 'suspended'
+  || alert.type === 'general'
+  || (alert.type === 'service' && !isIndividual(alert))
 const isIndividual = alert => !!alert.runID
 const isSuspended = alert => alert.type === 'suspended'
 const isDelay = alert => !isIndividual(alert) && (alert.type === 'minor' || alert.type === 'major') 
