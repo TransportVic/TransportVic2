@@ -78,7 +78,8 @@ export default class VLineTripUpdater extends TripUpdater {
           stopName,
           cancelled: true,
         }))
-      ]
+      ],
+      cancelled: false
     }, {
       skipStopCancellation: true,
       dataSource
@@ -96,7 +97,8 @@ export default class VLineTripUpdater extends TripUpdater {
       stops: trip.stopTimings.map(stop => ({
         stopName: stop.stopName,
         scheduledDepartureTime: new Date(+new Date(stop.scheduledDepartureTime) + timeOffset)
-      }))
+      })),
+      cancelled: false
     }, {
       skipStopCancellation: true,
       dataSource
@@ -111,7 +113,8 @@ export default class VLineTripUpdater extends TripUpdater {
     return await this.updateTrip(db, tripDB, {
       operationDays: operationDay,
       runID,
-      stops: [stopData]
+      stops: [stopData],
+      cancelled: false
     }, {
       skipStopCancellation: true,
       dataSource

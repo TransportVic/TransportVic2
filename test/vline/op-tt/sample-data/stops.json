@@ -3541,5 +3541,1112 @@
     "services": [],
     "screenServices": [],
     "cleanName": "yarragon-railway-station"
+  },
+  {
+    "stopName": "Ararat Railway Station",
+    "suburb": [
+      "Ararat"
+    ],
+    "cleanSuburbs": [
+      "ararat"
+    ],
+    "bays": [
+      {
+        "originalName": "Ararat Railway Station",
+        "fullStopName": "Ararat Railway Station",
+        "stopGTFSID": "vic:rail:ART",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            142.93691176,
+            -37.28224082
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Ararat",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Ararat Station"
+      },
+      {
+        "originalName": "Ararat Station",
+        "fullStopName": "Ararat Railway Station",
+        "stopGTFSID": "20288",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            142.9369137,
+            -37.28220485
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Ararat",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:ART"
+      },
+      {
+        "originalName": "Ararat Railway Station/High St",
+        "fullStopName": "Ararat Railway Station/High Street",
+        "stopGTFSID": "17799",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            142.93691236,
+            -37.28243901
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Ararat",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Ararat Station/High St",
+        "fullStopName": "Ararat Railway Station/High Street",
+        "stopGTFSID": "52532",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            142.93691236,
+            -37.28243901
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Ararat",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Ararat Railway Station/High St",
+        "fullStopName": "Ararat Railway Station/High Street",
+        "stopGTFSID": "17799",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            142.93691236,
+            -37.28243901
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Ararat",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Ararat Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "ararat-railway-station",
+    "cleanNames": [
+      "ararat-railway-station",
+      "ararat-railway-station-high-street"
+    ]
+  },
+  {
+    "stopName": "Bacchus Marsh Railway Station",
+    "suburb": [
+      "Maddingley"
+    ],
+    "cleanSuburbs": [
+      "maddingley"
+    ],
+    "bays": [
+      {
+        "originalName": "Bacchus Marsh Railway Station",
+        "fullStopName": "Bacchus Marsh Railway Station",
+        "stopGTFSID": "vic:rail:BAH",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.43678516,
+            -37.68757821
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Maddingley",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Bacchus Marsh Station"
+      },
+      {
+        "originalName": "Bacchus Marsh Station",
+        "fullStopName": "Bacchus Marsh Railway Station",
+        "stopGTFSID": "20290",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.43750226,
+            -37.68782809
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Maddingley",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:BAH"
+      },
+      {
+        "originalName": "Bacchus Marsh Station/Station St",
+        "fullStopName": "Bacchus Marsh Railway Station/Station Street",
+        "stopGTFSID": "37707",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.43599124,
+            -37.68725456
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Maddingley",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay A"
+      },
+      {
+        "originalName": "Bacchus Marsh Station/Station St",
+        "fullStopName": "Bacchus Marsh Railway Station/Station Street",
+        "stopGTFSID": "48833",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.43631765,
+            -37.68732474
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Maddingley",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay C"
+      },
+      {
+        "originalName": "Bacchus Marsh Station/Station St",
+        "fullStopName": "Bacchus Marsh Railway Station/Station Street",
+        "stopGTFSID": "48834",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.43664376,
+            -37.68740392
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Maddingley",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay B"
+      },
+      {
+        "originalName": "Bacchus Marsh Station",
+        "fullStopName": "Bacchus Marsh Railway Station",
+        "stopGTFSID": "20912",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.4369815,
+            -37.68747435
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Maddingley",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay D"
+      }
+    ],
+    "mergeName": "Bacchus Marsh Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "bacchus-marsh-railway-station",
+    "cleanNames": [
+      "bacchus-marsh-railway-station",
+      "bacchus-marsh-railway-station-station-street"
+    ]
+  },
+  {
+    "stopName": "Ballan Railway Station",
+    "suburb": [
+      "Ballan"
+    ],
+    "cleanSuburbs": [
+      "ballan"
+    ],
+    "bays": [
+      {
+        "originalName": "Ballan Railway Station",
+        "fullStopName": "Ballan Railway Station",
+        "stopGTFSID": "vic:rail:BLN",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.22544803,
+            -37.60429951
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Ballan",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Ballan Station"
+      },
+      {
+        "originalName": "Ballan Station",
+        "fullStopName": "Ballan Railway Station",
+        "stopGTFSID": "20292",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.22544803,
+            -37.60429951
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Ballan",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:BLN"
+      },
+      {
+        "originalName": "Ballan Station/Atkinson St",
+        "fullStopName": "Ballan Railway Station/Atkinson Street",
+        "stopGTFSID": "48835",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.22487928,
+            -37.60406086
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Ballan",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay 1"
+      },
+      {
+        "originalName": "Ballan Station/Atkinson St",
+        "fullStopName": "Ballan Railway Station/Atkinson Street",
+        "stopGTFSID": "48837",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.22515053,
+            -37.60407625
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Ballan",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay 2"
+      },
+      {
+        "originalName": "Ballan Station/Atkinson St",
+        "fullStopName": "Ballan Railway Station/Atkinson Street",
+        "stopGTFSID": "25",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.22546804,
+            -37.6040657
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Ballan",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay 3"
+      }
+    ],
+    "mergeName": "Ballan Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "ballan-railway-station",
+    "cleanNames": [
+      "ballan-railway-station",
+      "ballan-railway-station-atkinson-street"
+    ]
+  },
+  {
+    "stopName": "Ballarat Railway Station",
+    "suburb": [
+      "Ballarat Central",
+      "Soldiers Hill"
+    ],
+    "cleanSuburbs": [
+      "ballarat-central",
+      "soldiers-hill"
+    ],
+    "bays": [
+      {
+        "originalName": "Ballarat Railway Station",
+        "fullStopName": "Ballarat Railway Station",
+        "stopGTFSID": "vic:rail:BAT-V",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            143.85945743,
+            -37.55879148
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Ballarat Central",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Ballarat Station"
+      },
+      {
+        "originalName": "Ballarat Station",
+        "fullStopName": "Ballarat Railway Station",
+        "stopGTFSID": "20293",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            143.85953093,
+            -37.55865829
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Ballarat Central",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:BAT-V"
+      },
+      {
+        "originalName": "Doveton Cres/Lydiard St N",
+        "fullStopName": "Ballarat Railway Station/Lydiard Street North",
+        "stopGTFSID": "35278",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            143.85863079,
+            -37.5577243
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Soldiers Hill",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Ballarat Station/Lydiard St N",
+        "fullStopName": "Ballarat Railway Station/Lydiard Street North",
+        "stopGTFSID": "35279",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            143.85848971,
+            -37.55865759
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Ballarat Central",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay 1"
+      },
+      {
+        "originalName": "Ballarat Station/Lydiard St N",
+        "fullStopName": "Ballarat Railway Station/Lydiard Street North",
+        "stopGTFSID": "54574",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            143.85850858,
+            -37.55847789
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Ballarat Central",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay 2"
+      },
+      {
+        "originalName": "Ballarat Station/Lydiard St",
+        "fullStopName": "Ballarat Railway Station/Lydiard Street",
+        "stopGTFSID": "82",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            143.85876141,
+            -37.55865582
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Ballarat Central",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Ballarat Station/Lydiard St",
+        "fullStopName": "Ballarat Railway Station/Lydiard Street",
+        "stopGTFSID": "82",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            143.85876141,
+            -37.55865582
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Ballarat Central",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Ballarat Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "ballarat-railway-station",
+    "cleanNames": [
+      "ballarat-railway-station",
+      "ballarat-railway-station-lydiard-street-north",
+      "ballarat-railway-station-lydiard-street"
+    ]
+  },
+  {
+    "stopName": "Beaufort Railway Station",
+    "suburb": [
+      "Beaufort"
+    ],
+    "cleanSuburbs": [
+      "beaufort"
+    ],
+    "bays": [
+      {
+        "originalName": "Beaufort Railway Station",
+        "fullStopName": "Beaufort Railway Station",
+        "stopGTFSID": "vic:rail:BET",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            143.38238116,
+            -37.42762724
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Beaufort",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Beaufort Station"
+      },
+      {
+        "originalName": "Beaufort Station",
+        "fullStopName": "Beaufort Railway Station",
+        "stopGTFSID": "20294",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            143.38223366,
+            -37.42787497
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Beaufort",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:BET"
+      },
+      {
+        "originalName": "Beaufort Station/Pratt St",
+        "fullStopName": "Beaufort Railway Station/Pratt Street",
+        "stopGTFSID": "17797",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            143.3823855,
+            -37.42777151
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Beaufort",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Beaufort Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "beaufort-railway-station",
+    "cleanNames": [
+      "beaufort-railway-station",
+      "beaufort-railway-station-pratt-street"
+    ]
+  },
+  {
+    "stopName": "Caroline Springs Railway Station",
+    "suburb": [
+      "Ravenhall"
+    ],
+    "cleanSuburbs": [
+      "ravenhall"
+    ],
+    "bays": [
+      {
+        "originalName": "Caroline Springs Railway Station",
+        "fullStopName": "Caroline Springs Railway Station",
+        "stopGTFSID": "vic:rail:RVH",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.73573715,
+            -37.76612649
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Ravenhall",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Caroline Springs Station"
+      },
+      {
+        "originalName": "Caroline Springs Station",
+        "fullStopName": "Caroline Springs Railway Station",
+        "stopGTFSID": "52011",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.73571556,
+            -37.76609003
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Ravenhall",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:RVH"
+      },
+      {
+        "originalName": "Caroline Springs Station/Christies Rd",
+        "fullStopName": "Caroline Springs Railway Station/Christies Road",
+        "stopGTFSID": "27854",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.73742372,
+            -37.76628506
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Ravenhall",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay B"
+      },
+      {
+        "originalName": "Caroline Springs Station/Christies Rd",
+        "fullStopName": "Caroline Springs Railway Station/Christies Road",
+        "stopGTFSID": "51389",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.73717468,
+            -37.76626225
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Ravenhall",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay A"
+      },
+      {
+        "originalName": "Caroline Springs Station/Christies Rd",
+        "fullStopName": "Caroline Springs Railway Station/Christies Road",
+        "stopGTFSID": "27538",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.73691456,
+            -37.76623022
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Ravenhall",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay A"
+      }
+    ],
+    "mergeName": "Caroline Springs Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "caroline-springs-railway-station",
+    "cleanNames": [
+      "caroline-springs-railway-station",
+      "caroline-springs-railway-station-christies-road"
+    ]
+  },
+  {
+    "stopName": "Cobblebank Railway Station",
+    "suburb": [
+      "Cobblebank"
+    ],
+    "cleanSuburbs": [
+      "cobblebank"
+    ],
+    "bays": [
+      {
+        "originalName": "Cobblebank Railway Station",
+        "fullStopName": "Cobblebank Railway Station",
+        "stopGTFSID": "vic:rail:TLN",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.60410782,
+            -37.71254554
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Cobblebank",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Cobblebank"
+      },
+      {
+        "originalName": "Cobblebank Station",
+        "fullStopName": "Cobblebank Railway Station",
+        "stopGTFSID": "48804",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.60384768,
+            -37.71252223
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Cobblebank",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:TLN"
+      },
+      {
+        "originalName": "Cobblebank Station/Coach St",
+        "fullStopName": "Cobblebank Railway Station/Coach Street",
+        "stopGTFSID": "27575",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.60405407,
+            -37.71280578
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Cobblebank",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Cobblebank Station",
+        "fullStopName": "Cobblebank Railway Station",
+        "stopGTFSID": "48832",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.60363406,
+            -37.71281526
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Cobblebank",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Cobblebank Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "cobblebank-railway-station",
+    "cleanNames": [
+      "cobblebank-railway-station",
+      "cobblebank-railway-station-coach-street"
+    ]
+  },
+  {
+    "stopName": "Melton Railway Station",
+    "suburb": [
+      "Melton South"
+    ],
+    "cleanSuburbs": [
+      "melton-south"
+    ],
+    "bays": [
+      {
+        "originalName": "Melton Railway Station",
+        "fullStopName": "Melton Railway Station",
+        "stopGTFSID": "vic:rail:MEL",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.57209861,
+            -37.70347382
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Melton South",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Melton Station"
+      },
+      {
+        "originalName": "Melton Station",
+        "fullStopName": "Melton Railway Station",
+        "stopGTFSID": "19980",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.57221577,
+            -37.70335908
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Melton South",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:MEL"
+      },
+      {
+        "originalName": "Melton Station/Staughton St",
+        "fullStopName": "Melton Railway Station/Staughton Street",
+        "stopGTFSID": "21131",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.57123232,
+            -37.70256385
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Melton South",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay 4"
+      },
+      {
+        "originalName": "Melton Station/Staughton St",
+        "fullStopName": "Melton Railway Station/Staughton Street",
+        "stopGTFSID": "21183",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.57083651,
+            -37.70252866
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Melton South",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay 1"
+      },
+      {
+        "originalName": "Melton Station/Staughton St",
+        "fullStopName": "Melton Railway Station/Staughton Street",
+        "stopGTFSID": "21184",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.57048634,
+            -37.70248539
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Melton South",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay 2"
+      },
+      {
+        "originalName": "Melton Station/Staughton St",
+        "fullStopName": "Melton Railway Station/Staughton Street",
+        "stopGTFSID": "21185",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.57015854,
+            -37.7024516
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Melton South",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay 3"
+      },
+      {
+        "originalName": "Melton Station/Staughton St",
+        "fullStopName": "Melton Railway Station/Staughton Street",
+        "stopGTFSID": "27577",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.57301692,
+            -37.70278985
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Melton South",
+        "stopType": "stop",
+        "parentStopGTFSID": null,
+        "platform": "Bay 6"
+      },
+      {
+        "originalName": "Exford Rd/Staughton St",
+        "fullStopName": "Melton Railway Station/Staughton Street",
+        "stopGTFSID": "6644",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.56981999,
+            -37.70239956
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Melton South",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Melton Station/29 Staughton St",
+        "fullStopName": "Melton Railway Station/29 Staughton Street",
+        "stopGTFSID": "18",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.57195421,
+            -37.70338073
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Melton South",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Melton Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "melton-railway-station",
+    "cleanNames": [
+      "melton-railway-station",
+      "melton-railway-station-staughton-street",
+      "melton-railway-station-29-staughton-street"
+    ]
+  },
+  {
+    "stopName": "Rockbank Railway Station",
+    "suburb": [
+      "Rockbank"
+    ],
+    "cleanSuburbs": [
+      "rockbank"
+    ],
+    "bays": [
+      {
+        "originalName": "Rockbank Railway Station",
+        "fullStopName": "Rockbank Railway Station",
+        "stopGTFSID": "vic:rail:RBK",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.65063148,
+            -37.72926127
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Rockbank",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Rockbank Station"
+      },
+      {
+        "originalName": "Rockbank Station",
+        "fullStopName": "Rockbank Railway Station",
+        "stopGTFSID": "19981",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.65071313,
+            -37.72919081
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Rockbank",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:RBK"
+      },
+      {
+        "originalName": "Rockbank Station",
+        "fullStopName": "Rockbank Railway Station",
+        "stopGTFSID": "27576",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.65141414,
+            -37.72926786
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Rockbank",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Rockbank Station/Leakes Rd",
+        "fullStopName": "Rockbank Railway Station/Leakes Road",
+        "stopGTFSID": "22028",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            144.65052972,
+            -37.72925023
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Rockbank",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Rockbank Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "rockbank-railway-station",
+    "cleanNames": [
+      "rockbank-railway-station",
+      "rockbank-railway-station-leakes-road"
+    ]
+  },
+  {
+    "stopName": "Wendouree Railway Station",
+    "suburb": [
+      "Lake Gardens",
+      "Wendouree"
+    ],
+    "cleanSuburbs": [
+      "lake-gardens",
+      "wendouree"
+    ],
+    "bays": [
+      {
+        "originalName": "Wendouree Railway Station",
+        "fullStopName": "Wendouree Railway Station",
+        "stopGTFSID": "vic:rail:WED",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            143.82121077,
+            -37.53997217
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Lake Gardens",
+        "stopType": "station",
+        "parentStopGTFSID": null,
+        "vnetStationName": "Wendouree Station"
+      },
+      {
+        "originalName": "Wendouree Station",
+        "fullStopName": "Wendouree Railway Station",
+        "stopGTFSID": "43469",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            143.81999895,
+            -37.53973228
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional train",
+        "suburb": "Wendouree",
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:WED"
+      },
+      {
+        "originalName": "Wendouree Station/Learmonth Rd",
+        "fullStopName": "Wendouree Railway Station/Learmonth Road",
+        "stopGTFSID": "45779",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            143.81970642,
+            -37.53942706
+          ]
+        },
+        "stopNumber": null,
+        "mode": "bus",
+        "suburb": "Wendouree",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Wendouree Station",
+        "fullStopName": "Wendouree Railway Station",
+        "stopGTFSID": "48047",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            143.82025371,
+            -37.53959499
+          ]
+        },
+        "stopNumber": null,
+        "mode": "regional coach",
+        "suburb": "Wendouree",
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Wendouree Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "wendouree-railway-station",
+    "cleanNames": [
+      "wendouree-railway-station",
+      "wendouree-railway-station-learmonth-road"
+    ]
   }
 ]

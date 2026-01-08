@@ -21,6 +21,7 @@ import td8469Live from './sample-data/null-destination/td8469-live.mjs'
 import heatServices from './sample-data/heat-timetable/services.mjs'
 import td8469NSP from './sample-data/null-destination/td8469-nsp.mjs'
 import td8895 from './sample-data/midnight-trips/td8895.mjs'
+import td8181Live from './sample-data/preloaded-amex/td8181-live.mjs'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -50,6 +51,8 @@ const dstStartTripSat = (await fs.readFile(path.join(__dirname, 'sample-data', '
 const dstStartTripSun = (await fs.readFile(path.join(__dirname, 'sample-data', 'dst-start-no2am-sun.xml'))).toString()
 
 const vlineTripsTD8469_WTL = (await fs.readFile(path.join(__dirname, 'sample-data', 'null-destination', 'vline-trips-td8469-wtl.xml'))).toString()
+
+const vlineTripsTD8181 = (await fs.readFile(path.join(__dirname, 'sample-data', 'preloaded-amex', 'vline-trips-td8181.xml'))).toString()
 
 const heatDay = utils.parseDate('20251205')
 const heatTimetableTemplate = (await fs.readFile(path.join(__dirname, 'sample-data', 'heat-timetable', 'template.xml'))).toString()
@@ -646,5 +649,32 @@ describe('The loadOperationalTT function', () => {
 
     expect(trip).to.exist
     expect(trip.departureTime).to.equal('25:50')
+  })
+
+  it('Amends a trip that was fully cancelled previously and now runs a shortened trip', async () => {
+    let database = new LokiDatabaseConnection()
+    let stops = database.getCollection('stops')
+    let routes = database.getCollection('routes')
+    let liveTimetables = database.getCollection('live timetables')
+
+    await liveTimetables.createDocument(clone(td8181Live))
+    await stops.createDocuments(clone(allStops))
+    await routes.createDocuments(clone(allRoutes))
+
+    let stubAPI = new StubVLineAPI()
+    stubAPI.setResponses([ vlineTripsTD8181, vlineTripsEmpty ])
+    let ptvAPI = new PTVAPI(stubAPI)
+    ptvAPI.addVLine(stubAPI)
+
+    await loadOperationalTT(database, database, ptvAPI)
+    let trip = await liveTimetables.findDocument({ runID: '8181' })
+
+    expect(trip).to.exist
+    expect(trip.cancelled).to.be.false
+    expect(trip.stopTimings[0].cancelled, 'Expected SSS to not be cancelled').to.be.false
+    expect(trip.stopTimings[10].cancelled, 'Expected BLN to not be cancelled').to.be.false
+    expect(trip.stopTimings[11].cancelled, 'Expected BAT to not be cancelled').to.be.false
+
+    expect(trip.stopTimings[12].cancelled, 'Expected WED to be cancelled').to.be.true
   })
 })
