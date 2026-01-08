@@ -16,8 +16,8 @@ export async function getOutdatedTrips(database) {
     $and: [{
       stopTimings: {
         $elemMatch: {
-          actualDepartureTimeMS: { // Trip ended at most 15min ago
-            $gte: +utils.now().add(-15, 'minutes')
+          actualDepartureTimeMS: { // Trip ended at most 7min ago
+            $gte: +utils.now().add(-7, 'minutes')
           }
         }
       },
@@ -32,7 +32,7 @@ export async function getOutdatedTrips(database) {
     }],
     lastUpdated: {
       $gte: +utils.now().add(-20, 'minutes'),
-      $lte: +utils.now().add(-5, 'minutes')
+      $lte: +utils.now().add(-2, 'minutes')
     },
     isRailReplacementBus: false
   }, { runID: 1, routeName: 1, circular: 1, runID: 1 }).toArray()).filter(trip => {

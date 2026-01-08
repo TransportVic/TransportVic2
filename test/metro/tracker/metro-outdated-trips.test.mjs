@@ -15,7 +15,7 @@ describe('The Outdated trips tracker', () => {
     utils.now = () => utils.parseTime(1749509580000) // 2025-06-09T22:53:00.000Z
   })
 
-  it('Finds a list of active trips that have not been updated for 5 minutes', async () => {
+  it('Finds a list of active trips that have not been updated for 2 minutes', async () => {
     let database = new LokiDatabaseConnection('test-db')
     let liveTimetables = await database.getCollection('live timetables')
 
@@ -25,7 +25,7 @@ describe('The Outdated trips tracker', () => {
 
     let trip2 = clone(lil3826)
     trip2.runID = '3828'
-    trip2.lastUpdated = utils.now() - 1000 * 60 * 3 // Last updated 3 min ago
+    trip2.lastUpdated = utils.now() - 1000 * 60 * 1 // Last updated 1 min ago
     await liveTimetables.createDocument(trip2)
 
     let trip3 = clone(cbeC406)
