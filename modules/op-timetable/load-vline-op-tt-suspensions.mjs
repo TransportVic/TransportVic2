@@ -19,19 +19,25 @@ async function loadOperationalTT(db, operationDay) {
   let totalSeen = 0
   await gtfsTimetables.batchQuery({
     mode: TRANSIT_MODES.regionalTrain,
-    routeName: {
-      $in: [
-        'Maryborough',
-        'Ararat',
-        'Bendigo',
-        'Echuca',
-        'Swan Hill',
-        'Warrnambool',
-        'Seymour',
-        'Shepparton',
-        'Albury'
-      ]
-    },
+    $or: [{
+      routeName: {
+        $in: [
+          'Bendigo',
+          'Echuca',
+          'Swan Hill',
+          'Albury'
+        ]
+      },
+    }, {
+      routeName: 'Ararat',
+      origin: 'Southern Cross Railway Station', departureTime: '07:55'
+    }, {
+      routeName: 'Ararat',
+      origin: 'Ararat Railway Station', departureTime: '06:59'
+    }, {
+      routeName: 'Ararat',
+      origin: 'Ararat Railway Station', departureTime: '08:18'
+    }],
     operationDays: opDayFormat
   }, 1000, async trips => {
     totalSeen += trips.length
@@ -55,7 +61,7 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 
-  await loadOperationalTT(mongoDB, '20260109')
+  await loadOperationalTT(mongoDB, '20260110')
 
   await mongoDB.close()
 }
