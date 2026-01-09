@@ -17,13 +17,13 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
   
-  await downloadData()
+  // await downloadData()
   const routeIDMap = await loadStopsRoutes(mongoDB)
-  await loadTrips(mongoDB, routeIDMap)
-  await loadHeadsigns(mongoDB)
+  // await loadTrips(mongoDB, routeIDMap)
+  // await loadHeadsigns(mongoDB)
 
-  await loadOperationalTT(mongoDB, utils.now())
-  await loadOperationalTT(mongoDB, utils.now().add(1, 'day'))
+  // await loadOperationalTT(mongoDB, utils.now())
+  // await loadOperationalTT(mongoDB, utils.now().add(1, 'day'))
 
   process.exit(0)
 }

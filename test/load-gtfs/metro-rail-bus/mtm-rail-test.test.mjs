@@ -19,6 +19,8 @@ const stopTimesFile = path.join(__dirname, 'sample-data', 'stop_times.txt')
 const tripsFile = path.join(__dirname, 'sample-data', 'trips.txt')
 const stopsFile = path.join(__dirname, 'sample-data', 'stops.txt')
 
+const nptStopsFile = path.join(__dirname, 'sample-data', 'npt_stops.txt')
+
 describe('The GTFS Loaders with the MTM Website Rail data', () => {
   describe('The stop loader', () => {
     it('Changes "Fed Square" to Flinders Street', async () => {
@@ -34,6 +36,52 @@ describe('The GTFS Loaders with the MTM Website Rail data', () => {
 
       expect(fss).to.exist
       expect(fss.stopName).to.equal('Flinders Street Railway Station')
+    })
+
+    it('Deconflicts stop IDs where an ID has already been used but the stop name does not match', async () => {
+      let database = new LokiDatabaseConnection('test-db')
+      let stops = await database.createCollection('stops')
+
+      await stops.createDocument({
+        stopName: 'North Richmond Railway Station',
+        suburb: [ 'North Richmond' ],
+        bays: [{
+          originalName: 'North Richmond_Down',
+          fullStopName: 'North Richmond Railway Station',
+          stopGTFSID: 'RAIL_dysons_526',
+          location: { type: 'Point', coordinates: [ 144.991136, -37.810195 ] },
+          stopNumber: null,
+          mode: 'metro train',
+          suburb: 'East Melbourne',
+          stopType: 'stop',
+          parentStopGTFSID: null
+        }, {
+          originalName: 'North Richmond_Up',
+          fullStopName: 'North Richmond Railway Station',
+          stopGTFSID: 'RAIL_dysons_527',
+          location: { type: 'Point', coordinates: [ 144.991469, -37.810093 ] },
+          stopNumber: null,
+          mode: 'metro train',
+          suburb: 'Richmond',
+          stopType: 'stop',
+          parentStopGTFSID: null
+        }],
+        mergeName: 'North Richmond Railway Station'
+      })
+
+      const stopLoader = new MTMRailStopLoader(nptStopsFile, 'dysons', database, () => 'Suburb')
+      await stopLoader.loadStops()
+
+      const all526 = await stops.findDocuments({ 
+        'bays.stopGTFSID': 'RAIL_dysons_526'
+      }).toArray()
+
+      expect(all526.length).to.equal(1)
+      expect(all526[0].stopName).to.equal('Newport Railway Station')
+
+      expect(await stops.findDocument({ 
+        'stopName': 'North Richmond Railway Station'
+      })).to.exist
     })
   })
 

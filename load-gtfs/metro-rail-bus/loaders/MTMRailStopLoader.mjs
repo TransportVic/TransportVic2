@@ -99,10 +99,12 @@ export class MTMRailStopsReader extends GTFSReaders.GTFSStopsReader {
 export default class MTMRailStopLoader extends StopsLoader {
 
   #operator
+  #stops
 
   constructor(stopsFile, operator, database, suburbHook = null) {
     super(stopsFile, suburbsVIC, GTFS_CONSTANTS.TRANSIT_MODES.metroTrain, database, suburbHook)
     this.#operator = operator
+    this.#stops = this.getStopsDB(database)
   }
 
   getStopsDB(db) {
@@ -115,7 +117,23 @@ export default class MTMRailStopLoader extends StopsLoader {
 
   async loadStops() {
     await super.loadStops({
-      processStop: stop => {
+      processStop: async stop => {
+        const matchingStop = await this.#stops.findDocument({
+          'bays.stopGTFSID': stop.stopGTFSID
+        })
+
+        if (matchingStop) {
+          const bay = matchingStop.bays.find(bay => bay.stopGTFSID === stop.stopGTFSID)
+          if (bay.fullStopName !== stop.fullStopName) {
+            bay.stopGTFSID = `${bay.stopGTFSID}_old-${+new Date()}`
+            await this.#stops.updateDocument({ _id: matchingStop._id }, {
+              $set: {
+                bays: matchingStop.bays
+              }
+            })
+          }
+        }
+
         if (stop.fullStopName === 'DISCARD') return null
         return stop
       }
