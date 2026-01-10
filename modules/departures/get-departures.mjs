@@ -55,8 +55,16 @@ export default class Departures {
     return trips
   }
 
+  static getTripCollection(db) {
+    return db.getCollection('gtfs timetables')
+  }
+
+  static getTripDay(operationDay) {
+    return utils.getYYYYMMDD(operationDay)
+  }
+
   static async fetchScheduledTrips(station, mode, db, departureTime, timeframe = 120) {
-    let gtfsTimetables = db.getCollection('gtfs timetables')
+    let timetables = this.getTripCollection(db)
     let stopGTFSIDs = station.bays
       .filter(bay => bay.mode === mode)
       .map(bay => bay.stopGTFSID)
@@ -76,9 +84,9 @@ export default class Departures {
         $lte: rawDepartureTimeMinutes + timeframe + minutesOffset
       }
 
-      let dayTrips = await gtfsTimetables.findDocuments({
+      let dayTrips = await timetables.findDocuments({
         mode,
-        operationDays: utils.getYYYYMMDD(operationDay),
+        operationDays: this.getTripDay(operationDay),
         stopTimings: {
           $elemMatch: {
             stopGTFSID: {

@@ -45,7 +45,7 @@ let styConfigs = {
 function dayCodeToArray (dayCode) {
   if (dayCode === '2' || dayCode === '4' || dayCode === '6') return ['Sun']
   if (dayCode === '1' || dayCode === '5') return ['Sat']
-  if (dayCode === '3') return ['Mon', 'Tues', 'Wed', 'Thur']
+  if (dayCode === '3') return ['Mon', 'Tue', 'Wed', 'Thu']
   if (dayCode === '0') return ['Fri']
 
   throw new Error('Invalid day code ' + dayCode)
