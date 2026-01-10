@@ -17,8 +17,13 @@ export class MetroDepartures extends Departures {
 
 }
 
-export default async function getMetroDepartures(station, db, filter, backwards, departureTime, { mode = 'metro train', returnArrivals = false, timeframe = 120 } = {}) {
-  let departures = await MetroDepartures.getDepartures(station, mode, db, {
+export default async function getMetroDepartures(station, db, filter, backwards, departureTime, {
+  mode = 'metro train',
+  returnArrivals = false,
+  timeframe = 120,
+  DepartureClass = MetroDepartures
+} = {}) {
+  let departures = await DepartureClass.getDepartures(station, mode, db, {
     departureTime,
     returnArrivals,
     timeframe
