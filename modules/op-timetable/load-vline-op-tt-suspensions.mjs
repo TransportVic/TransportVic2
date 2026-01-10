@@ -24,19 +24,15 @@ async function loadOperationalTT(db, operationDay) {
         $in: [
           'Bendigo',
           'Echuca',
-          'Swan Hill',
-          'Albury'
+          'Swan Hill'
         ]
       },
     }, {
-      routeName: 'Ararat',
-      origin: 'Southern Cross Railway Station', departureTime: '07:55'
+      routeName: 'Albury',
+      origin: 'Southern Cross Railway Station', departureTime: '07:07'
     }, {
-      routeName: 'Ararat',
-      origin: 'Ararat Railway Station', departureTime: '06:59'
-    }, {
-      routeName: 'Ararat',
-      origin: 'Ararat Railway Station', departureTime: '08:18'
+      routeName: 'Albury',
+      origin: 'Albury Railway Station', departureTime: '06:45'
     }],
     operationDays: opDayFormat
   }, 1000, async trips => {
