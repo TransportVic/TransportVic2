@@ -58,20 +58,27 @@ function minutesPastMidnightTo24Time(minutesPastMidnight) {
   return utils.pad(hours, 2) + ':' + utils.pad(minutes, 2)
 }
 
+const trips = {
+}
+
+const rawFormings = {}
+
 function readFileData(filename, routeName, callback) {
   fs.readFile(path.join(__dirname, 'timetables', filename), async (err, buffer) => {
     if (err) return console.log(err)
 
     let rawData = JSON.parse(buffer.toString())
 
-    let trips = {}
     await async.forEachSeries(rawData, async tripTiming => {
+      if (tripTiming.orig_trip_id) return
+
       let runID = tripTiming.trip_id,
         tripDay = tripTiming.day_type,
         stationName = tripTiming.station,
         timeInSeconds = tripTiming.time_seconds,
         isArrival = tripTiming.is_arrival,
-        platform = tripTiming.platform
+        platform = tripTiming.platform,
+        forming = tripTiming.forms_trip_id
 
       if (runID === '0') return
       if (tripDay > 3) return
@@ -82,6 +89,8 @@ function readFileData(filename, routeName, callback) {
       let days = dayCodeToArray(tripDay)
 
       let tripID = runID + '-' + days.join('-')
+
+      if (forming !== '0') rawFormings[tripID] = `${forming}-${days.join('-')}`
 
       let vehicleFormation = ''
       if (filename === 'stony-point.json') {
@@ -135,49 +144,7 @@ function readFileData(filename, routeName, callback) {
       }
     })
 
-    trips = Object.values(trips)
-
-    let weekdayTrips = trips.filter(trip => trip.operationDays[0] === 'Mon')
-    let fridayTrips = trips.filter(trip => trip.operationDays[0] === 'Fri')
-
-    let dupeFriday = fridayTrips.filter(trip => {
-      let weekday = weekdayTrips.find(weekdayTrip => weekdayTrip.runID === trip.runID)
-      if (weekday) {
-        weekday.operationDays.push('Fri')
-        return true
-      } else {
-        return false
-      }
-    })
-
-    let monFriMerged = trips.filter(trip => !dupeFriday.includes(trip))
-
-    await async.forEach(monFriMerged, async trip => {
-      trip.stopTimings = Object.values(trip.stopTimings)
-        .sort((a, b) => a.sortTime - b.sortTime)
-        .map(a => {
-          delete a.sortTime
-          return a
-        })
-      trip.stopTimings[0].arrivalTime = null
-      trip.stopTimings[0].arrivalTimeMinutes = null
-      let lastStop = trip.stopTimings.slice(-1)[0]
-
-      lastStop.departureTime = null
-      lastStop.departureTimeMinutes = null
-
-      trip.origin = trip.stopTimings[0].stopName
-      trip.departureTime = trip.stopTimings[0].departureTime
-      trip.destination = lastStop.stopName
-      trip.destinationArrivalTime = lastStop.arrivalTime
-
-      let upService = !(trip.runID[3] % 2)
-      trip.direction = upService ? 'Up' : 'Down'
-
-      await timetables.createDocument(trip)
-    })
-
-    callback(monFriMerged.length)
+    callback(0)
   })
 }
 
@@ -191,17 +158,64 @@ await timetables.deleteDocuments({ mode: 'metro train' })
 
 let files = fs.readdirSync(path.join(__dirname, 'timetables'))
 
-let totalCount = 0
-
 await async.forEachOf(files, async (filename, i) => {
   let lineName = lineNames[i]
   return new Promise(resolve => {
-    readFileData(filename, lineName, count => {
-      totalCount += count
-      resolve()
-    })
+    readFileData(filename, lineName, resolve)
   })
 })
 
-console.log('Completed loading in ' + totalCount + ' MTM WTT trips')
+for (const formingID of Object.keys(rawFormings)) {
+  const tripTDN = formingID.split('-')[0]
+  const formingTDN = rawFormings[formingID].split('-')[0]
+
+  trips[formingID].forming = formingTDN
+  if (trips[rawFormings[formingID]]) trips[rawFormings[formingID]].formedBy = tripTDN
+
+  // console.log(tripTDN, 'forms', formingTDN)
+}
+
+const allTrips = Object.values(trips)
+
+let weekdayTrips = allTrips.filter(trip => trip.operationDays[0] === 'Mon')
+let fridayTrips = allTrips.filter(trip => trip.operationDays[0] === 'Fri')
+
+let dupeFriday = fridayTrips.filter(trip => {
+  let weekday = weekdayTrips.find(weekdayTrip => weekdayTrip.runID === trip.runID)
+  if (weekday) {
+    weekday.operationDays.push('Fri')
+    return true
+  } else {
+    return false
+  }
+})
+
+let monFriMerged = allTrips.filter(trip => !dupeFriday.includes(trip))
+
+await async.forEach(monFriMerged, async trip => {
+  trip.stopTimings = Object.values(trip.stopTimings)
+    .sort((a, b) => a.sortTime - b.sortTime)
+    .map(a => {
+      delete a.sortTime
+      return a
+    })
+  trip.stopTimings[0].arrivalTime = null
+  trip.stopTimings[0].arrivalTimeMinutes = null
+  let lastStop = trip.stopTimings.slice(-1)[0]
+
+  lastStop.departureTime = null
+  lastStop.departureTimeMinutes = null
+
+  trip.origin = trip.stopTimings[0].stopName
+  trip.departureTime = trip.stopTimings[0].departureTime
+  trip.destination = lastStop.stopName
+  trip.destinationArrivalTime = lastStop.arrivalTime
+
+  let upService = !(trip.runID[3] % 2)
+  trip.direction = upService ? 'Up' : 'Down'
+
+  await timetables.createDocument(trip)
+})
+
+console.log('Completed loading in ' + monFriMerged.length + ' MTM WTT trips')
 process.exit()
