@@ -40,6 +40,7 @@ export default async function getVLineDepartures(station, db, departureTime, { t
     }
 
     departure.destination = departure.destination.slice(0, -16)
+    departure.runID = departure.trip.runID
   }
 
   return [
