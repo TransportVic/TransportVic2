@@ -39,7 +39,7 @@ function expandOperationDays(days) {
     return Array(dayCount).fill(0).map((_, i) => utils.getYYYYMMDD(start.clone().add(i, 'days')))
   }
 
-  return utils.getYYYYMMDD(parseDay(`${days} ${currentYear}`))
+  return [ utils.getYYYYMMDD(parseDay(`${days} ${currentYear}`)) ]
 }
 
 let gtfsTimetables = mongoDB.getCollection('gtfs timetables')
