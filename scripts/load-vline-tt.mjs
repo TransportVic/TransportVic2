@@ -144,7 +144,7 @@ const trips = (await async.map(allRuns, async run => {
     destinationArrivalTime: destStop.arrivalTime,
     formedBy: null, forming: null,
     gtfsDirection: dir.gtfsDirection,
-    direction: dir.directionName.includes('Southern Cross')? 'Up' : 'Down'
+    direction: dir.directionName.includes('Southern Cross') ? 'Up' : 'Down'
   }
 })).filter(Boolean)
 
