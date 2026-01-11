@@ -43,6 +43,16 @@ await stopLoader.loadStop(reader.processEntity({
   "platform_code": ""
 }))
 
+await stopLoader.loadStop(reader.processEntity({
+  "stop_id": "vic:rail:WGS-RRB",
+  "stop_name": "Watergardens Railway Station/Watergardens Circuit Road (Watergardens)",
+  "stop_lat": "-37.69992193414763",
+  "stop_lon": "144.77348181016202",
+  "parent_station": "",
+  "location_type": "1",
+  "platform_code": ""
+}))
+
 let ttFiles = []
 for (let file of process.argv.slice(2)) {
   if (!file.endsWith('.pdf')) continue
@@ -64,6 +74,10 @@ const rewriteOpDay = process.argv.filter(a => a.startsWith('--change-op-day')).m
   ...acc,
   [arg[0]]: arg[1]
 }), {})
+
+const restrictOriginDest = process.argv.filter(a => a.startsWith('--restrict-origin-dest')).flatMap(arg => {
+  return arg.split('=')[1].split(',')
+})
 
 function expandOperationDays(days) {
   const currentYear = new Date().getFullYear().toString()
@@ -166,6 +180,7 @@ const trips = (await async.map(allRuns, async run => {
   const destName = destStop.stopName.split('/')[0].replace('Coach Terminal', 'Railway Station')
 
   const WER_LAV = ['Werribee', 'Laverton'].map(x => x + ' Railway Station')
+  const WGS_MEL = ['Watergardens', 'Melton', 'Cobblebank'].map(x => x + ' Railway Station')
   
   let allRouteData = await routes.findDocuments({
     mode: 'regional train',
@@ -199,7 +214,22 @@ const trips = (await async.map(allRuns, async run => {
     else dir = routeData.directions.find(d => !d.directionName.includes('Southern Cross'))
   }
 
-  if (!dir) console.log(stopTimings, originName, destName, allRouteData)
+  if (WGS_MEL.includes(originName) && WGS_MEL.includes(destName)) {
+    routeData = await routes.findDocument({
+      mode: 'regional train',
+      routeName: 'Ballarat'
+    })
+
+    const up = destName === 'Watergardens Railway Station'
+    if (up) dir = routeData.directions.find(d => d.directionName.includes('Southern Cross'))
+    else dir = routeData.directions.find(d => !d.directionName.includes('Southern Cross'))
+  }
+
+  if (restrictOriginDest.length) {
+    if (!(restrictOriginDest.includes(originName) || restrictOriginDest.includes(destName))) return null
+  }
+
+  if (!dir) console.log(stopTimings, originName, destName, run)
 
   const tripID = `${routeData.routeGTFSID}-${operationDays[0]}-${originStop.stopGTFSID}-${originStop.departureTime}-${destStop.arrivalTime}`
 
