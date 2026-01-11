@@ -51,21 +51,24 @@ for (let file of process.argv.slice(2)) {
 }
 
 const shiftOpDay = process.argv.includes('--shift-op-day')
+const coachOnly = process.argv.includes('--coach-only')
 const defaultMonth = (() => {
   const arg = process.argv.find(a => a.startsWith('--default-month'))
   if (!arg) return null
   return arg.split('=')[1]
 })()
 
-const rewriteOpDay = (() => {
-  const arg = process.argv.find(a => a.startsWith('--change-op-day'))
-  if (!arg) return null
+const rewriteOpDay = process.argv.filter(a => a.startsWith('--change-op-day')).map(arg => {
   return arg.split('=').slice(1)
-})()
+}).reduce((acc, arg) => ({
+  ...acc,
+  [arg[0]]: arg[1]
+}), {})
 
 function expandOperationDays(days) {
   const currentYear = new Date().getFullYear().toString()
-  const fullDays = (days.match(/\d+$/) ? `${days} ${defaultMonth}` : days).replace('cont.', '').trim()
+  const originalFullDay = (days.match(/\d+$/) ? `${days} ${defaultMonth}` : days).replace('cont.', '').trim()
+  const fullDays = rewriteOpDay[originalFullDay] || originalFullDay
 
   const parts = fullDays.split(' ')
   const front = parts.slice(0, -1).join(' ')
@@ -111,6 +114,8 @@ const trips = (await async.map(allRuns, async run => {
   if (run.type === 'Metro') return null
 
   const mode = run.type === 'Train' ? 'regional train' : 'regional coach'
+  if (coachOnly && run.type === 'Train') return null
+
   const stopTimings = run.stops.map(stop => {
     const cleanName = stop.name.replace(/station/i, '').replace(/ stn/i, '').trim().toUpperCase()
     const station = (cleanName === 'SOUTHERN CROSS' && mode === 'regional coach') ?
@@ -137,9 +142,7 @@ const trips = (await async.map(allRuns, async run => {
 
   if (stopTimings.length === 1) return null
   let operationDays = expandOperationDays(run.operationDay)
-  if (operationDays.length === 1 && rewriteOpDay && rewriteOpDay[0] === operationDays[0]) {
-    operationDays = [ rewriteOpDay[1] ]
-  }
+  operationDays = rewriteOpDay[operationDays.join('-')]?.split(',') || operationDays
 
   if (stopTimings[0].departureTimeMinutes < 3 * 60) {
     stopTimings[0].departureTimeMinutes += 1440
