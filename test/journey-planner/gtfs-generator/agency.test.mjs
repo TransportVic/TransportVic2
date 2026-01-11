@@ -243,6 +243,9 @@ describe('The TripGenerator', () => {
     await dbTrips.createDocuments(clone(alburyTrips))
     await dbStops.createDocuments(clone(tripStops))
 
+    const calGenerator = new CalendarGenerator(db, path.join(__dirname, 'sample-data', 'calendars'))
+    calGenerator.generateFileContents(new WritableStream(), new WritableStream())
+
     const routeGenerator = new RouteGenerator(db)
 
     const routeStream = new WritableStream()
@@ -255,7 +258,7 @@ describe('The TripGenerator', () => {
 
     const tripStream = new WritableStream()
     const stopTimesStream = new WritableStream()
-    await tripGenerator.generateFileContents(tripStream, stopTimesStream)
+    await tripGenerator.generateFileContents(tripStream, stopTimesStream, calGenerator)
 
     const tripLines = tripStream.toString().split('\n')
     const tripHeader = tripLines[0], tripBody = tripLines.slice(1)
@@ -282,6 +285,9 @@ describe('The TripGenerator', () => {
 
     const routeGenerator = new RouteGenerator(db)
 
+    const calGenerator = new CalendarGenerator(db, path.join(__dirname, 'sample-data', 'calendars'))
+    calGenerator.generateFileContents(new WritableStream(), new WritableStream())
+
     const routeStream = new WritableStream()
     const shapeStream = new WritableStream()
     await routeGenerator.generateFileContents(routeStream, shapeStream)
@@ -292,7 +298,7 @@ describe('The TripGenerator', () => {
 
     const tripStream = new WritableStream()
     const stopTimesStream = new WritableStream()
-    await tripGenerator.generateFileContents(tripStream, stopTimesStream)
+    await tripGenerator.generateFileContents(tripStream, stopTimesStream, calGenerator)
 
     const stopLines = stopTimesStream.toString().split('\n')
     const stopHeader = stopLines[0], stopBody = stopLines.slice(1)
@@ -321,6 +327,9 @@ describe('The TripGenerator', () => {
 
     const routeGenerator = new RouteGenerator(db)
 
+    const calGenerator = new CalendarGenerator(db, path.join(__dirname, 'sample-data', 'calendars'))
+    calGenerator.generateFileContents(new WritableStream(), new WritableStream())
+
     const routeStream = new WritableStream()
     const shapeStream = new WritableStream()
     await routeGenerator.generateFileContents(routeStream, shapeStream)
@@ -331,7 +340,7 @@ describe('The TripGenerator', () => {
 
     const tripStream = new WritableStream()
     const stopTimesStream = new WritableStream()
-    await tripGenerator.generateFileContents(tripStream, stopTimesStream)
+    await tripGenerator.generateFileContents(tripStream, stopTimesStream, calGenerator)
 
     const stopLines = stopTimesStream.toString().split('\n')
     const stopBody = stopLines.slice(1)
@@ -359,9 +368,12 @@ describe('The TripGenerator', () => {
 
     const tripGenerator = new TripGenerator(db, shapeMapping)
 
+    const calGenerator = new CalendarGenerator(db, path.join(__dirname, 'sample-data', 'calendars'))
+    calGenerator.generateFileContents(new WritableStream(), new WritableStream())
+
     const tripStream = new WritableStream()
     const stopTimesStream = new WritableStream()
-    await tripGenerator.generateFileContents(tripStream, stopTimesStream)
+    await tripGenerator.generateFileContents(tripStream, stopTimesStream, calGenerator)
 
     const stopLines = stopTimesStream.toString().split('\n')
     const stopBody = stopLines.slice(1)
@@ -384,9 +396,12 @@ describe('The TripGenerator', () => {
 
     const tripGenerator = new TripGenerator(db, shapeMapping)
 
+    const calGenerator = new CalendarGenerator(db, path.join(__dirname, 'sample-data', 'calendars'))
+    calGenerator.generateFileContents(new WritableStream(), new WritableStream())
+
     const tripStream = new WritableStream()
     const stopTimesStream = new WritableStream()
-    await tripGenerator.generateFileContents(tripStream, stopTimesStream)
+    await tripGenerator.generateFileContents(tripStream, stopTimesStream, calGenerator)
 
     const stopLines = stopTimesStream.toString().trim().split('\n')
     const stopBody = stopLines.slice(1)
@@ -492,5 +507,78 @@ describe('The TransferGenerator', () => {
 
     const trip = transferBody.find(line => line.includes('02-HBE--28-T3-1250'))
     expect(trip).to.not.exist
+  })
+})
+
+describe('The TripGenerator and CalendarGenerator', () => {
+  const originalNow = utils.now
+  beforeEach(() => {
+    utils.now = () => utils.parseDate('20251205')
+  })
+
+  after(() => {
+    utils.now = originalNow
+  })
+
+  it('Allocates calendar IDs for trips without calendar IDs', async () => {
+    const db = new LokiDatabaseConnection()
+    const dbRoutes = await db.getCollection('routes')
+    const dbTrips = await db.getCollection('gtfs timetables')
+    const dbStops = await db.getCollection('stops')
+    const trips = clone(alburyTrips)
+    delete trips[0].calendarID
+    delete trips[1].calendarID
+
+    await dbRoutes.createDocument(clone(albury))
+    await dbTrips.createDocuments(trips)
+    await dbStops.createDocuments(clone(tripStops))
+
+    const calGenerator = new CalendarGenerator(db, path.join(__dirname, 'sample-data', 'calendars'))
+    const routeGenerator = new RouteGenerator(db)
+
+    const calStream = new WritableStream()
+    const calDateStream = new WritableStream()
+    await calGenerator.generateFileContents(calStream, calDateStream)
+
+    const routeStream = new WritableStream()
+    const shapeStream = new WritableStream()
+    await routeGenerator.generateFileContents(routeStream, shapeStream)
+
+    const shapeMapping = routeGenerator.getShapeMapping()
+
+    const tripGenerator = new TripGenerator(db, shapeMapping)
+
+    const tripStream = new WritableStream()
+    const stopTimesStream = new WritableStream()
+    await tripGenerator.generateFileContents(tripStream, stopTimesStream, calGenerator)
+
+    const calDates = calDateStream.toString().split('\n')
+
+    const tripLines = tripStream.toString().split('\n')
+    const tripBody = tripLines.slice(1)
+  
+    const albury10Trip = tripBody.find(row => row.includes('01-ABY--10-T3-8605'))
+    expect(albury10Trip).to.exist
+
+    const albury10Parts = albury10Trip.match(/"1-ABY","(\w+)".+/)
+    expect(albury10Parts).to.exist
+
+    const calID10 = albury10Parts[1]
+    const lines10 = calDates.filter(line => line.includes(calID10))
+
+    expect(lines10.length).to.be.equal(1)
+    expect(lines10[0]).to.equal(`"${calID10}","${trips[0].operationDays[0]}","1"`)
+  
+    const albury6Trip = tripBody.find(row => row.includes('01-ABY--6-T0-8605'))
+    expect(albury6Trip).to.exist
+
+    const albury6Parts = albury6Trip.match(/"1-ABY","(\w+)".+/)
+    expect(albury6Parts).to.exist
+
+    const calID6 = albury6Parts[1]
+    const lines6 = calDates.filter(line => line.includes(calID6))
+    expect(lines6.length).to.be.equal(2)
+    expect(lines6[0]).to.equal(`"${calID6}","${trips[1].operationDays[0]}","1"`)
+    expect(lines6[1]).to.equal(`"${calID6}","${trips[1].operationDays[1]}","1"`)
   })
 })

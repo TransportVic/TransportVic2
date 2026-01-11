@@ -5,6 +5,11 @@ import CSVLineReader from '@transportme/load-ptv-gtfs/lib/gtfs-parser/readers/li
 
 export default class CalendarGenerator extends Generator {
 
+  #calendarDateStream
+
+  #manualDates = {}
+  #manualID = 0
+
   #gtfsFolder
   constructor(db, gtfsFolder) {
     super(db)
@@ -32,6 +37,8 @@ export default class CalendarGenerator extends Generator {
       } catch (e) {
       }
     }
+
+    this.#calendarDateStream = calendarDateStream
   }
 
   async #streamAndModifyFile(stream, folder, reader, headers) {
@@ -45,6 +52,19 @@ export default class CalendarGenerator extends Generator {
       stream.write('"\n')
     }
     await reader.close()
+  }
+
+  assignCalendarDates(operationDays) {
+    const joined = operationDays.join('-')
+    if (this.#manualDates[joined]) return this.#manualDates[joined]
+
+    const id = `TV_${this.#manualID++}`
+
+    for (const day of operationDays) {
+      this.#calendarDateStream.write(`"${id}","${day}","1"\n`)
+    }
+
+    return id
   }
 
 }

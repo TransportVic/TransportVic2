@@ -46,7 +46,7 @@ export default class TripGenerator extends Generator {
     return Array(21).fill(0).map((_, i) => utils.getYYYYMMDD(startDate.clone().add(i, 'days')))
   }
 
-  async generateFileContents(tripStream, stopTimesStream) {
+  async generateFileContents(tripStream, stopTimesStream, calGenerator) {
     await this.setParentStops()
 
     const dbTimetables = await this.#db.getCollection('gtfs timetables')
@@ -62,8 +62,10 @@ export default class TripGenerator extends Generator {
       for (const trip of trips) {
         const mode = trip.routeGTFSID.split('-')[0]
 
+        const calendarID = trip.calendarID ? `${mode}_${trip.calendarID}` : calGenerator.assignCalendarDates(trip.operationDays)
+
         this.#TRIPS_SEEN.add(trip.tripID)
-        tripStream.write(`"${trip.routeGTFSID}","${mode}_${trip.calendarID}","${trip.tripID}","${trip.block || ''}","${this.#SHAPE_MAPPING[trip.shapeID]}"\n`)
+        tripStream.write(`"${trip.routeGTFSID}","${calendarID}","${trip.tripID}","${trip.block || ''}","${this.#SHAPE_MAPPING[trip.shapeID]}"\n`)
         trip.stopTimings.forEach((stop, i) => {
           const stopGTFSID = this.#STOP_MAPPING[this.getCode(stop.stopGTFSID, stop.platform || '')] || stop.stopGTFSID
 
