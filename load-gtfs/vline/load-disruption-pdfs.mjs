@@ -64,7 +64,7 @@ for (const disruption of scripts.supercede) {
     }
   })
 
-  await gtfsTimetables.bulkWrite(bulkWrite)
+  if (bulkWrite.length) await gtfsTimetables.bulkWrite(bulkWrite)
 }
 
 process.exit(0)
