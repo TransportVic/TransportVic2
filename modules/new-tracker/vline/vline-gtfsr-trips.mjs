@@ -47,11 +47,13 @@ export async function getUpcomingTrips(db, gtfsrAPI) {
       }
       if (tripStop.cancelled && previousStopData && previousStopData.stopName === tripStop.stopName) continue
 
+      let departureTime = stop.departure || stop.arrival
+
       if (stop.arrival) tripStop.estimatedArrivalTime = new Date(stop.arrival.time * 1000)
-      if (stop.departure) {
-        tripStop.estimatedDepartureTime = new Date(stop.departure.time * 1000)
+      if (departureTime) {
+        tripStop.estimatedDepartureTime = new Date(departureTime.time * 1000)
         if (typeof stop.delay !== 'undefined') {
-          tripStop.scheduledDepartureTime = new Date(stop.departure.time * 1000 - stop.departure.delay * 1000)
+          tripStop.scheduledDepartureTime = new Date(departureTime.time * 1000 - departureTime.delay * 1000)
         }
       }
 
