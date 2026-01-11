@@ -56,7 +56,7 @@ await stopLoader.loadStop(reader.processEntity({
 let ttFiles = []
 for (let file of process.argv.slice(2)) {
   if (!file.endsWith('.pdf')) continue
-  let nspFile = new PassPDFReader(path.resolve(__dirname, file))
+  let nspFile = new PassPDFReader(path.resolve(process.cwd(), file))
   ttFiles.push(nspFile)
 }
 
@@ -248,7 +248,8 @@ const trips = (await async.map(allRuns, async run => {
     destinationArrivalTime: destStop.arrivalTime,
     formedBy: null, forming: null,
     gtfsDirection: dir.gtfsDirection,
-    direction: dir.directionName.includes('Southern Cross') ? 'Up' : 'Down'
+    direction: dir.directionName.includes('Southern Cross') ? 'Up' : 'Down',
+    manualOccoTrip: true
   }
 })).filter(Boolean)
 
