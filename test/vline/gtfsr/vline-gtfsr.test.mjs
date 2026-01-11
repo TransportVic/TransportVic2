@@ -129,7 +129,7 @@ describe('The V/Line GTFS-R updater', () => {
     expect(drouin[0].cancelled).to.be.false
   })
 
-  it('Does not add in an additional cancelled stop where the GTFS Trip ID does not match', async () => {
+  it('Does not add in an additional cancelled stops', async () => {
     let database = new LokiDatabaseConnection()
     let stops = database.getCollection('stops')
     let liveTimetables = database.getCollection('live timetables')

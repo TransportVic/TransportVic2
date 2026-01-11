@@ -681,6 +681,7 @@ export class LiveTimetable {
   }
 
   #createStop(stopName, stopData) {
+    if (stopData.additional && stopData.cancelled) return
     if (!stopData.scheduledDepartureTime && stopData.estimatedDepartureTime) {
       stopData.scheduledDepartureTime = stopData.estimatedDepartureTime
     }
