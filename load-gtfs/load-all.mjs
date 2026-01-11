@@ -3,7 +3,7 @@ import runCommands from './run-script.mjs'
 let start = new Date()
 console.log('Starting full GTFS loader', start)
 
-let commandsA = [
+let mainCommands = [
   ['create-indexes.mjs'],
   ['load-ptv-stops.mjs'],
   ['load-all-stops-routes.mjs'],
@@ -43,16 +43,15 @@ let commandsA = [
 
   ['bus/generate-regional-bus-groupings.mjs'],
   ['bus/load-regional-bus-operators.mjs'],
-  ['restart-database.mjs'],
+  ['restart-database.mjs']
 ]
 
 const moveDatabase = [['move-database.mjs']]
 
-const loadRRB = [['metro-rail-bus/load.mjs']]
-
-await runCommands(commandsA)
+await runCommands(mainCommands)
 const returnCode = await runCommands(moveDatabase)
-await runCommands(loadRRB)
+await runCommands([['metro-rail-bus/load.mjs']])
+await runCommands([['vline/load-disruption-pdfs.mjs']])
 
 console.log('\nLoading GTFS took', (new Date() - start) / 1000 / 60, 'minutes overall')
 process.exit(returnCode)

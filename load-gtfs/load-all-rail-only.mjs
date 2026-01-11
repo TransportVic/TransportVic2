@@ -26,7 +26,9 @@ let commands = [
 
   ['extra/load-search-query.mjs'],
 
-  ['move-database.mjs']
+  ['move-database.mjs'],
+
+  ['vline/load-disruption-pdfs.mjs']
 ]
 
 let returnCode = await runCommands(commands)
