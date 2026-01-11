@@ -57,6 +57,12 @@ const defaultMonth = (() => {
   return arg.split('=')[1]
 })()
 
+const rewriteOpDay = (() => {
+  const arg = process.argv.find(a => a.startsWith('--change-op-day'))
+  if (!arg) return null
+  return arg.split('=').slice(1)
+})()
+
 function expandOperationDays(days) {
   const currentYear = new Date().getFullYear().toString()
   const fullDays = (days.match(/\d+$/) ? `${days} ${defaultMonth}` : days).replace('cont.', '').trim()
@@ -131,6 +137,9 @@ const trips = (await async.map(allRuns, async run => {
 
   if (stopTimings.length === 1) return null
   let operationDays = expandOperationDays(run.operationDay)
+  if (operationDays.length === 1 && rewriteOpDay && rewriteOpDay[0] === operationDays[0]) {
+    operationDays = [ rewriteOpDay[1] ]
+  }
 
   if (stopTimings[0].departureTimeMinutes < 3 * 60) {
     stopTimings[0].departureTimeMinutes += 1440
