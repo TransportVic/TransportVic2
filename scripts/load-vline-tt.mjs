@@ -7,8 +7,10 @@ import url from 'url'
 import utils from '../utils.js'
 import async from 'async'
 import getTripID from '../modules/new-tracker/metro-rail-bus/get-trip-id.mjs'
-import { StopsLoader } from '@transportme/load-ptv-gtfs'
+import { RouteLoader, StopsLoader } from '@transportme/load-ptv-gtfs'
 import GTFSStopsReader from '@transportme/load-ptv-gtfs/lib/gtfs-parser/readers/GTFSStopsReader.mjs'
+import GTFSRouteReader from '@transportme/load-ptv-gtfs/lib/gtfs-parser/readers/GTFSRouteReader.mjs'
+import GTFSAgency from '@transportme/load-ptv-gtfs/lib/gtfs-parser/GTFSAgency.mjs'
 
 let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
 await mongoDB.connect()
@@ -20,10 +22,40 @@ class DirectStopLoader extends StopsLoader {
   getStopsDB(db) { return db.getCollection('stops') }
 }
 
+class VLineRouteLoader extends RouteLoader {
+
+  #vline
+
+  constructor(database) {
+    super('', '', GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain, database)
+  }
+
+  async loadAgencies() {
+    this.#vline = new GTFSAgency({
+      id: 'vline',
+      name: 'V/Line'
+    })
+  }
+
+  getOperator(id) {
+    return this.#vline
+  }
+
+  getRoutesDB(db) { 
+    return db.getCollection('routes')
+  }
+
+}
+
 const suburbs = { features: [] }
+
+let routeLoader = new VLineRouteLoader(mongoDB)
+let routeReader = new GTFSRouteReader('', GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain)
+await routeLoader.loadAgencies()
+
 const stopLoader = new DirectStopLoader('', suburbs, GTFS_CONSTANTS.TRANSIT_MODES.regionalCoach, mongoDB)
-const reader = new GTFSStopsReader('', suburbs)
-await stopLoader.loadStop(reader.processEntity({
+const stopReader = new GTFSStopsReader('', suburbs)
+await stopLoader.loadStop(stopReader.processEntity({
   "stop_id": "20968",
   "stop_name": "Werribee Railway Station/Manly Street (Werribee)",
   "stop_lat": "-37.89892473135621",
@@ -33,7 +65,7 @@ await stopLoader.loadStop(reader.processEntity({
   "platform_code": ""
 }))
 
-await stopLoader.loadStop(reader.processEntity({
+await stopLoader.loadStop(stopReader.processEntity({
   "stop_id": "vic:rail:LAV-RRB",
   "stop_name": "Laverton Railway Station/Railway Avenue (Laverton)",
   "stop_lat": "-37.86435558873784",
@@ -43,7 +75,7 @@ await stopLoader.loadStop(reader.processEntity({
   "platform_code": ""
 }))
 
-await stopLoader.loadStop(reader.processEntity({
+await stopLoader.loadStop(stopReader.processEntity({
   "stop_id": "vic:rail:WGS-RRB",
   "stop_name": "Watergardens Railway Station/Watergardens Circuit Road (Watergardens)",
   "stop_lat": "-37.69992193414763",
@@ -51,6 +83,13 @@ await stopLoader.loadStop(reader.processEntity({
   "parent_station": "",
   "location_type": "1",
   "platform_code": ""
+}))
+
+await routeLoader.loadRoute(routeReader.processEntity({
+  "route_id": "5-MBY",
+  "agency_id": "vline",
+  "route_short_name": "Maryborough",
+  "route_long_name": "Maryborough"
 }))
 
 let ttFiles = []

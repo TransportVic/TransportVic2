@@ -65,9 +65,11 @@ export default class TripGenerator extends Generator {
         const calendarID = trip.calendarID ? `${mode}_${trip.calendarID}` : calGenerator.assignCalendarDates(trip.operationDays)
 
         this.#TRIPS_SEEN.add(trip.tripID)
-        tripStream.write(`"${trip.routeGTFSID}","${calendarID}","${trip.tripID}","${trip.block || ''}","${this.#SHAPE_MAPPING[trip.shapeID]}"\n`)
+        tripStream.write(`"${trip.routeGTFSID}","${calendarID}","${trip.tripID}","${trip.block || ''}","${this.#SHAPE_MAPPING[trip.shapeID] || ''}"\n`)
         trip.stopTimings.forEach((stop, i) => {
           const stopGTFSID = this.#STOP_MAPPING[this.getCode(stop.stopGTFSID, stop.platform || '')] || stop.stopGTFSID
+
+          const stopConditions = stop.stopConditions || { pickup: 0, dropoff: 0 }
 
           stopTimesStream.write(
             `"` + [
@@ -76,8 +78,8 @@ export default class TripGenerator extends Generator {
               utils.getPTHHMMFromMinutesPastMidnight(stop.departureTimeMinutes) + ':00',
               stopGTFSID,
               i,
-              stop.stopConditions.pickup,
-              stop.stopConditions.dropoff
+              stopConditions.pickup,
+              stopConditions.dropoff
             ].join('","')
             + `"\n`
           )
