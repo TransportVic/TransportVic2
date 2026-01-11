@@ -10,6 +10,10 @@ import td8409GTFSR from './sample-data/td8409-gtfsr.mjs'
 import tdMismatch from './sample-data/td-mismatch.mjs'
 import badPlatforms from './sample-data/bad-platforms.mjs'
 import td8431DuplicateStopGTFSR from './sample-data/td8431-duplicate-stop-gtfsr.mjs'
+import geelongStops from '../op-tt/sample-data/stops.json' with { type: 'json' }
+import td8725Live from './sample-data/td8725-live.mjs'
+import td8725GTFSR from './sample-data/td8725-gtfsr.mjs'
+import VLineTripUpdater from '../../../modules/vline/trip-updater.mjs'
 
 const clone = o => JSON.parse(JSON.stringify(o))
 
@@ -123,5 +127,26 @@ describe('The V/Line GTFS-R updater', () => {
 
     expect(drouin.length).to.equal(1)
     expect(drouin[0].cancelled).to.be.false
+  })
+
+  it('Does not add in an additional cancelled stop where the GTFS Trip ID does not match', async () => {
+    let database = new LokiDatabaseConnection()
+    let stops = database.getCollection('stops')
+    let liveTimetables = database.getCollection('live timetables')
+    await stops.createDocuments(clone(geelongStops))
+    await liveTimetables.createDocument(clone(td8725Live))
+
+    let tripUpdates = await getUpcomingTrips(database, () => td8725GTFSR)
+
+    await VLineTripUpdater.updateTrip(database, database, tripUpdates[0], {
+      skipStopCancellation: true,
+      dataSource: 'gtfsr-trip-update',
+      propagateDelay: true,
+      fullTrip: true
+    })
+
+    const timetable = await liveTimetables.findDocument({})
+    expect(timetable.stopTimings[0].stopName).to.equal('Wyndham Vale Railway Station')
+    expect(timetable.stopTimings[timetable.stopTimings.length - 1].stopName).to.equal('Waurn Ponds Railway Station')
   })
 })
