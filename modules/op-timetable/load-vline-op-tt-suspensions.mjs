@@ -5,8 +5,6 @@ import { convertToLive } from '../departures/sch-to-live.js'
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 import fs from 'fs/promises'
 import { fileURLToPath } from 'url'
-import discordIntegration from '../discord-integration.js'
-import { hostname } from 'os'
 
 const { TRANSIT_MODES } = GTFS_CONSTANTS
 
@@ -27,12 +25,6 @@ async function loadOperationalTT(db, operationDay) {
           'Swan Hill'
         ]
       },
-    }, {
-      routeName: 'Albury',
-      origin: 'Southern Cross Railway Station', departureTime: '07:07'
-    }, {
-      routeName: 'Albury',
-      origin: 'Albury Railway Station', departureTime: '06:45'
     }],
     operationDays: opDayFormat
   }, 1000, async trips => {
@@ -57,7 +49,7 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 
-  await loadOperationalTT(mongoDB, '20260111')
+  await loadOperationalTT(mongoDB, '20260112')
 
   await mongoDB.close()
 }
