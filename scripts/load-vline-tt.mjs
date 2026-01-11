@@ -7,12 +7,41 @@ import url from 'url'
 import utils from '../utils.js'
 import async from 'async'
 import getTripID from '../modules/new-tracker/metro-rail-bus/get-trip-id.mjs'
+import { StopsLoader } from '@transportme/load-ptv-gtfs'
+import GTFSStopsReader from '@transportme/load-ptv-gtfs/lib/gtfs-parser/readers/GTFSStopsReader.mjs'
 
 let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
 await mongoDB.connect()
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
+
+class DirectStopLoader extends StopsLoader {
+  getStopsDB(db) { return db.getCollection('stops') }
+}
+
+const suburbs = { features: [] }
+const stopLoader = new DirectStopLoader('', suburbs, GTFS_CONSTANTS.TRANSIT_MODES.regionalCoach, mongoDB)
+const reader = new GTFSStopsReader('', suburbs)
+await stopLoader.loadStop(reader.processEntity({
+  "stop_id": "20968",
+  "stop_name": "Werribee Railway Station/Manly Street (Werribee)",
+  "stop_lat": "-37.89892473135621",
+  "stop_lon": "144.66050609871286",
+  "parent_station": "",
+  "location_type": "1",
+  "platform_code": ""
+}))
+
+await stopLoader.loadStop(reader.processEntity({
+  "stop_id": "vic:rail:LAV-RRB",
+  "stop_name": "Laverton Railway Station/Railway Avenue (Laverton)",
+  "stop_lat": "-37.86435558873784",
+  "stop_lon": "144.7717901601029",
+  "parent_station": "",
+  "location_type": "1",
+  "platform_code": ""
+}))
 
 let ttFiles = []
 for (let file of process.argv.slice(2)) {
@@ -21,25 +50,34 @@ for (let file of process.argv.slice(2)) {
   ttFiles.push(nspFile)
 }
 
+const shiftOpDay = process.argv.includes('--shift-op-day')
+const defaultMonth = (() => {
+  const arg = process.argv.find(a => a.startsWith('--default-month'))
+  if (!arg) return null
+  return arg.split('=')[1]
+})()
+
 function expandOperationDays(days) {
   const currentYear = new Date().getFullYear().toString()
-  const parts = days.split(' ')
+  const fullDays = (days.match(/\d+$/) ? `${days} ${defaultMonth}` : days).replace('cont.', '').trim()
+
+  const parts = fullDays.split(' ')
   const front = parts.slice(0, -1).join(' ')
-  const month = parts[parts.length - 1]
+  const month = parts[parts.length - 1] || defaultMonth
 
   const parseDay = day => utils.parseTime(new Date(`${day} ${month} ${currentYear}`))
 
-  if (days.includes('&')) {
+  if (fullDays.includes('&')) {
     const days = front.split(' & ')
     return days.map(parseDay).map(day => utils.getYYYYMMDD(day))
-  } else if (days.includes(' to ')) {
-    const days = front.split(' to ')
+  } else if (fullDays.includes(' to ') || fullDays.includes(' – ')) {
+    const days = front.replace(/ ?– ?/, ' to ').split(' to ')
     const start = parseDay(days[0]), end = parseDay(days[1])
     const dayCount = end.diff(start, 'days') + 1
     return Array(dayCount).fill(0).map((_, i) => utils.getYYYYMMDD(start.clone().add(i, 'days')))
   }
 
-  return [ utils.getYYYYMMDD(parseDay(`${days} ${currentYear}`)) ]
+  return [ utils.getYYYYMMDD(parseDay(`${days} ${parts.length == 2 ? defaultMonth : ''} ${currentYear}`)) ]
 }
 
 let gtfsTimetables = mongoDB.getCollection('gtfs timetables')
@@ -49,6 +87,8 @@ let routes = mongoDB.getCollection('routes')
 let railStations = (await stops.findDocuments({
   $or: [{
     'bays.mode': GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain
+  }, {
+    'bays.mode': GTFS_CONSTANTS.TRANSIT_MODES.regionalCoach
   }, {
     stopName: 'Southern Cross Coach Terminal/Spencer Street'
   }]
@@ -62,6 +102,8 @@ const allRuns = await async.flatMap(ttFiles, async file => {
 })
 
 const trips = (await async.map(allRuns, async run => {
+  if (run.type === 'Metro') return null
+
   const mode = run.type === 'Train' ? 'regional train' : 'regional coach'
   const stopTimings = run.stops.map(stop => {
     const cleanName = stop.name.replace(/station/i, '').replace(/ stn/i, '').trim().toUpperCase()
@@ -88,11 +130,11 @@ const trips = (await async.map(allRuns, async run => {
   }).filter(Boolean)
 
   if (stopTimings.length === 1) return null
-
-  const operationDays = expandOperationDays(run.operationDay)
+  let operationDays = expandOperationDays(run.operationDay)
 
   if (stopTimings[0].departureTimeMinutes < 3 * 60) {
     stopTimings[0].departureTimeMinutes += 1440
+    if (shiftOpDay) operationDays = operationDays.map(d => utils.getYYYYMMDD(utils.parseDate(d).add(-1, 'day')))
   }
 
   for (let i = 1; i < stopTimings.length; i++) {
@@ -111,7 +153,9 @@ const trips = (await async.map(allRuns, async run => {
   const originName = originStop.stopName.split('/')[0].replace('Coach Terminal', 'Railway Station')
   const destName = destStop.stopName.split('/')[0].replace('Coach Terminal', 'Railway Station')
 
-  const allRouteData = await routes.findDocuments({
+  const WER_LAV = ['Werribee', 'Laverton'].map(x => x + ' Railway Station')
+  
+  let allRouteData = await routes.findDocuments({
     mode: 'regional train',
     $and: [{
       'directions.stops.stopName': originName
@@ -119,13 +163,31 @@ const trips = (await async.map(allRuns, async run => {
       'directions.stops.stopName': destName
     }]
   }, { directions: 1, routeGTFSID: 1, routeName: 1 }).toArray()
-  const routeData = allRouteData.sort((a, b) => a.directions[0].stops.length - b.directions[0].stops.length)[0]
 
-  const dir = routeData.directions.find(dir => {
-    const originIndex = dir.stops.findIndex(stop => stop.stopName === originName)
-    const destIndex = dir.stops.findIndex(stop => stop.stopName === destName)
-    return originIndex > -1 && destIndex > -1 && originIndex < destIndex
-  })
+  let routeData = allRouteData.map(routeData => {
+    let dir = routeData.directions.find(dir => {
+      const originIndex = dir.stops.findIndex(stop => stop.stopName === originName)
+      const destIndex = dir.stops.findIndex(stop => stop.stopName === destName)
+      return originIndex > -1 && destIndex > -1 && originIndex < destIndex
+    })
+
+    routeData.dir = dir
+    return routeData
+  }).filter(r => r.dir).sort((a, b) => a.directions[0].stops.length - b.directions[0].stops.length)[0]
+  let dir = routeData ? routeData.dir : null
+
+  if (WER_LAV.includes(originName) || WER_LAV.includes(destName)) {
+    routeData = await routes.findDocument({
+      mode: 'regional train',
+      routeName: 'Geelong'
+    })
+
+    const up = WER_LAV.includes(destName)
+    if (up) dir = routeData.directions.find(d => d.directionName.includes('Southern Cross'))
+    else dir = routeData.directions.find(d => !d.directionName.includes('Southern Cross'))
+  }
+
+  if (!dir) console.log(stopTimings, originName, destName, allRouteData)
 
   const tripID = `${routeData.routeGTFSID}-${operationDays[0]}-${originStop.stopGTFSID}-${originStop.departureTime}-${destStop.arrivalTime}`
 
