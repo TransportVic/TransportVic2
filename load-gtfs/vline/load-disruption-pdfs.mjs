@@ -8,14 +8,14 @@ for (const command of scripts.commands) {
   await new Promise(resolve => {
     console.log('node', [ file, ...command ].join(' '))
 
-    const process = spawn('node', [ file, ...command ], {
+    const childProcess = spawn('node', [ file, ...command ], {
       cwd: scripts.cwd
     })
 
-    process.stdout.pipe(process.stdout)
-    process.stderr.pipe(process.stderr)
+    childProcess.stdout.pipe(process.stdout)
+    childProcess.stderr.pipe(process.stderr)
 
-    process.on('close', code => {
+    childProcess.on('close', code => {
       console.log('Finished with code', code)
       resolve()
     })
