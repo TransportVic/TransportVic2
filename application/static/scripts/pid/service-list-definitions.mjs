@@ -35,6 +35,23 @@ const MTP_ConcourseTrains = name => ({
   }
 })
 
+const MTPConcourseLineGroup = (station, name, lineGroups, big, small, parameters) => {
+  const main = ConcourseLineGroup(name, lineGroups, big, small, parameters)
+  const pidData = main.getComponents()
+
+  return {
+    ...main,
+    headerStyle: {
+      height: '0.08',
+      margin: '0.01'
+    },
+    getComponents: () => ({
+      ...pidData,
+      header: new Header(`Trains from ${station}`)
+    })
+  }
+}
+
 const ConcourseLineGroup = (name, lineGroups, big, small, parameters = {}) => ({
   orientation: 'portrait',
   getComponents: () => {
@@ -122,7 +139,11 @@ export default {
           area
         }
       }
-    }
+    },
+    'line-group-portrait-chl': MTPConcourseLineGroup('Melbourne Central', 'Mernda & Hurstbridge Lines', ['mernda', 'hurstbridge'], 3, 2),
+    'line-group-portrait-bly': MTPConcourseLineGroup('Melbourne Central', 'Lilydale, Belgrave, Alamein & Glen Waverley Lines', ['lilydale', 'belgrave', 'alamein', 'glen-waverley'], 3, 2),
+    'line-group-portrait-nor': MTPConcourseLineGroup('Melbourne Central', 'Craigieburn, Sunbury & Upfield Lines', ['craigieburn', 'sunbury', 'upfield'], 3, 2),
+    'line-group-portrait-dng': MTPConcourseLineGroup('Melbourne Central', 'Cranbourne & Pakenham Lines', ['cranbourne', 'pakenham'], 3, 2),
   },
   'north-melbourne': {
     'line-group-portrait': {
@@ -471,13 +492,13 @@ export default {
   },
   'state-library': {
     'concourse-trains': MTP_ConcourseTrains('State Library'),
-    'line-group-portrait-mtp-suy': ConcourseLineGroup('towards Sunbury', ['metro-tunnel'], 3, 4, { tunnelDirection: 'west' }),
-    'line-group-portrait-mtp-dng': ConcourseLineGroup('towards Pakenham and Cranbourne', ['metro-tunnel'], 3, 4, { tunnelDirection: 'east' }),
+    'line-group-portrait-mtp-suy': MTPConcourseLineGroup('State Library', 'towards Sunbury', ['metro-tunnel'], 3, 2, { tunnelDirection: 'west' }),
+    'line-group-portrait-mtp-dng': MTPConcourseLineGroup('State Library', 'towards Pakenham and Cranbourne', ['metro-tunnel'], 3, 2, { tunnelDirection: 'east' }),
   },
   'town-hall': {
     'concourse-trains': MTP_ConcourseTrains('Town Hall'),
-    'line-group-portrait-mtp-suy': ConcourseLineGroup('towards Sunbury', ['metro-tunnel'], 3, 4, { tunnelDirection: 'west' }),
-    'line-group-portrait-mtp-dng': ConcourseLineGroup('towards Pakenham and Cranbourne', ['metro-tunnel'], 3, 4, { tunnelDirection: 'east' }),
+    'line-group-portrait-mtp-suy': MTPConcourseLineGroup('Town Hall', 'towards Sunbury', ['metro-tunnel'], 3, 2, { tunnelDirection: 'west' }),
+    'line-group-portrait-mtp-dng': MTPConcourseLineGroup('Town Hall', 'towards Pakenham and Cranbourne', ['metro-tunnel'], 3, 2, { tunnelDirection: 'east' }),
   },
   'anzac': {
     'concourse-trains': MTP_ConcourseTrains('Anzac'),
