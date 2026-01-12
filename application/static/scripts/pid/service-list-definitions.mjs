@@ -35,7 +35,7 @@ const MTP_ConcourseTrains = name => ({
   }
 })
 
-const ConcourseLineGroup = (name, lineGroups, big, small) => ({
+const ConcourseLineGroup = (name, lineGroups, big, small, parameters = {}) => ({
   orientation: 'portrait',
   getComponents: () => {
     const pid = new LineGroupServiceList(name, lineGroups[0], big, small)
@@ -46,7 +46,7 @@ const ConcourseLineGroup = (name, lineGroups, big, small) => ({
     return {
       pids: [{
         pid: pid,
-        filter: dep => lineGroups.includes(dep.line)
+        filter: dep => lineGroups.includes(dep.line) && Object.keys(parameters).every(key => dep[key] === parameters[key])
       }],
       area
     }
@@ -460,22 +460,37 @@ export default {
     }
   },
   'arden': {
-    'concourse-trains': MTP_ConcourseTrains('Arden')
+    'concourse-trains': MTP_ConcourseTrains('Arden'),
+    'line-group-portrait-mtp-suy': ConcourseLineGroup('towards Sunbury', ['metro-tunnel'], 3, 4, { tunnelDirection: 'west' }),
+    'line-group-portrait-mtp-dng': ConcourseLineGroup('towards Pakenham and Cranbourne', ['metro-tunnel'], 3, 4, { tunnelDirection: 'east' }),
   },
   'parkville': {
-    'concourse-trains': MTP_ConcourseTrains('Parkville')
+    'concourse-trains': MTP_ConcourseTrains('Parkville'),
+    'line-group-portrait-mtp-suy': ConcourseLineGroup('towards Sunbury', ['metro-tunnel'], 3, 4, { tunnelDirection: 'west' }),
+    'line-group-portrait-mtp-dng': ConcourseLineGroup('towards Pakenham and Cranbourne', ['metro-tunnel'], 3, 4, { tunnelDirection: 'east' }),
   },
   'state-library': {
-    'concourse-trains': MTP_ConcourseTrains('State Library')
+    'concourse-trains': MTP_ConcourseTrains('State Library'),
+    'line-group-portrait-mtp-suy': ConcourseLineGroup('towards Sunbury', ['metro-tunnel'], 3, 4, { tunnelDirection: 'west' }),
+    'line-group-portrait-mtp-dng': ConcourseLineGroup('towards Pakenham and Cranbourne', ['metro-tunnel'], 3, 4, { tunnelDirection: 'east' }),
   },
   'town-hall': {
-    'concourse-trains': MTP_ConcourseTrains('Town Hall')
+    'concourse-trains': MTP_ConcourseTrains('Town Hall'),
+    'line-group-portrait-mtp-suy': ConcourseLineGroup('towards Sunbury', ['metro-tunnel'], 3, 4, { tunnelDirection: 'west' }),
+    'line-group-portrait-mtp-dng': ConcourseLineGroup('towards Pakenham and Cranbourne', ['metro-tunnel'], 3, 4, { tunnelDirection: 'east' }),
   },
   'anzac': {
-    'concourse-trains': MTP_ConcourseTrains('Anzac')
+    'concourse-trains': MTP_ConcourseTrains('Anzac'),
+    'line-group-portrait-mtp-suy': ConcourseLineGroup('towards Sunbury', ['metro-tunnel'], 3, 4, { tunnelDirection: 'west' }),
+    'line-group-portrait-mtp-dng': ConcourseLineGroup('towards Pakenham and Cranbourne', ['metro-tunnel'], 3, 4, { tunnelDirection: 'east' }),
   }
 }
 
 export const minimumTimes = {
-  'flinders-street': 1
+  'flinders-street': 1,
+  'arden': 1,
+  'parkville': 1,
+  'state-library': 1,
+  'town-hall': 1,
+  'anzac': 1
 }

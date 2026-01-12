@@ -347,9 +347,9 @@ module.exports = {
   "Wangaratta": [],
   "Morwell": [],
 
-  "Anzac": [...capPIDs, ...psdPIDs, sl('concourse-trains')],
-  "Town Hall": [...capPIDs, ...psdPIDs, sl('concourse-trains')],
-  "State Library": [...capPIDs, ...psdPIDs, sl('concourse-trains')],
-  "Parkville": [...capPIDs, ...psdPIDs, sl('concourse-trains')],
-  "Arden": [...capPIDs, ...psdPIDs, sl('concourse-trains')]
+  "Anzac": [...capPIDs, ...psdPIDs, sl('concourse-trains'), sl('line-group-portrait-mtp-suy'), sl('line-group-portrait-mtp-dng')],
+  "Town Hall": [...capPIDs, ...psdPIDs, sl('concourse-trains'), sl('line-group-portrait-mtp-suy'), sl('line-group-portrait-mtp-dng')],
+  "State Library": [...capPIDs, ...psdPIDs, sl('concourse-trains'), sl('line-group-portrait-mtp-suy'), sl('line-group-portrait-mtp-dng')],
+  "Parkville": [...capPIDs, ...psdPIDs, sl('concourse-trains'), sl('line-group-portrait-mtp-suy'), sl('line-group-portrait-mtp-dng')],
+  "Arden": [...capPIDs, ...psdPIDs, sl('concourse-trains'), sl('line-group-portrait-mtp-suy'), sl('line-group-portrait-mtp-dng')]
 }

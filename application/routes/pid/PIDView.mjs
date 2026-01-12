@@ -58,7 +58,8 @@ router.post('/data', async (req, res) => {
     stops: departure.stops,
     disruptions: [],
     isArrival: departure.isArrival,
-    direction: departure.direction
+    direction: departure.direction,
+    tunnelDirection: departure.tunnelDirection
   })))
 })
 
