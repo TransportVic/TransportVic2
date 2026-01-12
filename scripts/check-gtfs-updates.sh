@@ -9,4 +9,5 @@ sudo systemctl restart mongod
 sudo systemctl restart mongod-trip
 node scripts/update-gtfs.mjs
 sudo systemctl restart mongod
+node scripts/push-gtfs.mjs
 sudo systemctl restart transportvic
