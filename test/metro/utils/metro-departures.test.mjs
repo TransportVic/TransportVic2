@@ -427,6 +427,8 @@ describe('The metro departures class', () => {
       'State Library', 'Parkville', 'Arden',
       'Footscray', 'Middle Footscray', 'West Footscray'
     ])
+
+    expect(departures[0].tunnelDirection).to.equal('west')
   })
 
   it('Should should not mark an arrival as cancelled', async () => {

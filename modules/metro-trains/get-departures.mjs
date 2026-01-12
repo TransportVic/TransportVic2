@@ -87,7 +87,14 @@ export default async function getMetroDepartures(station, db, filter, backwards,
 
     let routeName = (formingTrip && formingType === 'CITY_LOOP') ? formingTrip.routeName : trip.routeName
     let cleanRouteName = utils.encodeName(routeName)
-    if (trip.stopTimings.some(stop => stop.stopName === 'Town Hall Railway Station')) cleanRouteName = 'metro-tunnel'
+    let tunnelDirection = null
+    if (trip.stopTimings.some(stop => stop.stopName === 'Town Hall Railway Station')) {
+      cleanRouteName = 'metro-tunnel'
+      let destination = trip.destination.slice(0, -16)
+      let origin = trip.origin.slice(0, -16)
+      if (trip.routeName === 'Sunbury') tunnelDirection = destination === 'Town Hall' ? 'east' : 'west'
+      else tunnelDirection = origin === 'Town Hall' ? 'east' : 'west'
+    }
 
     outputDepartures.push({
       ...departure,
@@ -110,7 +117,8 @@ export default async function getMetroDepartures(station, db, filter, backwards,
       futureStops: futureStops,
       cityLoopRunning: [],
       formingDestination, formingRunID, futureFormingStops,
-      formingTrip, formingType
+      formingTrip, formingType,
+      tunnelDirection
     })
   }
 
