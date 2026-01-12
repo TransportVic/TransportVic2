@@ -9,9 +9,13 @@ import fs from 'fs/promises'
 
 async function sendGTFS(server, gtfsFile) {
   const readStream = createReadStream(gtfsFile)
-  const request = await fetch(`http://${server}/update-gtfs`, { method: 'POST', body: readStream })
+  const request = await fetch(`http://${server}/gtfs/update`, { method: 'POST', body: readStream })
+  await request.text()
+}
 
-  console.log(await request.text())
+async function buildGTFS(server) {
+  const request = await fetch(`http://${server}/gtfs/build`)
+  await request.text()
 }
 
 if (await fs.realpath(process.argv[1]) === url.fileURLToPath(import.meta.url) && await isPrimary()) {
@@ -20,4 +24,5 @@ if (await fs.realpath(process.argv[1]) === url.fileURLToPath(import.meta.url) &&
   // const servers = await getAvailableServers()
 
   await sendGTFS(jpBuildServer, gtfsFile)
+  await buildGTFS(jpBuildServer)
 }
