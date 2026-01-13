@@ -48,7 +48,7 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 
-  await loadOperationalTT(mongoDB, '20260113')
+  await loadOperationalTT(mongoDB, '20260114')
 
   await mongoDB.close()
 }
