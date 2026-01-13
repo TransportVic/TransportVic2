@@ -619,7 +619,7 @@
   "K121": "Kinetic (Fitzroy North)",
   "K122": "Kinetic (Fitzroy North)",
   "K123": "Kinetic (Orbital)",
-  "K124": "Kinetic (Heatherton)",
+  "K124": "Kinetic (Fitzroy North)",
   "K125": "Kinetic (Orbital)",
   "K126": "Kinetic (Fitzroy North)",
   "K128": "Kinetic (Heatherton)",
@@ -1169,7 +1169,7 @@
   "K8617": "Kinetic (Fitzroy North)",
   "K8618": "Kinetic (Fitzroy North)",
   "K8619": "Kinetic (Fitzroy North)",
-  "K8620": "Kinetic (Preston)",
+  "K8620": "Kinetic (Fitzroy North)",
   "K8621": "Kinetic (Fitzroy North)",
   "K8622": "Kinetic (Fitzroy North)",
   "K8623": "Kinetic (Fitzroy North)",
@@ -1194,5 +1194,7 @@
   "SY73": "Mitchell Transit (Seymour)",
   "SY74": "Mitchell Transit (Seymour)",
   "SY75": "Mitchell Transit (Kilmore)",
-  "SY76": "Mitchell Transit (Kilmore)"
+  "SY76": "Mitchell Transit (Kilmore)",
+
+  "TS1": "Transit Systems (Footscray)"
 }
