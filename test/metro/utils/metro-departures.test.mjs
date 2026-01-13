@@ -17,6 +17,8 @@ import utils from '../../../utils.js'
 import northernSSSForming from './sample-data/northern-sss-forming.mjs'
 import mixedRRB from './sample-data/mixed-rrb.mjs'
 import mtpThroughRunningBlock from './sample-data/mtp-through-running-block.mjs'
+import fknLoop from './sample-data/fkn-loop.mjs'
+import werEastbound from './sample-data/wer-eastbound.mjs'
 
 let clone = o => JSON.parse(JSON.stringify(o))
 
@@ -303,7 +305,7 @@ describe('The metro departures class', () => {
     const db = new LokiDatabaseConnection()
     const stops = await db.createCollection('stops')
     await stops.createDocuments(clone(pkmStops))
-    
+
     // Have a down trip in the city loop, forming an up trip on the return to the city
     // FSS CLP RMD EPH, then EPH RMD FSS
     const trips = clone(ephTrips)
@@ -351,7 +353,7 @@ describe('The metro departures class', () => {
     expect(departures[0].futureFormingStops).to.not.exist
   })
 
-  it('Should return the next trip\'s data for cross city runs', async () => {
+  it('Should return the next trip\'s data for cross city runs (westbound)', async () => {
     let db = new LokiDatabaseConnection()
     db.connect()
 
@@ -377,6 +379,25 @@ describe('The metro departures class', () => {
       'Southern Cross',
       'Williamstown'
     ])
+  })
+
+  it('Should return the next trip\'s data for cross city runs (eastbound)', async () => {
+    utils.now = () => utils.parseTime('2025-11-17T11:00:00.000Z')
+
+    let db = new LokiDatabaseConnection()
+    db.connect()
+
+    let stops = await db.createCollection('stops')
+    await stops.createDocuments(clone(pkmStops))
+    await (await db.createCollection('gtfs timetables')).createDocuments(clone(werEastbound))
+
+    let syr = await stops.findDocument({ stopName: "Southern Cross Railway Station" })
+    let departures = await getDepartures(syr, db, null, null, new Date('2026-01-15T05:00:00.000Z'))
+
+    expect(departures[0].runID).to.equal('6482')
+    expect(departures[0].destination).to.equal('Flinders Street')
+    expect(departures[0].formingDestination).to.equal('Cheltenham')
+    expect(departures[0].formingRunID).to.equal('4465')
   })
 
   it('Should return the next trip\'s data for cross city runs at SSS (Eastbound)', async () => {
@@ -559,6 +580,23 @@ describe('The metro departures class', () => {
     expect(departures[0].formingRunID).to.equal('Z001')
     expect(departures[0].formingDestination).to.equal('Sunbury')
     expect(departures[0].cleanRouteName).to.equal('metro-tunnel')
+  })
+
+  it('Does does not allow showing of a NOR -> SSS -> FSS -> SSS -> NOR trip', async () => {
+    utils.now = () => utils.parseTime('2025-11-17T11:00:00.000Z')
+    const db = new LokiDatabaseConnection()
+    const gtfsTimetables = await db.createCollection('gtfs timetables')
+    const stops = await db.createCollection('stops')
+    await stops.createDocuments(clone(pkmStops))
+    await gtfsTimetables.createDocuments(clone(fknLoop))
+
+    const par = stops.findDocument({ stopName: "Parliament Railway Station" })
+
+    const departures = await getDepartures(par, db, null, null, new Date('2026-02-13T08:20:00.000Z'))
+
+    expect(departures[0].runID).to.equal('4968')
+    expect(departures[0].formingRunID).to.equal('4479')
+    expect(departures[0].formingTrip).to.exist
   })
 
   afterEach(() => {

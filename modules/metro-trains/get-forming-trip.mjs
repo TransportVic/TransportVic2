@@ -88,7 +88,7 @@ export async function getFormingTrip(trip, isArrival, isLiveDeparture, isWithinC
   let isCHLFormingCCLSpecialCase
 
   let formingTrip = await getFormingTripData(trip, isLiveDeparture, db)
-
+  
   if (!shouldShowForming) {
     isCHLFormingCCLSpecialCase = checkIsCHLFormingCCLSpecialCase(trip, formingTrip)
     shouldShowForming = isCHLFormingCCLSpecialCase
@@ -100,8 +100,10 @@ export async function getFormingTrip(trip, isArrival, isLiveDeparture, isWithinC
   } else if (shouldShowForming) {
     returnedFormingTrip = formingTrip
 
-    if ((isCrossCityTrip || (isMetroTunnelTrip && !upTripInCityLoop)) && returnedFormingTrip) shouldShowForming = tripCrossesCity(trip, returnedFormingTrip)
-    else if (returnedFormingTrip && isNorthernTrip && upTripInCityLoop && isSSS) shouldShowForming = nextTripHasLoop(returnedFormingTrip)
+    const crossesCity = returnedFormingTrip && tripCrossesCity(trip, returnedFormingTrip)
+
+    if (returnedFormingTrip && ((isCrossCityTrip && !upTripInCityLoop) || (isMetroTunnelTrip && !upTripInCityLoop))) shouldShowForming = crossesCity
+    else if (returnedFormingTrip && isNorthernTrip && upTripInCityLoop && isSSS && !crossesCity) shouldShowForming = nextTripHasLoop(returnedFormingTrip)
 
     const applyForming = returnedFormingTrip
       && shouldShowForming
