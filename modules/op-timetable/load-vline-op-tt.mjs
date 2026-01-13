@@ -381,6 +381,7 @@ export default async function loadOperationalTT(db, tripDB, ptvAPI) {
     // TODO: Cleanup with date library cleanup
     const operationDay = utils.parseTime(vlineTrip.departureTime.toUTC().toISO())
     if (operationDay.get('hours') < 3) operationDay.add(-1, 'day')
+    operationDay.startOf('day')
 
     const opDayFormat = utils.getYYYYMMDD(operationDay)
     const dayOfWeek = utils.getDayOfWeek(operationDay) // Technically should use public holiday thing
@@ -425,14 +426,14 @@ export default async function loadOperationalTT(db, tripDB, ptvAPI) {
       })
       continue
     }
-    tripsNeedingFetch.push({ opDayFormat, vlineTrip, nspTrip })
+    tripsNeedingFetch.push({ operationDay, opDayFormat, vlineTrip, nspTrip })
   }
 
   let missingPatternTrips = tripsNeedingFetch.slice(15)
-  for (let { opDayFormat, vlineTrip, nspTrip } of tripsNeedingFetch.slice(0, 15)) {
+  for (let { operationDay, opDayFormat, vlineTrip, nspTrip } of tripsNeedingFetch.slice(0, 15)) {
     let pattern = await downloadTripPattern(opDayFormat, vlineTrip, nspTrip, db)
     if (!pattern) {
-      missingPatternTrips.push({ vlineTrip })
+      missingPatternTrips.push({ operationDay, opDayFormat, vlineTrip })
       continue
     }
 
@@ -447,7 +448,7 @@ export default async function loadOperationalTT(db, tripDB, ptvAPI) {
 
   let missingTrips = []
   // Matching TDN found, but times incorrect: Find a trip with same time profile and shift times to match
-  for (let { vlineTrip } of missingPatternTrips) {
+  for (let { operationDay, opDayFormat, vlineTrip } of missingPatternTrips) {
     let scheduledTDN = await getScheduledTripByTDN(opDayFormat, vlineTrip, db)
     if (scheduledTDN) {
       let matchingTrip = await findMatchingTrip(operationDay, opDayFormat, scheduledTDN, vlineTrip, db)

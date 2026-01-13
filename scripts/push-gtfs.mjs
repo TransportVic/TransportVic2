@@ -19,7 +19,8 @@ async function buildGTFS(server) {
 }
 
 if (await fs.realpath(process.argv[1]) === url.fileURLToPath(import.meta.url) && await isPrimary()) {
-  const gtfsFile = await generateGTFS()
+  // const gtfsFile = await generateGTFS()
+  const gtfsFile = '/Users/edwardyeung/Projects/TransportVic/jp-gtfs/gtfs.zip'
   const jpBuildServer = utils.shuffle(config.jpServers.slice(0))[0]
   // const servers = await getAvailableServers()
 
