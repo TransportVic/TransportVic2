@@ -76,38 +76,33 @@ export async function getFormedByTripData(trip, isLiveDeparture, db) {
 
 
 export async function getFormingTrip(trip, isArrival, isLiveDeparture, isWithinCityLoop, isSSS, db) {
-  let formingDestination = null, formingRunID = null
-  let returnedFormingTrip
+  const isCityCircle = trip.routeName === 'City Circle' || !!(trip.runID && trip.runID.match(/^0[789]\d\d$/))
+  const isCrossCityTrip = CROSS_CITY_GROUP_EAST.includes(trip.routeName) || CROSS_CITY_GROUP_WEST.includes(trip.routeName)
+  const isMetroTunnelTrip = METRO_TUNNEL_GROUP_EAST.includes(trip.routeName) || METRO_TUNNEL_GROUP_WEST.includes(trip.routeName)
+  const isNorthernTrip = NORTHERN_GROUP.includes(trip.routeName)
+  const upTripInCityLoop = (isWithinCityLoop && trip.direction === 'Up')
 
-  let isCityCircle = trip.routeName === 'City Circle' || !!(trip.runID && trip.runID.match(/^0[789]\d\d$/))
-  let isCrossCityTrip = CROSS_CITY_GROUP_EAST.includes(trip.routeName) || CROSS_CITY_GROUP_WEST.includes(trip.routeName)
-  let isMetroTunnelTrip = METRO_TUNNEL_GROUP_EAST.includes(trip.routeName) || METRO_TUNNEL_GROUP_WEST.includes(trip.routeName)
-  let isNorthernTrip = NORTHERN_GROUP.includes(trip.routeName)
-  let upTripInCityLoop = (isWithinCityLoop && trip.direction === 'Up')
+  let formingDestination = null, formingRunID = null
   let shouldShowForming = (upTripInCityLoop || isCrossCityTrip || isMetroTunnelTrip) && !isCityCircle
   let isCHLFormingCCLSpecialCase
 
-  let formingTrip = await getFormingTripData(trip, isLiveDeparture, db)
+  const formingTrip = await getFormingTripData(trip, isLiveDeparture, db)
+  const crossesCity = formingTrip && tripCrossesCity(trip, formingTrip)
   
   if (!shouldShowForming) {
     isCHLFormingCCLSpecialCase = checkIsCHLFormingCCLSpecialCase(trip, formingTrip)
     shouldShowForming = isCHLFormingCCLSpecialCase
   }
 
+  let returnedFormingTrip = shouldShowForming ? formingTrip : null
+
   if (isArrival) {
-    returnedFormingTrip = formingTrip
     formingRunID = trip.forming
-  } else if (shouldShowForming) {
-    returnedFormingTrip = formingTrip
+  } else if (shouldShowForming && formingTrip) {
+    if (!upTripInCityLoop && (isCrossCityTrip || isMetroTunnelTrip)) shouldShowForming = crossesCity
+    else if (isNorthernTrip && upTripInCityLoop && isSSS && !crossesCity) shouldShowForming = nextTripHasLoop(formingTrip)
 
-    const crossesCity = returnedFormingTrip && tripCrossesCity(trip, returnedFormingTrip)
-
-    if (returnedFormingTrip && ((isCrossCityTrip && !upTripInCityLoop) || (isMetroTunnelTrip && !upTripInCityLoop))) shouldShowForming = crossesCity
-    else if (returnedFormingTrip && isNorthernTrip && upTripInCityLoop && isSSS && !crossesCity) shouldShowForming = nextTripHasLoop(returnedFormingTrip)
-
-    const applyForming = returnedFormingTrip
-      && shouldShowForming
-      && !(upTripInCityLoop && trip.cancelled)
+    const applyForming = shouldShowForming && !(upTripInCityLoop && trip.cancelled)
 
     if (applyForming) {
       formingDestination = returnedFormingTrip.destination.slice(0, -16)
