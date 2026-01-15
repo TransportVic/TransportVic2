@@ -282,6 +282,64 @@ router.get('/highlights', async (req, res) => {
   })
 })
 
+router.get('/endeavours', async (req, res) => {
+  let { tripDB } = res
+  let busTrips = tripDB.getCollection('bus trips')
+  let busRegos = tripDB.getCollection('bus regos')
+
+  let today = utils.getYYYYMMDDNow()
+
+  let {operator, date} = querystring.parse(url.parse(req.url).query)
+  if (date) date = utils.getYYYYMMDD(utils.parseDate(date))
+  else date = today
+
+  let minutesPastMidnightNow = utils.getMinutesPastMidnightNow()
+
+  async function getBuses(fleets) {
+    return await busRegos.distinct('rego', { fleetNumber: { $in: fleets } })
+  }
+
+  let data = [{
+    name: 'Ventura Endeavours',
+    track: Array(1653 - 1632 + 1).fill(0).map((_, i) => `V${1632 + i}`)
+  }, {
+    name: 'Sunbury Endeavours',
+    track: ['S6', 'S7', 'S8']
+  }]
+
+  let highlights = await async.map(data, async section => {
+    let trackBuses = section.track
+
+    let matchedBuses = await getBuses(trackBuses)
+    let query = {
+      date,
+      consist: { $in: matchedBuses }
+    }
+
+    let matchedTrips = await busTrips.findDocuments(query)
+      .sort({departureTime: 1, origin: 1}).toArray()
+
+    let trips = (await async.map(matchedTrips, async trip => {
+      let {fleetNumber} = await getBusFromRego(busRegos, trip.consist[0]) || {}
+
+      trip.fleetNumber = fleetNumber ? '#' + fleetNumber : trip.consist[0]
+
+      return trip
+    })).map(trip => adjustTrip(trip, date, date, minutesPastMidnightNow))
+
+    return {
+      ...section,
+      trips
+    }
+  })
+
+  res.render('tracker/bus/highlights', {
+    highlights,
+    unknownBuses: [],
+    unsureBuses: []
+  })
+})
+
 router.get('/cross-depot', async (req, res) => {
   let { tripDB } = res
   let busTrips = tripDB.getCollection('bus trips')
