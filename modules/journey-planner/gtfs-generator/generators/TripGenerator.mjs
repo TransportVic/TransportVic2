@@ -60,6 +60,8 @@ export default class TripGenerator extends Generator {
       }
     }, 100, trips => {
       for (const trip of trips) {
+        if (trip.isMTMRailTrip) continue
+
         const mode = trip.routeGTFSID.split('-')[0]
 
         const calendarID = trip.calendarID ? `${mode}_${trip.calendarID}` : calGenerator.assignCalendarDates(trip.operationDays)
