@@ -125,6 +125,16 @@ await stopLoader.loadStop(stopReader.processEntity({
   "platform_code": ""
 }))
 
+await stopLoader.loadStop(stopReader.processEntity({
+  "stop_id": "22028",
+  "stop_name": "Rockbank Railway Station (Rockbank)",
+  "stop_lat": "-37.72925023",
+  "stop_lon": "144.65052972",
+  "parent_station": "",
+  "location_type": "1",
+  "platform_code": ""
+}))
+
 await routeLoader.loadRoute(routeReader.processEntity({
   "route_id": "5-MBY",
   "agency_id": "vline",
