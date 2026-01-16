@@ -95,6 +95,16 @@ await stopLoader.loadStop(stopReader.processEntity({
   "platform_code": ""
 }))
 
+await stopLoader.loadStop(stopReader.processEntity({
+  "stop_id": "27537",
+  "stop_name": "Deer Park Railway Station/Railway Parade (Deer Park)",
+  "stop_lat": "-37.77730825",
+  "stop_lon": "144.77109111",
+  "parent_station": "",
+  "location_type": "1",
+  "platform_code": ""
+}))
+
 await routeLoader.loadRoute(routeReader.processEntity({
   "route_id": "5-MBY",
   "agency_id": "vline",
