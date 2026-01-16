@@ -85,6 +85,16 @@ await stopLoader.loadStop(stopReader.processEntity({
   "platform_code": ""
 }))
 
+await stopLoader.loadStop(stopReader.processEntity({
+  "stop_id": "1",
+  "stop_name": "Sunshine Railway Station/City Place (Sunshine)",
+  "stop_lat": "-37.78774462",
+  "stop_lon": "144.83197021",
+  "parent_station": "",
+  "location_type": "1",
+  "platform_code": ""
+}))
+
 await routeLoader.loadRoute(routeReader.processEntity({
   "route_id": "5-MBY",
   "agency_id": "vline",
