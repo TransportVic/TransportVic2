@@ -105,6 +105,26 @@ await stopLoader.loadStop(stopReader.processEntity({
   "platform_code": ""
 }))
 
+await stopLoader.loadStop(stopReader.processEntity({
+  "stop_id": "52533",
+  "stop_name": "Ardeer Railway Station/Forrest Street (Ardeer)",
+  "stop_lat": "-37.78279234",
+  "stop_lon": "144.80204855",
+  "parent_station": "",
+  "location_type": "1",
+  "platform_code": ""
+}))
+
+await stopLoader.loadStop(stopReader.processEntity({
+  "stop_id": "48832",
+  "stop_name": "Cobblebank Railway Station (Cobblebank)",
+  "stop_lat": "-37.71281526",
+  "stop_lon": "144.60363406",
+  "parent_station": "",
+  "location_type": "1",
+  "platform_code": ""
+}))
+
 await routeLoader.loadRoute(routeReader.processEntity({
   "route_id": "5-MBY",
   "agency_id": "vline",
