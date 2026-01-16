@@ -8,10 +8,8 @@ import { dateUtils, GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 import { LiveTimetable } from '../schema/live-timetable.mjs'
 import VLineUtils from '../vline/vline-utils.mjs'
 import VLineTripUpdater from '../vline/trip-updater.mjs'
-import discordIntegration from '../discord-integration.js'
 import { getDSTMinutesPastMidnight, getNonDSTMinutesPastMidnight, isDSTChange } from '../dst/dst.js'
 import fs from 'fs/promises'
-import { hostname } from 'os'
 
 let existingVNetStops = {}
 
@@ -474,8 +472,6 @@ export default async function loadOperationalTT(db, tripDB, ptvAPI) {
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  await discordIntegration('taskLogging', `V/Line Op TT: ${hostname()} loading`)
-
   let database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await database.connect()
 
@@ -495,8 +491,6 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
 
     await discordIntegration('vlineOpTT', tripData)
   }
-
-  await discordIntegration('taskLogging', `V/Line Op TT: ${hostname()} completed loading`)
 
   await database.close()
   await tripDatabase.close()

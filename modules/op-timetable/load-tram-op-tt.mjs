@@ -5,8 +5,6 @@ import { convertToLive } from '../departures/sch-to-live.js'
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 import fs from 'fs/promises'
 import { fileURLToPath } from 'url'
-import discordIntegration from '../discord-integration.js'
-import { hostname } from 'os'
 
 const { TRANSIT_MODES } = GTFS_CONSTANTS
 
@@ -39,15 +37,11 @@ async function loadOperationalTT(db, operationDay) {
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  await discordIntegration('taskLogging', `Tram Op TT: ${hostname()} loading`)
-
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 
   await loadOperationalTT(mongoDB, utils.now())
   await loadOperationalTT(mongoDB, utils.now().add(1, 'day'))
-
-  await discordIntegration('taskLogging', `Tram Op TT: ${hostname()} completed loading`)
 
   await mongoDB.close()
 }

@@ -9,9 +9,12 @@ const __dirname = path.dirname(__filename)
 if (!process.env.NODE_ENV) await utils.setEnv()
 let isProd = process.env['NODE_ENV'] === 'prod'
 
+export function getLogPath(logPath) {
+  return path.join(__dirname, 'logs', utils.getYYYYMMDDNow(), logPath)
+}
+
 export default async function createLogger(logPath, name) {
-  let currentDay = utils.getYYYYMMDDNow()
-  let fullPath = path.join(__dirname, 'logs', currentDay, logPath)
+  let fullPath = getLogPath(logPath)
 
   if (isProd) {
     let logger = new FileLogger(fullPath, name)
