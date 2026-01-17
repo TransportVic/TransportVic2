@@ -64,8 +64,8 @@ let uniqueNamesCounter = uniqueStops.reduce((acc, e) => {
   return acc
 }, {})
 
-let routeProcessors = await createRouteProcessor()
-let stopProcessors = await createStopProcessor()
+let routeProcessors = await createRouteProcessor(mongoDB)
+let stopProcessors = await createStopProcessor(mongoDB)
 
 for (let i of selectedModes) {
   let mode = GTFS_MODES[i]
