@@ -3,13 +3,39 @@ import { fileURLToPath } from 'url'
 import utils from '../../utils.js'
 import { convertToLive } from '../departures/sch-to-live.js'
 import config from '../../config.json' with { type: 'json' }
-import { GetPlatformServicesAPI, PTVAPI, PTVAPIInterface, VLineAPIInterface } from '@transportme/ptv-api'
+import { GetPlatformServicesAPI, PTVAPI, PTVAPIInterface, StubVLineAPI, VLineAPIInterface } from '@transportme/ptv-api'
 import { dateUtils, GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 import { LiveTimetable } from '../schema/live-timetable.mjs'
 import VLineUtils from '../vline/vline-utils.mjs'
 import VLineTripUpdater from '../vline/trip-updater.mjs'
 import { getDSTMinutesPastMidnight, getNonDSTMinutesPastMidnight, isDSTChange } from '../dst/dst.js'
 import fs from 'fs/promises'
+import { getLogPath } from '../../init-loggers.mjs'
+
+class PartialStubVLineAPI extends StubVLineAPI {
+
+  #trueInterface
+
+  constructor(callerID, signature) {
+    super()
+    this.#trueInterface = new VLineAPIInterface(callerID, signature)
+  }
+
+  async init() {
+    const responsePath = getLogPath('vline-op-tt.xml')
+    const data = (await fs.readFile(responsePath)).toString()
+
+    this.setResponses([ data, '' ])
+
+    return this
+  }
+
+  performFetch(apiMethod, requestOptions) {
+    if (this.responses.length) return super.performFetch(apiMethod, requestOptions)
+    return this.#trueInterface.performFetch(apiMethod, requestOptions)
+  }
+
+}
 
 let existingVNetStops = {}
 
@@ -41,7 +67,7 @@ export async function matchTrip(opDayFormat, operationDay, vlineTrip, db, timeta
 
   let arrivalTime = utils.parseTime(vlineTrip.arrivalTime.toUTC().toISO())
   let departureTime = utils.parseTime(vlineTrip.departureTime.toUTC().toISO())
-  
+
   // Really crappy DST aware + midnight handling code :D
   let isBeforeDSTChangeDay = isDSTChange(operationDay.clone().add(1, 'day'))
   let departureTimeMinutes = isBeforeDSTChangeDay ? getDSTMinutesPastMidnight(departureTime) : getNonDSTMinutesPastMidnight(departureTime)
@@ -478,8 +504,13 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let tripDatabase = new MongoDatabaseConnection(config.tripDatabaseURL, config.databaseName)
   await tripDatabase.connect()
 
+  const stubDepartures = process.argv.includes('--stub-departures')
+
   let ptvAPI = new PTVAPI(new PTVAPIInterface(config.ptvKeys[0].devID, config.ptvKeys[0].key))
-  let vlineAPIInterface = new VLineAPIInterface(config.vlineCallerID, config.vlineSignature)
+  let vlineAPIInterface = stubDepartures ?
+      await (new PartialStubVLineAPI(config.vlineCallerID, config.vlineSignature).init())
+    : new VLineAPIInterface(config.vlineCallerID, config.vlineSignature)
+
   ptvAPI.addVLine(vlineAPIInterface)
 
   const missingTrips = await loadOperationalTT(database, tripDatabase, ptvAPI)
