@@ -11,6 +11,7 @@ import VLineTripUpdater from '../vline/trip-updater.mjs'
 import { getDSTMinutesPastMidnight, getNonDSTMinutesPastMidnight, isDSTChange } from '../dst/dst.js'
 import fs from 'fs/promises'
 import { getLogPath } from '../../init-loggers.mjs'
+import discordIntegration from '../discord-integration.js'
 
 class PartialStubVLineAPI extends StubVLineAPI {
 
