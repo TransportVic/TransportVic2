@@ -2,117 +2,59 @@ import { MongoDatabaseConnection, LokiDatabaseConnection } from '@transportme/da
 import path from 'path'
 import url from 'url'
 import fs from 'fs/promises'
-import { StopsLoader, RouteLoader } from '@transportme/load-ptv-gtfs'
+import { RouteLoader } from '@transportme/load-ptv-gtfs'
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 
-import uniqueStops from '../transportvic-data/excel/stops/unique-stops.json' with { type: 'json' }
-import nameOverrides from '../transportvic-data/excel/stops/name-overrides.json' with { type: 'json' }
-import { createRouteProcessor, createStopProcessor } from '../transportvic-data/gtfs/process.mjs'
+import { createRouteProcessor } from '../transportvic-data/gtfs/process.mjs'
 import config from '../config.json' with { type: 'json' }
-import ptvStops from './ptv-stops.json' with { type: 'json' }
-import turf from '@turf/turf'
-
-import suburbsList from '../transportvic-data/gtfs/stop-suburbs.json' with { type: 'json' }
+import loadStops from './loaders/load-stops.mjs'
 
 const { GTFS_MODES } = GTFS_CONSTANTS
 
-let allModes = Object.keys(GTFS_MODES)
-let selectedModes = process.argv.slice(2)
-if (!selectedModes.length) selectedModes = allModes
+const selectedModes = process.argv.length > 2 ? process.argv.slice(2) : Object.keys(GTFS_MODES)
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const suburbsVIC = JSON.parse(await fs.readFile(path.join(__dirname, '../transportvic-data/geospatial/suburb-boundaries/vic.geojson')))
-const suburbsNSW = JSON.parse(await fs.readFile(path.join(__dirname, '../transportvic-data/geospatial/suburb-boundaries/nsw.geojson')))
-const suburbsACT = JSON.parse(await fs.readFile(path.join(__dirname, '../transportvic-data/geospatial/suburb-boundaries/act.geojson')))
-const suburbsSA = JSON.parse(await fs.readFile(path.join(__dirname, '../transportvic-data/geospatial/suburb-boundaries/sa.geojson')))
-
-const suburbs = {
-   type: 'FeatureCollection',
-   features: [ ...suburbsVIC.features, ...suburbsNSW.features, ...suburbsACT.features, ...suburbsSA.features ]
-}
-
 const gtfsPath = path.join(__dirname, '..', 'gtfs', '{0}')
 
-const stopsFile = path.join(gtfsPath, 'stops.txt')
 const routesFile = path.join(gtfsPath, 'routes.txt')
 const agencyFile = path.join(gtfsPath, 'agency.txt')
 
-let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+const mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
 await mongoDB.connect()
 
-let mongoStops = await mongoDB.getCollection('gtfs-stops')
-let mongoRoutes = await mongoDB.getCollection('gtfs-routes')
+const mongoStops = await mongoDB.getCollection('gtfs-stops')
+const mongoRoutes = await mongoDB.getCollection('gtfs-routes')
 
-let database = new LokiDatabaseConnection('transportvic')
-let stops = await database.createCollection('gtfs-stops')
-let routes = await database.createCollection('gtfs-routes')
+const database = new LokiDatabaseConnection('transportvic')
+const stops = await database.createCollection('gtfs-stops')
+const routes = await database.createCollection('gtfs-routes')
 
-let start = new Date()
-console.log('Start loading stops and routes', start)
+const globalStart = new Date()
+
+console.log('Loading stops', globalStart)
+const {
+  nameOverridesCounter,
+  uniqueNamesCounter,
+  time
+} = await loadStops(database, selectedModes)
+
+console.log('Loaded stops, took', time, 'seconds')
+
+console.log('Stop overrides', nameOverridesCounter)
+console.log('Unique stops', uniqueNamesCounter)
+
+const start = new Date()
+console.log('Loading routes', start)
 
 let routeIDMap = {}
-
-let nameOverridesCounter = Object.keys(nameOverrides).reduce((acc, e) => {
-  acc[e] = 0
-  return acc
-}, {})
-
-let uniqueNamesCounter = uniqueStops.reduce((acc, e) => {
-  acc[e] = 0
-  return acc
-}, {})
-
-let routeProcessors = await createRouteProcessor(mongoDB)
-let stopProcessors = await createStopProcessor(mongoDB)
+const routeProcessors = await createRouteProcessor(database)
 
 for (let i of selectedModes) {
   let mode = GTFS_MODES[i]
 
   try {
-    let suburbFile
-    if (['2', '3', '4'].includes(i)) suburbFile = suburbsVIC
-    else suburbFile = suburbs
-    
-    let stopProcessor = stopProcessors[i]
-    let stopLoader = new StopsLoader(stopsFile.replace('{0}', i), suburbFile, mode, database, stop => {
-      let ptvStop = ptvStops[stop.originalName]
-      if (ptvStop && ptvStop.length === 1) {
-        if (ptvStop[0].suburb.includes('(')) return ptvStop[0].suburb
-      } else if (ptvStop) {
-        let distances = ptvStop.map(ptvStop => ({
-          ...ptvStop,
-          distance: turf.distance(ptvStop.location, stop.location) * 1000
-        }))
-        let best = distances.sort((a, b) => a.distance - b.distance)[0]
-        if (best.distance < 2) {
-          return best.suburb
-        }
-      }
-
-      return suburbsList[stop.stopGTFSID]
-    })
-
-    await stopLoader.loadStops({
-      getMergeName: stop => {
-        if (uniqueStops.includes(stop.fullStopName)) {
-          uniqueNamesCounter[stop.fullStopName]++
-          return stop.fullStopName
-        }
-      },
-      processStop: stop => {
-        let updatedName = nameOverrides[stop.fullStopName]
-        if (updatedName) {
-          nameOverridesCounter[stop.fullStopName]++
-          stop.fullStopName = updatedName
-        }
-
-        return stopProcessor ? stopProcessor(stop) : stop
-      }
-    })
-
-    console.log('Loaded stops for', mode)
     let routeProcessor = routeProcessors[i]
 
     let routeLoader = new RouteLoader(routesFile.replace('{0}', i), agencyFile.replace('{0}', i), mode, database)
@@ -130,14 +72,12 @@ for (let i of selectedModes) {
 
     console.log('Loaded routes for', GTFS_MODES[i])
   } catch (e) {
-    console.log('ERROR: Failed to load stops and routes for', GTFS_MODES[i])
+    console.log('ERROR: Failed to load routes for', GTFS_MODES[i])
     console.log(e)
   }
 }
-console.log('Stop overrides', nameOverridesCounter)
-console.log('Unique stops', uniqueNamesCounter)
 
-console.log('Stops & Routes done, took', (new Date() - start) / 1000, 'seconds')
+console.log('Loaded routes, took', (new Date() - start) / 1000, 'seconds')
 
 let transferStart = new Date()
 console.log('\nTransferring to MongoDB now\n')
@@ -165,7 +105,7 @@ await stops.deleteDocuments({})
 await routes.deleteDocuments({})
 
 console.log('Done transferring to MongoDB, took', (new Date() - transferStart) / 1000, 'seconds')
-console.log('\nLoading stops and routes took', (new Date() - start) / 1000, 'seconds overall')
+console.log('\nLoading stops and routes took', (new Date() - globalStart) / 1000, 'seconds overall')
 
 await fs.writeFile(path.join(__dirname, 'routes.json'), JSON.stringify(routeIDMap))
 
