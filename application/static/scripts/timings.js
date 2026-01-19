@@ -5,9 +5,9 @@ function setMap() {
   const main = $('div#map')
   if (!main) return
 
-  const dataURL = $('#mapLink').href
-  $('main#content').classList.add('map-enabled')
-  generateMap('map', dataURL, true)
+  // const dataURL = $('#mapLink').href
+  // $('main#content').classList.add('map-enabled')
+  // generateMap('map', dataURL, true)
 }
 
 function getStopData(mode, suburb, stopName, callback) {
