@@ -5,7 +5,8 @@
   "main": "index.mjs",
   "scripts": {
     "test": "mocha './{,!(node_modules)/**}/*.test.mjs'",
-    "test-report": "mocha './{,!(node_modules)/**}/*.test.mjs' --reporter mochawesome --reporter-options output=test-report.html"
+    "test-report": "mocha './{,!(node_modules)/**}/*.test.mjs' --reporter mochawesome --reporter-options output=test-report.html",
+    "app": "npx tsc; node index.mjs"
   },
   "author": "",
   "license": "ISC",
@@ -49,6 +50,7 @@
     "memory-streams": "^0.1.3",
     "mocha": "^10.3.0",
     "mochawesome": "^7.1.3",
-    "node-mocks-http": "^1.17.2"
+    "node-mocks-http": "^1.17.2",
+    "typescript": "^5.9.3"
   }
 }
