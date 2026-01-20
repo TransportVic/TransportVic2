@@ -4,5 +4,4 @@ DIRNAME=$(dirname "$0")
 cd $DIRNAME
 . $DIRNAME/.env
 
-# Note: we do not want sudo or we cannot kill the process
-node --max-old-space-size=4096 $DIRNAME
+npm run app
