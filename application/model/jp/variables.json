@@ -1,0 +1,17 @@
+{
+  "from": {
+    "place": "1:51587",
+    "coordinates": {
+      "latitude": -37.6,
+      "longitude": 145.1
+    }
+  },
+  "to": {
+    "place": "1:19810",
+    "coordinates": {
+      "latitude": -37.7,
+      "longitude": 145.3
+    }
+  },
+  "dateTime": "2026-01-05T05:53:11.430Z"
+}
