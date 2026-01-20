@@ -41,3 +41,5 @@ tt-intermediate.pem
 /modules/offline-trips/out
 /public
 /jp-gtfs
+
+/application/static/js
