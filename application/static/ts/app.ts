@@ -30,19 +30,32 @@ class App {
       if (!pageFactory) return
 
       event.preventDefault()
+      window.history.pushState(this.currentPage?.serialise(), '', targetURL)
 
       const page = pageFactory.createPage(targetURL)
-      await this.currentPage?.destroy()
+
+      this.currentPage?.destroy()
       await page.setup()
 
       this.currentPage = page
-      history.pushState(null, '', targetURL)
     })
   }
 
   watchPopState(window: Window) {
     window.addEventListener('popstate', async event => {
-      console.log(event)
+      const targetURL = new URL((event.target as Window).location.toString())
+      const serialisedPage = event.state
+
+      const pageFactory = this.getFactory(targetURL)
+      if (!pageFactory) return window.location = targetURL.toString()
+
+      const restoredPage = pageFactory.unserialise(targetURL, serialisedPage)
+
+      console.log('Transitioning to', targetURL)
+
+      this.currentPage?.destroy()
+      this.currentPage = restoredPage
+      await restoredPage.setup()
     })
   }
 
