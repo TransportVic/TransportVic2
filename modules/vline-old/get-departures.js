@@ -1,6 +1,6 @@
 const async = require('async')
 const utils = require('../../utils.mjs')
-const ptvAPI = require('../../ptv-api')
+const ptvAPI = require('../../ptv-api.mjs')
 const departureUtils = require('../utils/get-train-timetables')
 const guessPlatform = require('./guess-scheduled-platforms')
 const termini = require('../../additional-data/termini-to-lines')

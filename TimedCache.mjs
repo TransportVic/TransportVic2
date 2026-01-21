@@ -1,4 +1,4 @@
-module.exports = class TimedCache {
+export default class TimedCache {
 
   constructor(ttl) {
     this.ttl = ttl

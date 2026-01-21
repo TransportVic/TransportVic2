@@ -5,7 +5,7 @@ import cheerio from 'cheerio'
 import termini from '../../../../additional-data/termini-to-lines.js'
 import getMetroDepartures from '../../../../modules/metro-trains/get-departures.mjs'
 import getVLineStops from './SSS-Lines.mjs'
-import getMetroStops from '../../../../additional-data/route-stops.js'
+import getMetroStops from '../../../../additional-data/route-stops.mjs'
 import TrainUtils from '../TrainUtils.mjs'
 import { getDayOfWeek } from '../../../../public-holidays.mjs'
 

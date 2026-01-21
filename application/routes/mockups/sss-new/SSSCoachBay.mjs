@@ -1,6 +1,6 @@
 import express from 'express'
 import getCoachDepartures from '../../../../modules/regional-coach/get-departures.mjs'
-import destinationOverrides from '../../../../additional-data/coach-stops.js'
+import destinationOverrides from '../../../../additional-data/coach-stops.mjs'
 import utils from '../../../../utils.mjs'
 import url from 'url'
 import querystring from 'querystring'

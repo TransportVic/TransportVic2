@@ -5,7 +5,7 @@ import url from 'url'
 import querystring from 'querystring'
 import vlineFleet from '../../../additional-data/vline-tracker/vline-fleet.json' with { type: 'json' }
 import vlineConsists from '../../../additional-data/vline-tracker/carriage-sets.json' with { type: 'json' }
-import rawLineRanges from '../../../additional-data/vline-tracker/line-ranges.js'
+import rawLineRanges from '../../../additional-data/vline-tracker/line-ranges.mjs'
 import { getDayOfWeek } from '../../../public-holidays.mjs'
 
 const router = new express.Router()

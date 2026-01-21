@@ -11,7 +11,7 @@
   },
   "author": "",
   "license": "ISC",
-  "type": "module",
+  "type": "commonjs",
   "dependencies": {
     "@transportme/database": "^1.0.53",
     "@transportme/load-ptv-gtfs": "^1.4.37",

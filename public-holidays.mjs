@@ -6,15 +6,17 @@ import utils from './utils.mjs'
 import _loggers from './init-loggers.mjs'
 
 const database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+
+const isInTest = typeof global.it === 'function'
 let gtfsTimetables
 
-setTimeout(async () => {
+if (!isInTest) {
   await database.connect()
   gtfsTimetables = await database.getCollection('gtfs timetables')
-}, 1)
+}
 
-let rawEvents = ical.sync.parseFile(path.join(import.meta.dirname, 'transportvic-data/calendar/vic-public-holidays/vic-holidays.ics'))
-let events = Object.values(rawEvents).slice(1)
+const rawEvents = ical.sync.parseFile(path.join(import.meta.dirname, 'transportvic-data/calendar/vic-public-holidays/vic-holidays.ics'))
+const events = Object.values(rawEvents).slice(1)
 
 let eventCache = {}
 let dayCache = {}
@@ -115,3 +117,5 @@ export async function isNightNetworkRunning(time) {
 
   return nightNetworkRunning[day]
 }
+
+export async function closeDB() { await database.close() }

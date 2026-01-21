@@ -1,9 +1,9 @@
-const utils = require('../utils.mjs')
-const config = require('../config')
-const modules = require('../modules')
-const async = require('async')
-const FormData = require('form-data')
-const fs = require('fs')
+import utils from '../utils.mjs'
+import config from '../config.json' with { type: 'json' }
+import modules from '../modules.json' with { type: 'json' }
+import async from 'async'
+import FormData from 'form-data'
+import fs from 'fs'
 
 async function postFirst(type, text, file) {
   let formData = new FormData()
@@ -19,7 +19,7 @@ async function postFirst(type, text, file) {
   })
 }
 
-module.exports = async (type, text, file) => {
+export default async (type, text, file) => {
   if (modules.discordIntegration && modules.discordIntegration[type]) {
     let chunks = [[text]]
 

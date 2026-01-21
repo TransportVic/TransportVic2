@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   'Ballarat': [
     [8100, 8199],
     [8200, 8299]

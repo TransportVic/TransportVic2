@@ -1,8 +1,6 @@
 import express from 'express'
 import utils from '../../../utils.mjs'
-import guessPlatform from '../../../modules/vline-old/guess-scheduled-platforms.js'
-import { getDayOfWeek } from '../../../public-holidays.mjs'
-import VLineUtils from '../../../modules/vline/vline-utils.mjs'
+import guessPlatform from '../../../modules/vline-old/guess-scheduled-platforms.mjs'
 
 const router = new express.Router()
 

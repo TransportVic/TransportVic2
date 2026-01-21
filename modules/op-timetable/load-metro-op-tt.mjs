@@ -5,7 +5,7 @@ import convertToLive from '../departures/sch-to-live.mjs'
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 import fs from 'fs/promises'
 import { fileURLToPath } from 'url'
-import discordIntegration from '../discord-integration.js'
+import discordIntegration from '../discord-integration.mjs'
 import { hostname } from 'os'
 
 const { TRANSIT_MODES } = GTFS_CONSTANTS

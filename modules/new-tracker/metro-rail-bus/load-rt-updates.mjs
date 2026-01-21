@@ -9,7 +9,7 @@ import utils from '../../../utils.mjs'
 import config from '../../../config.json' with { type: 'json' }
 import _ from '../../../init-loggers.mjs'
 import fs from 'fs/promises'
-import discordIntegration from '../../discord-integration.js'
+import discordIntegration from '../../discord-integration.mjs'
 import { hostname } from 'os'
 import { MTMRailStop } from '../../../load-gtfs/metro-rail-bus/loaders/MTMRailStopLoader.mjs'
 

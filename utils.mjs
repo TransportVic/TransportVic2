@@ -1,6 +1,6 @@
 import moment from 'moment-timezone'
-import stopNameModifier from './additional-data/stop-name-modifier.js'
-import TimedCache from './TimedCache.js'
+import stopNameModifier from './additional-data/stop-name-modifier.mjs'
+import TimedCache from './TimedCache.mjs'
 import EventEmitter from 'events'
 import crypto from 'crypto'
 import fs from 'fs'
@@ -335,7 +335,7 @@ const utils = {
   },
   formatPTHHMMForOpDay: (time, operationDay) => {
     if (time.clone().startOf('day') - operationDay.clone().startOf('day') === 0) return time.format('HH:mm')
-    hour = time.diff(operationDay, 'hours')
+    const hour = time.diff(operationDay, 'hours')
     return `${hour}:${time.format('mm')}`
   },
   getPTYYYYMMDD: time => {

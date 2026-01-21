@@ -1,8 +1,8 @@
-const utils = require('../../../utils.mjs')
+import utils from '../../../utils.mjs'
 
 let stopDates = {}
 
-module.exports = {
+export default {
   groupDepartures: departures => {
     let services = []
     let groupedDepartures = {}

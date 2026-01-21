@@ -2,7 +2,7 @@ import express from 'express'
 import utils from '../../../utils.mjs'
 import url from 'url'
 import querystring from 'querystring'
-import rawLineRanges from '../../../additional-data/metro-tracker/line-ranges.js'
+import rawLineRanges from '../../../additional-data/metro-tracker/line-ranges.mjs'
 
 const router = new express.Router()
 

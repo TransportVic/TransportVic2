@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2024",
-    "module": "nodenext",
+    "module": "es2022",
     "outDir": "./application/static/js",
     "strict": true,
     "esModuleInterop": true,

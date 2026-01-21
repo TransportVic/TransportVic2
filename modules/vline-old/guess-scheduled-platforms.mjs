@@ -98,7 +98,7 @@ let singlePlatforms = [
   'Murray Bridge'
 ]
 
-module.exports = (stationName, departureTimeMinutes, line, direction, isWeekday) => {
+export default (stationName, departureTimeMinutes, line, direction, isWeekday) => {
   let isUp = direction === 'Up'
 
   if (line === 'The Overland') {
@@ -195,10 +195,10 @@ module.exports = (stationName, departureTimeMinutes, line, direction, isWeekday)
         [6,42],
         [15,42],
         [17,45],
-        [18,02],
+        [18, 2],
         [18,52],
-        [07,42],
-        [09,13]
+        [ 7,42],
+        [ 9,13]
       ].map(e => e[0] * 60 + e[1])
       if (plat2.includes(departureTimeMinutes)) return 2
       else return 1

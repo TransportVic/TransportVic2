@@ -1,11 +1,10 @@
-const async = require('async')
-const utils = require('../../utils.mjs')
-const ptvAPI = require('../../ptv-api')
-const nameModifier = require('../../additional-data/stop-name-modifier')
-const determineBusRouteNumber = require('../../additional-data/determine-bus-route-number')
-const regionalRouteNumbers = require('../../additional-data/bus-data/bus-network-regions')
-const { getStop } = require('../utils/get-bus-timetables')
-const overrideStops = require('./override-stops')
+import async from 'async'
+import utils from '../../utils.mjs'
+import ptvAPI from '../../ptv-api.mjs'
+import determineBusRouteNumber from '../../additional-data/determine-bus-route-number.js'
+import regionalRouteNumbers from '../../additional-data/bus-data/bus-network-regions.json' with { type: 'json' }
+import busTimetables from '../utils/get-bus-timetables.mjs'
+import overrideStops from './override-stops.json' with { type: 'json' }
 
 let regionalGTFSIDs = Object.keys(regionalRouteNumbers).reduce((acc, region) => {
   let regionRoutes = regionalRouteNumbers[region]
@@ -51,7 +50,7 @@ function getRunIDFromTripID(tripID) {
   return `${depotID}-${routeNumber}-${routeVariant}-${rosterType}-${tripRunID}`
 }
 
-module.exports = async function (data, db) {
+export default async function (data, db) {
   let { ptvRunID, time, referenceTrip } = data
 
   let stopsCollection = db.getCollection('stops')
@@ -84,7 +83,7 @@ module.exports = async function (data, db) {
 
   let dbStops = {}
 
-  let firstStopData = await getStop(stops[departures[0].stop_id], stopsCollection)
+  let firstStopData = await busTimetables.getStop(stops[departures[0].stop_id], stopsCollection)
   let { stopType, screenServices } = determineStopType(firstStopData)
 
   if (stopType === 'regional') return referenceTrip
@@ -138,7 +137,7 @@ module.exports = async function (data, db) {
   let gtfsDirection = referenceTrip ? referenceTrip.gtfsDirection : route.ptvDirections[directionName] || 0
 
   await async.forEach(Object.values(stops), async stop => {
-    let dbStop = await getStop(stop, stopsCollection)
+    let dbStop = await busTimetables.getStop(stop, stopsCollection)
 
     if (!dbStop) global.loggers.general.err('Failed to match stop', stop)
     dbStops[stop.stop_id] = dbStop

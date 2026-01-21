@@ -8,7 +8,7 @@ import config from '../../../config.json' with { type: 'json' }
 import MetroTripUpdater from '../../metro-trains/trip-updater.mjs'
 import _ from '../../../init-loggers.mjs'
 import fs from 'fs/promises'
-import discordIntegration from '../../discord-integration.js'
+import discordIntegration from '../../discord-integration.mjs'
 import { hostname } from 'os'
 
 export async function getUpcomingTrips(ptvAPI, lines) {

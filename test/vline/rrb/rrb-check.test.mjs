@@ -6,7 +6,7 @@ import rrbSecondStop from './sample-data/rrb-second-stop.json' with { type: 'jso
 import rrbSecondStopEarly from './sample-data/rrb-second-stop-early.json' with { type: 'json' }
 import rrbPKM35L from './sample-data/rrb-pkm-35L.json' with { type: 'json' }
 import rrbMidnight from './sample-data/rrb-midnight.json' with { type: 'json' }
-import rrbCheck from '../../../modules/regional-coach/rrb-check.js'
+import rrbCheck from '../../../modules/regional-coach/rrb-check.mjs'
 
 const clone = o => JSON.parse(JSON.stringify(o))
 

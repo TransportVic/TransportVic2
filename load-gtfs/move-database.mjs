@@ -1,7 +1,7 @@
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../config.json' with { type: 'json' }
 import { runHealthCheck } from './health-check/check.mjs'
-import discordIntegration from '../modules/discord-integration.js'
+import discordIntegration from '../modules/discord-integration.mjs'
 import utils from '../utils.mjs'
 import url from 'url'
 import fs from 'fs/promises'

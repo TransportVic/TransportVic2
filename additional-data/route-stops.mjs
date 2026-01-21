@@ -572,7 +572,7 @@ let lines = {
   ]
 }
 
-function getLineStops(lineName, destination) {
+export default function getLineStops(lineName, destination) {
   if (['Pakenham', 'Traralgon', 'Bairnsdale'].includes(lineName)) return lines.Gippsland
   if (lineName === 'Cranbourne') return lines.Cranbourne
   if (lineName === 'Belgrave') return lines.Belgrave
@@ -599,5 +599,3 @@ function getLineStops(lineName, destination) {
   if (lineName === 'Flemington Racecourse') return lines['Flemington Racecourse']
   if (lineName === 'The Overland') return lines.Overland
 }
-
-module.exports = getLineStops

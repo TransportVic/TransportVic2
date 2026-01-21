@@ -1,7 +1,7 @@
 import express from 'express'
 import getDepartures from '../../../modules/metro-trains/get-departures.mjs'
 import utils from '../../../utils.mjs'
-import timingUtils from './timing-utils.js'
+import timingUtils from './timing-utils.mjs'
 import { getImportantDelays, getStationAlerts, shouldShowDelays } from '../../../modules/metro-trains/metro-notify.mjs'
 
 const router = new express.Router()

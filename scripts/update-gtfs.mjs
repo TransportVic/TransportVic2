@@ -9,7 +9,7 @@ import utils from '../utils.mjs'
 import config from '../config.json' with { type: 'json' }
 import modules from '../modules.json' with { type: 'json' }
 import urls from '../urls.json' with { type: 'json' }
-import postDiscordUpdate from '../modules/discord-integration.js'
+import postDiscordUpdate from '../modules/discord-integration.mjs'
 import createLogger from '../init-loggers.mjs'
 import { generateTimetableExtract } from '../modules/offline-trips/generate-data.mjs'
 

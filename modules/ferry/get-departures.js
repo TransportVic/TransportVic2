@@ -1,4 +1,4 @@
-const departureUtils = require('../utils/get-bus-timetables')
+const departureUtils = require('../utils/get-bus-timetables.mjs')
 const utils = require('../../utils.mjs')
 
 async function getDepartures(stop, db) {

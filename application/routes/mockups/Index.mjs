@@ -6,7 +6,7 @@ import rawStationPIDs from '../../../additional-data/station-pids.js'
 import url from 'url'
 import querystring from 'querystring'
 import PIDBackend from './PIDBackend.mjs'
-import busBays from '../../../additional-data/bus-data/bus-bays.js'
+import busBays from '../../../additional-data/bus-data/bus-bays.mjs'
 
 const router = new express.Router()
 

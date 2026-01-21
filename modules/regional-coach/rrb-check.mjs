@@ -1,5 +1,5 @@
-const utils = require('../../utils.mjs')
-const { getDayOfWeek } = require('../../utils.mjs')
+import { getDayOfWeek } from '../../public-holidays.mjs'
+import utils from '../../utils.mjs'
 
 let longDistanceCountryStops = [
   "Albury",
@@ -48,9 +48,9 @@ let outstationOriginStops = [
   'Sunbury'
 ].map(x => x + ' Railway Station')
 
-module.exports = async function checkRRB(trip, tripOperationDay, timetables) {
+export default async function checkRRB(trip, tripOperationDay, timetables) {
   let { origin, destination, routeName } = trip
-  let operationDay = await getDayOfWeek(utils.parseDate(tripOperationDay))
+  let operationDay = await utils.getDayOfWeek(utils.parseDate(tripOperationDay))
   let originDepartureMinutes = trip.stopTimings[0].departureTimeMinutes
 
   if (origin === 'Southern Cross Coach Terminal/Spencer Street') {

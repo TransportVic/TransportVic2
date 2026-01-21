@@ -1,6 +1,6 @@
-const async = require('async')
-const utils = require('../../utils.mjs')
-const overrideStops = require('../bus/override-stops.json')
+import async from 'async'
+import utils from '../../utils.mjs'
+import overrideStops from '../bus/override-stops.json' with { type: 'json' }
 
 /*
 
@@ -268,7 +268,7 @@ async function getScheduledDepartures(stopGTFSIDs, db, mode, timeout, useLive, t
   }).filter(Boolean).sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
 }
 
-module.exports = {
+export default {
   getUniqueGTFSIDs,
   getScheduledDepartures,
   getDeparture,

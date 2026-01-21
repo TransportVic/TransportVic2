@@ -1,13 +1,13 @@
-const async = require('async')
-const utils = require('../../utils.mjs')
-const ptvAPI = require('../../ptv-api')
-const getStoppingPattern = require('./get-stopping-pattern.js')
-const stopNameModifier = require('../../additional-data/stop-name-modifier')
-const busBays = require('../../additional-data/bus-data/bus-bays')
-const departureUtils = require('../utils/get-bus-timetables')
-const overrideStops = require('./override-stops')
+import async from 'async'
+import utils from '../../utils.mjs'
+import ptvAPI from '../../ptv-api.mjs'
+import getStoppingPattern from './get-stopping-pattern.mjs'
+import stopNameModifier from '../../additional-data/stop-name-modifier.mjs'
+import busBays from '../../additional-data/bus-data/bus-bays.mjs'
+import departureUtils from '../utils/get-bus-timetables.mjs'
+import overrideStops from './override-stops.json' with { type: 'json' }
 
-const regionalRouteNumbers = require('../../additional-data/bus-data/bus-network-regions')
+import regionalRouteNumbers from '../../additional-data/bus-data/bus-network-regions.json' with { type: 'json' }
 
 let regionalGTFSIDs = Object.keys(regionalRouteNumbers).reduce((acc, region) => {
   let regionRoutes = regionalRouteNumbers[region]
@@ -222,7 +222,7 @@ async function getScheduledDepartures(stop, db, time, useLive) {
   return await departureUtils.getScheduledDepartures(gtfsIDs, db, 'bus', 90, useLive, time)
 }
 
-async function getDepartures(stop, db, tripDB, time, discardUnmatched) {
+export default async function getDepartures(stop, db, tripDB, time, discardUnmatched) {
   let cacheKey = stop.cleanSuburbs[0] + stop.stopName
 
   try {
@@ -383,5 +383,3 @@ async function getDepartures(stop, db, tripDB, time, discardUnmatched) {
     throw e
   }
 }
-
-module.exports = getDepartures

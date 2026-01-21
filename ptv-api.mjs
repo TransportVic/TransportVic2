@@ -1,7 +1,8 @@
-const crypto = require('crypto')
-const { ptvKeys } = require('./config.json')
-const utils = require('./utils.mjs')
-const cheerio = require('cheerio')
+import crypto from 'crypto'
+import config from './config.json' with { type: 'json' }
+import utils from './utils.mjs'
+
+const { ptvKeys } = config
 
 let blankKey = {ptvDevID: "", ptvKey: ""}
 
@@ -14,7 +15,7 @@ setInterval(() => {
   ptvResponses = ptvResponses.filter(resp => now - resp.time <= hour)
 }, 1000 * 60)
 
-function getPTVCreds() {
+export function getPTVCreds() {
   if (ptvKeys.length === 0) return blankKey
 
   let key = ptvKeys[Math.floor(Math.random() * ptvKeys.length)]
@@ -24,14 +25,14 @@ function getPTVCreds() {
   }
 }
 
-function getURL(request) {
+export function getURL(request) {
   let {ptvDevID, ptvKey} = getPTVCreds()
   request += (request.includes('?') ? '&' : '?') + 'devid=' + ptvDevID
   let signature = crypto.createHmac('SHA1', ptvKey).update(request).digest('hex').toString('hex')
   return 'https://timetableapi.ptv.vic.gov.au' + request + '&signature=' + signature
 }
 
-async function makeRequest(url, maxRetries=2, timeout=2400) {
+export default async function makeRequest(url, maxRetries=2, timeout=2400) {
   try {
     return await utils.getData('ptv-api', url, async () => {
       let start = +new Date()
@@ -78,12 +79,12 @@ async function makeRequest(url, maxRetries=2, timeout=2400) {
   }
 }
 
-function getPTVKey(baseURL='https://ptv.vic.gov.au', timeout=6000) {
+export function getPTVKey(baseURL='https://ptv.vic.gov.au', timeout=6000) {
   return 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3NTM4NjQ4MDgsIm5iZiI6MTc1Mzg2NDgwOCwiZXhwIjo0OTA3NDY0ODA4LCJ1c3IiOiJ0cmFuc3BvcnR2aWN0b3JpYSIsImRvbWFpbnMiOiIqcHR2LnZpYy5nb3YuYXUsKnRyYW5zcG9ydC52aWMuZ292LmF1In0.LkqiufBLCq000ecdzrQYjFug2mGRJb7GP15xDSIRxNPYI6GoovzDzF3TxL4diKVJ6ZkuKGCvo7OrY6u3-gOEFw'
 }
 
 
-function getAverageResponseTime() {
+export function getAverageResponseTime() {
   let counts = pastResponseTimes.length
   let sum = pastResponseTimes.reduce((a, b) => a + b, 0)
   let average = sum / counts
@@ -91,15 +92,10 @@ function getAverageResponseTime() {
   return average
 }
 
-function getFaultRate() {
+export function getFaultRate() {
   let faulty = ptvResponses.filter(r => r.fault).length
   return {
     rate: faulty / ptvResponses.length * 100,
     count: faulty
   }
 }
-
-module.exports = makeRequest
-module.exports.getPTVKey = getPTVKey
-module.exports.getAverageResponseTime = getAverageResponseTime
-module.exports.getFaultRate = getFaultRate

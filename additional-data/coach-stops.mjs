@@ -1,8 +1,8 @@
-const DatabaseConnection = require('../database/DatabaseConnection')
-const config = require('../config')
-const utils = require('../utils.mjs')
+import { MongoDatabaseConnection } from '@transportme/database'
+import config from '../config.json' with { type: 'json' }
 
-const database = new DatabaseConnection(config.databaseURL, config.databaseName)
+const database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
+const isInTest = typeof global.it === 'function'
 
 let overrides = {
   "Post Office/Great Ocean Road": "Airerys Inlet Post Office",
@@ -19,18 +19,17 @@ let overrides = {
   "Southern Cross Coach Terminal/Spencer Street": "Southern Cross Coach Terminal"
 }
 
-let stops = {}
+export let stops = {}
 
 let suburbOverride = {
   'Ballarat Central': 'Ballarat'
 }
 
-database.connect(async err => {
+if (!isInTest) {
+  await database.connect()
   let coachStops = await database.getCollection('stops').findDocuments({
     'bays.mode': 'regional coach'
   }).toArray()
-
-  let added = []
 
   coachStops.forEach(stop => {
     stop.bays.forEach(bay => {
@@ -46,12 +45,10 @@ database.connect(async err => {
       stops[fullName] = suburbOverride[correctedSuburb] || correctedSuburb
     })
   })
-})
+}
 
-module.exports = function (stop) {
+export default function (stop) {
   let stopName = stop.fullStopName || stop.stopName
   let fullName = `${stopName.replace('Shopping Centre', 'SC')} ${stop.suburb}`
   return stops[fullName] || stopName.replace(/Railway Station.*/, '')
 }
-
-module.exports.stops = stops

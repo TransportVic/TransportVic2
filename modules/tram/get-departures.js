@@ -1,4 +1,4 @@
-const departureUtils = require('../utils/get-bus-timetables')
+const departureUtils = require('../utils/get-bus-timetables.mjs')
 const async = require('async')
 const utils = require('../../utils.mjs')
 const tramFleet = require('../../additional-data/tram-tracker/tram-fleet.js')

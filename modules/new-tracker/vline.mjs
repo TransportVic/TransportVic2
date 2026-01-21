@@ -5,7 +5,7 @@ import config from '../../config.json' with { type: 'json' }
 import _ from '../../init-loggers.mjs'
 import fs from 'fs/promises'
 import { isPrimary } from '../replication.mjs'
-import discordIntegration from '../discord-integration.js'
+import discordIntegration from '../discord-integration.mjs'
 import { hostname } from 'os'
 import VLineTripUpdater from '../vline/trip-updater.mjs'
 import { PTVAPI, PTVAPIInterface, VLineAPIInterface } from '@transportme/ptv-api'

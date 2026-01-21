@@ -1,4 +1,4 @@
-import getRouteStops from '../../../additional-data/route-stops.js'
+import getRouteStops from '../../../additional-data/route-stops.mjs'
 import getMetroDepartures from '../../../modules/metro-trains/get-departures.mjs'
 import getVLineDepartures from '../../../modules/vline/get-departures.mjs'
 import utils from '../../../utils.mjs'

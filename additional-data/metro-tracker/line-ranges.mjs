@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   'City Circle': [
     [700, 899]
   ],
