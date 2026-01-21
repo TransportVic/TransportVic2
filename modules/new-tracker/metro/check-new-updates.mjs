@@ -1,6 +1,6 @@
 import { updateTDNFromPTV } from './metro-ptv-trips.mjs'
 import _ from '../../../init-loggers.mjs'
-import utils from '../../../utils.js'
+import utils from '../../../utils.mjs'
 
 async function checkFormingChange(trip, change, liveTimetables, trips, updates) {
   let oldTrip, newTrip

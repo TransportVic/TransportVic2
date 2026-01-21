@@ -1,6 +1,6 @@
-import utils from '../../utils.js'
-import { getNonDSTMinutesPastMidnight } from '../dst/dst.js'
-import { convertToLive } from './sch-to-live.js'
+import utils from '../../utils.mjs'
+import { getNonDSTMinutesPastMidnight } from '../dst/dst.mjs'
+import convertToLive from './sch-to-live.mjs'
 
 export default class Departures {
   

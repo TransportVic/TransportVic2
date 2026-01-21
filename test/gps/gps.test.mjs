@@ -1,7 +1,7 @@
 import { LokiDatabaseConnection } from '@transportme/database'
 import { expect } from 'chai'
 import { getEstimatedArrivalTime, getRelevantTrips, getTripData, updateTrips } from '../../modules/new-tracker/gps/update-trips.mjs'
-import utils from '../../utils.js'
+import utils from '../../utils.mjs'
 import td8507Live from './sample-data/td8507-live.mjs'
 import styRoute from './sample-data/sty-route.mjs'
 import styStops from '../metro/tracker/sample-data/sty-stops.json' with { type: 'json' }

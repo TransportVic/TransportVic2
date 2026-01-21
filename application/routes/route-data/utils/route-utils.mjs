@@ -1,7 +1,6 @@
-const moment = require('moment')
-const async = require('async')
-const utils = require('../../../../utils')
-const publicHolidays = require('../../../../public-holidays')
+import async from 'async'
+import utils from '../../../../utils.mjs'
+import { getPublicHolidayName } from '../../../../public-holidays.mjs'
 
 let frequencyRanges = {
   'Early Morning': [[3, 0], [6, 0]],
@@ -14,7 +13,7 @@ let frequencyRanges = {
 
 function getDistantWeekdays(allAvailableDays) {
   let weekdays = allAvailableDays.filter(day => {
-    let phName = publicHolidays.getPublicHolidayName(day)
+    let phName = getPublicHolidayName(day)
     if (phName) return false
     let dayOfWeek = day.day()
 
@@ -268,7 +267,7 @@ async function generateFrequencyMap(gtfsTimetables, query) {
   }
 }
 
-module.exports = {
+export default {
   getDistantWeekdays,
   getDistantSaturday,
   getDistantSunday,

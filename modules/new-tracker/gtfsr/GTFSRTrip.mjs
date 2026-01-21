@@ -1,5 +1,5 @@
 import { SmartrakTrip } from '@transportme/load-ptv-gtfs/lib/gtfs-parser/GTFSTrip.mjs'
-import utils from '../../../utils.js'
+import utils from '../../../utils.mjs'
 
 export class GTFSRTrip {
 

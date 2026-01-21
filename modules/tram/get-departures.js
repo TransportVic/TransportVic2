@@ -1,6 +1,6 @@
 const departureUtils = require('../utils/get-bus-timetables')
 const async = require('async')
-const utils = require('../../utils')
+const utils = require('../../utils.mjs')
 const tramFleet = require('../../additional-data/tram-tracker/tram-fleet.js')
 const urls = require('../../urls')
 const determineTramRouteNumber = require('./determine-tram-route-number')

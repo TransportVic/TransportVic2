@@ -1,5 +1,5 @@
 const async = require('async')
-const utils = require('../../utils')
+const utils = require('../../utils.mjs')
 const ptvAPI = require('../../ptv-api')
 const getStoppingPattern = require('./get-stopping-pattern.js')
 const stopNameModifier = require('../../additional-data/stop-name-modifier')

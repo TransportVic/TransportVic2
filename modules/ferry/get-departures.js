@@ -1,5 +1,5 @@
 const departureUtils = require('../utils/get-bus-timetables')
-const utils = require('../../utils')
+const utils = require('../../utils.mjs')
 
 async function getDepartures(stop, db) {
   try {

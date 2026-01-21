@@ -1,6 +1,6 @@
 import { expect, use } from 'chai'
 import chaiExclude from 'chai-exclude'
-import utils from '../../utils.js'
+import utils from '../../utils.mjs'
 import { LokiDatabaseConnection } from '@transportme/database'
 import busTrips from './sample-data/bus-trips.mjs'
 import BusTracker from '../../application/model/tracker/BusTracker.mjs'

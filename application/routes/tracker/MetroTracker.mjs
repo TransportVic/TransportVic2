@@ -1,9 +1,10 @@
-const express = require('express')
-const utils = require('../../../utils')
+import express from 'express'
+import utils from '../../../utils.mjs'
+import url from 'url'
+import querystring from 'querystring'
+import rawLineRanges from '../../../additional-data/metro-tracker/line-ranges.js'
+
 const router = new express.Router()
-const url = require('url')
-const querystring = require('querystring')
-const rawLineRanges = require('../../../additional-data/metro-tracker/line-ranges')
 
 let lineRanges = {}
 
@@ -150,4 +151,4 @@ router.get('/consist', async (req, res) => {
   })
 })
 
-module.exports = router
+export default router

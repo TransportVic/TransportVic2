@@ -1,6 +1,7 @@
-const express = require('express')
-const utils = require('../../../utils')
-const render = require('./utils/render-train')
+import express from 'express'
+import utils from '../../../utils.mjs'
+import render from './utils/render-train.mjs'
+
 const router = new express.Router()
 
 router.get('/:routeName', async (req, res, next) => {
@@ -39,4 +40,4 @@ router.get('/:routeName/:directionName', async (req, res, next) => {
   render(req.params, res, matchingRoute)
 })
 
-module.exports = router
+export default router

@@ -1,5 +1,5 @@
-import utils from '../../utils.js'
-import { convertToLive } from '../../modules/departures/sch-to-live.js'
+import utils from '../../utils.mjs'
+import convertToLive from '../../modules/departures/sch-to-live.mjs'
 import routeGroups from './route-groups.json' with { type: 'json' }
 
 const routeGroupings = Object.keys(routeGroups).reduce((acc, e) => ({

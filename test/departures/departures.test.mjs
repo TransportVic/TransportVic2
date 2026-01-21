@@ -13,7 +13,7 @@ import studPark from './sample-data/stud-park.json' with { type: 'json' }
 import flindersStreet from './sample-data/flinders-street.json' with { type: 'json' }
 import alamein from './sample-data/alamein.json' with { type: 'json' }
 import { fetchLiveTrips, fetchScheduledTrips, getDepartures, getCombinedDepartures, shouldUseLiveDepartures } from '../../modules/departures/get-departures.mjs'
-import utils from '../../utils.js'
+import utils from '../../utils.mjs'
 
 let clone = o => JSON.parse(JSON.stringify(o))
 

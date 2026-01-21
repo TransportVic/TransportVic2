@@ -1,6 +1,7 @@
-const express = require('express')
-const utils = require('../../../utils')
-const render = require('./utils/render-tram')
+import express from 'express'
+import utils from '../../../utils.mjs'
+import render from './utils/render-tram.mjs'
+
 const router = new express.Router()
 
 router.get('/:routeNumber', async (req, res, next) => {
@@ -37,4 +38,4 @@ router.get('/:routeNumber/:directionName', async (req, res, next) => {
   render(req.params, res, matchingRoute)
 })
 
-module.exports = router
+export default router

@@ -5,7 +5,7 @@ const DatabaseConnection = require('../../database/DatabaseConnection')
 const BufferedLineReader = require('../split-gtfs/BufferedLineReader')
 const config = require('../../config')
 const loadGTFSTimetables = require('../utils/load-gtfs-timetables')
-const utils = require('../../utils')
+const utils = require('../../utils.mjs')
 const gtfsUtils = require('../../gtfs-utils')
 const moment = require('moment')
 

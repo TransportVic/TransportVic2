@@ -1,23 +1,23 @@
-const moment = require('moment-timezone')
+import moment from 'moment-timezone'
+import stopNameModifier from './additional-data/stop-name-modifier.js'
+import TimedCache from './TimedCache.js'
+import EventEmitter from 'events'
+import crypto from 'crypto'
+import fs from 'fs'
+import fsp from 'fs/promises'
+import path from 'path'
+
+import { spawn } from 'child_process'
+import util from 'util'
+import fetch from 'node-fetch'
+
 moment.tz.setDefault('Australia/Melbourne')
-const stopNameModifier = require('./additional-data/stop-name-modifier')
-const TimedCache = require('./TimedCache')
-const EventEmitter = require('events')
-const crypto = require('crypto')
-const fs = require('fs')
-const fsp = require('fs/promises')
-const path = require('path')
-
-const { spawn } = require('child_process')
-const util = require('util')
-const fetch = require('node-fetch')
-
 const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 const locks = {}, caches = {}
 
 let forceLongRequest = true
 let interval = setInterval(() => {
-  if (module.exports.uptime() >= 40000) {
+  if (utils.uptime() >= 40000) {
     forceLongRequest = false
     clearInterval(interval)
 
@@ -40,10 +40,10 @@ String.prototype.format = (function (i, safe, arg) {
   return format
 }())
 
-module.exports = {
+const utils = {
   encodeName: name => name.toLowerCase().replace(/[^\w\d ]/g, '-').replace(/  */g, '-').replace(/--+/g, '-').replace(/-$/, '').replace(/^-/, ''),
   adjustRouteName: routeName => {
-    return module.exports.titleCase(routeName.replace(/via .+/i, '')
+    return utils.titleCase(routeName.replace(/via .+/i, '')
       .replace(/\(?(?:anti)? ?-? ?(?:clockwise)(?: loop)?\)?$/i, '')
       .replace(/ \(SMARTBUS.+/gi, '')
       .replace(/ to /i, ' - ')
@@ -148,7 +148,7 @@ module.exports = {
       name = name.replace(' Station', ' Railway Station')
     }
 
-    name = module.exports.expandStopName(name)
+    name = utils.expandStopName(name)
 
     return name
   },
@@ -289,10 +289,10 @@ module.exports = {
     return mainTime
   },
   getMinutesPastMidnightNow: () => {
-    return module.exports.getMinutesPastMidnight(module.exports.now())
+    return utils.getMinutesPastMidnight(utils.now())
   },
   getPTMinutesPastMidnight: time => {
-    let minutesPastMidnight = module.exports.getMinutesPastMidnight(time)
+    let minutesPastMidnight = utils.getMinutesPastMidnight(time)
     let offset = 0
 
     if (minutesPastMidnight < 180) offset = 1440
@@ -303,7 +303,7 @@ module.exports = {
     return time.get('hours') * 60 + time.get('minutes')
   },
   getPTDayName: time => {
-    let minutesPastMidnight = module.exports.getMinutesPastMidnight(time)
+    let minutesPastMidnight = utils.getMinutesPastMidnight(time)
     let offset = 0
 
     if (minutesPastMidnight < 180) offset = 1440
@@ -347,7 +347,7 @@ module.exports = {
   getYYYYMMDD: time => {
     return time.format('YYYYMMDD')
   },
-  getYYYYMMDDNow: () => module.exports.getYYYYMMDD(module.exports.now()),
+  getYYYYMMDDNow: () => utils.getYYYYMMDD(utils.now()),
   getHumanDateShort: time => {
     return time.format('DD/MM')
   },
@@ -446,11 +446,11 @@ module.exports = {
 
   getDistanceFromLatLon: (lat1, lon1, lat2, lon2) => {
     var R = 6371 // Radius of the earth in km
-    var dLat = module.exports.deg2rad(lat2-lat1)
-    var dLon = module.exports.deg2rad(lon2-lon1)
+    var dLat = utils.deg2rad(lat2-lat1)
+    var dLon = utils.deg2rad(lon2-lon1)
     var a =
       Math.sin(dLat/2) * Math.sin(dLat/2) +
-      Math.cos(module.exports.deg2rad(lat1)) * Math.cos(module.exports.deg2rad(lat2)) *
+      Math.cos(utils.deg2rad(lat1)) * Math.cos(utils.deg2rad(lat2)) *
       Math.sin(dLon/2) * Math.sin(dLon/2)
 
     var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
@@ -481,18 +481,18 @@ module.exports = {
     return stopName
   },
   parseDate: date => {
-    if (date instanceof Date) return module.exports.parseTime(date)
+    if (date instanceof Date) return utils.parseTime(date)
 
-    if (date.match(/^\d{1,2}\/\d{1,2}\/\d{1,4}$/)) return module.exports.parseTime(date, 'DD/MM/YYYY')
-    else return module.exports.parseTime(date, 'YYYYMMDD')
+    if (date.match(/^\d{1,2}\/\d{1,2}\/\d{1,4}$/)) return utils.parseTime(date, 'DD/MM/YYYY')
+    else return utils.parseTime(date, 'YYYYMMDD')
   },
   prettyTime: (time, showHours, blankOld) => {
-    time = module.exports.parseTime(time)
-    let timeDifference = moment.utc(time.diff(module.exports.now()))
+    time = utils.parseTime(time)
+    let timeDifference = moment.utc(time.diff(utils.now()))
 
     if (blankOld && +timeDifference <= -60000 * 2) return ''
     if (+timeDifference <= 60000) return 'Now'
-    if (+timeDifference > 1440 * 60 * 1000) return module.exports.getHumanDateShort(time)
+    if (+timeDifference > 1440 * 60 * 1000) return utils.getHumanDateShort(time)
 
     let hours = timeDifference.get('hours')
     let minutes = timeDifference.get('minutes')
@@ -523,14 +523,14 @@ module.exports = {
     }
   },
   getProperStopName: ptvStopName => {
-    return module.exports.adjustRawStopName(stopNameModifier(module.exports.adjustStopName(ptvStopName.trim().replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, ''))))
+    return utils.adjustRawStopName(stopNameModifier(utils.adjustStopName(ptvStopName.trim().replace(/ #.+$/, '').replace(/^(D?[\d]+[A-Za-z]?)-/, ''))))
   },
   getShortName: stopName => stopName.replace('Shopping Centre', 'SC').replace('Railway Station', 'Station'),
   getDestinationName: stopName => {
-    let shortName = module.exports.getShortName(stopName)
+    let shortName = utils.getShortName(stopName)
 
-    let primaryStopName = module.exports.getStopName(shortName)
-    if (module.exports.isStreet(primaryStopName)) return shortName
+    let primaryStopName = utils.getStopName(shortName)
+    if (utils.isStreet(primaryStopName)) return shortName
     else return primaryStopName
   },
   getRunID: ptvRunID => {
@@ -540,7 +540,7 @@ module.exports = {
     }
   },
   getPTVRunID: runID => {
-      if (module.exports.isValidRunID(runID)) {
+      if (utils.isValidRunID(runID)) {
         return `9${runID.charCodeAt(0)}${runID.slice(1)}`
       } else return null
   },
@@ -566,7 +566,7 @@ module.exports = {
   },
   tokeniseAndSubstring: text => {
     let words = text.split(/[^\w]/)
-    return words.map(w => module.exports.findSubstrings(w, 4)).reduce((a, e) => a.concat(e), [])
+    return words.map(w => utils.findSubstrings(w, 4)).reduce((a, e) => a.concat(e), [])
   },
   shuffle: a => {
     let j, x, i
@@ -663,7 +663,7 @@ module.exports = {
           fs.stat(file, async function(err, stat) {
             if (stat && stat.isDirectory()) {
               dirs.push({file: false, path: file})
-              results = results.concat(await module.exports.walkDir(file))
+              results = results.concat(await utils.walkDir(file))
               next()
             } else {
               results.push({file: true, path: file})
@@ -676,7 +676,7 @@ module.exports = {
     })
   },
   rmDir: async dir => {
-    let allFiles = await module.exports.walkDir(dir)
+    let allFiles = await utils.walkDir(dir)
 
     for (let file of allFiles) {
       try {
@@ -721,9 +721,11 @@ module.exports = {
     }
   },
   getPrettyStopName: (stopName, destinations, { routeNumber, routeGTFSID } = {}) => {
-    const keyStopName = module.exports.getDestinationName(stopName)
-    const primaryStopName = module.exports.getShortName(module.exports.getStopName(stopName))
+    const keyStopName = utils.getDestinationName(stopName)
+    const primaryStopName = utils.getShortName(utils.getStopName(stopName))
     const serviceData = destinations.service[routeGTFSID] || destinations.service[routeNumber] || {}
     return (serviceData[keyStopName] || destinations.generic[keyStopName] || primaryStopName)
   }
 }
+
+export default utils

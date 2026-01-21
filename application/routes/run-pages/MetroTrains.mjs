@@ -1,5 +1,5 @@
 import express from 'express'
-import utils from '../../../utils.js'
+import utils from '../../../utils.mjs'
 import { tripCrossesCity, checkIsCHLFormingCCLSpecialCase, getFormedByTripData, getFormingTripData } from '../../../modules/metro-trains/get-forming-trip.mjs'
 import appendDoorsData from '../../../transportvic-data/sample/get-doors.mjs'
 

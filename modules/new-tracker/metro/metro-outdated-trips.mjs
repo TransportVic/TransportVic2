@@ -4,7 +4,7 @@ import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../../config.json' with { type: 'json' }
 import { PTVAPI, PTVAPIInterface } from '@transportme/ptv-api'
 import { updateTDNFromPTV } from './metro-ptv-trips.mjs'
-import utils from '../../../utils.js'
+import utils from '../../../utils.mjs'
 import _ from '../../../init-loggers.mjs'
 import fs from 'fs/promises'
 

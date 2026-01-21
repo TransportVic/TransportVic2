@@ -1,6 +1,6 @@
 const DatabaseConnection = require('../database/DatabaseConnection')
 const config = require('../config')
-const utils = require('../utils')
+const utils = require('../utils.mjs')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 

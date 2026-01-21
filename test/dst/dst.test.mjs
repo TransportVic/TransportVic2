@@ -1,5 +1,5 @@
 import { expect } from 'chai'
-import { getDSTMinutesPastMidnight, getMinutesInDay, getNonDSTMinutesPastMidnight, getTimeOffset, isDSTChange } from '../../modules/dst/dst.js'
+import { getDSTMinutesPastMidnight, getMinutesInDay, getNonDSTMinutesPastMidnight, getTimeOffset, isDSTChange } from '../../modules/dst/dst.mjs'
 
 describe('The DST methods', () => {
   it('Should identify if a given day is the first day of a time change', () => {

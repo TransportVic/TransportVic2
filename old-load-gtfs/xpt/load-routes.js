@@ -6,7 +6,7 @@ const BufferedLineReader = require('../split-gtfs/BufferedLineReader')
 const config = require('../../config')
 const loadRoutes = require('../utils/load-routes')
 const gtfsUtils = require('../../gtfs-utils')
-const utils = require('../../utils')
+const utils = require('../../utils.mjs')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)
 const updateStats = require('../utils/stats')

@@ -1,6 +1,6 @@
 import express from 'express'
 import escapeRegex from 'escape-regex-string'
-import utils from '../../utils.js'
+import utils from '../../utils.mjs'
 import stationCodes from '../../additional-data/station-codes.json' with { type: 'json' }
 import { distance } from 'fastest-levenshtein'
 

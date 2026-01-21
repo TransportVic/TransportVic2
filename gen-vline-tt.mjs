@@ -1,6 +1,6 @@
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from './config.json' with { type: 'json' }
-import utils from './utils.js'
+import utils from './utils.mjs'
 
 const allDates = utils.allDaysBetweenDates(
   utils.parseDate('20250906'),

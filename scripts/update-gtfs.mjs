@@ -5,7 +5,7 @@ import path from 'path'
 import { MongoDatabaseConnection } from '@transportme/database'
 import { PTVGTFS } from '@transportme/load-ptv-gtfs'
 
-import utils from '../utils.js'
+import utils from '../utils.mjs'
 import config from '../config.json' with { type: 'json' }
 import modules from '../modules.json' with { type: 'json' }
 import urls from '../urls.json' with { type: 'json' }

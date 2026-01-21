@@ -1,6 +1,6 @@
 import { MongoDatabaseConnection } from '@transportme/database'
 import { fileURLToPath } from 'url'
-import utils from '../../../utils.js'
+import utils from '../../../utils.mjs'
 import config from '../../../config.json' with { type: 'json' }
 import { GetPlatformServicesAPI, PTVAPI, PTVAPIInterface, VLineAPIInterface } from '@transportme/ptv-api'
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'

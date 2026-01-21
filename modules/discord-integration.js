@@ -1,4 +1,4 @@
-const utils = require('../utils')
+const utils = require('../utils.mjs')
 const config = require('../config')
 const modules = require('../modules')
 const async = require('async')

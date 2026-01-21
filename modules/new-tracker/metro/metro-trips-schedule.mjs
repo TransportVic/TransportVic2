@@ -1,6 +1,6 @@
 import { PTVAPI, MetroSiteAPIInterface } from '@transportme/ptv-api'
 import { fileURLToPath } from 'url'
-import utils from '../../../utils.js'
+import utils from '../../../utils.mjs'
 import { LiveTimetable } from '../../schema/live-timetable.mjs'
 
 import { MongoDatabaseConnection } from '@transportme/database'

@@ -2,7 +2,7 @@ import async from 'async'
 import fs from 'fs/promises'
 import path from 'path'
 import url from 'url'
-import utils from '../../utils.js'
+import utils from '../../utils.mjs'
 import urls from '../../urls.json' with { type: 'json' }
 
 const __filename = url.fileURLToPath(import.meta.url)

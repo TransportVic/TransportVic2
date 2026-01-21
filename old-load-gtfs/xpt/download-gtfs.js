@@ -2,7 +2,7 @@ const tfnswAPI = require('../../modules/xpt/tfnsw-api')
 const fs = require('fs')
 const path = require('path')
 const updateStats = require('../utils/stats')
-const utils = require('../../utils')
+const utils = require('../../utils.mjs')
 const AdmZip = require('adm-zip')
 
 tfnswAPI.makeRequest('/v1/gtfs/schedule/nswtrains', {

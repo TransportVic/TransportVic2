@@ -1,27 +1,29 @@
-const async = require('async')
-const express = require('express')
-const utils = require('../../../../utils.js')
-const url = require('url')
-const querystring = require('querystring')
-const moment = require('moment')
-const busDestinations = require('../../../../additional-data/bus-destinations.json')
-const router = new express.Router()
+import async from 'async'
+import express, { raw } from 'express'
+import utils from '../../../../utils.mjs'
+import url from 'url'
+import querystring from 'querystring'
+import busDestinations from '../../../../additional-data/bus-destinations.json' with { type: 'json' }
 
-const highlightData = require('../../../../additional-data/bus-tracker/highlights.js')
+import highlightData from '../../../../additional-data/bus-tracker/highlights.js'
+import smartrakDepots from '../../../../transportvic-data/excel/bus/depots/bus-depots.json' with { type: 'json' }
+
+import rawDepotAllocations from '../../../../additional-data/bus-tracker/depot-allocations.json' with { type: 'json' }
+import manualOverrides from '../../../../additional-data/bus-tracker/manual-overrides.json' with { type: 'json' }
+
+import operatorCodes from '../../../../additional-data/bus-tracker/operators.json' with { type: 'json' }
+import BusTracker from '../../../model/tracker/BusTracker.mjs'
 
 const depotAllocations = {
-  ...require('../../../../additional-data/bus-tracker/depot-allocations.json'),
-  ...require('../../../../additional-data/bus-tracker/manual-overrides.json')
+  ...rawDepotAllocations, ...manualOverrides
 }
 
-const smartrakDepots = require('../../../../transportvic-data/excel/bus/depots/bus-depots.json')
+const router = new express.Router()
 
 const smartrakDepotLookup = Object.keys(smartrakDepots).reduce((acc, depotID) => ({
   ...acc,
   [smartrakDepots[depotID]]: depotID
 }), {})
-
-const operatorCodes = require('../../../../additional-data/bus-tracker/operators.json')
 
 let crossDepotQuery = null
 
@@ -30,8 +32,6 @@ let manualRoutes = {
   "CS": ["4-406", "4-407", "4-408", "4-409", "4-410", "4-418", "4-419", "4-421", "4-423", "4-424", "4-425", "4-461"],
   "CW": ["4-150", "4-151", "4-153", "4-160", "4-161", "4-166", "4-167", "4-170", "4-180", "4-181", "4-190", "4-191", "4-192", "4-400", "4-411", "4-412", "4-414", "4-415", "4-417", "4-439", "4-441", "4-443", "4-494", "4-495", "4-496", "4-497", "4-498", "4-606"],
 }
-
-const { default: BusTracker } = require('../../../model/tracker/BusTracker.mjs')
 
 async function generateCrossDepotQuery(busRegos) {
   if (crossDepotQuery) return
@@ -473,9 +473,8 @@ router.get('/operator-unknown', async (req, res) => {
   })
 })
 
-router.use('/locator', require('../BusLocator'))
-
-module.exports = router
-module.exports.initDB = async (db, tripDB) => {
+router.initDB = async (db, tripDB) => {
   await generateCrossDepotQuery(await tripDB.getCollection('bus regos'))
 }
+
+export default router

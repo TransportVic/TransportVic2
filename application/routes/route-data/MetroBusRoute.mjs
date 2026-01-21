@@ -1,18 +1,18 @@
-const express = require('express')
-const utils = require('../../../utils')
-const render = require('./utils/render-bus')
+import express from 'express'
+import utils from '../../../utils.mjs'
+import render from './utils/render-bus.mjs'
+
 const router = new express.Router()
 
-router.get('/:suburb/:routeNumber', async (req, res, next) => {
+router.get('/:routeNumber', async (req, res, next) => {
   let {db} = res
   let routes = db.getCollection('routes')
-  let {routeNumber, suburb} = req.params
+  let {routeNumber} = req.params
 
   let matchingRoute = await routes.findDocument({
     mode: 'bus',
     routeNumber,
-    routeGTFSID: /6-/,
-    cleanSuburbs: suburb
+    routeGTFSID: /(4|7|8)-/
   })
 
   if (!matchingRoute) return res.status(404).render('errors/no-route')
@@ -20,27 +20,25 @@ router.get('/:suburb/:routeNumber', async (req, res, next) => {
   let bestDirection = matchingRoute.directions.sort((a, b) => a.directionName.localeCompare(b.directionName))[0]
   let cleanName = utils.encodeName(bestDirection.directionName)
 
-  res.redirect(`/bus/route/regional/${suburb}/${routeNumber}/${cleanName}`)
+  res.redirect('/bus/route/' + routeNumber + '/' + cleanName)
 })
 
-router.get('/:suburb/:routeNumber/:directionName/', async (req, res, next) => {
+router.get('/:routeNumber/:directionName/', async (req, res, next) => {
   let {db} = res
   let routes = db.getCollection('routes')
   let gtfsTimetables = db.getCollection('gtfs timetables')
 
-  let {routeNumber, directionName, suburb} = req.params
-  if (['named'].includes(routeNumber)) return next()
+  let {routeNumber, directionName} = req.params
+  if (['regional', 'named'].includes(routeNumber)) return next()
 
   let matchingRoute = await routes.findDocument({
     mode: 'bus',
     routeNumber,
-    routeGTFSID: /6-/,
-    cleanSuburbs: suburb
+    routeGTFSID: /(4|7|8)-/
   })
 
   if (!matchingRoute) return res.status(404).render('errors/no-route')
   render(req.params, res, matchingRoute)
 })
 
-
-module.exports = router
+export default router

@@ -5,7 +5,7 @@ import config from '../../../config.json' with { type: 'json' }
 import fs from 'fs/promises'
 import path from 'path'
 import url from 'url'
-import utils from '../../../utils.js'
+import utils from '../../../utils.mjs'
 
 let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
 await mongoDB.connect()

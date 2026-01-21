@@ -1,6 +1,6 @@
 const crypto = require('crypto')
-const { ptvKeys } = require('./config')
-const utils = require('./utils')
+const { ptvKeys } = require('./config.json')
+const utils = require('./utils.mjs')
 const cheerio = require('cheerio')
 
 let blankKey = {ptvDevID: "", ptvKey: ""}

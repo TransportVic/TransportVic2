@@ -1,6 +1,6 @@
 import config from '../config.json' with { type: 'json' }
 import { MongoDatabaseConnection } from '@transportme/database'
-import utils from '../utils.js'
+import utils from '../utils.mjs'
 
 const RETENTION_PERIODS = {
   notify: 14,

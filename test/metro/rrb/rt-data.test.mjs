@@ -11,7 +11,7 @@ import { PTVAPI, StubAPI } from '@transportme/ptv-api'
 import { fetchTrips, getRailBusUpdates } from '../../../modules/new-tracker/metro-rail-bus/load-rt-updates.mjs'
 import { expect } from 'chai'
 import getTripID from '../../../modules/new-tracker/metro-rail-bus/get-trip-id.mjs'
-import utils from '../../../utils.js'
+import utils from '../../../utils.mjs'
 
 let clone = o => JSON.parse(JSON.stringify(o))
 

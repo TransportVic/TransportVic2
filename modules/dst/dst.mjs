@@ -1,4 +1,4 @@
-const moment = require('moment-timezone')
+import moment from 'moment-timezone'
 moment.tz.setDefault('Australia/Melbourne')
 
 function isDSTChange(date) {
@@ -33,7 +33,7 @@ function getMinutesInDay(date) {
   return nextDay.diff(startOfDay, 'minutes')
 }
 
-module.exports = {
+export {
   isDSTChange,
   getTimeOffset,
   getNonDSTMinutesPastMidnight,

@@ -1,43 +1,43 @@
-const express = require('express')
-const utils = require('../../../utils')
-const render = require('./utils/render-bus')
+import express from 'express'
+import utils from '../../../utils.mjs'
+import render from './utils/render-bus.mjs'
+
 const router = new express.Router()
 
-router.get('/:routeNumber', async (req, res, next) => {
+router.get('/:cleanName', async (req, res, next) => {
   let {db} = res
   let routes = db.getCollection('routes')
-  let {routeNumber} = req.params
+  let {cleanName} = req.params
 
   let matchingRoute = await routes.findDocument({
     mode: 'bus',
-    routeNumber,
-    routeGTFSID: /(4|7|8)-/
+    cleanName,
+    routeGTFSID: /(4|6|7|8|11|12)-/
   })
 
   if (!matchingRoute) return res.status(404).render('errors/no-route')
 
   let bestDirection = matchingRoute.directions.sort((a, b) => a.directionName.localeCompare(b.directionName))[0]
-  let cleanName = utils.encodeName(bestDirection.directionName)
+  let codedDirection = utils.encodeName(bestDirection.directionName)
 
-  res.redirect('/bus/route/' + routeNumber + '/' + cleanName)
+  res.redirect('/bus/route/named/' + cleanName + '/' + codedDirection)
 })
 
-router.get('/:routeNumber/:directionName/', async (req, res, next) => {
+router.get('/:cleanName/:directionName/', async (req, res, next) => {
   let {db} = res
   let routes = db.getCollection('routes')
   let gtfsTimetables = db.getCollection('gtfs timetables')
 
-  let {routeNumber, directionName} = req.params
-  if (['regional', 'named'].includes(routeNumber)) return next()
+  let {cleanName, directionName, operationDateType} = req.params
 
   let matchingRoute = await routes.findDocument({
     mode: 'bus',
-    routeNumber,
-    routeGTFSID: /(4|7|8)-/
+    cleanName,
+    routeGTFSID: /(4|6|7|8|11|12)-/
   })
 
   if (!matchingRoute) return res.status(404).render('errors/no-route')
   render(req.params, res, matchingRoute)
 })
 
-module.exports = router
+export default router

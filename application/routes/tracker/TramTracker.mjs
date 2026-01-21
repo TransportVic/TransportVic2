@@ -1,13 +1,14 @@
-const async = require('async')
-const express = require('express')
-const utils = require('../../../utils')
-const url = require('url')
-const querystring = require('querystring')
-const tramDestinations = require('../../../additional-data/tram-destinations')
-const tramFleet = require('../../../additional-data/tram-tracker/tram-fleet.js')
-const knownTrams = require('../../../additional-data/tram-tracker/known-tram-fleet.json')
-const tramDepots = require('../../../additional-data/tram-tracker/depot-allocations')
-const serviceDepots = require('../../../additional-data/tram-tracker/service-depots')
+import async from 'async'
+import express from 'express'
+import utils from '../../../utils.mjs'
+import url from 'url'
+import querystring from 'querystring'
+import tramDestinations from '../../../additional-data/tram-destinations.json' with { type: 'json' }
+import tramFleet from '../../../additional-data/tram-tracker/tram-fleet.js'
+import knownTrams from '../../../additional-data/tram-tracker/known-tram-fleet.json' with { type: 'json' }
+import tramDepots from '../../../additional-data/tram-tracker/depot-allocations.json' with { type: 'json' }
+import serviceDepots from '../../../additional-data/tram-tracker/service-depots.json' with { type: 'json' }
+
 const router = new express.Router()
 
 let crossDepotQuery = {
@@ -345,4 +346,4 @@ router.get('/full-list', async (req, res) => {
   })
 })
 
-module.exports = router
+export default router

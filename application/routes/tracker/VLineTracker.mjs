@@ -1,14 +1,14 @@
-const async = require('async')
-const express = require('express')
-const utils = require('../../../utils')
+import async from 'async'
+import express from 'express'
+import utils from '../../../utils.mjs'
+import url from 'url'
+import querystring from 'querystring'
+import vlineFleet from '../../../additional-data/vline-tracker/vline-fleet.json' with { type: 'json' }
+import vlineConsists from '../../../additional-data/vline-tracker/carriage-sets.json' with { type: 'json' }
+import rawLineRanges from '../../../additional-data/vline-tracker/line-ranges.js'
+import { getDayOfWeek } from '../../../public-holidays.mjs'
+
 const router = new express.Router()
-const url = require('url')
-const querystring = require('querystring')
-const moment = require('moment')
-const vlineFleet = require('../../../additional-data/vline-tracker/vline-fleet')
-const vlineConsists = require('../../../additional-data/vline-tracker/carriage-sets')
-const rawLineRanges = require('../../../additional-data/vline-tracker/line-ranges')
-const { getDayOfWeek } = require('../../../public-holidays')
 
 let lineRanges = {}
 
@@ -280,5 +280,4 @@ router.get('/highlights', async (req, res) => {
   })
 })
 
-module.exports = router
-module.exports.filterHighlights = filterHighlights
+export default router

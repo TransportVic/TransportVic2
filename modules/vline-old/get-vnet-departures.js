@@ -1,8 +1,8 @@
 const urls = require('../../urls')
-const utils = require('../../utils')
+const utils = require('../../utils.mjs')
 const cheerio = require('cheerio')
 const async = require('async')
-const { getDayOfWeek } = require('../../public-holidays')
+const { getDayOfWeek } = require('../../public-holidays.mjs')
 
 async function getStationFromVNETName(vnetStationName, db) {
   return await utils.getData('vnet-station', vnetStationName, async () => {

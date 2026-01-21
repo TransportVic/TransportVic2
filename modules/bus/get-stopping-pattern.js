@@ -1,5 +1,5 @@
 const async = require('async')
-const utils = require('../../utils')
+const utils = require('../../utils.mjs')
 const ptvAPI = require('../../ptv-api')
 const nameModifier = require('../../additional-data/stop-name-modifier')
 const determineBusRouteNumber = require('../../additional-data/determine-bus-route-number')

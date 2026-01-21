@@ -1,7 +1,7 @@
-const utils = require('../../utils')
-const { getTimeOffset } = require('../dst/dst')
+import utils from '../../utils.mjs'
+import { getTimeOffset } from '../dst/dst.mjs'
 
-function convertToLive(trip, departureDay) {
+export default function convertToLive(trip, departureDay) {
   let startOfDay = utils.parseTime(departureDay).startOf('day')
   let operationDay = utils.getYYYYMMDD(startOfDay)
 
@@ -37,8 +37,4 @@ function convertToLive(trip, departureDay) {
   delete trip._id
 
   return trip
-}
-
-module.exports = {
-  convertToLive
 }

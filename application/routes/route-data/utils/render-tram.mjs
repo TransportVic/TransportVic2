@@ -1,7 +1,7 @@
-const utils = require('../../../../utils')
-const routeUtils = require('./route-utils')
+import utils from '../../../../utils.mjs'
+import routeUtils from './route-utils.mjs'
 
-async function render(params, res, matchingRoute) {
+export default async function render(params, res, matchingRoute) {
   let {db} = res
   let {routeNumber, directionName} = params
 
@@ -57,5 +57,3 @@ async function render(params, res, matchingRoute) {
     frequencyMap
   })
 }
-
-module.exports = render

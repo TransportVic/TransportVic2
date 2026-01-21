@@ -6,7 +6,7 @@ import MetroTripUpdater from '../../metro-trains/trip-updater.mjs'
 import getMetroDepartures from '../../metro-trains/get-departures.mjs'
 import { PTVAPI, PTVAPIInterface } from '@transportme/ptv-api'
 import getTripUpdateData from '../../metro-trains/get-stopping-pattern.mjs'
-import utils from '../../../utils.js'
+import utils from '../../../utils.mjs'
 import _ from '../../../init-loggers.mjs'
 import fs from 'fs/promises'
 

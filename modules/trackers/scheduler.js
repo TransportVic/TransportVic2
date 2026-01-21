@@ -1,4 +1,4 @@
-const utils = require('../../utils')
+const utils = require('../../utils.mjs')
 
 module.exports = function schedule(intervals, func, name, logger) {
   let minutesNow = utils.getMinutesPastMidnightNow()

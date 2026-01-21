@@ -1,4 +1,4 @@
-const utils = require('../../../utils')
+const utils = require('../../../utils.mjs')
 const cancellation = require('./handle-cancellation')
 const async = require('async')
 const postDiscordUpdate = require('../../discord-integration')

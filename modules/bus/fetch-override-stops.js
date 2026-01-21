@@ -1,7 +1,7 @@
 const ptvAPI = require('../../ptv-api')
 const fs = require('fs/promises')
 const discord = require('../discord-integration')
-const utils = require('../../utils')
+const utils = require('../../utils.mjs')
 let stops = {}
 
 let RWD = {

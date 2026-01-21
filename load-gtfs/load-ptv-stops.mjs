@@ -1,4 +1,4 @@
-import utils from '../utils.js'
+import utils from '../utils.mjs'
 import { getPTVKey } from '../ptv-api.js'
 import { writeFile } from 'fs/promises'
 import path from 'path'

@@ -1,5 +1,5 @@
 const async = require('async')
-const utils = require('../../utils')
+const utils = require('../../utils.mjs')
 const overrideStops = require('../bus/override-stops.json')
 
 /*

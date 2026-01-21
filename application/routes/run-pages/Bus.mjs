@@ -1,5 +1,5 @@
 import express from 'express'
-import utils from '../../../utils.js'
+import utils from '../../../utils.mjs'
 import getStoppingPattern from '../../../modules/bus/get-stopping-pattern.js'
 import busDestinations from '../../../additional-data/bus-destinations.json' with { type: 'json' }
 import busBays from '../../../additional-data/bus-data/bus-bays.js'

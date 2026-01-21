@@ -1,5 +1,5 @@
 import { makePBRequest } from './gtfsr-api.mjs'
-import utils from '../../utils.js'
+import utils from '../../utils.mjs'
 
 let dataset = process.argv[2]
 if (!dataset) {

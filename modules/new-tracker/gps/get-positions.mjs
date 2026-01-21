@@ -1,4 +1,4 @@
-import utils from '../../../utils.js'
+import utils from '../../../utils.mjs'
 import urls from '../../../urls.json' with { type: 'json' }
 
 export async function getGPSPositions() {

@@ -1,5 +1,5 @@
 import TimedCache from '../../../../TimedCache.js'
-import utils from '../../../../utils.js'
+import utils from '../../../../utils.mjs'
 import getLineStops from '../../../../additional-data/route-stops.js'
 import express from 'express'
 

@@ -1,6 +1,6 @@
 import express from 'express'
 import getData from './SouthernCrossTrains.mjs'
-import utils from '../../../../utils.js'
+import utils from '../../../../utils.mjs'
 
 const router = new express.Router()
 

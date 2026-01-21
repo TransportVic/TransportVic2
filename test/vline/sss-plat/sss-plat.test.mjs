@@ -8,7 +8,7 @@ import allStops from '../op-tt/sample-data/stops.json' with { type: 'json' }
 import td8866 from './sample-data/td8866.json' with { type: 'json' }
 import td8741GTFS from '../op-tt/sample-data/td8741-gtfs.json' with { type: 'json' }
 import { fetchSSSPlatforms, getPlatformUpdates } from '../../../modules/new-tracker/vline/southern-cross-platform.mjs'
-import { convertToLive } from '../../../modules/departures/sch-to-live.js'
+import convertToLive from '../../../modules/departures/sch-to-live.mjs'
 import td8431Live from '../gtfsr/sample-data/td8431-live.mjs'
 import trnStops from '../gtfsr/sample-data/trn-stops.mjs'
 

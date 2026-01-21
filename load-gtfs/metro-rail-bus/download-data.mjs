@@ -1,5 +1,5 @@
 import urls from '../../urls.json' with { type: 'json' }
-import utils from '../../utils.js'
+import utils from '../../utils.mjs'
 import AdmZip from 'adm-zip'
 import fs from 'fs/promises'
 import path from 'path'

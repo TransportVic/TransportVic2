@@ -1,5 +1,5 @@
-const utils = require('../../utils.js')
-const { getDayOfWeek } = require('../../utils.js')
+const utils = require('../../utils.mjs')
+const { getDayOfWeek } = require('../../utils.mjs')
 
 let longDistanceCountryStops = [
   "Albury",

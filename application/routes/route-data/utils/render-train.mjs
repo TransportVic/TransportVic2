@@ -1,11 +1,11 @@
-const utils = require('../../../../utils')
-const routeUtils = require('./route-utils')
-const stationCodes = require('../../../../additional-data/station-codes')
+import utils from '../../../../utils.mjs'
+import routeUtils from './route-utils.mjs'
+import stationCodes from '../../../../additional-data/station-codes.json' with { type: 'json' }
 
 let stationCodeLookup = {}
 Object.keys(stationCodes).forEach(code => stationCodeLookup[stationCodes[code]] = code)
 
-async function render(params, res, matchingRoute) {
+export default async function render(params, res, matchingRoute) {
   let {db} = res
   let {routeNumber, directionName, suburb} = params
 
@@ -71,5 +71,3 @@ async function render(params, res, matchingRoute) {
     frequencyMap
   })
 }
-
-module.exports = render

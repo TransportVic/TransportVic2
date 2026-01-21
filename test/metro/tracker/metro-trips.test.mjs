@@ -6,7 +6,7 @@ import styStops from './sample-data/sty-stops.json' with { type: 'json' }
 import bbnStops from './sample-data/bbn-stops-db.json' with { type: 'json' }
 import styRoute from './sample-data/sty-route.json' with { type: 'json' }
 import stubSTYOpData from './sample-data/stony-point.json' with { type: 'json' }
-import utils from '../../../utils.js'
+import utils from '../../../utils.mjs'
 import { fetchTrips, getUpcomingTrips } from '../../../modules/new-tracker/metro/metro-trips-schedule.mjs'
 import td3154DST from './sample-data/td3154-dst.mjs'
 import begRoute from './sample-data/beg-route.mjs'

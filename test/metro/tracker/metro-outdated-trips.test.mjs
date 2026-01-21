@@ -2,7 +2,7 @@ import { expect } from 'chai'
 import { LokiDatabaseConnection } from '@transportme/database'
 import lil3826 from './sample-data/lil-3826.json' with { type: 'json' }
 import cbeC406 from './sample-data/cbe-C406.json' with { type: 'json' }
-import utils from '../../../utils.js'
+import utils from '../../../utils.mjs'
 import { getOutdatedTrips } from '../../../modules/new-tracker/metro/metro-outdated-trips.mjs'
 import steamTD8543 from './sample-data/steam-td8543.mjs'
 

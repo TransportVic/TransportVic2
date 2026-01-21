@@ -1,4 +1,4 @@
-import utils from '../../utils.js'
+import utils from '../../utils.mjs'
 import Departures from '../departures/get-departures.mjs'
 import { getFormingTrip } from './get-forming-trip.mjs'
 import { NORTHERN_GROUP, CITY_LOOP } from './line-groups.mjs'

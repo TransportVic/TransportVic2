@@ -1,7 +1,7 @@
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../config.json' with { type: 'json' }
 import destos from '../../additional-data/bus-destinations.json' with { type: 'json' }
-import utils from '../../utils.js'
+import utils from '../../utils.mjs'
 
 const database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
 await database.connect()

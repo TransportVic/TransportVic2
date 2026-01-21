@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url'
 
 import MetroTripUpdater from '../../metro-trains/trip-updater.mjs'
 import getTripID from './get-trip-id.mjs'
-import utils from '../../../utils.js'
+import utils from '../../../utils.mjs'
 
 import config from '../../../config.json' with { type: 'json' }
 import _ from '../../../init-loggers.mjs'

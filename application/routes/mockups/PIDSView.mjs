@@ -1,7 +1,7 @@
 import express from 'express'
 import stationCodes from '../../../additional-data/station-codes.json' with { type: 'json' }
 import rawStationPIDs from '../../../additional-data/station-pids.js'
-import utils from '../../../utils.js'
+import utils from '../../../utils.mjs'
 import PIDBackend from './PIDBackend.mjs'
 
 const router = new express.Router()

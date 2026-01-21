@@ -13,7 +13,7 @@ import ephTrips from '../../departures/sample-data/eph-clp-forming.json' with { 
 import pkmStops from '../tracker/sample-data/pkm-stops-db.json' with { type: 'json' }
 import getDepartures from '../../../modules/metro-trains/get-departures.mjs'
 import sssTurnbackTrips from './sample-data/sss-turnback-trips.mjs'
-import utils from '../../../utils.js'
+import utils from '../../../utils.mjs'
 import northernSSSForming from './sample-data/northern-sss-forming.mjs'
 import mixedRRB from './sample-data/mixed-rrb.mjs'
 import mtpThroughRunningBlock from './sample-data/mtp-through-running-block.mjs'

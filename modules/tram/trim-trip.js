@@ -1,5 +1,5 @@
 const async = require('async')
-const utils = require('../../utils')
+const utils = require('../../utils.mjs')
 const tramDestinations = require('../../additional-data/tram-destinations')
 const { closest, distance } = require('fastest-levenshtein')
 

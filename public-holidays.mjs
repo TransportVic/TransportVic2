@@ -1,8 +1,9 @@
-const ical = require('node-ical')
-const path = require('path')
-const { MongoDatabaseConnection } = require('@transportme/database')
-const config = require('./config')
-const utils = require('./utils')
+import ical from 'node-ical'
+import path from 'path'
+import { MongoDatabaseConnection } from '@transportme/database'
+import config from './config.json' with { type: 'json' }
+import utils from './utils.mjs'
+import _loggers from './init-loggers.mjs'
 
 const database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
 let gtfsTimetables
@@ -12,7 +13,7 @@ setTimeout(async () => {
   gtfsTimetables = await database.getCollection('gtfs timetables')
 }, 1)
 
-let rawEvents = ical.sync.parseFile(path.join(__dirname, 'transportvic-data/calendar/vic-public-holidays/vic-holidays.ics'))
+let rawEvents = ical.sync.parseFile(path.join(import.meta.dirname, 'transportvic-data/calendar/vic-public-holidays/vic-holidays.ics'))
 let events = Object.values(rawEvents).slice(1)
 
 let eventCache = {}
@@ -38,7 +39,7 @@ events.filter(e => e.type === 'VEVENT').forEach(event => {
   }
 })
 
-function getPublicHolidayName(time) {
+export function getPublicHolidayName(time) {
   return eventCache[utils.getYYYYMMDD(time)]
 }
 
@@ -49,7 +50,7 @@ async function waitForDB() {
   }
 }
 
-async function getPHDayOfWeek(time) {
+export async function getPHDayOfWeek(time) {
   await waitForDB()
 
   let day = utils.getYYYYMMDD(time)
@@ -87,7 +88,7 @@ async function getPHDayOfWeek(time) {
   }
 }
 
-async function getDayOfWeek(time) {
+export async function getDayOfWeek(time) {
   let phDay = await getPHDayOfWeek(time)
   let regularDay = utils.getDayOfWeek(time)
   if (!phDay || phDay === 'Weekday') return regularDay
@@ -96,7 +97,7 @@ async function getDayOfWeek(time) {
   else return 'Sun'
 }
 
-async function isNightNetworkRunning(time) {
+export async function isNightNetworkRunning(time) {
   await waitForDB()
 
   let day = utils.getYYYYMMDD(time)
@@ -113,11 +114,4 @@ async function isNightNetworkRunning(time) {
   nightNetworkRunning[day] = !!train // If timetable exists means NN running, else not running
 
   return nightNetworkRunning[day]
-}
-
-module.exports = {
-  getPublicHolidayName,
-  getPHDayOfWeek,
-  getDayOfWeek,
-  isNightNetworkRunning
 }

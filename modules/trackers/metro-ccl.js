@@ -1,5 +1,5 @@
 const config = require('../../config')
-const utils = require('../../utils')
+const utils = require('../../utils.mjs')
 const urls = require('../../urls')
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const schedule = require('./scheduler')

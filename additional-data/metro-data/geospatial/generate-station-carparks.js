@@ -1,6 +1,6 @@
 const fs = require('fs')
 const path = require('path')
-const utils = require('../../../utils')
+const utils = require('../../../utils.mjs')
 const async = require('async')
 const { closest, distance } = require('fastest-levenshtein')
 const config = require('../../../config')

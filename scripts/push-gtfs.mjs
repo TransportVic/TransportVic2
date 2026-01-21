@@ -2,7 +2,7 @@ import generateGTFS from '../modules/journey-planner/generate-gtfs.mjs'
 import { getAvailableServers, isPrimary } from '../modules/replication.mjs'
 import url from 'url'
 import config from '../config.json' with { type: 'json' }
-import utils from '../utils.js'
+import utils from '../utils.mjs'
 import fetch from 'node-fetch'
 import { createReadStream } from 'fs'
 import fs from 'fs/promises'

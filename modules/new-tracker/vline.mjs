@@ -13,7 +13,7 @@ import { makePBRequest } from '../gtfsr/gtfsr-api.mjs'
 import { fetchSSSPlatforms } from './vline/southern-cross-platform.mjs'
 import { fetchGTFSRTrips } from './vline/vline-gtfsr-trips.mjs'
 import { fetchGTFSRFleet } from './vline/vline-gtfsr-fleet.mjs'
-import utils from '../../utils.js'
+import utils from '../../utils.mjs'
 
 async function writeUpdatedTrips(db, tripDB, updatedTrips) {
   const tripBulkOperations = updatedTrips.map(timetable => (timetable.stops.length ? {
