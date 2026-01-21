@@ -1,4 +1,4 @@
-import { SearchPage } from './pages.js'
+import { NearbyPage, SearchPage } from './pages.js'
 import { Page, PathPageFactory, StaticPageFactory } from './types.js'
 import { on, pageReady } from './util.js'
 
@@ -9,7 +9,8 @@ class App {
   private pageFactories = [
     new StaticPageFactory('/'),
     new StaticPageFactory('/links'),
-    new PathPageFactory('/search', SearchPage)
+    new PathPageFactory('/search', SearchPage),
+    new PathPageFactory('/nearby', NearbyPage),
   ] as const
 
   constructor(landingPage: URL) {
@@ -61,8 +62,9 @@ class App {
 
       this.currentPage?.destroy()
       this.currentPage = restoredPage
+
       await restoredPage.restore()
-      // await restoredPage.load()
+      await restoredPage.setup()
     })
   }
 
