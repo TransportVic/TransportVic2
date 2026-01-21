@@ -1,4 +1,5 @@
 import { NearbyPage, SearchPage } from './pages.js'
+import { TimingPageFactory } from './timings.js'
 import { Page, PathPageFactory, StaticPageFactory } from './types.js'
 import { on, pageReady } from './util.js'
 
@@ -11,6 +12,7 @@ class App {
     new StaticPageFactory('/links'),
     new PathPageFactory('/search', SearchPage),
     new PathPageFactory('/nearby', NearbyPage),
+    new TimingPageFactory(),
   ] as const
 
   constructor(landingPage: URL) {
@@ -38,9 +40,18 @@ class App {
 
       const page = pageFactory.createPage(targetURL)
 
-      await this.currentPage?.destroy()
-      await page.load()
-      await page.setup()
+      try {
+        await this.currentPage?.destroy()
+      } catch (e) {
+        console.error('An error occurred tearing down the page', e)
+      }
+
+      try {
+        await page.load()
+        await page.setup()
+      } catch (e) {
+        console.error('An error occurred setting up the page', e)
+      }
 
       this.currentPage = page
 
@@ -79,4 +90,10 @@ pageReady(async () => {
   app.watchLinks(document)
   app.watchPopState(window)
   await app.setup()
+
+  window.app = app
 })
+
+declare global {
+  interface Window { app: App }
+}

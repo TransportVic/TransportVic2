@@ -61,9 +61,6 @@ append postStyle
   link(rel='stylesheet' href=`${staticBase}/static/css/constant-colours.css`)
 
 append content
-  div#body-container
-    div.left
-      include mode-switch
-      div#departures.map
-        include ./templates/grouped
-    div#map.right
+  include mode-switch
+  div#departures
+    include ./templates/grouped

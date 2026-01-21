@@ -12,12 +12,16 @@ export type PageState = {
   styles: string[]
 }
 
+export const BASE_STATE: PageState = {
+  header: '',
+  content: '',
+  styles: []
+} as const
+
 export abstract class Page {
 
   protected state: PageState = {
-    header: '',
-    content: '',
-    styles: []
+    ...BASE_STATE
   }
 
   constructor(protected url: URL) {
@@ -88,19 +92,19 @@ export abstract class Page {
     this.replaceHeaderContent(header.innerHTML)
     this.replaceMainContent(content.innerHTML)
 
-    this.state = {
-      header: header.innerHTML,
-      content: content.innerHTML,
-      styles: styles.map(link => link.getAttribute('href') || '').filter(Boolean)
-    }
+    this.initialiseState()
   }
 
-  initialiseState() {
-    this.state = {
+  getInitialState(): PageState {
+    return {
       header: $('nav')?.innerHTML || '',
       content: $('main')?.innerHTML || '',
       styles: this.getExistingStyles().map(link => link.getAttribute('href') || '').filter(Boolean)
     }
+  }
+
+  initialiseState() {
+    this.state = this.getInitialState()
   }
 
   restore() {

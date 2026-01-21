@@ -47,9 +47,6 @@ append postStyle
 
 append content
   - let currentMode = 'metro train'
-  div#body-container
-    div.left
-      include mode-switch
-      div#departures.map
-        include ./templates/metro-trains
-    div#map.right
+  include mode-switch
+  div#departures
+    include ./templates/metro-trains

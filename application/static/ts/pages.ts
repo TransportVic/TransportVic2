@@ -1,4 +1,4 @@
-import { Page, PageState } from './types.js'
+import { BASE_STATE, Page, PageState } from './types.js'
 import { $, inputTimeout } from './util.js'
 
 type SearchPageState = PageState & {
@@ -14,9 +14,7 @@ export class SearchPage extends Page {
 
   private searchID: number = 0
   protected state: SearchPageState = {
-    header: '',
-    content: '',
-    styles: [],
+    ...BASE_STATE,
     searchQuery: '',
     searchResults: ''
   }

@@ -42,9 +42,6 @@ append postStyle
 
 append content
   - let currentMode = 'regional coach'
-  div#body-container
-    div.left
-      include mode-switch
-      div#departures.map
-        include ./templates/regional-coach
-    div#map.right
+  include mode-switch
+  div#departures
+    include ./templates/regional-coach

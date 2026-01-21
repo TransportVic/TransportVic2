@@ -54,9 +54,6 @@ append postStyle
 
 append content
   - let currentMode = 'regional train'
-  div#body-container
-    div.left
-      include mode-switch
-      div#departures.map
-        include ./templates/vline
-    div#map.right
+  include mode-switch
+  div#departures
+    include ./templates/vline

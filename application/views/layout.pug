@@ -61,9 +61,11 @@ html(lang='en-GB')
       div#header-right
         block header-right
         a#home-button(href='/') Home
-    main#content
-      block content
+    div#page-content
+      main#content
+        block content
+      div#map
     
     block postStyle
     block scripts
-    script(src=`${staticBase}/static/scripts/sw-load.js`)
+    //- script(src=`${staticBase}/static/scripts/sw-load.js`)
