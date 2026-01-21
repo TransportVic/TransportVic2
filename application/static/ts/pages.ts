@@ -72,7 +72,13 @@ export class SearchPage extends Page {
 
 export class NearbyPage extends Page {
 
-  static UPDATE_INTERVAL: number = 5000
+  private static UPDATE_INTERVAL: number = 5000
+  private static ERROR_MESSAGES: Record<number, string> = {
+    0: 'Whoops! Something went wrong and I can\'t find your location!',
+    1: 'Please accept the location prompt!',
+    2: 'Whoops! Something went wrong and I can\'t find your location!',
+    3: 'Whoops! Finding your location took too long!'
+  }
 
   private watchID: number = 0
 
@@ -105,7 +111,18 @@ export class NearbyPage extends Page {
   }
 
   processError(error: GeolocationPositionError) {
+    const content = $('#content')!
+    const message = NearbyPage.ERROR_MESSAGES[error.code] || NearbyPage.ERROR_MESSAGES[0]
 
+    content.className = 'none'
+    content.innerHTML = `
+  <h2>${message}</h2>
+  <img src="/static/images/home/500.svg" />
+  <div>
+    <a href="/">Try going home</a>
+    <span>&nbspOr&nbsp</span>
+    <a href="/search">Searching for a stop</a>
+  </div>`
   }
 
   destroy() {
