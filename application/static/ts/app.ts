@@ -17,6 +17,8 @@ class App {
     if (!pageFactory) return
 
     this.currentPage = pageFactory.createPage(landingPage)
+    this.currentPage.initialiseState()
+    window.history.replaceState(this.currentPage.serialise(), '')
   }
 
   getFactory(url: URL) {
@@ -32,7 +34,6 @@ class App {
       if (!pageFactory) return
 
       event.preventDefault()
-      window.history.pushState(this.currentPage?.serialise(), '', targetURL)
 
       const page = pageFactory.createPage(targetURL)
 
@@ -41,6 +42,8 @@ class App {
       await page.setup()
 
       this.currentPage = page
+
+      window.history.pushState(page.serialise(), '', targetURL)
     })
   }
 
@@ -54,17 +57,17 @@ class App {
 
       const restoredPage = pageFactory.unserialise(targetURL, serialisedPage)
 
-      console.log('Transitioning to', targetURL)
+      console.log('Transitioning to', targetURL, restoredPage)
 
       this.currentPage?.destroy()
       this.currentPage = restoredPage
-      await restoredPage.setup()
-      await restoredPage.load()
+      await restoredPage.restore()
+      // await restoredPage.load()
     })
   }
 
   async setup() {
-    if (this.currentPage) await this.currentPage.load()
+    if (this.currentPage) await this.currentPage.setup()
   }
 
 }

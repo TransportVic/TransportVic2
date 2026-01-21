@@ -6,7 +6,7 @@ type PageContent = {
   styles: HTMLLinkElement[]
 }
 
-type SerialisedPage = {
+export type PageState = {
   header: string,
   content: string,
   styles: string[]
@@ -14,7 +14,7 @@ type SerialisedPage = {
 
 export abstract class Page {
 
-  private state: SerialisedPage = {
+  protected state: PageState = {
     header: '',
     content: '',
     styles: []
@@ -95,15 +95,25 @@ export abstract class Page {
     }
   }
 
+  initialiseState() {
+    this.state = {
+      header: $('nav')?.innerHTML || '',
+      content: $('main')?.innerHTML || '',
+      styles: this.getExistingStyles().map(link => link.getAttribute('href') || '').filter(Boolean)
+    }
+  }
+
   restore() {
     this.replaceStylesFromLinks(this.state.styles)
     this.replaceHeaderContent(this.state.header)
     this.replaceMainContent(this.state.content)
   }
 
-  serialise(): SerialisedPage { return this.state }
+  serialise(): PageState { return this.state }
 
-  setState(state: SerialisedPage) { this.state = state }
+  setState(state: PageState) { this.state = state }
+
+  replacePageState() { window.history.replaceState(this.serialise(), '') }
 }
 
 export abstract class PageFactory {
@@ -111,7 +121,7 @@ export abstract class PageFactory {
   abstract canCreatePage(url: URL): boolean
   abstract createPage(url: URL): Page
 
-  unserialise(url: URL, state: SerialisedPage): Page {
+  unserialise(url: URL, state: PageState): Page {
     const page = this.createPage(url)
     page.setState(state)
     return page
