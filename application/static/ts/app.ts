@@ -1,4 +1,5 @@
-import { Page, StaticPageFactory } from './types.js'
+import { SearchPage } from './pages.js'
+import { Page, PathPageFactory, StaticPageFactory } from './types.js'
 import { on, pageReady } from './util.js'
 
 class App {
@@ -7,7 +8,8 @@ class App {
 
   private pageFactories = [
     new StaticPageFactory('/'),
-    new StaticPageFactory('/links')
+    new StaticPageFactory('/links'),
+    new PathPageFactory('/search', SearchPage)
   ] as const
 
   constructor(landingPage: URL) {
@@ -34,7 +36,8 @@ class App {
 
       const page = pageFactory.createPage(targetURL)
 
-      this.currentPage?.destroy()
+      await this.currentPage?.destroy()
+      await page.load()
       await page.setup()
 
       this.currentPage = page
@@ -56,13 +59,19 @@ class App {
       this.currentPage?.destroy()
       this.currentPage = restoredPage
       await restoredPage.setup()
+      await restoredPage.load()
     })
+  }
+
+  async setup() {
+    if (this.currentPage) await this.currentPage.load()
   }
 
 }
 
-pageReady(() => {
+pageReady(async () => {
   const app = new App(new URL(location.toString()))
   app.watchLinks(document)
   app.watchPopState(window)
+  await app.setup()
 })

@@ -23,6 +23,7 @@ export abstract class Page {
   constructor(protected url: URL) {
   }
 
+  abstract load(): Promise<void> | void
   abstract setup(): Promise<void> | void
   abstract destroy(): Promise<void> | void
 
@@ -83,9 +84,9 @@ export abstract class Page {
   protected async replacePageData(req: Response): Promise<void> {
     const { content, header, styles } = await this.getPageContent(req)
 
+    this.replaceStyles(styles)
     this.replaceHeaderContent(header.innerHTML)
     this.replaceMainContent(content.innerHTML)
-    this.replaceStyles(styles)
 
     this.state = {
       header: header.innerHTML,
@@ -95,9 +96,9 @@ export abstract class Page {
   }
 
   restore() {
+    this.replaceStylesFromLinks(this.state.styles)
     this.replaceHeaderContent(this.state.header)
     this.replaceMainContent(this.state.content)
-    this.replaceStylesFromLinks(this.state.styles)
   }
 
   serialise(): SerialisedPage { return this.state }
@@ -140,10 +141,26 @@ class StaticPage extends Page {
     super(url)
   }
 
-  async setup(): Promise<any> {
+  async load(): Promise<any> {
     await this.replacePageData(await fetch(this.path))
   }
 
+  setup() {}
   destroy() {}
 
+}
+
+export class PathPageFactory extends PageFactory {
+
+  constructor(private path: string, private pageConstructor: new (url: URL) => Page) {
+    super()
+  }
+
+  canCreatePage(url: URL): boolean {
+    return url.pathname === this.path
+  }
+
+  createPage(url: URL): Page {
+    return new this.pageConstructor(url)
+  }
 }
