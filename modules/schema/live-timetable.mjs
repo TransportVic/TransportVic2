@@ -150,8 +150,8 @@ export class LiveTimetable {
   #runID
   #direction
 
-  #vehicleForced = false
-  #vehicle
+  _vehicleForced = false
+  _vehicle
 
   #stops = []
 
@@ -205,15 +205,15 @@ export class LiveTimetable {
   get gtfsDirection() { return this.#gtfsDirection }
 
   get vehicle() {
-    if (this.#vehicle) {
+    if (this._vehicle) {
       let returnData = {
-        size: this.#vehicle.size,
-        type: this.#vehicle.type,
-        consist: this.#vehicle.consist,
+        size: this._vehicle.size,
+        type: this._vehicle.type,
+        consist: this._vehicle.consist,
       }
-      if (this.#vehicle.icon) returnData.icon = this.#vehicle.icon
-      if (this.#vehicle.forced) returnData.forced = this.#vehicle.forced
-      if (this.#vehicle.variant) returnData.variant = this.#vehicle.variant
+      if (this._vehicle.icon) returnData.icon = this._vehicle.icon
+      if (this._vehicle.forced) returnData.forced = this._vehicle.forced
+      if (this._vehicle.variant) returnData.variant = this._vehicle.variant
       return returnData
     }
     return null
@@ -224,9 +224,9 @@ export class LiveTimetable {
     return variants.length === 1 ? variants[0] : variants.length > 1 ? 'Mixed' : undefined
   }
 
-  #setConsist(consist, forceUpdate) {
+  setConsist(consist, forceUpdate) {
     if (!forceUpdate) {
-      if (!consist || !consist.length || this.#vehicleForced) return
+      if (!consist || !consist.length || this._vehicleForced) return
       let hasFormingChange = this.changes.find(change => change.type === 'forming-change')
       if (hasFormingChange && this.vehicle && this.vehicle.consist) {
         let lastStop = this.stops[this.stops.length - 1]
@@ -243,13 +243,13 @@ export class LiveTimetable {
     let newVal = { size: consist.length, type: typeDescriptor, consist }
     if (variant) newVal.variant = variant
 
-    if (this.#vehicle) {
-      if (consist.length === 3 && this.#vehicle.size === 6) {
-        if (this.#vehicle.consist.includes(consist[0])) return
-      } else if (consist.length === 3 && this.#vehicle.size === 3 && typeDescriptor === this.#vehicle.type) {
-        if (consist[0] === this.#vehicle.consist[0]) return
-        let oldVal = { ...this.#vehicle, consist: this.#vehicle.consist.slice(0) }
-        let newVal = { ...this.#vehicle, size: 6, consist: this.#vehicle.consist.concat(consist) }
+    if (this._vehicle) {
+      if (consist.length === 3 && this._vehicle.size === 6) {
+        if (this._vehicle.consist.includes(consist[0])) return
+      } else if (consist.length === 3 && this._vehicle.size === 3 && typeDescriptor === this._vehicle.type) {
+        if (consist[0] === this._vehicle.consist[0]) return
+        let oldVal = { ...this._vehicle, consist: this._vehicle.consist.slice(0) }
+        let newVal = { ...this._vehicle, size: 6, consist: this._vehicle.consist.concat(consist) }
 
         let variant = this.#getVariant([ oldVal?.variant, type?.variant ])
         if (variant) newVal.variant = variant
@@ -260,31 +260,31 @@ export class LiveTimetable {
           newVal
         })
 
-        this.#vehicle = newVal
+        this._vehicle = newVal
         return
-      } else if (consist.join('-') === this.#vehicle.consist.join('-')) return
+      } else if (consist.join('-') === this._vehicle.consist.join('-')) return
     }
 
     this.addChange({
       type: 'veh-change',
-      oldVal: this.#vehicle || null,
+      oldVal: this._vehicle || null,
       newVal
     })
 
-    this.#vehicle = newVal
+    this._vehicle = newVal
   }
 
   set consist(consist) {
-    this.#setConsist(consist, false)
+    this.setConsist(consist, false)
   }
 
   set forcedVehicle(vehicle) {
-    let oldVal = this.#vehicle ? { ...this.#vehicle, consist: this.#vehicle.consist.slice(0) } : null
+    let oldVal = this._vehicle ? { ...this._vehicle, consist: this._vehicle.consist.slice(0) } : null
     if (vehicle.consist && !vehicle.type && !vehicle.size) {
-      this.#setConsist(vehicle.consist, true)
-      this.#vehicle.forced = true
+      this.setConsist(vehicle.consist, true)
+      this._vehicle.forced = true
     } else {
-      this.#vehicle = {
+      this._vehicle = {
         size: vehicle.size,
         type: vehicle.type,
         consist: vehicle.consist,
@@ -292,10 +292,10 @@ export class LiveTimetable {
       }
     }
 
-    this.#vehicleForced = true
-    if (vehicle.icon) this.#vehicle.icon = vehicle.icon
+    this._vehicleForced = true
+    if (vehicle.icon) this._vehicle.icon = vehicle.icon
 
-    let newVal = { ...this.#vehicle, consist: this.#vehicle.consist.slice(0) }
+    let newVal = { ...this._vehicle, consist: this._vehicle.consist.slice(0) }
     this.addChange({
       type: 'veh-change',
       oldVal,
@@ -364,7 +364,7 @@ export class LiveTimetable {
   get additional() { return this.#additional }
 
   static fromDatabase(timetable) {
-    let parsers = [ BusLiveTimetable, LiveTimetable ]
+    let parsers = [ BusLiveTimetable, VLineLiveTimetable, LiveTimetable ]
     for (let parser of parsers) if (parser.canProcessDBTrip(timetable)) return parser._fromDatabase(timetable)
   }
 
@@ -388,8 +388,8 @@ export class LiveTimetable {
     if (timetable.circular) timetableInstance.#circular = timetable.circular
     if (timetable.headsign) timetableInstance.#headsign = timetable.headsign
     if (timetable.vehicle) {
-      timetableInstance.#vehicle = timetable.vehicle
-      timetableInstance.#vehicleForced = timetable.vehicle.forced || false
+      timetableInstance._vehicle = timetable.vehicle
+      timetableInstance._vehicleForced = timetable.vehicle.forced || false
     }
     if (typeof timetable.gtfsDirection !== 'undefined') timetableInstance.#gtfsDirection = timetable.gtfsDirection
     if (typeof timetable.flags !== 'undefined') timetableInstance.#flags = clone(timetable.flags)
@@ -456,7 +456,7 @@ export class LiveTimetable {
       gtfsDirection: this.#gtfsDirection,
       runID: this.#runID,
       isRailReplacementBus: this.#isRRB,
-      vehicle: this.#vehicle,
+      vehicle: this._vehicle,
       direction: this.#direction,
       routeName: this.#routeName,
       routeNumber: this.#routeNumber,
@@ -482,7 +482,7 @@ export class LiveTimetable {
   }
 
   getTrackerDatabaseKey() {
-    if (!this.#vehicle) return null
+    if (!this._vehicle) return null
     return {
       date: this.operationDay,
       runID: this.#runID
@@ -524,7 +524,7 @@ export class LiveTimetable {
   }
 
   toTrackerDatabase() {
-    if (!this.#vehicle) return null
+    if (!this._vehicle) return null
 
     let {
       origin,
@@ -542,13 +542,13 @@ export class LiveTimetable {
       destination: destination.slice(0, -16),
       departureTime,
       destinationArrivalTime,
-      consist: this.#vehicle.consist
+      consist: this._vehicle.consist
     }
 
-    if (this.#vehicleForced) {
+    if (this._vehicleForced) {
       returnData.forced = true
-      if (this.#vehicle.icon) returnData.icon = this.#vehicle.icon
-      if (this.#vehicle.size) returnData.size = this.#vehicle.size
+      if (this._vehicle.icon) returnData.icon = this._vehicle.icon
+      if (this._vehicle.size) returnData.size = this._vehicle.size
     }
     return returnData
   }
@@ -709,6 +709,35 @@ export class LiveTimetable {
   }
 
   static canProcessDBTrip (timetable) { return true }
+
+}
+
+export class VLineLiveTimetable extends LiveTimetable {
+
+  static canProcessDBTrip(timetable) {
+    return timetable.mode === 'regional train'
+  }
+
+  #getType(consist) {
+    const first = consist[0]
+    if (first.match(/^VL\d+/)) return 'VLocity'
+    if (first.match(/^7\d+/)) return 'Sprinter'
+    if (first.match(/^N\d+/)) return 'N Set'
+    return 'Unknown'
+  }
+
+  setConsist(consist, forceUpdate) {
+    let type = this.#getType(consist)
+    let newVal = { size: consist.length, type, consist }
+
+    this.addChange({
+      type: 'veh-change',
+      oldVal: this._vehicle || null,
+      newVal
+    })
+
+    this._vehicle = newVal
+  }
 
 }
 
