@@ -732,6 +732,8 @@ export class VLineLiveTimetable extends LiveTimetable {
     let type = this.#getType(consist)
     let newVal = { size: consist.length, type, consist }
 
+    if (this._vehicle && consist.join('-') === this._vehicle.consist.join('-')) return
+
     this.addChange({
       type: 'veh-change',
       oldVal: this._vehicle || null,
