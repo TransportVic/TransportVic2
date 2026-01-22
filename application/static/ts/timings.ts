@@ -173,6 +173,21 @@ export class TimingPage extends Page {
 
 abstract class TimePicker {
   abstract setup(time: Date, callback: (date: Date) => void): void
+
+  protected formatDate(time: Date) {
+    return [
+      time.getFullYear(),
+      (time.getMonth() + 1).toString().padStart(2, '0'),
+      (time.getDate()).toString().padStart(2, '0')
+    ].join('-')
+  }
+
+  protected formatTime(time: Date) {
+    return [
+      time.getHours().toString().padStart(2, '0'),
+      time.getMinutes().toString().padStart(2, '0')
+    ].join(':')
+  }
 }
 
 class CombinedPicker extends TimePicker {
@@ -182,17 +197,7 @@ class CombinedPicker extends TimePicker {
   }
 
   initialisePickers(time: Date) {
-    this.dateTimePicker.value = [
-      [
-        time.getFullYear(),
-        (time.getMonth() + 1).toString().padStart(2, '0'),
-        (time.getDate()).toString().padStart(2, '0')
-      ].join('-'),
-      [
-        time.getHours().toString().padStart(2, '0'),
-        time.getMinutes().toString().padStart(2, '0')
-      ].join(':')
-    ].join('T')
+    this.dateTimePicker.value = `${this.formatDate(time)}T${this.formatTime(time)}`
   }
 
   setup(time: Date, callback: (date: Date) => void) {
@@ -226,8 +231,8 @@ class HTMLPicker extends TimePicker {
   }
 
   initialisePickers(time: Date) {
-    this.datePicker.value = `${time.getFullYear()}-${(time.getMonth() + 1).toString().padStart(2, '0')}-${(time.getDate()).toString().padStart(2, '0')}`
-    this.timePicker.value = `${time.getHours().toString().padStart(2, '0')}:${time.getMinutes().toString().padStart(2, '0')}`
+    this.datePicker.value = this.formatDate(time)
+    this.timePicker.value = this.formatTime(time)
   }
 
   setup(time: Date, callback: (date: Date) => void) {
