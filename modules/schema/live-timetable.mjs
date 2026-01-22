@@ -727,10 +727,21 @@ export class VLineLiveTimetable extends LiveTimetable {
     return 'Unknown'
   }
 
+  getMinimumSize(consist, type) {
+    if (type === 'VLocity') return 3
+    return consist.length
+  }
+
   setConsist(consist, forceUpdate) {
     if (!consist.length) return
-    let type = this.#getType(consist)
-    let newVal = { size: consist.length, type, consist }
+    const type = this.#getType(consist)
+    const size = this._vehicle ? this._vehicle.size : this.getMinimumSize(consist, type)
+
+    const newVal = {
+      size,
+      type,
+      consist
+    }
 
     if (this._vehicle && consist.join('-') === this._vehicle.consist.join('-')) return
 

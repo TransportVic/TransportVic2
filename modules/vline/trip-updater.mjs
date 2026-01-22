@@ -1,11 +1,16 @@
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 import TripUpdater from '../new-tracker/trip-updater.mjs'
 import ptvAPIStopIDs from '../../transportvic-data/rail/vline-stops.json' with { type: 'json' }
+import { VLineLiveTimetable } from '../schema/live-timetable.mjs'
 
 export default class VLineTripUpdater extends TripUpdater {
   
   static getMode() { return GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain }
   static getTrackerDB() { return 'vline trips' }
+
+  static createLiveTimetable(data) {
+    return new VLineLiveTimetable(...data)
+  }
 
   static async getStop(db, stopID) {
     if (stopID[0] === 'G') {
