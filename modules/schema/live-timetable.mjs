@@ -720,6 +720,7 @@ export class VLineLiveTimetable extends LiveTimetable {
 
   #getType(consist) {
     const first = consist[0]
+    if (!first) return 'Unknown'
     if (first.match(/^VL\d+/)) return 'VLocity'
     if (first.match(/^7\d+/)) return 'Sprinter'
     if (first.match(/^N\d+/)) return 'N Set'
@@ -727,6 +728,7 @@ export class VLineLiveTimetable extends LiveTimetable {
   }
 
   setConsist(consist, forceUpdate) {
+    if (!consist.length) return
     let type = this.#getType(consist)
     let newVal = { size: consist.length, type, consist }
 
