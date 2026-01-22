@@ -29,17 +29,6 @@ module.exports = [{
   routes: [],
   type: 'exclude'
 }, {
-  name: 'Uni Shuttle Buses',
-  track: ['TS16' ,'TS19', 'TS27', 'TS40', 'TS41', 'TS43', 'TS54', 'TS71', 'CO127', 'CO128', 'CO129', 'CO130', 'CO154', 'CO171', 'CO175', 'D897', 'D898', 'D899', 'D900', 'V1254', 'V1255', 'V1256'],
-  routes: ['201', '301', '401', '601'],
-  type: 'exclude'
-}, {
-  name: 'Non-Perm Uni Shuttle Buses',
-  track: ['TS16' ,'TS19', 'TS27', 'TS40', 'TS41', 'TS43', 'TS54', 'TS71', 'D897', 'D898', 'D899', 'D900', 'V1254', 'V1255', 'V1256'],
-  routes: ['201', '301', '401'],
-  type: 'include',
-  buses: 'exclude'
-}, {
   name: 'CDC Oakleigh Specials',
   track: ['CO13', 'CO31', 'CO34', 'CO35'],
   routes: [],
@@ -61,7 +50,7 @@ module.exports = [{
   type: 'include'
 }, {
   name: 'CDC Tullamarine Specials',
-  track: ['CT26', 'CT52', 'CT53', 'CT55', 'CT56', 'CG104'],
+  track: ['CT26', 'CT52', 'CT53', 'CT55', 'CT56'],
   routes: [],
   type: 'exclude'
 }, {
