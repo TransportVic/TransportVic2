@@ -332,6 +332,19 @@ async function updateExistingTrip(db, tripDB, existingTrip, vlineTrip) {
     runID: vlineTrip.tdn
   })
 
+  if (existingTrip && existingTrip.vehicle && vlineTrip.consist) {
+    const vehicle = existingTrip.vehicle
+    if ((vehicle.type !== vlineTrip.consist.type) || (vehicle.size !== vlineTrip.consist.size)) {
+      await VLineTripUpdater.updateTrip(db, tripDB, {
+        operationDays: existingTrip.operationDays,
+        runID: existingTrip.runID,
+        forcedVehicle: vlineTrip.consist
+      }, {
+        dataSource: 'vline-op-tt'
+      })
+    }
+  }
+
   const originStop = vlineTrip.origin
     ? await getStopFromVNetName(stops, vlineTrip.origin)
     : await matchStopFromNSP(stops, vlineTrip.departureTime, nspTrip)
@@ -440,6 +453,7 @@ export default async function loadOperationalTT(db, tripDB, ptvAPI) {
         liveTrip.forming = nspTrip.forming
       }
 
+      liveTrip.vehicle = vlineTrip.consist
       newTrips.push({ liveTrip, vlineTrip })
 
       outputTrips.push({
@@ -462,6 +476,7 @@ export default async function loadOperationalTT(db, tripDB, ptvAPI) {
       continue
     }
 
+    pattern.forcedVehicle = vlineTrip.consist
     outputTrips.push({
       replaceOne: {
         filter: pattern.getDBKey(),
@@ -478,6 +493,7 @@ export default async function loadOperationalTT(db, tripDB, ptvAPI) {
     if (scheduledTDN) {
       let matchingTrip = await findMatchingTrip(operationDay, opDayFormat, scheduledTDN, vlineTrip, db)
       if (matchingTrip) {
+        matchingTrip.forcedVehicle = vlineTrip.consist
         outputTrips.push({
           replaceOne: {
             filter: matchingTrip.getDBKey(),

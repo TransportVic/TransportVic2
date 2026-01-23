@@ -229,6 +229,13 @@ describe('The loadOperationalTT function', () => {
     expect(trip.stopTimings[0].departureTime).to.equal('11:30')
     expect(trip.stopTimings[1].stopName).to.equal('Footscray Railway Station')
     expect(trip.stopTimings[1].departureTime).to.equal('11:38')
+
+    expect(trip.vehicle).to.deep.equal({
+      consist: [],
+      size: 3,
+      type: 'VLocity',
+      forced: true
+    })
   })
 
   it('Reuses trips where available', async () => {
@@ -676,5 +683,49 @@ describe('The loadOperationalTT function', () => {
     expect(trip.stopTimings[11].cancelled, 'Expected BAT to not be cancelled').to.be.false
 
     expect(trip.stopTimings[12].cancelled, 'Expected WED to be cancelled').to.be.true
+  })
+
+  it('Updates an existing trip\'s vehicle', async () => {
+    let database = new LokiDatabaseConnection()
+    let stops = database.getCollection('stops')
+    let routes = database.getCollection('routes')
+    let gtfsTimetables = database.getCollection('gtfs timetables')
+    let liveTimetables = database.getCollection('live timetables')
+
+    await gtfsTimetables.createDocument(clone(td8741GTFS))
+    await stops.createDocuments(clone(allStops))
+    await routes.createDocuments(clone(allRoutes))
+
+    const secondResponse = vlineTripsTD8741_Normal.replaceAll('VLocity', 'Sprinter')
+
+    let stubAPI = new StubVLineAPI()
+    stubAPI.setResponses([ vlineTripsTD8741_Normal, vlineTripsEmpty, secondResponse, vlineTripsEmpty ])
+    let ptvAPI = new PTVAPI(stubAPI)
+    ptvAPI.addVLine(stubAPI)
+
+    await loadOperationalTT(database, database, ptvAPI)
+    let trip = await liveTimetables.findDocument({ runID: '8741' })
+
+    expect(trip.vehicle).to.deep.equal({
+      consist: [],
+      size: 3,
+      type: 'VLocity'
+    })
+
+    await loadOperationalTT(database, database, ptvAPI)
+    let updatedTrip = await liveTimetables.findDocument({ runID: '8741' })
+
+    expect(updatedTrip.vehicle).to.deep.equal({
+      consist: [],
+      size: 1,
+      type: 'Sprinter',
+      forced: true
+    })
+    expect(updatedTrip.changes.length).to.equal(1)
+    expect(updatedTrip.changes[0].type).to.equal('veh-change')
+    expect(updatedTrip.changes[0].oldVal.type).to.equal('VLocity')
+    expect(updatedTrip.changes[0].oldVal.size).to.equal(3)
+    expect(updatedTrip.changes[0].newVal.type).to.equal('Sprinter')
+    expect(updatedTrip.changes[0].newVal.size).to.equal(1)
   })
 })
