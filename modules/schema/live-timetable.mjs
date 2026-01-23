@@ -723,7 +723,7 @@ export class VLineLiveTimetable extends LiveTimetable {
     if (!first) return 'Unknown'
     if (first.match(/^VL\d+/)) return 'VLocity'
     if (first.match(/^7\d+/)) return 'Sprinter'
-    if (first.match(/^N\d+/)) return 'N Set'
+    if (first.match(/^N\d+/)) return 'N Class'
     return 'Unknown'
   }
 
