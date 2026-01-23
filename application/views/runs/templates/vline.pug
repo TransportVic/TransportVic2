@@ -6,16 +6,12 @@ if trip.runID
       let parts
       if (vehicle && vehicle.consist) {
         let { consist } = vehicle
+        parts = [
+          vehicle.size.toString(),
+          vehicle.type
+        ]
 
-        if (consist[0].startsWith('N')) {
-          parts = [null, 'N']
-        } else if (consist[0].startsWith('A')) {
-          parts = [null, 'A']
-        } else if (consist[0].includes('VL') || consist[0].includes('VS')) {
-          parts = ['3', 'vlocity']
-        } else {
-          parts = ['1', 'sprinter']
-        }
+        if (vehicle.type === 'N Class') parts[1] = 'N'
       }
     if vehicle && parts && parts[1]
       div.vehicle

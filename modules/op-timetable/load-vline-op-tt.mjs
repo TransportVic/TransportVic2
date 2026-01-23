@@ -333,7 +333,7 @@ async function updateExistingTrip(db, tripDB, existingTrip, vlineTrip) {
   })
 
   const vehicle = existingTrip.vehicle
-  if (existingTrip && existingTrip.vehicle && vlineTrip.consist || !vehicle) {
+  if (!vehicle || vlineTrip.consist) {
     if (!vehicle || (vehicle.consist.length === 0 && (vehicle.type !== vlineTrip.consist.type) || (vehicle.size !== vlineTrip.consist.size))) {
       await VLineTripUpdater.updateTrip(db, tripDB, {
         operationDays: existingTrip.operationDays,
