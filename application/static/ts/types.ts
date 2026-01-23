@@ -1,5 +1,7 @@
 import { $, deleteElem } from './util.js'
 
+export const APP_RESTORE_KEY = 'transportvic.pwa-last-page'
+
 type PageContent = {
   header: HTMLElement,
   content: HTMLElement,
@@ -9,13 +11,15 @@ type PageContent = {
 export type PageState = {
   header: string,
   content: string,
-  styles: string[]
+  styles: string[],
+  pageLoaded: number
 }
 
 export const BASE_STATE: PageState = {
   header: '',
   content: '',
-  styles: []
+  styles: [],
+  pageLoaded: 0
 } as const
 
 export abstract class Page {
@@ -99,7 +103,8 @@ export abstract class Page {
     return {
       header: $('nav')?.innerHTML || '',
       content: $('main')?.innerHTML || '',
-      styles: this.getExistingStyles().map(link => link.getAttribute('href') || '').filter(Boolean)
+      styles: this.getExistingStyles().map(link => link.getAttribute('href') || '').filter(Boolean),
+      pageLoaded: +new Date()
     }
   }
 
@@ -111,13 +116,22 @@ export abstract class Page {
     this.replaceStylesFromLinks(this.state.styles)
     this.replaceHeaderContent(this.state.header)
     this.replaceMainContent(this.state.content)
+
+    this.state.pageLoaded = +new Date()
   }
 
   serialise(): PageState { return this.state }
 
   setState(state: PageState) { this.state = state }
 
-  replacePageState() { window.history.replaceState(this.serialise(), '') }
+  replacePageState() {
+    window.history.replaceState(this.serialise(), '')
+    this.markPageAsActive()
+  }
+  
+  markPageAsActive() {
+    window.localStorage.setItem(APP_RESTORE_KEY, JSON.stringify(this.serialise()))
+  }
 }
 
 export abstract class PageFactory {

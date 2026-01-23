@@ -1,6 +1,6 @@
 import { NearbyPage, SearchPage } from './pages.js'
 import { TimingPageFactory } from './timings.js'
-import { Page, PathPageFactory, StaticPageFactory } from './types.js'
+import { APP_RESTORE_KEY, Page, PathPageFactory, StaticPageFactory } from './types.js'
 import { on, pageReady } from './util.js'
 
 class App {
@@ -21,7 +21,7 @@ class App {
 
     this.currentPage = pageFactory.createPage(landingPage)
     this.currentPage.initialiseState()
-    window.history.replaceState(this.currentPage.serialise(), '')
+    this.currentPage.replacePageState()
   }
 
   getFactory(url: URL) {
@@ -53,13 +53,22 @@ class App {
         console.error('An error occurred setting up the page', e)
       }
 
-      this.currentPage = page
-
       window.history.pushState(page.serialise(), '', targetURL)
+      this.setCurrentPage(page)
     })
   }
 
+  async restorePage(page: Page) {
+    this.currentPage?.destroy()
+
+    await page.restore()
+    await page.setup()
+
+    this.setCurrentPage(page)
+  }
+
   watchPopState(window: Window) {
+    // Note: browser handles change of URL for us
     window.addEventListener('popstate', async event => {
       const targetURL = new URL((event.target as Window).location.toString())
       const serialisedPage = event.state
@@ -68,14 +77,8 @@ class App {
       if (!pageFactory) return window.location = targetURL.toString()
 
       const restoredPage = pageFactory.unserialise(targetURL, serialisedPage)
-
       console.log('Transitioning to', targetURL, restoredPage)
-
-      this.currentPage?.destroy()
-      this.currentPage = restoredPage
-
-      await restoredPage.restore()
-      await restoredPage.setup()
+      await this.restorePage(restoredPage)
     })
   }
 
@@ -83,6 +86,10 @@ class App {
     if (this.currentPage) await this.currentPage.setup()
   }
 
+  setCurrentPage(page: Page) {
+    this.currentPage = page
+    page.markPageAsActive()
+  }
 }
 
 pageReady(async () => {
