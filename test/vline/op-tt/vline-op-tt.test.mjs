@@ -22,6 +22,7 @@ import heatServices from './sample-data/heat-timetable/services.mjs'
 import td8469NSP from './sample-data/null-destination/td8469-nsp.mjs'
 import td8895 from './sample-data/midnight-trips/td8895.mjs'
 import td8181Live from './sample-data/preloaded-amex/td8181-live.mjs'
+import VLineTripUpdater from '../../../modules/vline/trip-updater.mjs'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -727,5 +728,46 @@ describe('The loadOperationalTT function', () => {
     expect(updatedTrip.changes[0].oldVal.size).to.equal(3)
     expect(updatedTrip.changes[0].newVal.type).to.equal('Sprinter')
     expect(updatedTrip.changes[0].newVal.size).to.equal(1)
+  })
+
+  it('Does not delete an existing consist', async () => {
+    let database = new LokiDatabaseConnection()
+    let stops = database.getCollection('stops')
+    let routes = database.getCollection('routes')
+    let gtfsTimetables = database.getCollection('gtfs timetables')
+    let liveTimetables = database.getCollection('live timetables')
+
+    await gtfsTimetables.createDocument(clone(td8741GTFS))
+    await stops.createDocuments(clone(allStops))
+    await routes.createDocuments(clone(allRoutes))
+
+    let stubAPI = new StubVLineAPI()
+    stubAPI.setResponses([ vlineTripsTD8741_Normal, vlineTripsEmpty, vlineTripsTD8741_Normal, vlineTripsEmpty ])
+    let ptvAPI = new PTVAPI(stubAPI)
+    ptvAPI.addVLine(stubAPI)
+
+    await loadOperationalTT(database, database, ptvAPI)
+    let trip = await liveTimetables.findDocument({ runID: '8741' })
+
+    expect(trip.vehicle).to.deep.equal({
+      consist: [],
+      size: 3,
+      type: 'VLocity'
+    })
+
+    await VLineTripUpdater.updateTrip(database, database, {
+      operationDays: trip.operationDays,
+      runID: '8741',
+      consist: [ 'VL00' ]
+    })
+
+    await loadOperationalTT(database, database, ptvAPI)
+    let updatedTrip = await liveTimetables.findDocument({ runID: '8741' })
+
+    expect(updatedTrip.vehicle).to.deep.equal({
+      consist: [ 'VL00' ],
+      size: 3,
+      type: 'VLocity'
+    })
   })
 })

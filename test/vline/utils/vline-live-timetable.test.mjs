@@ -81,7 +81,7 @@ describe('The V/Line Live Timetable', () => {
     expect(timetable.vehicle).to.deep.equal({
       consist: ['N450'],
       size: 1,
-      type: 'N Set'
+      type: 'N Class'
     })
   })
 
