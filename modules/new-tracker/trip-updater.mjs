@@ -173,7 +173,7 @@ export default class TripUpdater {
     })
   }
 
-  static setUpTimetable(timetable, trip) {
+  static setUpTimetable(timetable, trip, deconflictConsist) {
     timetable.cancelled = trip.cancelled
     if (trip.cancelled) {
       if (trip.stops && trip.stops.length) {
@@ -186,8 +186,12 @@ export default class TripUpdater {
 
     if (trip.forming) timetable.forming = trip.forming
     if (trip.formedBy) timetable.formedBy = trip.formedBy
-    if (trip.consist) timetable.consist = trip.consist.reduce((acc, e) => acc.concat(e), [])
-    else if (trip.forcedVehicle) timetable.forcedVehicle = trip.forcedVehicle
+
+    if (trip.consist) {
+      const flattenedConsist = trip.consist.reduce((acc, e) => acc.concat(e), [])
+      const mismatch = !timetable.vehicle || (timetable.vehicle.consist.join('-') !== flattenedConsist.join('-'))
+      if (mismatch && !deconflictConsist) timetable.consist = flattenedConsist
+    } else if (trip.forcedVehicle) timetable.forcedVehicle = trip.forcedVehicle
 
     timetable.runID = trip.runID
   }
@@ -285,13 +289,13 @@ export default class TripUpdater {
     return !(trip.stops && trip.stops.length > 0)
   }
 
-  static async updateNonStopData(db, tripDB, trip, { dataSource, updateTime, existingTrips, skipWrite }) {
+  static async updateNonStopData(db, tripDB, trip, { dataSource, updateTime, existingTrips, skipWrite, deconflictConsist }) {
     const timetable = existingTrips[this.getTripCacheValue(trip)] || await this.getTripSkeleton(db, trip.runID, trip.operationDays)
     if (!timetable) return null
     if (updateTime) timetable.lastUpdated = updateTime
 
     timetable.setModificationSource(dataSource)
-    this.setUpTimetable(timetable, trip)
+    this.setUpTimetable(timetable, trip, deconflictConsist)
 
     if (!skipWrite) {
       const liveTimetables = db.getCollection('live timetables')
@@ -320,10 +324,11 @@ export default class TripUpdater {
     updateTime = null,
     existingTrips = {},
     propagateDelay = false,
-    fullTrip = false
+    fullTrip = false,
+    deconflictConsist = false
   } = {}) {
     if (this.isNonStopUpdate(trip) && !fullTrip) {
-      return await this.updateNonStopData(db, tripDB, trip, { dataSource, updateTime, existingTrips, skipWrite })
+      return await this.updateNonStopData(db, tripDB, trip, { dataSource, updateTime, existingTrips, skipWrite, deconflictConsist })
     }
 
     let timetable = existingTrips[this.getTripCacheValue(trip)] || await this.getTimetable(db, trip)
@@ -339,7 +344,7 @@ export default class TripUpdater {
       let firstStop = timetable.stops[0]
       if (trip.scheduledStartTime && ![firstStop.departureTime, firstNonAMEXStop?.departureTime].includes(trip.scheduledStartTime)) return null
 
-      this.setUpTimetable(timetable, trip)
+      this.setUpTimetable(timetable, trip, deconflictConsist)
       this.adjustTripInput(timetable, trip)
 
       if (trip.stops) {

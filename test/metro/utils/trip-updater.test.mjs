@@ -1548,6 +1548,48 @@ describe('The trip updater module', () => {
     expect(tripData.stops[4].actualDepartureTime.toISOString()).to.equal('2025-06-05T21:57:00.000Z')
   })
 
+  it('Avoids changing the consist if told to deconflict consists', async () => {
+    let database = new LokiDatabaseConnection('test-db')
+    let routes = await database.createCollection('routes')
+    let liveTimetables = await database.createCollection('live timetables')
+
+    await routes.createDocument({
+      "mode" : "metro train",
+      "routeName" : "Flemington Racecourse",
+      "cleanName" : "flemington-racecourse",
+      "routeNumber" : null,
+      "routeGTFSID" : "2-RCE",
+      "operators" : [
+        "Metro"
+      ],
+      "cleanName" : "flemington-racecourse"
+    })
+    await liveTimetables.createDocument(clone(tdR205))
+
+    let trip = await MetroTripUpdater.updateTrip(database, database, {
+      operationDays: '20240224',
+      runID: 'R205',
+      consist: ['9001', '9101', '9201', '9301', '9701', '9801', '9901']
+    })
+    expect(trip.vehicle.type).to.equal('HCMT')
+
+    let trip2 = await MetroTripUpdater.updateTrip(database, database, {
+      operationDays: '20240224',
+      runID: 'R205',
+      consist: ['831M', '2566T', '832M']
+    })
+    expect(trip2.vehicle.type).to.equal('Siemens')
+
+    let trip3 = await MetroTripUpdater.updateTrip(database, database, {
+      operationDays: '20240224',
+      runID: 'R205',
+      consist: ['9001', '9101', '9201', '9301', '9701', '9801', '9901']
+    }, {
+      deconflictConsist: true
+    })
+    expect(trip3.vehicle.type).to.equal('Siemens')
+  })
+
   describe('Updating non-stop time properties', () => {
     it('Checks if a trip update does not update stop times data', () => {
       expect(TripUpdater.isNonStopUpdate({

@@ -41,7 +41,8 @@ export async function fetchTrips(db, tripDB, ptvAPI, {
       dataSource: 'ptv-departure',
       skipWrite: true,
       existingTrips,
-      fullTrip: true
+      fullTrip: true,
+      deconflictConsist: true
     }))
   }
 

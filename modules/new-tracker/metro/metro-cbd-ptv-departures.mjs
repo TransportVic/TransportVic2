@@ -26,14 +26,16 @@ async function fetchStop(name, db, tripDB, ptvAPI, maxResults, backwards, tdnsSe
 export async function fetchCBDTrips(db, tripDB, ptvAPI, existingTrips = {}) {
   let tdnsSeen = []
   let updatedTrips = {}
-  await fetchStop('Flinders Street Railway Station', db, tripDB, ptvAPI, 10, false, tdnsSeen, updatedTrips, existingTrips)
-  await fetchStop('Richmond Railway Station', db, tripDB, ptvAPI, 10, false, tdnsSeen, updatedTrips, existingTrips)
-  await fetchStop('Jolimont Railway Station', db, tripDB, ptvAPI, 10, false, tdnsSeen, updatedTrips, existingTrips)
-  await fetchStop('North Melbourne Railway Station', db, tripDB, ptvAPI, 10, false, tdnsSeen, updatedTrips, existingTrips)
+  await fetchStop('Flinders Street Railway Station', db, tripDB, ptvAPI, 5, false, tdnsSeen, updatedTrips, existingTrips)
+  await fetchStop('Richmond Railway Station', db, tripDB, ptvAPI, 5, false, tdnsSeen, updatedTrips, existingTrips)
+  await fetchStop('Jolimont Railway Station', db, tripDB, ptvAPI, 3, false, tdnsSeen, updatedTrips, existingTrips)
+  await fetchStop('North Melbourne Railway Station', db, tripDB, ptvAPI, 5, false, tdnsSeen, updatedTrips, existingTrips)
+  await fetchStop('Southern Cross Railway Station', db, tripDB, ptvAPI, 5, false, tdnsSeen, updatedTrips, existingTrips)
 
-  await fetchStop('Richmond Railway Station', db, tripDB, ptvAPI, 5, true, tdnsSeen, updatedTrips, existingTrips)
-  await fetchStop('Jolimont Railway Station', db, tripDB, ptvAPI, 5, true, tdnsSeen, updatedTrips, existingTrips)
-  await fetchStop('North Melbourne Railway Station', db, tripDB, ptvAPI, 5, true, tdnsSeen, updatedTrips, existingTrips)
+  await fetchStop('Richmond Railway Station', db, tripDB, ptvAPI, 3, true, tdnsSeen, updatedTrips, existingTrips)
+  await fetchStop('Jolimont Railway Station', db, tripDB, ptvAPI, 2, true, tdnsSeen, updatedTrips, existingTrips)
+  await fetchStop('North Melbourne Railway Station', db, tripDB, ptvAPI, 3, true, tdnsSeen, updatedTrips, existingTrips)
+  await fetchStop('Southern Cross Railway Station', db, tripDB, ptvAPI, 3, true, tdnsSeen, updatedTrips, existingTrips)
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
