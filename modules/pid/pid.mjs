@@ -1,5 +1,6 @@
 import getMetroDepartures from '../metro-trains/get-departures.mjs'
 import { ALTONA_LOOP, CITY_LOOP, METRO_TUNNEL_GROUP, MTP_STOPS, MURL, NON_MTP_STOPS, NORTHERN_GROUP, NPT_LAV_MAINLINE } from '../metro-trains/line-groups.mjs'
+import getVLineDepartures from '../vline/get-departures.mjs'
 import getLineStops from './route-stops.mjs'
 
 const stoppingText = {
@@ -42,8 +43,16 @@ export async function getPIDDepartures(cleanName, db, { departureTime = new Date
 
   const stationName = stationData.stopName.slice(0, -16)
   const metroDepartures = await getMetroDepartures(stationData, db, false, false, departureTime)
+  const vlineDepartures = (await getVLineDepartures(stationData, db, departureTime)).map(departure => ({
+    ...departure,
+    cleanRouteName: 'vline'
+  }))
 
-  return metroDepartures.map(departure => {
+  const allDepartures = [
+    ...metroDepartures, ...vlineDepartures
+  ].sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
+
+  return allDepartures.map(departure => {
     const expressData = getScreenStopsAndExpress([
       stationName,
       ...departure.futureStops

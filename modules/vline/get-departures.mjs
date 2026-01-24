@@ -15,6 +15,15 @@ export class VLineDepartures extends Departures {
     return now.startOf('day').add(1, 'day').set('hours', 3)
   }
 
+  static async getDepartures(station, mode, db, options) {
+    const departures = await super.getDepartures(station, mode, db, options)
+    return departures.map(departure => ({
+      ...departure,
+      allStops: departure.allStops.map(stop => stop.slice(0, -16)),
+      futureStops: departure.futureStops.map(stop => stop.slice(0, -16))
+    }))
+  }
+
 }
 
 export default async function getVLineDepartures(station, db, departureTime, { timeframe = 120 } = {}) {
