@@ -45,6 +45,7 @@ export async function getPIDDepartures(cleanName, db, { departureTime = new Date
   const metroDepartures = await getMetroDepartures(stationData, db, false, false, departureTime)
   const vlineDepartures = (await getVLineDepartures(stationData, db, departureTime)).map(departure => ({
     ...departure,
+    platform: departure.platform.replace('?', ''),
     cleanRouteName: 'vline'
   }))
 
@@ -52,7 +53,7 @@ export async function getPIDDepartures(cleanName, db, { departureTime = new Date
     ...metroDepartures, ...vlineDepartures
   ].sort((a, b) => a.actualDepartureTime - b.actualDepartureTime)
 
-  return allDepartures.map(departure => {
+  return allDepartures.filter(departure => !departure.cancelled).map(departure => {
     const expressData = getScreenStopsAndExpress([
       stationName,
       ...departure.futureStops
