@@ -19,6 +19,27 @@ function correctStopTimes(stop) {
   }
 }
 
+function mergeTrips(tripA, tripB) {
+  const allTimings = tripA.concat(tripB)
+
+  return Object.values(allTimings.reduce((acc, stop) => {
+    const existingStop = acc[stop.stopName]
+    if (!existingStop) {
+      acc[stop.stopName] = stop
+      return acc
+    }
+
+    if (existingStop.departureTimeMinutes < stop.departureTimeMinutes) {
+      existingStop.departureTime = stop.departureTime
+      existingStop.departureTimeMinutes = stop.departureTimeMinutes
+    } else {
+      existingStop.arrivalTime = stop.arrivalTime
+      existingStop.arrivalTimeMinutes = stop.arrivalTimeMinutes
+    }
+    return acc
+  }, {})).sort((a, b) => a.departureTimeMinutes - b.departureTimeMinutes)
+}
+
 /**
   'Monday to Friday', 'Saturday',
   'Sunday',           'M-F',
@@ -204,6 +225,7 @@ for (let { run, stopTimings, operationDays } of Object.values(runs)) {
     }
   }
 
+  let earlyThreshold = 1
   let lateThreshold = 20
   if (originStop.stopName === 'Southern Cross Railway Station') lateThreshold = 10
   if (originStop.stopName === 'Warrnambool Railway Station') lateThreshold = 45
@@ -214,15 +236,29 @@ for (let { run, stopTimings, operationDays } of Object.values(runs)) {
   if (originStop.stopName === 'Melton Railway Station') lateThreshold = 14
   if (originStop.stopName === 'Ballarat Railway Station' && destStop.stopName === 'Maryborough Railway Station') lateThreshold = 30
 
+  let destinationStopQuery = destStop.stopName
+
+  if (['Swan Hill', 'Bendigo'].includes(run.lineHint)) {
+    earlyThreshold = 6
+    if (originStop.stopName === 'Southern Cross Railway Station') lateThreshold = 20
+    if (originStop.stopName === 'Southern Cross Railway Station' && originStop.departureTimeMinutes > 19 * 60) earlyThreshold = 20
+    if (destinationStopQuery === 'Epsom Railway Station') destinationStopQuery = {
+      $in: [
+        'Epsom Railway Station',
+        'Bendigo Railway Station'
+      ]
+    }
+  }
+
   let matchingTrips = await timetables.findDocuments({
     mode: GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain,
     operationDays: operationDays[0],
     'stopTimings.0.stopName': originStop.stopName,
     'stopTimings.0.departureTimeMinutes': {
       $gte: departureTime - lateThreshold,
-      $lte: departureTime + 1
+      $lte: departureTime + earlyThreshold
     },
-    'stopTimings.stopName': destStop.stopName
+    'stopTimings.stopName': destinationStopQuery
   }).toArray()
 
   if (!matchingTrips.length) {
@@ -235,14 +271,14 @@ for (let { run, stopTimings, operationDays } of Object.values(runs)) {
             stopName: originStop.stopName,
             departureTimeMinutes: {
               $gte: departureTime - lateThreshold,
-              $lte: departureTime + 1
+              $lte: departureTime + earlyThreshold
             }
           }
         }
       }, {
         stopTimings: {
           $elemMatch: {
-            stopName: destStop.stopName,
+            stopName: destinationStopQuery,
             departureTimeMinutes: {
               $gte: departureTime
             }
@@ -262,6 +298,12 @@ for (let { run, stopTimings, operationDays } of Object.values(runs)) {
     closeness: Math.abs(trip.stopTimings[0].departureTimeMinutes - departureTime)
   })).sort((a, b) => a.closeness - b.closeness)[0].trip
 
+  let id = `${matchingTrip.runID}-${matchingTrip.operationDays[0]}-${run.type}`
+
+  if (bulkWrite[id]) {
+    stopTimings = mergeTrips(bulkWrite[id].replaceOne.replacement.stopTimings, stopTimings)
+  }
+
   const timetable = {
     ...matchingTrip,
     stopTimings,
@@ -272,11 +314,7 @@ for (let { run, stopTimings, operationDays } of Object.values(runs)) {
     formedBy: null, forming: null,
     type: run.type
   }
-
   delete timetable._id
-
-  let id = `${timetable.runID}-${timetable.operationDays[0]}-${timetable.type}`
-  if (bulkWrite[id] && bulkWrite[id].replaceOne.replacement.stopTimings.length > timetable.stopTimings.length) continue
 
   bulkWrite[id] = {
     replaceOne: {
