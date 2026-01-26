@@ -81,6 +81,8 @@ export async function matchTrip(opDayFormat, operationDay, vlineTrip, db, timeta
     arrivalTimeMinutes += 1440
   }
 
+  if (arrivalTimeMinutes - departureTimeMinutes < 10) threshold = 3
+
   const baseQuery = {
     mode: GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain,
     operationDays: opDayFormat,
