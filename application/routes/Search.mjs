@@ -44,7 +44,7 @@ async function prioritySearch(db, query) {
         mergeName: /Railway Station/
       }
     ]
-  }).limit(6).toArray())
+  }, { textQuery: 0 }).limit(8).toArray())
     .filter(stop => shortWords.every(word => stop.stopName.toLowerCase().includes(word)))
     : []
 
@@ -68,7 +68,7 @@ async function prioritySearch(db, query) {
         }]
       }
     ]
-  }).limit(6).toArray())
+  }, { textQuery: 0 }).limit(8).toArray())
     .filter(stop => shortWords.every(word => stop.stopName.toLowerCase().includes(word)))
     .sort((a, b) => a.stopName.length - b.stopName.length)
     : []
