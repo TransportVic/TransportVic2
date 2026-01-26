@@ -37,14 +37,16 @@ async function prioritySearch(db, query) {
   const searchedWords = queryWords.filter(word => word.length >= 4)
   const shortWords = queryWords.filter(word => word.length < 4)
 
-  const stations = searchedWords.length ? await stops.findDocuments({
+  const stations = searchedWords.length ? (await stops.findDocuments({
     $and: [
       ...(searchedWords.map(name => ({ textQuery: name }))),
       {
         mergeName: /Railway Station/
       }
     ]
-  }).limit(6).toArray() : []
+  }).limit(6).toArray())
+    .filter(stop => shortWords.every(word => stop.stopName.toLowerCase().includes(word)))
+    : []
 
   let priorityStopsByName = searchedWords.length ? (await stops.findDocuments({
     $and: [
