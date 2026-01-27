@@ -236,6 +236,8 @@ for (let { run, stopTimings, operationDays } of Object.values(runs)) {
   if (originStop.stopName === 'Melton Railway Station') lateThreshold = 14
   if (originStop.stopName === 'Ballarat Railway Station' && destStop.stopName === 'Maryborough Railway Station') lateThreshold = 30
 
+  if (originStop.stopName === 'Traralgon Railway Station' && destStop.stopName === 'Southern Cross Railway Station') earlyThreshold = 10
+
   let destinationStopQuery = destStop.stopName
 
   if (['Swan Hill', 'Bendigo'].includes(run.lineHint)) {
