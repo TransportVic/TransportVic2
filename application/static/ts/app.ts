@@ -1,4 +1,4 @@
-import { NearbyPage, SearchPage } from './pages.js'
+import { IndexPage, NearbyPage, SearchPage } from './pages.js'
 import { TimingPageFactory } from './timings.js'
 import { APP_RESTORE_KEY, Page, PathPageFactory, StaticPageFactory } from './types.js'
 import { on, pageReady } from './util.js'
@@ -8,7 +8,7 @@ class App {
   private currentPage: Page | null = null
 
   private pageFactories = [
-    new StaticPageFactory('/'),
+    new PathPageFactory('/', IndexPage),
     new StaticPageFactory('/links'),
     new PathPageFactory('/search', SearchPage),
     new PathPageFactory('/nearby', NearbyPage),
@@ -20,12 +20,17 @@ class App {
     if (!pageFactory) return
 
     this.currentPage = pageFactory.createPage(landingPage)
-    this.currentPage.initialiseState()
-    this.currentPage.replacePageState()
   }
 
   getFactory(url: URL) {
     return this.pageFactories.find(fac => fac.canCreatePage(url))
+  }
+
+  async initialise() {
+    if (!this.currentPage) return
+
+    await this.currentPage.initialiseState()
+    this.currentPage.replacePageState()
   }
 
   watchLinks(document: Document) {
@@ -94,6 +99,7 @@ class App {
 
 pageReady(async () => {
   const app = new App(new URL(location.toString()))
+  await app.initialise()
   app.watchLinks(document)
   app.watchPopState(window)
   await app.setup()

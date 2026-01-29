@@ -10,6 +10,66 @@ type NearbyPageState = PageState & {
   nearbyResults: string
 }
 
+type IndexPageState = PageState & {
+  banner: BannerData
+}
+
+type BannerData = {
+  link: string,
+  alt: string,
+  text: string
+}
+
+export class IndexPage extends Page {
+
+  protected state: IndexPageState = {
+    ...BASE_STATE,
+    banner: {
+      link: '',
+      alt: 'Alert',
+      text: 'Could not connect to server!'
+    }
+  }
+
+  async load() {
+    await this.replacePageData(await fetch('/'))
+  }
+
+  showBanner() {
+    const data = this.state.banner
+    const banner = $('.popup')! as HTMLAnchorElement
+
+    banner.href = data.link;
+    ($('img', banner) as HTMLImageElement).alt = data.alt;
+    ($('span', banner) as HTMLSpanElement).textContent = data.text;
+
+    banner.style = ''
+  }
+
+  setup() {
+    this.showBanner()
+  }
+
+  destroy() {}
+
+  async getInitialState() {
+    try {
+      const banner = JSON.parse(await (await fetch('/home-banner')).text()) as BannerData
+      return {
+        ...super.getInitialState(),
+        banner
+      }
+    } catch (e) {}
+    return this.state
+  }
+
+  updateState(banner: BannerData) {
+    this.state.banner = banner
+    this.replacePageState()
+  }
+
+}
+
 export class SearchPage extends Page {
 
   private searchID: number = 0
@@ -50,11 +110,12 @@ export class SearchPage extends Page {
     $('#search-results')!.innerHTML = searchResults
   }
 
+  getInitialState() { return this.state }
   updateState(query: string, searchResults: string) {
     this.state.searchQuery = query
     this.state.searchResults = searchResults
 
-    super.replacePageState()
+    this.replacePageState()
   }
 
   destroy() {}
@@ -62,8 +123,8 @@ export class SearchPage extends Page {
   restore() {
     super.restore();
 
-    ($('#textbar') as HTMLInputElement).value = this.state.searchQuery;
-    $('#search-results')!.innerHTML = this.state.searchResults;
+    ($('#textbar') as HTMLInputElement).value = this.state.searchQuery
+    $('#search-results')!.innerHTML = this.state.searchResults
   }
 
 }

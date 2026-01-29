@@ -96,10 +96,10 @@ export abstract class Page {
     this.replaceHeaderContent(header.innerHTML)
     this.replaceMainContent(content.innerHTML)
 
-    this.initialiseState()
+    await this.initialiseState()
   }
 
-  getInitialState(): PageState {
+  getInitialState(): Promise<PageState> | PageState {
     return {
       header: $('nav')?.innerHTML || '',
       content: $('main')?.innerHTML || '',
@@ -108,8 +108,8 @@ export abstract class Page {
     }
   }
 
-  initialiseState() {
-    this.state = this.getInitialState()
+  async initialiseState() {
+    this.state = await this.getInitialState()
   }
 
   restore() {

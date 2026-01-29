@@ -133,11 +133,11 @@ export class TimingPage extends Page {
     this.state.departureResults = $('#departures')!.innerHTML
   }
 
-  getInitialState(): TimingPageState {
+  async getInitialState(): Promise<TimingPageState> {
     const departureResults = $('#departures')!.innerHTML
 
     return {
-      ...super.getInitialState(),
+      ...await super.getInitialState(),
       content: $('main')!.innerHTML.replace(departureResults, ''),
       departureFilter: this.getDepartureFilter(),
       departureResults,
