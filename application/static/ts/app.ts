@@ -1,4 +1,5 @@
 import { IndexPage, NearbyPage, SearchPage } from './pages.js'
+import { RunPageFactory } from './runs.js'
 import { TimingPageFactory } from './timings.js'
 import { APP_RESTORE_KEY, Page, PathPageFactory, StaticPageFactory } from './types.js'
 import { on, pageReady } from './util.js'
@@ -13,6 +14,7 @@ class App {
     new PathPageFactory('/search', SearchPage),
     new PathPageFactory('/nearby', NearbyPage),
     new TimingPageFactory(),
+    new RunPageFactory(),
   ] as const
 
   constructor(landingPage: URL) {

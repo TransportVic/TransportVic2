@@ -130,7 +130,6 @@ export class TimingPage extends Page {
 
   async load(): Promise<any> {
     await this.replacePageData(await fetch(this.url))
-    this.state.departureResults = $('#departures')!.innerHTML
   }
 
   async getInitialState(): Promise<TimingPageState> {

@@ -110,7 +110,14 @@ export class SearchPage extends Page {
     $('#search-results')!.innerHTML = searchResults
   }
 
-  getInitialState() { return this.state }
+  async getInitialState(): Promise<SearchPageState> {
+    return {
+      ...await super.getInitialState(),
+      searchQuery: '',
+      searchResults: ''
+    }
+  }
+
   updateState(query: string, searchResults: string) {
     this.state.searchQuery = query
     this.state.searchResults = searchResults
