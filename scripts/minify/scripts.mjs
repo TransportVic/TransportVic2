@@ -49,6 +49,11 @@ async function run(inFolder, outFolder) {
 }
 
 await run(
+  path.join(__dirname, '..', '..', 'application', 'static', 'js'),
+  path.join(__dirname, '..', '..', 'public', 'static', 'js')
+)
+
+await run(
   path.join(__dirname, '..', '..', 'application', 'static', 'scripts'),
   path.join(__dirname, '..', '..', 'public', 'static', 'scripts')
 )
