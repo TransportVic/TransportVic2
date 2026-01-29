@@ -141,6 +141,11 @@ export class NearbyPage extends Page {
 
   private watchID: number = 0
 
+  protected state: NearbyPageState = {
+    ...BASE_STATE,
+    nearbyResults: ''
+  }
+
   async load(): Promise<any> {
     await this.replacePageData(await fetch('/nearby'))
   }
@@ -166,7 +171,12 @@ export class NearbyPage extends Page {
       })
     })).text()
 
-    $('#content')!.innerHTML = nearbyResults
+    this.updateState(nearbyResults)
+    this.showResults()
+  }
+
+  showResults() {
+    $('#content')!.innerHTML = this.state.nearbyResults
   }
 
   processError(error: GeolocationPositionError) {
@@ -186,6 +196,23 @@ export class NearbyPage extends Page {
 
   destroy() {
     window.navigator.geolocation.clearWatch(this.watchID)
+  }
+
+  restore() {
+    super.restore()
+    this.showResults()
+  }
+
+  async getInitialState(): Promise<NearbyPageState> {
+    return {
+      ...await super.getInitialState(),
+      nearbyResults: ''
+    }
+  }
+
+  updateState(results: string) {
+    this.state.nearbyResults = results
+    this.replacePageState()
   }
 
 }
