@@ -1,7 +1,7 @@
-const async = require('async')
-const utils = require('../../utils.mjs')
-const tramDestinations = require('../../additional-data/tram-destinations')
-const { closest, distance } = require('fastest-levenshtein')
+import async from 'async'
+import utils from '../../utils.mjs'
+import tramDestinations from '../../additional-data/tram-destinations.json' with { type: 'json' }
+import { closest, distance } from 'fastest-levenshtein'
 
 let tramDestinationLookup = {}
 
@@ -39,7 +39,7 @@ async function modifyTrip(db, trip, operationDay) {
   })
 }
 
-module.exports.trimFromDestination = async function(db, destination, coreRoute, trip, operationDay) {
+export async function trimFromDestination(db, destination, coreRoute, trip, operationDay) {
   let cutoffStop
   let stops = db.getCollection('stops')
 
@@ -94,7 +94,7 @@ module.exports.trimFromDestination = async function(db, destination, coreRoute, 
 }
 
 
-module.exports.trimFromMessage = async function(db, destinations, currentStopGTFSID, trip, operationDay) {
+export async function trimFromMessage(db, destinations, currentStopGTFSID, trip, operationDay) {
   let stops = db.getCollection('stops')
   let indexes = []
   let destinationsFound

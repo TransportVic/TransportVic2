@@ -1,12 +1,12 @@
-const departureUtils = require('../utils/get-bus-timetables.mjs')
-const async = require('async')
-const utils = require('../../utils.mjs')
-const tramFleet = require('../../additional-data/tram-tracker/tram-fleet.js')
-const urls = require('../../urls')
-const determineTramRouteNumber = require('./determine-tram-route-number')
-const trimTrip = require('./trim-trip')
-const { distance } = require('fastest-levenshtein')
-const tramDestinations = require('../../additional-data/tram-destinations')
+import departureUtils from '../utils/get-bus-timetables.mjs'
+import async from 'async'
+import utils from '../../utils.mjs'
+import tramFleet from '../../additional-data/tram-tracker/tram-fleet.js'
+import urls from '../../urls.json' with { type: 'json' }
+import determineTramRouteNumber from './determine-tram-route-number.js'
+import { trimFromDestination, trimFromMessage } from './trim-trip.mjs'
+import { distance } from 'fastest-levenshtein'
+import tramDestinations from '../../additional-data/tram-destinations.json' with { type: 'json' }
 
 function findScore(trip, stopGTFSID, departureTimeMinutes) {
   let stopData = trip.stopTimings.find(stop => stop.stopGTFSID === stopGTFSID)
@@ -88,16 +88,16 @@ async function trimTripIfNeeded(db, tramDeparture, trip, stopGTFSID, day) {
 
         let stops = stopParts.map(stop => utils.adjustStopName(stop.replace(/Stop \w*/, '').replace(/\.$/, '').trim()))
 
-        trimmedTrip = await trimTrip.trimFromMessage(db, stops, stopGTFSID, trip, day)
+        trimmedTrip = await trimFromMessage(db, stops, stopGTFSID, trip, day)
       }
 
       if (trimmedTrip) {
         return trimmedTrip
       } else {
-        return await trimTrip.trimFromDestination(db, Destination, coreRoute, trip, day)
+        return await trimFromDestination(db, Destination, coreRoute, trip, day)
       }
     } else {
-      return await trimTrip.trimFromDestination(db, Destination, coreRoute, trip, day)
+      return await trimFromDestination(db, Destination, coreRoute, trip, day)
     }
   }
 
@@ -265,4 +265,4 @@ async function getDepartures(stop, db, tripDB) {
   }
 }
 
-module.exports = getDepartures
+export default getDepartures

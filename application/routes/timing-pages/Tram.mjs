@@ -1,5 +1,5 @@
 import express from 'express'
-import getDepartures from '../../../modules/tram/get-departures.js'
+import getDepartures from '../../../modules/tram/get-departures.mjs'
 import tramDestinations from '../../../additional-data/tram-destinations.json' with { type: 'json' }
 import utils from '../../../utils.mjs'
 import timingUtils from './timing-utils.mjs'
