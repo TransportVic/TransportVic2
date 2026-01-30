@@ -25,7 +25,8 @@ let suburbOverride = {
   'Ballarat Central': 'Ballarat'
 }
 
-database.connect(async err => {
+const isInTest = typeof global.it === 'function'
+if (!isInTest) database.connect(async err => {
   let coachStops = await database.getCollection('stops').findDocuments({
     'bays.mode': 'regional coach'
   }).toArray()
