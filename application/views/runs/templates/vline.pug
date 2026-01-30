@@ -5,7 +5,7 @@ if trip.runID
     if vehicle
       div.vehicle
         span=vehicle.size ? `${vehicle.size}x` : ''
-        img(src=`/static/images/icons/${vehicle.type.toLowerCase().replaceAll(' ', '-')}.svg`)
+        img(src=`/static/images/icons/${vehicle.type.toLowerCase().replace('.', '').replaceAll(' ', '-')}.svg`)
   if vehicle && vehicle.consist && vehicle.consist.length
     div.liveConsist
       span.header Live Tracking

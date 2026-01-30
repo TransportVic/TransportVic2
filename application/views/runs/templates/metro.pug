@@ -4,7 +4,7 @@ mixin infoTextRow(text)
 
 mixin stopRow(stop)
   div.timingRow(id='stop-' + stop.stopGTFSID)
-    a.departureInfo(href=`/metro/timings/${stop.stopName.toLowerCase().replace(/ /g, '-').slice(0, -16)}`)
+    a.departureInfo(href=`/metro/timings/${stop.stopName.toLowerCase().replace('.', '').replace(/ /g, '-').slice(0, -16)}`)
       span.stopName=stop.stopName.slice(0, -16)
       if trip.cancelled || stop.cancelled
         span.info.cancelled CANCELLED
