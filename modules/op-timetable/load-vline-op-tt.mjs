@@ -436,7 +436,7 @@ export default async function loadOperationalTT(db, tripDB, ptvAPI) {
     let flags = null
     let allowNSP = true
 
-    if (!matchingTrip && (matchingTrip = await matchTrip(utils.getDayOfWeek(operationDay), operationDay, vlineTrip, db, heatTimetables, 2))) {
+    if (!matchingTrip && (matchingTrip = await matchTrip(dayOfWeek, operationDay, vlineTrip, db, heatTimetables, 2))) {
       flags = { heatTT: matchingTrip.type }
       allowNSP = false
       matchingTrip.vehicle = null

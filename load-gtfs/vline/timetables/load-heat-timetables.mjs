@@ -6,6 +6,7 @@ import fs from 'fs/promises'
 import path from 'path'
 import url from 'url'
 import utils from '../../../utils.js'
+import getTripID from '../../../modules/new-tracker/metro-rail-bus/get-trip-id.mjs'
 
 let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
 await mongoDB.connect()
@@ -241,7 +242,7 @@ for (let { run, stopTimings, operationDays } of Object.values(runs)) {
   let destinationStopQuery = destStop.stopName
 
   if (['Swan Hill', 'Bendigo'].includes(run.lineHint)) {
-    earlyThreshold = 6
+    earlyThreshold = 10
     if (originStop.stopName === 'Southern Cross Railway Station') lateThreshold = 20
     if (originStop.stopName === 'Southern Cross Railway Station' && originStop.departureTimeMinutes > 19 * 60) earlyThreshold = 20
     if (destinationStopQuery === 'Epsom Railway Station') destinationStopQuery = {
@@ -292,7 +293,15 @@ for (let { run, stopTimings, operationDays } of Object.values(runs)) {
 
   if (!matchingTrips.length) {
     // console.log(run, operationDays, stopTimings)
-    continue
+
+    matchingTrips = [{
+      stopTimings: [{ departureTimeMinutes: departureTime }],
+      mode: 'regional train',
+      routeName: run.lineHint,
+      routeGTFSID: allRouteData[run.lineHint].routeGTFSID,
+      operationDays,
+      runID: getTripID(`${operationDays[0]}-${run.lineHint}-${departureTime}-${originStop.stopName}-${destStop.stopName}`)
+    }]
   }
 
   const matchingTrip = matchingTrips.map(trip => ({
