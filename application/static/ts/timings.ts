@@ -1,3 +1,4 @@
+import { Bookmarks, Mode } from './bookmarks.js'
 import { BASE_STATE, Page, PageFactory, PageState } from './types.js'
 import { $, deleteElem } from './util.js'
 
@@ -31,6 +32,12 @@ export class TimingPage extends Page {
   }
 
   private timePicker: TimePicker | undefined
+
+  private isBookmarked: boolean = false
+  private stopName: string = ''
+  private suburb: string = ''
+  private stopID: string = ''
+  private mode: Mode = 'unknown'
 
   getDepartureFilter() {
     const textbar = $('#textbar') as HTMLInputElement
@@ -122,6 +129,27 @@ export class TimingPage extends Page {
     this.timePicker = timePicker
   }
 
+  setupBookmark() {
+    this.isBookmarked = Bookmarks.isStopBookmarked(this.stopID, this.mode)
+    this.updateBookmark()
+    $('#bookmark')!.addEventListener('click', this.bookmarkClicked.bind(this))
+  }
+
+  bookmarkClicked() {
+    this.isBookmarked = !this.isBookmarked
+
+    if (this.isBookmarked) Bookmarks.addStopBookmark(this.stopID, this.stopName, this.suburb, this.mode)
+    else Bookmarks.removeStopBookmark(this.stopID, this.mode)
+
+    this.updateBookmark()
+  }
+
+  updateBookmark() {
+    const icon = $('#bookmark') as HTMLImageElement
+    if (this.isBookmarked) icon.src = '/static/images/decals/bookmark-filled.svg'
+    else icon.src = '/static/images/decals/bookmark.svg'
+  }
+
   setDepartureTime(time: Date) {
     this.state.departureTime = +time
     this.replacePageState()
@@ -149,8 +177,14 @@ export class TimingPage extends Page {
     this.updateInterval = setInterval(this.updateBody.bind(this), 30 * 1000)
     const textbar = $('#textbar') as HTMLInputElement | undefined
 
+    this.stopName = ($('#stop-name') as HTMLInputElement).value
+    this.suburb = ($('#stop-suburb') as HTMLInputElement).value
+    this.stopID = ($('#stop-id') as HTMLInputElement).value
+    this.mode = this.url.pathname.split('/')[1] as Mode
+
     if (textbar) this.setupTextbar(textbar)
     this.setupClock()
+    this.setupBookmark()
   }
 
   destroy() {

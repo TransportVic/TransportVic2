@@ -1,6 +1,7 @@
 import { $, deleteElem } from './util.js'
 
 export const APP_RESTORE_KEY = 'transportvic.pwa-last-page'
+export const BOOKMARK_KEY = 'transportvic.bookmarks'
 
 type PageContent = {
   header: HTMLElement,

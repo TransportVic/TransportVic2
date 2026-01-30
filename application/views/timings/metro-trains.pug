@@ -20,6 +20,10 @@ block head
   link(rel='preload' as='style' href=`${staticBase}/static/css/timings/base-style.css`)
   link(rel='preload' as='style' href=`${staticBase}/static/css/timings/alerts.css`)
   
+  input#stop-name(type='hidden' value=station.stopName)
+  input#stop-suburb(type='hidden' value=station.suburb[0])
+  input#stop-id(type='hidden' value=`${station.cleanName}/${station.cleanSuburbs[0]}`)
+
 
 block title
   span=station.stopName
