@@ -177,9 +177,9 @@ export class TimingPage extends Page {
     this.updateInterval = setInterval(this.updateBody.bind(this), 30 * 1000)
     const textbar = $('#textbar') as HTMLInputElement | undefined
 
-    this.stopName = ($('#stop-name') as HTMLInputElement).value
-    this.suburb = ($('#stop-suburb') as HTMLInputElement).value
-    this.stopID = ($('#stop-id') as HTMLInputElement).value
+    this.stopName = ($('meta[name="stop-name"]') as HTMLMetaElement).content
+    this.suburb = ($('meta[name="stop-suburb"]') as HTMLMetaElement).content
+    this.stopID = ($('meta[name="stop-id"]') as HTMLMetaElement).content
     this.mode = this.url.pathname.split('/')[1] as Mode
 
     if (textbar) this.setupTextbar(textbar)

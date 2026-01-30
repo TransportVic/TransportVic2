@@ -29,9 +29,9 @@ block head
   link(rel='preload' as='style' href=`${staticBase}/static/css/combined-colours.css`)
   link(rel='preload' as='style' href=`${staticBase}/static/css/timings/base-style.css`)
 
-  input#stop-name(type='hidden' value=station.stopName)
-  input#stop-suburb(type='hidden' value=station.suburb[0])
-  input#stop-id(type='hidden' value=`${station.cleanName}/${station.cleanSuburbs[0]}`)
+  meta(name='stop-name' content=station.stopName)
+  meta(name='stop-suburb' content=station.suburb[0])
+  meta(name='stop-id' content=`${station.cleanSuburbs[0]}/${station.cleanName}`)
 
 block title
   span=station.stopName

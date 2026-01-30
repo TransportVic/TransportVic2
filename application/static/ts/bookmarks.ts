@@ -108,8 +108,8 @@ export class BookmarksPage extends Page {
     const parts = [ mode, 'timings' ]
     if (['bus', 'tram', 'regional coach'].includes(mode)) parts.push(stop.id)
     else {
-      const primaryName = stop.id.split('/')[0]
-      parts.push(primaryName.replace('-railway-station', ''))
+      const stopName = stop.id.split('/')[1]
+      parts.push(stopName.replace('-railway-station', ''))
     }
 
     return parts.join('/')

@@ -6,20 +6,20 @@ export const BOOKMARK_KEY = 'transportvic.bookmarks'
 type PageContent = {
   header: HTMLElement,
   content: HTMLElement,
-  styles: HTMLLinkElement[]
+  headerTags: HTMLElement[]
 }
 
 export type PageState = {
   header: string,
   content: string,
-  styles: string[],
+  docHeader: string,
   pageLoaded: number
 }
 
 export const BASE_STATE: PageState = {
   header: '',
   content: '',
-  styles: [],
+  docHeader: '',
   pageLoaded: 0
 } as const
 
@@ -45,13 +45,12 @@ export abstract class Page {
 
     const contentElem = dummyElem.getElementsByTagName('main')[0] as HTMLElement
     const headerElem = dummyElem.getElementsByTagName('nav')[0] as HTMLElement
-    const styles = [...dummyElem.getElementsByTagName('link')]
-      .filter(link => link.getAttribute('rel') === 'stylesheet')
+    const headerTags = [...dummyElem.querySelectorAll('title, link, head meta')] as HTMLElement[]
 
     return {
       content: contentElem || document.createElement('main'),
       header: headerElem || document.createElement('nav'),
-      styles
+      headerTags
     }
   }
 
@@ -70,30 +69,18 @@ export abstract class Page {
     existingContent.innerHTML = newContentHTML
   }
 
-  protected replaceStyles(newStyles: HTMLLinkElement[]) {
-    const existingStyles = this.getExistingStyles()
-
-    newStyles.forEach(link => document.head.appendChild(link))
-    existingStyles.forEach(link => deleteElem(link))
+  protected replaceDocumentHeader(newTags: HTMLElement[]) {
+    this.replaceDocumentHeaderContent(newTags.map(elem => elem.outerHTML).join(''))
   }
 
-  protected replaceStylesFromLinks(newStyles: string[]) {
-    const existingStyles = this.getExistingStyles()
-
-    newStyles.forEach(href => {
-      const link = document.createElement('link')
-      link.setAttribute('rel', 'stylesheet')
-      link.setAttribute('href', href)
-      document.head.appendChild(link)
-    })
-
-    existingStyles.forEach(link => deleteElem(link))
+  protected replaceDocumentHeaderContent(content: string) {
+    document.head.innerHTML = content
   }
 
   protected async replacePageData(req: Response): Promise<void> {
-    const { content, header, styles } = await this.getPageContent(req)
+    const { content, header, headerTags } = await this.getPageContent(req)
 
-    this.replaceStyles(styles)
+    this.replaceDocumentHeader(headerTags)
     this.replaceHeaderContent(header.innerHTML)
     this.replaceMainContent(content.innerHTML)
 
@@ -104,7 +91,7 @@ export abstract class Page {
     return {
       header: $('nav')?.innerHTML || '',
       content: $('main')?.innerHTML || '',
-      styles: this.getExistingStyles().map(link => link.getAttribute('href') || '').filter(Boolean),
+      docHeader: $('head')?.innerHTML || '',
       pageLoaded: +new Date()
     }
   }
@@ -114,7 +101,7 @@ export abstract class Page {
   }
 
   restore() {
-    this.replaceStylesFromLinks(this.state.styles)
+    this.replaceDocumentHeaderContent(this.state.docHeader)
     this.replaceHeaderContent(this.state.header)
     this.replaceMainContent(this.state.content)
 
