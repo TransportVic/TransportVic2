@@ -1,3 +1,4 @@
+import { BookmarksPage } from './bookmarks.js'
 import { IndexPage, NearbyPage, SearchPage } from './pages.js'
 import { RunPageFactory } from './runs.js'
 import { TimingPageFactory } from './timings.js'
@@ -13,6 +14,7 @@ class App {
     new StaticPageFactory('/links'),
     new PathPageFactory('/search', SearchPage),
     new PathPageFactory('/nearby', NearbyPage),
+    new PathPageFactory('/bookmarks', BookmarksPage),
     new TimingPageFactory(),
     new RunPageFactory(),
   ] as const
