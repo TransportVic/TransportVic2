@@ -77,7 +77,7 @@ export async function loadTrips(mongoDB, routeIDMap) {
         }
       }))
 
-      await mongoStops.bulkWrite(bulkUpdate)
+      if (bulkUpdate.length) await mongoStops.bulkWrite(bulkUpdate)
 
       console.log('Loaded stop services for', operator)
     } catch (e) {
