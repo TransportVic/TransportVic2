@@ -62,5 +62,5 @@ if stopModes.length > 1
           url = '/vline/timings/southern-cross'
         }
       a(href=url class=`modeSwitchType ${mode.replace(' ', '-')} ${mode === currentMode ? '' : 'inactive'}` aria-label=`View ${screenReaderLabels[mode]} departures from this stop`)
-        img(src=`${staticBase}/static/images/clear-icons/${iconMap[mode] || mode}.svg` alt='' width='30' height='30')
+        img(src=`${staticBase}/static/images/clear-icons/${iconMap[mode] || mode}.svg` alt=`${screenReaderLabels[mode]} icon` width='30' height='30')
         span=mode

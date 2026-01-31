@@ -46,9 +46,21 @@ append postStyle
   link(rel='stylesheet' href=`${staticBase}/static/css/constant-colours.css`)
 
 append content
-  - let currentMode = 'metro train'
+  -
+    let currentMode = 'metro train'
+    const relevantStations = {
+      'Flinders Street': 'Town Hall',
+      'Town Hall': 'Flinders Street',
+      'State Library': 'Melbourne Central',
+      'Melbourne Central': 'State Library'
+    }
+  
   div#body-container
     div.left
+      if relevantStations[stationName]
+        a#relevant-station(href=`/metro/timings/${relevantStations[stationName].toLowerCase().replaceAll(/ /g, '-')}`)
+          img(src=`${staticBase}/static/images/clear-icons/metro.svg` alt='metro train icon' width='30' height='30')
+          span View departures from #{relevantStations[stationName]}
       include mode-switch
       div#departures.map
         include ./templates/metro-trains

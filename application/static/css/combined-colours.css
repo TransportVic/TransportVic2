@@ -82,13 +82,14 @@
   background-color: #e9ae00 !important;
 }
 
+
 .sunbury-line {
-  background-color: #ffbe00 !important;
+  background-color: #279FD5 !important;
   --operator-text: #1E1E1E;
 }
 
 :nth-child(even) > .sunbury-line {
-  background-color: #e9ae00 !important;
+  background-color: #2491c4 !important;
 }
 
 .leftContainer.upfield-line img, .leftContainer.craigieburn-line img, .leftContainer.sunbury-line img {
@@ -96,19 +97,21 @@
 }
 
 .werribee-line {
-  background-color: #219f18 !important;
+  background-color: #F178AF !important;
+  --operator-text: #1E1E1E;
 }
 
 :nth-child(even) > .werribee-line {
-  background-color: #1b8013 !important;
+  background-color: #dc6b9e !important;
 }
 
 .williamstown-line {
-  background-color: #219f18 !important;
+  background-color: #F178AF !important;
+  --operator-text: #1E1E1E;
 }
 
 :nth-child(even) > .williamstown-line {
-  background-color: #1b8013 !important;
+  background-color: #dc6b9e !important;
 }
 
 .frankston-line {

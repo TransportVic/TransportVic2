@@ -104,10 +104,15 @@ div.alerts div.generalAlert div.alertText > p:has(+p) {
   margin-block-end: calc(0.2 * var(--width) + 0.3 * var(--height));
 }
 
+
 div.alerts div.generalAlert input[type='checkbox'] {
   display: none;
 }
 
 div.alerts div.generalAlert input[type='checkbox']:not(:checked) ~ label div.alertText :not(:first-child) {
   display: none;
+}
+
+div.alerts div.generalAlert input[type='checkbox']:not(:checked) ~ label div.alertText p:first-child {
+  margin-block-end: calc(0.5 * var(--width) + 0.7 * var(--height));
 }

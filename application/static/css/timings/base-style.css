@@ -144,6 +144,23 @@ div#map .stopIcon {
   z-index: -9999;
 }
 
+a#relevant-station {
+  width: calc(100 * var(--width));
+  height: calc(4 * var(--width) + 4 * var(--height));
+  font-size: calc(2 * var(--width) + 1 * var(--height));
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  background-color: #3483db;
+  color: #f9f9f9;
+}
+
+a#relevant-station img {
+  margin-inline: calc(2 * var(--width));
+  height: calc(2 * var(--width) + 1.7 * var(--height));
+}
+
 #modeSwitch {
   width: calc(100 * var(--width));
   display: flex;
