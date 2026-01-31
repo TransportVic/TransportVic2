@@ -7,6 +7,10 @@ import ptvAPITD3826 from '../tracker/sample-data/ptv-api-3826.json' with { type:
 import { PTVAPI, StubAPI } from '@transportme/ptv-api'
 import getTripUpdateData from '../../../modules/metro-trains/get-ptv-departures.mjs'
 import { LokiDatabaseConnection } from '@transportme/database'
+import pkmStops from '../tracker/sample-data/pkm-stops-db.json' with { type: 'json' }
+import tdC014 from './sample-data/tdn-C014-loop-amex.mjs'
+import ptvAPI_RMDC014 from './sample-data/ptv-api-rmd-C014.mjs'
+import ptvAPI_TDNC014 from './sample-data/ptv-api-tdn-C014.mjs'
 
 let clone = o => JSON.parse(JSON.stringify(o))
 
@@ -200,6 +204,65 @@ describe('The getTripUpdateData function', () => {
       stopName: 'Flinders Street Railway Station',
       platform: '2',
       scheduledDepartureTime: new Date('2025-06-09T22:58:00.000Z'),
+      cancelled: false
+    })
+  })
+
+  it('Fetches stopping pattern data for trips not marked as updated but have records of being updated', async () => {
+    let database = new LokiDatabaseConnection('test-db')
+    let stops = await database.createCollection('stops')
+    let routes = await database.createCollection('routes')
+    let liveTimetables = await database.createCollection('live timetables')
+
+    const dbStops = clone(pkmStops)
+    const rmdStop = dbStops.find(stop => stop.stopName === 'Richmond Railway Station')
+
+    await stops.createDocument(dbStops)
+    await liveTimetables.createDocument(clone(tdC014))
+    await routes.createDocuments([{
+      "mode" : "metro train",
+      "routeName" : "Pakenham",
+      "cleanName" : "pakenham",
+      "routeNumber" : null,
+      "routeGTFSID" : "2-PKM",
+      "operators" : [
+        "Metro"
+      ]
+    }])
+
+    let stubAPI = new StubAPI()
+    stubAPI.setResponses([ clone(ptvAPI_RMDC014), clone(ptvAPI_TDNC014) ])
+    let ptvAPI = new PTVAPI(stubAPI)
+
+    let tripData = await getTripUpdateData(database, rmdStop, ptvAPI)
+
+    let { type, data } = tripData[0]
+    expect(type).to.equal('pattern')
+    expect(data.operationDays).to.equal('20260131')
+    expect(data.runID).to.equal('C014')
+    expect(data.routeGTFSID).to.equal('2-PKM')
+    expect(data.cancelled).to.be.false
+
+    expect(data.stops[0]).to.deep.equal({
+      stopName: 'East Pakenham Railway Station',
+      platform: '2',
+      scheduledDepartureTime: new Date('2026-01-30T22:13:00Z'),
+      estimatedDepartureTime: new Date('2026-01-30T22:12:40Z'),
+      cancelled: false
+    })
+
+    expect(data.stops[data.stops.length - 2]).to.deep.equal({
+      stopName: 'Southern Cross Railway Station',
+      platform: '12',
+      scheduledDepartureTime: new Date('2026-01-30T23:31:00Z'),
+      estimatedDepartureTime: new Date('2026-01-30T23:35:00Z'),
+      cancelled: false
+    })
+
+    expect(data.stops[data.stops.length - 1]).to.deep.equal({
+      stopName: 'Flinders Street Railway Station',
+      platform: '6',
+      scheduledDepartureTime: new Date('2026-01-30T23:35:00Z'),
       cancelled: false
     })
   })

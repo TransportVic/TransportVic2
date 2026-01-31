@@ -43,7 +43,10 @@ export default async function getTripUpdateData(db, stop, ptvAPI, { skipTDN = []
       }
     })
 
-    if (timetable) {
+    // If a trip had an update but was reverted, PTV reports it as scheduled and not updated
+    // But if we have records of an update, this should still count as an updated trip and trigger a pattern update
+    const timetableHasUpdate = !!timetable && timetable.changes && timetable.changes.some(c => c.type === 'stop-cancelled')
+    if (timetable && !timetableHasUpdate) {
       const tripData = {
         operationDays: timetable.operationDays,
         runID: departure.runData.tdn,
