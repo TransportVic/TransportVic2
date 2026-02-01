@@ -65,8 +65,10 @@ export abstract class Page {
   }
 
   protected replaceMainContent(newContentHTML: string) {
-    const existingContent = $('#content')!
+    const existingContent = $('#content') as HTMLDivElement
     existingContent.innerHTML = newContentHTML
+
+    this.setupDropdowns()
   }
 
   protected replaceDocumentHeader(newTags: HTMLElement[]) {
@@ -85,6 +87,19 @@ export abstract class Page {
     this.replaceMainContent(content.innerHTML)
 
     await this.initialiseState()
+  }
+
+  setupDropdowns() {
+    const dropdowns = Array.from(document.querySelectorAll('#content .customDropdown')) as HTMLDivElement[]
+    for (const dropdown of dropdowns) {
+      const span = $('span', dropdown) as HTMLSpanElement
+      const select = $('select', dropdown) as HTMLSelectElement
+
+      select.addEventListener('change', () => {
+        span.textContent = select.options[select.selectedIndex].value
+      })
+    }
+
   }
 
   getInitialState(): Promise<PageState> | PageState {
@@ -151,9 +166,9 @@ export class StaticPageFactory extends PageFactory {
 
 }
 
-class StaticPage extends Page {
+export class StaticPage extends Page {
 
-  constructor (url: URL, private path: string) {
+  constructor(url: URL, private path: string) {
     super(url)
   }
 

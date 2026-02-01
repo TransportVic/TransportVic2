@@ -2,8 +2,9 @@ import { BookmarksPage } from './bookmarks.js'
 import { IndexPage, NearbyPage, SearchPage } from './pages.js'
 import { RunPageFactory } from './runs.js'
 import { TimingPageFactory } from './timings.js'
-import { APP_RESTORE_KEY, Page, PathPageFactory, StaticPageFactory } from './types.js'
-import { on, pageReady } from './util.js'
+import { TrackerPageFactory } from './tracker.js'
+import { Page, PathPageFactory, StaticPageFactory } from './types.js'
+import { pageReady } from './util.js'
 
 class App {
 
@@ -17,6 +18,8 @@ class App {
     new PathPageFactory('/bookmarks', BookmarksPage),
     new TimingPageFactory(),
     new RunPageFactory(),
+    new TrackerPageFactory(),
+    new StaticPageFactory('/mockups'),
   ] as const
 
   constructor(landingPage: URL) {
@@ -33,6 +36,7 @@ class App {
   async initialise() {
     if (!this.currentPage) return
 
+    this.currentPage.setupDropdowns()
     await this.currentPage.initialiseState()
     this.currentPage.replacePageState()
   }
@@ -41,6 +45,8 @@ class App {
     document.addEventListener('click', async event => {
       const target = (event.target as HTMLElement).closest('a')
       if (!target) return
+      if (event.ctrlKey || event.metaKey) return
+
       const targetURL = new URL(target.href)
       const pageFactory = this.getFactory(targetURL)
       if (!pageFactory) return
