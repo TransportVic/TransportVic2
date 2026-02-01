@@ -88,7 +88,7 @@ async function prioritySearch(db, query) {
   return gtfsMatch.concat(numericalMatchStops).concat(priorityStopsByName).concat(stations)
 }
 
-async function findStops(db, rawQuery) {
+export async function findStops(db, rawQuery) {
   let stops = db.getCollection('stops')
 
   if (!rawQuery.length) return []

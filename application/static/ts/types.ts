@@ -4,6 +4,38 @@ import { $, deleteElem } from './util.js'
 export const APP_RESTORE_KEY = 'transportvic.pwa-last-page'
 export const BOOKMARK_KEY = 'transportvic.bookmarks'
 
+export type Mode = 'bus' | 'metro' | 'tram' | 'coach' | 'vline' | 'ferry' | 'unknown'
+
+export const modeCSSNames: Record<Mode, string> = {
+  bus: 'busStop',
+  tram: 'tramStop',
+  coach: 'regionalCoachStop',
+  vline: 'vlineStation',
+  metro: 'metroStation',
+  ferry: 'ferryTerminal',
+  unknown: 'unknown'
+}
+
+export const modeIconNames: Record<Mode, string> = {
+  bus: 'bus',
+  tram: 'tram',
+  coach: 'bus',
+  vline: 'vline',
+  metro: 'metro',
+  ferry: 'ferry',
+  unknown: 'unknown'
+}
+
+export const modeHumanNames: Record<Mode, string> = {
+  bus: 'Bus Stop',
+  tram: 'Tram Stop',
+  coach: 'Regional Coach Stop',
+  vline: 'V/Line Train Station',
+  metro: 'Metro Train Station',
+  ferry: 'Ferry Terminal',
+  unknown: 'unknown'
+}
+
 type PageContent = {
   header: HTMLElement,
   content: HTMLElement,

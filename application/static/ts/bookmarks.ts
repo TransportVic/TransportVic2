@@ -1,37 +1,5 @@
-import { BOOKMARK_KEY, Page } from './types.js'
+import { BOOKMARK_KEY, Mode, modeCSSNames, modeHumanNames, modeIconNames, Page } from './types.js'
 import { $ } from './util.js'
-
-export type Mode = 'bus' | 'metro' | 'tram' | 'coach' | 'vline' | 'ferry' | 'unknown'
-
-const cssNames: Record<Mode, string> = {
-  bus: 'busStop',
-  tram: 'tramStop',
-  coach: 'regionalCoachStop',
-  vline: 'vlineStation',
-  metro: 'metroStation',
-  ferry: 'ferryTerminal',
-  unknown: 'unknown'
-}
-
-const iconNames: Record<Mode, string> = {
-  bus: 'bus',
-  tram: 'tram',
-  coach: 'bus',
-  vline: 'vline',
-  metro: 'metro',
-  ferry: 'ferry',
-  unknown: 'unknown'
-}
-
-const stopTypes: Record<Mode, string> = {
-  bus: 'Bus Stop',
-  tram: 'Tram Stop',
-  coach: 'Regional Coach Stop',
-  vline: 'V/Line Train Station',
-  metro: 'Metro Train Station',
-  ferry: 'Ferry Terminal',
-  unknown: 'unknown'
-}
 
 type BookmarkedStop = {
   id: string,
@@ -126,12 +94,12 @@ export class BookmarksPage extends Page {
   getStopHTML(stop: BookmarkedStop) {
     const mode = stop.mode
     return `
-<a class="${cssNames[mode]} result" href="${this.getStopLink(stop, mode)}">
+<a class="${modeCSSNames[mode]} result" href="${this.getStopLink(stop, mode)}">
   <div class="leftContainer">
-    <img src="/static/images/clear-icons/${iconNames[mode]}.svg">
+    <img src="/static/images/clear-icons/${modeIconNames[mode]}.svg">
   </div>
   <div class="resultDetails">
-    <span>${stopTypes[mode]} in ${stop.suburb}</span>
+    <span>${modeHumanNames[mode]} in ${stop.suburb}</span>
     <span>${stop.stopName}</span>
   </div>
 </a>

@@ -1,5 +1,5 @@
-import { Bookmarks, Mode } from './bookmarks.js'
-import { BASE_STATE, Page, PageFactory, PageState } from './types.js'
+import { Bookmarks } from './bookmarks.js'
+import { BASE_STATE, Mode, Page, PageFactory, PageState } from './types.js'
 import { $, deleteElem } from './util.js'
 
 type TimingPageState = PageState & {

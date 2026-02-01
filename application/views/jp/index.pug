@@ -1,0 +1,26 @@
+extends ../layout
+
+block head
+  title TransportVic - Journey Planner
+  
+  -
+    title = 'Journey Planner'
+    description = 'Plan your journey with TransportVic'
+
+block title
+  span Journey Planner
+
+block style
+  link(rel='stylesheet' href=`${staticBase}/static/css/jp.css`)
+
+block content
+  div.journey-endpoints
+    div.journey-dotted-lines
+      img(src=`${staticBase}/static/images/decals/jp-dots.svg`)
+    div.journey-endpoint-inputs
+      div.journey-origin
+        input#journey-origin-input(placeholder='Origin')
+        div.stop-suggestions
+      div.journey-destination
+        input#journey-destination-input(placeholder='Destination')
+        div.stop-suggestions

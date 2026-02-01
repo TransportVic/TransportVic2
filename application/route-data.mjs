@@ -8,6 +8,7 @@ export default [
   { path: '/search', router: 'Search.mjs' },
   { path: '/nearby', router: 'StopsNearby.mjs' },
   { path: '/public-holiday', router: 'PublicHolidayInfo.mjs' },
+  { path: '/journey', router: 'JourneyPlanner.mjs' },
 
   { path: '/vline/timings', router: 'timing-pages/VLine.mjs', enable: modules.Next4 && modules.Next4.vline },
   { path: '/metro/timings', router: 'timing-pages/MetroTrains.mjs', enable: modules.Next4 && modules.Next4.metro },

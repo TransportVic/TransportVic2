@@ -1,5 +1,6 @@
 import { BookmarksPage } from './bookmarks.js'
 import { Error500Page } from './errors.js'
+import JourneyPage from './jp.js'
 import { NearbyPage } from './nearby.js'
 import { IndexPage, SearchPage } from './pages.js'
 import { RunPageFactory } from './runs.js'
@@ -24,6 +25,7 @@ export class App {
     new StaticPageFactory('/mockups'),
     new StaticPageFactory('/about'),
     new StaticPageFactory('/500'),
+    new PathPageFactory('/journey', JourneyPage),
   ] as const
 
   constructor(landingPage: URL) {
