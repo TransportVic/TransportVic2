@@ -22,6 +22,7 @@ export class App {
     new RunPageFactory(),
     new TrackerPageFactory(),
     new StaticPageFactory('/mockups'),
+    new StaticPageFactory('/about'),
     new StaticPageFactory('/500'),
   ] as const
 
@@ -117,6 +118,15 @@ export class App {
     this.currentPage = page
     page.markPageAsActive()
   }
+
+  async loadServiceWorker() {
+    if ('serviceWorker' in navigator) {
+      await navigator.serviceWorker.register('/sw.js', { scope: '/' })
+      console.log('Service Worker registered!')
+      await navigator.serviceWorker.ready
+      console.log('Service Worker ready!')
+    }
+  }
 }
 
 pageReady(async () => {
@@ -125,6 +135,8 @@ pageReady(async () => {
   app.watchLinks(document)
   app.watchPopState(window)
   await app.setup()
+
+  await app.loadServiceWorker()
 
   window.app = app
 })
