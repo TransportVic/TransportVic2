@@ -35,6 +35,8 @@ export class App {
     this.currentPage = pageFactory.createPage(landingPage)
   }
 
+  getCurrentPage() { return this.currentPage }
+
   getFactory(url: URL) {
     return this.pageFactories.find(fac => fac.canCreatePage(url))
   }
@@ -68,11 +70,14 @@ export class App {
 
       try {
         await page.load()
-        window.history.pushState(page.serialise(), '', targetURL)
 
+        // Equivalent to DOMContentLoaded
+        window.history.pushState(page.serialise(), '', targetURL)
+        this.setCurrentPage(page)
+
+        // Equivalent to window.onload
         await page.setup(this)
 
-        this.setCurrentPage(page)
         page.scroll()
       } catch (e) {
         console.error('An error occurred setting up the page', e)

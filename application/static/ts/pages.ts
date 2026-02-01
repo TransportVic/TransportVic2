@@ -1,3 +1,4 @@
+import { App } from './app.js'
 import { BASE_STATE, Page, PageState } from './types.js'
 import { $, inputTimeout } from './util.js'
 
@@ -7,7 +8,7 @@ type SearchPageState = PageState & {
 }
 
 type IndexPageState = PageState & {
-  banner: BannerData
+  banner: BannerData | null
 }
 
 type BannerData = {
@@ -18,13 +19,15 @@ type BannerData = {
 
 export class IndexPage extends Page {
 
+  private ERROR_BANNER: BannerData = {
+    link: '',
+    alt: 'Alert',
+    text: 'Could not connect to server!'
+  }
+
   protected state: IndexPageState = {
     ...BASE_STATE,
-    banner: {
-      link: '',
-      alt: 'Alert',
-      text: 'Could not connect to server!'
-    }
+    banner: null
   }
 
   async load() {
@@ -35,7 +38,7 @@ export class IndexPage extends Page {
     const banner = $('.popup') as HTMLAnchorElement
     if (!banner) return
 
-    const data = this.state.banner
+    const data = this.state.banner || this.ERROR_BANNER
     banner.href = data.link;
     ($('img', banner) as HTMLImageElement).alt = data.alt;
     ($('span', banner) as HTMLSpanElement).textContent = data.text;
@@ -43,24 +46,24 @@ export class IndexPage extends Page {
     banner.style = ''
   }
 
-  setup() {
+  async setup(app: App) {
+    console.log('setup', this.state.banner)
+    try {
+      if (!this.state.banner) {
+        const banner = JSON.parse(await (await fetch('/home-banner')).text()) as BannerData
+        if (app.getCurrentPage() === this) this.updateState(banner)
+      }
+    } catch (e) {}
+
     this.showBanner()
   }
 
   destroy() {}
 
   async getInitialState(): Promise<IndexPageState> {
-    try {
-      const banner = JSON.parse(await (await fetch('/home-banner')).text()) as BannerData
-      return {
-        ...await super.getInitialState(),
-        banner
-      }
-    } catch (e) {}
-
     return {
       ...await super.getInitialState(),
-      banner: this.state.banner
+      banner: null
     }
   }
 
@@ -68,7 +71,6 @@ export class IndexPage extends Page {
     this.state.banner = banner
     this.replacePageState()
   }
-
 }
 
 export class SearchPage extends Page {
