@@ -161,6 +161,11 @@ async function pickBestTrip(data, db, tripDB) {
       referenceTrip: gtfsTrip
     }, db)
 
+    if (!trip && referenceTrip)  {
+      let isLive = referenceTrip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
+      return { trip: referenceTrip, tripStartTime, isLive } // Request must have failed, but we have a reference trip
+    }
+
     let isLive = trip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
 
     return { trip, tripStartTime, isLive }

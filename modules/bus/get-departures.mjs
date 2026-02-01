@@ -137,6 +137,7 @@ async function getDeparturesFromPTV(stop, db, time, discardUnmatched) {
       }
 
       trip = await departureUtils.getDeparture(db, allGTFSIDs, scheduledDepartureTime, destination, 'bus', routeGTFSID, [], 1, null, true, run.run_ref)
+
       if (!trip && discardUnmatched) return
       if (!trip && run.run_ref.match(/^\d+$/)) return
       if (!trip) trip = await getStoppingPatternWithCache(db, busDeparture, destination)

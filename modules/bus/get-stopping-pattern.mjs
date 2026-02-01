@@ -233,7 +233,11 @@ export default async function (data, db) {
     })
   }
 
-  let key = {
+  let key = ptvRunID.includes('-') ? {
+    mode: 'bus',
+    operationDays: timetable.operationDays,
+    runID: getRunIDFromTripID(ptvRunID)
+  } : {
     mode: 'bus',
     routeGTFSID,
     operationDays: timetable.operationDays,
