@@ -51,12 +51,11 @@ append content
       'State Library': 'Melbourne Central',
       'Melbourne Central': 'State Library'
     }
-  
-  div#body-container
-    if relevantStations[stationName]
-      a#relevant-station(href=`/metro/timings/${relevantStations[stationName].toLowerCase().replaceAll(/ /g, '-')}`)
-        img(src=`${staticBase}/static/images/clear-icons/metro.svg` alt='metro train icon' width='30' height='30')
-        span View departures from #{relevantStations[stationName]}
-    include mode-switch
-    div#departures
-      include ./templates/metro-trains
+
+  if relevantStations[stationName]
+    a#relevant-station(href=`/metro/timings/${relevantStations[stationName].toLowerCase().replaceAll(/ /g, '-')}`)
+      img(src=`${staticBase}/static/images/clear-icons/metro.svg` alt='metro train icon' width='30' height='30')
+      span View departures from #{relevantStations[stationName]}
+  include mode-switch
+  div#departures
+    include ./templates/metro-trains
