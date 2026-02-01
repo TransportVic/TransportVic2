@@ -40,7 +40,6 @@ export default [
   { path: '/mockups/sss-new/coach', router: 'mockups/sss-new/SSSCoachBay.mjs' },
   { path: '/jmss-screens/big-screen', router: 'jmss-screens/BigScreen.mjs', enable: modules.jmssScreen },
 
-  { path: '/smartrak', router: 'SmartrakIDs.mjs' },
   { path: '/bus/tracker', router: 'tracker/bus/BusTracker.mjs' },
   { path: '/tram/tracker', router: 'tracker/TramTracker.mjs' },
   { path: '/vline/tracker', router: 'tracker/VLineTracker.mjs' },
