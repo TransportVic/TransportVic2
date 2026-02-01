@@ -5,7 +5,7 @@ import config from '../../../config.json' with { type: 'json' }
 import fs from 'fs/promises'
 import path from 'path'
 import url from 'url'
-import utils from '../../../utils.js'
+import utils from '../../../utils.mjs'
 import getTripID from '../../../modules/new-tracker/metro-rail-bus/get-trip-id.mjs'
 
 let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)

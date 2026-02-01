@@ -1,8 +1,8 @@
 import express from 'express'
 import getDepartures from '../../../modules/regional-coach/get-departures.mjs'
-import utils from '../../../utils.js'
+import utils from '../../../utils.mjs'
 import async from 'async'
-import timingUtils from './timing-utils.js'
+import timingUtils from './timing-utils.mjs'
 
 const router = new express.Router()
 

@@ -1,6 +1,6 @@
 const fs = require('fs')
 const path = require('path')
-const utils = require('../../../utils')
+const utils = require('../../../utils.mjs')
 const async = require('async')
 const config = require('../../../config')
 const DatabaseConnection = require('../../../database/DatabaseConnection')

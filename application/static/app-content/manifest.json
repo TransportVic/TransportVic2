@@ -1,7 +1,7 @@
 {
   "name": "TransportVic",
   "short_name": "Transport Vic",
-  "start_url": "/nearby",
+  "start_url": "/nearby?app",
   "scope": "/",
   "background_color": "#1e1e1e",
   "theme_color": "#1e1e1e",

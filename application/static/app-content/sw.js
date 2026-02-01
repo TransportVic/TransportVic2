@@ -1,5 +1,5 @@
-const version = '158a'
-const cacheName = `transportvic-${version}`
+const version = '1'
+const cacheName = `transportvic-new-${version}`
 
 async function cacheFiles(files) {
   let server = await (await fetch('/static-server')).text()
@@ -16,19 +16,13 @@ async function cacheFiles(files) {
   return cache.addAll(serverMappedFiles).then(() => self.skipWaiting())
 }
 
-self.addEventListener('install', event => {
-  const timeStamp = Date.now()
-  caches.keys().then(function (cachesNames) {
-    return Promise.all(cachesNames.map((storedCacheName) => {
-      if (storedCacheName === cacheName || !storedCacheName.startsWith('transportvic')) return Promise.resolve()
-      return caches.delete(storedCacheName).then(() => {
-        console.log('Old cache ' + storedCacheName + ' deleted')
-      })
-    }))
-  })
+self.addEventListener('install', async event => {
+  event.waitUntil((async () => {
+    const cacheNames = await caches.keys()
+    const oldCaches = cacheNames.filter(storedCacheName => !(storedCacheName === cacheName || !storedCacheName.startsWith('transportvic')))
+    await Promise.all(oldCaches.map(async cacheName => await caches.delete(cacheName)))
 
-  event.waitUntil(
-    cacheFiles([
+    await cacheFiles([
       '/static/css/runs/base-style.css',
 
       '/static/css/timings/base-style.css',
@@ -85,6 +79,7 @@ self.addEventListener('install', event => {
       '/static/images/decals/ac.svg',
       '/static/images/decals/wheelchair.svg',
 
+      '/static/images/decals/clock.svg',
       '/static/images/decals/bookmark.svg',
       '/static/images/decals/bookmark-filled.svg',
       '/static/images/decals/map.svg',
@@ -154,23 +149,18 @@ self.addEventListener('install', event => {
       '/static/scripts/mockups/pids-utils.js',
       '/static/scripts/mockups/summary.js',
 
-      '/static/scripts/tracker/locator.js',
-
-      '/static/scripts/bookmarks.js',
-      '/static/scripts/dropdown.js',
-      '/static/scripts/nearby.js',
-      '/static/scripts/route-paths.js',
-      '/static/scripts/route-preview.js',
-      '/static/scripts/search.js',
-      '/static/scripts/smartrak.js',
-      '/static/scripts/stats.js',
-      '/static/scripts/stop-preview.js',
-      '/static/scripts/stop-map.js',
-      '/static/scripts/sw-load.js',
-      '/static/scripts/timings.js',
-      '/static/scripts/run.js',
+      '/static/js/app.js',
+      '/static/js/bookmarks.js',
+      '/static/js/errors.js',
+      '/static/js/nearby.js',
+      '/static/js/pages.js',
+      '/static/js/runs.js',
+      '/static/js/timings.js',
+      '/static/js/tracker.js',
+      '/static/js/types.js',
+      '/static/js/util.js',
+      
       '/static/scripts/util.js',
-      '/static/scripts/index.js',
 
       '/static/scripts/vendor/leaflet-locate-0.85.1.js',
       '/static/scripts/vendor/leaflet-1.6.0.js',
@@ -181,6 +171,12 @@ self.addEventListener('install', event => {
       '/search',
       '/railmap',
 
+      '/bus/tracker',
+      '/tram/tracker',
+      '/metro/tracker',
+      '/vline/tracker',
+      '/mockups',
+      '/about',
 
 
       '/pid/metro-lcd/full-pid',
@@ -214,7 +210,7 @@ self.addEventListener('install', event => {
       '/mockups/static/css/metro-lcd/templates/city-loop.css',
       '/mockups/static/css/metro-lcd/templates/next-service-header.css'
     ])
-  )
+  })())
 })
 
 self.addEventListener('activate', event => {

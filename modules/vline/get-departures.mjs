@@ -1,8 +1,8 @@
 import Departures from '../departures/get-departures.mjs'
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
-import guessScheduledPlatforms from '../vline-old/guess-scheduled-platforms.js'
+import guessScheduledPlatforms from '../vline-old/guess-scheduled-platforms.mjs'
 import getCoachDepartures from '../regional-coach/get-departures.mjs'
-import utils from '../../utils.js'
+import utils from '../../utils.mjs'
 
 const { TRANSIT_MODES } = GTFS_CONSTANTS
 

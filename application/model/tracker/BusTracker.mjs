@@ -1,5 +1,5 @@
 import Tracker from './Tracker.mjs'
-import utils from '../../../utils.js'
+import utils from '../../../utils.mjs'
 import busDestinations from '../../../additional-data/bus-destinations.json' with { type: 'json' }
 
 export default class BusTracker extends Tracker {

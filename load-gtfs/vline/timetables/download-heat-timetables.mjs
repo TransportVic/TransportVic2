@@ -2,7 +2,7 @@ import { getHeatTimetables } from '@transportme/vline-nsp-reader'
 import fs from 'fs/promises'
 import path from 'path'
 import url from 'url'
-import utils from '../../../utils.js'
+import utils from '../../../utils.mjs'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)

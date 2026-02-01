@@ -1,8 +1,8 @@
 import express from 'express'
-import getBusDepartures from '../../../modules/bus/get-departures.js'
+import getBusDepartures from '../../../modules/bus/get-departures.mjs'
 import getTrainDepartures from '../../../modules/metro-trains/get-departures.mjs'
 import busDestinations from '../../../additional-data/bus-destinations.json' with { type: 'json' }
-import utils from '../../../utils.js'
+import utils from '../../../utils.mjs'
 
 const router = new express.Router()
 

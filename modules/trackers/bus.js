@@ -1,6 +1,6 @@
 const config = require('../../config')
 const DatabaseConnection = require('../../database/DatabaseConnection')
-const utils = require('../../utils')
+const utils = require('../../utils.mjs')
 const stops = require('../../additional-data/bus-tracker/stops')
 const nightStops = require('../../additional-data/bus-tracker/night-stops')
 const async = require('async')

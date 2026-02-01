@@ -14,7 +14,7 @@ import td8007NSP from './sample-data/td8007-nsp.json' with { type: 'json' }
 import allStops from './sample-data/stops.json' with { type: 'json' }
 import allRoutes from './sample-data/routes.json' with { type: 'json' }
 import VLineUtils from '../../../modules/vline/vline-utils.mjs'
-import utils from '../../../utils.js'
+import utils from '../../../utils.mjs'
 import td8457GTFS from './sample-data/td8457-gtfs.mjs'
 import dstStartNo2amTripsGTFS from './sample-data/dst-start-no2am-trips.mjs'
 import td8469Live from './sample-data/null-destination/td8469-live.mjs'

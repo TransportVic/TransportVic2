@@ -1,6 +1,6 @@
 const async = require('async')
-const utils = require('../../utils')
-const { getDayOfWeek } = require('../../public-holidays')
+const utils = require('../../utils.mjs')
+const { getDayOfWeek } = require('../../public-holidays.mjs')
 
 const routeGTFSIDs = require('../../additional-data/metro-route-gtfs-ids')
 

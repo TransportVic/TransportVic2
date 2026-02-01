@@ -1,6 +1,6 @@
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../config.json' with { type: 'json' }
-import utils from '../utils.js'
+import utils from '../utils.mjs'
 
 let adminConnection = new MongoDatabaseConnection(config.databaseURL, 'admin')
 await adminConnection.connect()

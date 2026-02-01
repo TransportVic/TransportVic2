@@ -1,6 +1,6 @@
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../config.json' with { type: 'json' }
-import utils from '../../utils.js'
+import utils from '../../utils.mjs'
 import ptvStops from './tram-stops.json' with { type: 'json' }
 import directions from './tram-directions.mjs'
 import async from 'async'

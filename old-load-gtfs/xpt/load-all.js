@@ -1,4 +1,4 @@
-const utils = require('../../utils')
+const utils = require('../../utils.mjs')
 const path = require('path')
 
 function l(p) {

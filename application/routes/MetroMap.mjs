@@ -1,6 +1,6 @@
 import async from 'async'
 import express from 'express'
-import utils from '../../utils.js'
+import utils from '../../utils.mjs'
 import turf from '@turf/turf'
 import stationCodes from '../../additional-data/station-codes.json' with { type: 'json' }
 import platformGeometry from '../../additional-data/station-platform-geometry.json' with { type: 'json' }

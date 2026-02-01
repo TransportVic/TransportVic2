@@ -1,7 +1,7 @@
 import VLineMailServer from "@transportme/vline-mail-server"
 import lineStops from '../../additional-data/vline-data/line-stops.json' with { type: 'json' }
 import vlineStations from '../../additional-data/vline-data/stations.json' with { type: 'json' }
-import utils from '../../utils.js'
+import utils from '../../utils.mjs'
 
 const lineGroups = {
   "South Western": [ "Geelong", "Warrnambool" ],

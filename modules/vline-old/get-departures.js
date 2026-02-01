@@ -1,6 +1,6 @@
 const async = require('async')
-const utils = require('../../utils')
-const ptvAPI = require('../../ptv-api')
+const utils = require('../../utils.mjs')
+const ptvAPI = require('../../ptv-api.mjs')
 const departureUtils = require('../utils/get-train-timetables')
 const guessPlatform = require('./guess-scheduled-platforms')
 const termini = require('../../additional-data/termini-to-lines')
@@ -8,7 +8,7 @@ const getCoachDepartures = require('../regional-coach/get-departures-old.js')
 const getVNETDepartures = require('./get-vnet-departures')
 const handleTripShorted = require('./handle-trip-shorted')
 const findTrip = require('./find-trip')
-const { getDayOfWeek } = require('../../public-holidays')
+const { getDayOfWeek } = require('../../public-holidays.mjs')
 
 let gippsland = ['Traralgon', 'Bairnsdale']
 

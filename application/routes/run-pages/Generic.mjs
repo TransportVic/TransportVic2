@@ -1,9 +1,9 @@
 // TODO: Move bus to its own page handler
 
 import express from 'express'
-import utils from '../../../utils.js'
-import coachDestinations from '../../../additional-data/coach-stops.js'
-import busBays from '../../../additional-data/bus-data/bus-bays.js'
+import utils from '../../../utils.mjs'
+import coachDestinations from '../../../additional-data/coach-stops.mjs'
+import busBays from '../../../additional-data/bus-data/bus-bays.mjs'
 
 const router = new express.Router()
 

@@ -1,17 +1,17 @@
 import { MongoDatabaseConnection } from '@transportme/database'
 import { fileURLToPath } from 'url'
-import utils from '../../utils.js'
-import { convertToLive } from '../departures/sch-to-live.js'
+import utils from '../../utils.mjs'
+import convertToLive from '../departures/sch-to-live.mjs'
 import config from '../../config.json' with { type: 'json' }
 import { GetPlatformServicesAPI, PTVAPI, PTVAPIInterface, StubVLineAPI, VLineAPIInterface } from '@transportme/ptv-api'
 import { dateUtils, GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 import { LiveTimetable } from '../schema/live-timetable.mjs'
 import VLineUtils from '../vline/vline-utils.mjs'
 import VLineTripUpdater from '../vline/trip-updater.mjs'
-import { getDSTMinutesPastMidnight, getNonDSTMinutesPastMidnight, isDSTChange } from '../dst/dst.js'
+import { getDSTMinutesPastMidnight, getNonDSTMinutesPastMidnight, isDSTChange } from '../dst/dst.mjs'
 import fs from 'fs/promises'
 import { getLogPath } from '../../init-loggers.mjs'
-import discordIntegration from '../discord-integration.js'
+import discordIntegration from '../discord-integration.mjs'
 
 class PartialStubVLineAPI extends StubVLineAPI {
 

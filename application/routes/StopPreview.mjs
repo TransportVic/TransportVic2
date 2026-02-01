@@ -1,5 +1,5 @@
 import express from 'express'
-import bayData from '../../additional-data/bus-data/bus-bays.js'
+import bayData from '../../additional-data/bus-data/bus-bays.mjs'
 import trainReplacementBays from '../../additional-data/train-replacement-bays.json' with { type: 'json' }
 import platformGeometry from '../../additional-data/station-platform-geometry.json' with { type: 'json' }
 import stationBikes from '../../additional-data/metro-data/geospatial/station-bikes.json' with { type: 'json' }

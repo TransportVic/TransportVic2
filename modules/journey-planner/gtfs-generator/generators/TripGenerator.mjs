@@ -1,4 +1,4 @@
-import utils from '../../../../utils.js'
+import utils from '../../../../utils.mjs'
 import Generator from './Generator.mjs'
 
 export default class TripGenerator extends Generator {

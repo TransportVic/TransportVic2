@@ -17,18 +17,16 @@ block head
   link(rel='preload' as='style' href=`${staticBase}/static/css/combined-colours.css`)
   link(rel='preload' as='style' href=`${staticBase}/static/css/timings/base-style.css`)
 
+  meta(name='stop-name' content=stop.stopName)
+  meta(name='stop-suburb' content=stop.suburb[0])
+  meta(name='stop-id' content=`${stop.cleanSuburbs[0]}/${stop.cleanName}`)
+
 block title
   span=stop.stopName
   
 block header-right
   include ./templates/header
   +header(stop)
-
-block scripts
-  script(src=`${staticBase}/static/scripts/vendor/leaflet-1.6.0.js`)
-  script(src=`${staticBase}/static/scripts/vendor/leaflet-locate-0.85.1.js`)
-  script(src=`${staticBase}/static/scripts/timings.js` async)
-  script(src=`${staticBase}/static/scripts/stop-map.js`)
 
 append style
   link(rel='stylesheet' href=`${staticBase}/static/css/timings/base-style.css`)
@@ -42,9 +40,6 @@ append postStyle
 
 append content
   - let currentMode = 'regional coach'
-  div#body-container
-    div.left
-      include mode-switch
-      div#departures.map
-        include ./templates/regional-coach
-    div#map.right
+  include mode-switch
+  div#departures
+    include ./templates/regional-coach

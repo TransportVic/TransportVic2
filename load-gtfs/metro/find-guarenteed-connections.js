@@ -1,7 +1,7 @@
 const async = require('async')
 import { MongoDatabaseConnection } from '@transportme/database'
 const config = require('../../config')
-const utils = require('../../utils')
+const utils = require('../../utils.mjs')
 
 let timetables
 

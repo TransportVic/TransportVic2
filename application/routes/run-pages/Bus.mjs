@@ -1,9 +1,9 @@
 import express from 'express'
-import utils from '../../../utils.js'
-import getStoppingPattern from '../../../modules/bus/get-stopping-pattern.js'
+import utils from '../../../utils.mjs'
+import getStoppingPattern from '../../../modules/bus/get-stopping-pattern.mjs'
 import busDestinations from '../../../additional-data/bus-destinations.json' with { type: 'json' }
-import busBays from '../../../additional-data/bus-data/bus-bays.js'
-import getDepartures from '../../../modules/bus/get-departures.js'
+import busBays from '../../../additional-data/bus-data/bus-bays.mjs'
+import getDepartures from '../../../modules/bus/get-departures.mjs'
 import regionalRouteNumbers from '../../../additional-data/bus-data/bus-network-regions.json' with { type: 'json' }
 import overrideStops from '../../../modules/bus/override-stops.json' with { type: 'json' }
 import depots from '../../../transportvic-data/excel/bus/depots/bus-depots.json' with { type: 'json' }

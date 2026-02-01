@@ -5,7 +5,7 @@ import config from '../../config.json' with { type: 'json' }
 import _ from '../../init-loggers.mjs'
 import fs from 'fs/promises'
 import { isPrimary } from '../replication.mjs'
-import discordIntegration from '../discord-integration.js'
+import discordIntegration from '../discord-integration.mjs'
 import { hostname } from 'os'
 import VLineTripUpdater from '../vline/trip-updater.mjs'
 import { PTVAPI, PTVAPIInterface, VLineAPIInterface } from '@transportme/ptv-api'
@@ -13,7 +13,7 @@ import { makePBRequest } from '../gtfsr/gtfsr-api.mjs'
 import { fetchSSSPlatforms } from './vline/southern-cross-platform.mjs'
 import { fetchGTFSRTrips } from './vline/vline-gtfsr-trips.mjs'
 import { fetchGTFSRFleet } from './vline/vline-gtfsr-fleet.mjs'
-import utils from '../../utils.js'
+import utils from '../../utils.mjs'
 
 async function writeUpdatedTrips(db, tripDB, updatedTrips) {
   const tripBulkOperations = updatedTrips.map(timetable => (timetable.stops.length ? {

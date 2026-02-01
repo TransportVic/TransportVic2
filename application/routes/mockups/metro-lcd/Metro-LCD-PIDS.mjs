@@ -1,5 +1,5 @@
  import express from 'express'
-import utils from '../../../../utils.js'
+import utils from '../../../../utils.mjs'
 import PIDBackend from '../PIDBackend.mjs'
 import csrf from '../csrf.js'
 

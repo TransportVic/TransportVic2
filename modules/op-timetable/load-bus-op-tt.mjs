@@ -1,11 +1,11 @@
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../config.json' with { type: 'json' }
-import utils from '../../utils.js'
-import { convertToLive } from '../departures/sch-to-live.js'
+import utils from '../../utils.mjs'
+import convertToLive from '../departures/sch-to-live.mjs'
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 import fs from 'fs/promises'
 import { fileURLToPath } from 'url'
-import discordIntegration from '../discord-integration.js'
+import discordIntegration from '../discord-integration.mjs'
 import { hostname } from 'os'
 
 const { TRANSIT_MODES } = GTFS_CONSTANTS

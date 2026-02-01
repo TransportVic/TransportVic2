@@ -3,7 +3,7 @@ import async from 'async'
 import path from 'path'
 import url from 'url'
 import config from '../../config.json' with { type: 'json' }
-import utils from '../../utils.js'
+import utils from '../../utils.mjs'
 import { MongoDatabaseConnection } from '@transportme/database'
 
 const __filename = url.fileURLToPath(import.meta.url)

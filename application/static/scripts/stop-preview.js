@@ -1,1 +1,0 @@
-generateMap('map', location.href)

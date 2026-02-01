@@ -1,6 +1,6 @@
 import { PTVAPI, MetroSiteAPIInterface } from '@transportme/ptv-api'
 import { fileURLToPath } from 'url'
-import utils from '../../../utils.js'
+import utils from '../../../utils.mjs'
 import { LiveTimetable } from '../../schema/live-timetable.mjs'
 
 import { MongoDatabaseConnection } from '@transportme/database'
@@ -8,7 +8,7 @@ import config from '../../../config.json' with { type: 'json' }
 import MetroTripUpdater from '../../metro-trains/trip-updater.mjs'
 import _ from '../../../init-loggers.mjs'
 import fs from 'fs/promises'
-import discordIntegration from '../../discord-integration.js'
+import discordIntegration from '../../discord-integration.mjs'
 import { hostname } from 'os'
 
 export async function getUpcomingTrips(ptvAPI, lines) {

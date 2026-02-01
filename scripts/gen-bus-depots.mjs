@@ -1,6 +1,6 @@
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../config.json' with { type: 'json' }
-import utils from '../utils.js'
+import utils from '../utils.mjs'
 import depots from '../transportvic-data/excel/bus/depots/bus-depots.json' with { type: 'json' }
 import path from 'path'
 import fs from 'fs/promises'

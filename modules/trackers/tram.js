@@ -1,6 +1,6 @@
 const config = require('../../config')
 const DatabaseConnection = require('../../database/DatabaseConnection')
-const utils = require('../../utils')
+const utils = require('../../utils.mjs')
 const stops = require('../../additional-data/tram-tracker/stops')
 const async = require('async')
 const getDepartures = require('../../modules/tram/get-departures')

@@ -1,11 +1,11 @@
 const async = require('async')
 const config = require('../../config')
-const utils = require('../../utils')
+const utils = require('../../utils.mjs')
 const DatabaseConnection = require('../../database/DatabaseConnection')
 const getVNETDepartures = require('../vline-old/get-vnet-departures')
 const handleTripShorted = require('../vline-old/handle-trip-shorted')
 const findTrip = require('../vline-old/find-trip')
-const { getDayOfWeek } = require('../../public-holidays')
+const { getDayOfWeek } = require('../../public-holidays.mjs')
 const schedule = require('./scheduler')
 
 const database = new DatabaseConnection(config.databaseURL, config.databaseName)

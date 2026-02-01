@@ -1,6 +1,6 @@
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../config.json' with { type: 'json' }
-import utils from '../../utils.js'
+import utils from '../../utils.mjs'
 import fs from 'fs/promises'
 import turf from '@turf/turf'
 import url from 'url'

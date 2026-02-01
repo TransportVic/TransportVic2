@@ -4,5 +4,8 @@ DIRNAME=$(dirname "$0")
 cd $DIRNAME
 . $DIRNAME/.env
 
-# Note: we do not want sudo or we cannot kill the process
-node --max-old-space-size=4096 $DIRNAME
+if [ "$NODE_ENV" == "dev" ]; then
+  npm run dev
+else
+  npm run app
+fi

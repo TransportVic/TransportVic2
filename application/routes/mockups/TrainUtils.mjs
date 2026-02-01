@@ -1,10 +1,10 @@
-import getLineStops from '../../../additional-data/route-stops.js'
+import getLineStops from '../../../additional-data/route-stops.mjs'
 import getMetroDepartures from '../../../modules/metro-trains/get-departures.mjs'
 import getVLineDepartures from '../../../modules/vline-old/get-departures.js'
-import destinationOverrides from '../../../additional-data/coach-stops.js'
-import utils from '../../../utils.js'
+import destinationOverrides from '../../../additional-data/coach-stops.mjs'
+import utils from '../../../utils.mjs'
 import async from 'async'
-import { getDayOfWeek } from '../../../public-holidays.js'
+import { getDayOfWeek } from '../../../public-holidays.mjs'
 
 const emptyShunts = [] // Replace with metro shunts db
 

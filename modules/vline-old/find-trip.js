@@ -1,4 +1,4 @@
-const utils = require('../../utils')
+const utils = require('../../utils.mjs')
 const termini = require('../../additional-data/termini-to-lines')
 
 let longDistanceCountryStops = [

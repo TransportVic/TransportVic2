@@ -1,6 +1,6 @@
-import TimedCache from '../../../../TimedCache.js'
-import utils from '../../../../utils.js'
-import getLineStops from '../../../../additional-data/route-stops.js'
+import TimedCache from '../../../../TimedCache.mjs'
+import utils from '../../../../utils.mjs'
+import getLineStops from '../../../../additional-data/route-stops.mjs'
 import express from 'express'
 
 const router = new express.Router()

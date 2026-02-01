@@ -1,8 +1,8 @@
 import express from 'express'
-import utils from '../../../utils.js'
+import utils from '../../../utils.mjs'
 import getMetroDepartures from '../../../modules/metro-trains/get-departures.mjs'
-import getVLineDepartures from '../../../modules/vline-old/get-departures.js'
-import getBusDepartures from '../../../modules/bus/get-departures.js'
+import getVLineDepartures from '../../../modules/vline/get-departures.mjs'
+import getBusDepartures from '../../../modules/bus/get-departures.mjs'
 import busDestinations from '../../../additional-data/bus-destinations.json' with { type: 'json' }
 
 const router = express.Router()
@@ -100,10 +100,6 @@ async function getNextVLineDepartures(db) {
   }))
 
   let vlineDepartures = await getVLineDepartures(clayton, db)
-  vlineDepartures = vlineDepartures.map(d => {
-    d.actualDepartureTime = d.scheduledDepartureTime
-    return d
-  })
   vlineDepartures = filterDepartures(vlineDepartures)
 
   return vlineDepartures.filter(departure => {

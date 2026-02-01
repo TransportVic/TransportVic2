@@ -1,9 +1,9 @@
-import getRouteStops from '../../../additional-data/route-stops.js'
+import getRouteStops from '../../../additional-data/route-stops.mjs'
 import getMetroDepartures from '../../../modules/metro-trains/get-departures.mjs'
-import getVLineDepartures from '../../../modules/vline-old/get-departures.js'
-import utils from '../../../utils.js'
+import getVLineDepartures from '../../../modules/vline/get-departures.mjs'
+import utils from '../../../utils.mjs'
 import async from 'async'
-import { getDayOfWeek } from '../../../public-holidays.js'
+import { getDayOfWeek } from '../../../public-holidays.mjs'
 import metroTypes from '../../../additional-data/metro-tracker/metro-types.json' with { type: 'json' }
 
 let undergroundLoopStations = ['Parliament', 'Flagstaff', 'Melbourne Central']

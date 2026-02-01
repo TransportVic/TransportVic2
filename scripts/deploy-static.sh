@@ -17,6 +17,8 @@ cp -R application/static/seized public/static/
 cp -R vic-pid/static/fonts public/mockups/static/
 cp -R vic-pid/static/img public/mockups/static/
 
+npx tsc
+
 npm i uglify-js clean-css
 node scripts/minify/scripts.mjs
 node scripts/minify/styles.mjs

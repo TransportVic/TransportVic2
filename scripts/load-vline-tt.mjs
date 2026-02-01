@@ -4,7 +4,7 @@ import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 import config from '../config.json' with { type: 'json' }
 import path from 'path'
 import url from 'url'
-import utils from '../utils.js'
+import utils from '../utils.mjs'
 import async from 'async'
 import getTripID from '../modules/new-tracker/metro-rail-bus/get-trip-id.mjs'
 import { RouteLoader, StopsLoader } from '@transportme/load-ptv-gtfs'

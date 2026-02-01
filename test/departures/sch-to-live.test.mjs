@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import regSchTrip from './sample-data/sch-trip-reg.json' with { type: 'json' }
 import schTripRep2am from './sample-data/sch-trip-rep-2am.json' with { type: 'json' }
-import { convertToLive } from '../../modules/departures/sch-to-live.js'
+import convertToLive from '../../modules/departures/sch-to-live.mjs'
 
 let clone = o => JSON.parse(JSON.stringify(o))
 

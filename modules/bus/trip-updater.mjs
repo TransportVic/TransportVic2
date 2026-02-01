@@ -1,6 +1,6 @@
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 import TripUpdater from '../new-tracker/trip-updater.mjs'
-import { convertToLive } from '../departures/sch-to-live.js'
+import convertToLive from '../departures/sch-to-live.mjs'
 import { BusLiveTimetable } from '../schema/live-timetable.mjs'
 
 export default class BusTripUpdater extends TripUpdater {

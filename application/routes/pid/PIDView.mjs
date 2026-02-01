@@ -1,7 +1,7 @@
 import express from 'express'
 import PIDRender from './PIDRenderer.mjs'
 import { getPIDDepartures } from '../../../modules/pid/pid.mjs'
-import utils from '../../../utils.js'
+import utils from '../../../utils.mjs'
 
 const router = new express.Router()
 

@@ -1,12 +1,12 @@
 import express from 'express'
-import utils from '../../../utils.js'
+import utils from '../../../utils.mjs'
 import stationCodes from '../../../additional-data/station-codes.json' with { type: 'json' }
 import rawStationPlatforms from '../../../additional-data/station-platforms.json' with { type: 'json' }
 import rawStationPIDs from '../../../additional-data/station-pids.js'
 import url from 'url'
 import querystring from 'querystring'
 import PIDBackend from './PIDBackend.mjs'
-import busBays from '../../../additional-data/bus-data/bus-bays.js'
+import busBays from '../../../additional-data/bus-data/bus-bays.mjs'
 
 const router = new express.Router()
 

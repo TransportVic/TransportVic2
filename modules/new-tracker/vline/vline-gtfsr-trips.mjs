@@ -7,7 +7,7 @@ import { GTFSRTrip } from '../gtfsr/GTFSRTrip.mjs'
 import VLineTripUpdater from '../../vline/trip-updater.mjs'
 import _ from '../../../init-loggers.mjs'
 import { getPlatformUsage } from '../../metro-trains/platform-usage.mjs'
-import utils from '../../../utils.js'
+import utils from '../../../utils.mjs'
 import fs from 'fs/promises'
 
 let EPH = 'East Pakenham Railway Station'

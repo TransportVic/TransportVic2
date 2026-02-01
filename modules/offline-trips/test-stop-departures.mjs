@@ -1,7 +1,7 @@
 import stops from './stops.json' with { type: 'json' }
 import routes from './routes.json' with { type: 'json' }
 import tripData from './trips.json' with { type: 'json' }
-import utils from '../../utils.js'
+import utils from '../../utils.mjs'
 
 const search = 'Huntingdale Railway Station'
 const searchMode = 'metro train'

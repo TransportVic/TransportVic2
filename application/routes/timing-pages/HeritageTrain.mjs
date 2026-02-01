@@ -1,7 +1,7 @@
 import express from 'express'
 import getDepartures from '../../../modules/heritage-train/get-departures.js'
-import utils from '../../../utils.js'
-import timingUtils from './timing-utils.js'
+import utils from '../../../utils.mjs'
+import timingUtils from './timing-utils.mjs'
 
 const router = new express.Router()
 

@@ -5,7 +5,7 @@ import pkmC143 from './sample-data/pkm-C143.json' with { type: 'json' }
 import cbe4201 from './sample-data/cbe-4201.json' with { type: 'json' }
 import { BusLiveTimetable, LiveTimetable } from '../../modules/schema/live-timetable.mjs'
 import chaiExclude from 'chai-exclude'
-import utils from '../../utils.js'
+import utils from '../../utils.mjs'
 import beg3152 from './sample-data/beg-3152.mjs'
 import bus200Data from './sample-data/bus-200-data.mjs'
 import bus670Data from './sample-data/bus-670-data.mjs'

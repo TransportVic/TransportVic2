@@ -1,5 +1,5 @@
 import express from 'express'
-import utils from '../../../utils.js'
+import utils from '../../../utils.mjs'
 import tramDestinations from '../../../additional-data/tram-destinations.json' with { type: 'json' }
 import determineTramRouteNumber from '../../../modules/tram/determine-tram-route-number.js'
 import tramFleet from '../../../additional-data/tram-tracker/tram-fleet.js'

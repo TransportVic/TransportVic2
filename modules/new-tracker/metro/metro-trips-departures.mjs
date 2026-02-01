@@ -4,8 +4,8 @@ import { fileURLToPath } from 'url'
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../../config.json' with { type: 'json' }
 
-import rawLineRanges from '../../../additional-data/metro-tracker/line-ranges.js'
-import utils from '../../../utils.js'
+import rawLineRanges from '../../../additional-data/metro-tracker/line-ranges.mjs'
+import utils from '../../../utils.mjs'
 import MetroTripUpdater from '../../metro-trains/trip-updater.mjs'
 import _ from '../../../init-loggers.mjs'
 import fs from 'fs/promises'

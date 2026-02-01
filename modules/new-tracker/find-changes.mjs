@@ -1,7 +1,7 @@
 import { fileURLToPath } from 'url'
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../config.json' with { type: 'json' }
-import utils from '../../utils.js'
+import utils from '../../utils.mjs'
 import stationCodesMap from '../../additional-data/station-codes.json' with { type: 'json' }
 import fs from 'fs/promises'
 

@@ -1,7 +1,7 @@
 const tfnswAPI = require('./tfnsw-api')
 const async = require('async')
 const config = require('../../config')
-const utils = require('../../utils')
+const utils = require('../../utils.mjs')
 const moment = require('moment')
 const DatabaseConnection = require('../../database/DatabaseConnection')
 

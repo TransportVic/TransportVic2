@@ -1,4 +1,4 @@
-import utils from '../../utils.js'
+import utils from '../../utils.mjs'
 import getMetroDepartures from './get-departures.mjs'
 
 export async function getPlatformUsage(db, station, time) {

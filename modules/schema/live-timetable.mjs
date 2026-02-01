@@ -1,4 +1,4 @@
-import utils from '../../utils.js'
+import utils from '../../utils.mjs'
 import allRouteStops from '../../additional-data/metro-data/metro-routes.json' with { type: 'json' }
 import metroTypes from '../../additional-data/metro-tracker/metro-types.json' with { type: 'json' }
 

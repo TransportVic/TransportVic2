@@ -1,6 +1,6 @@
-const utils = require('../../../utils')
+const utils = require('../../../utils.mjs')
 const findTrip = require('../../vline-old/find-trip')
-const { getDayOfWeek } = require('../../../public-holidays')
+const { getDayOfWeek } = require('../../../public-holidays.mjs')
 const vlineLock = require('../../vline-old/vline-lock-wrap')
 
 module.exports = async function (db, departureTime, origin, destination, keepID=false) {

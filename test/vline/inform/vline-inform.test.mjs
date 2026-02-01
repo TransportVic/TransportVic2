@@ -1,5 +1,5 @@
 import { expect, use } from 'chai'
-import utils from '../../../utils.js'
+import utils from '../../../utils.mjs'
 import { LokiDatabaseConnection } from '@transportme/database'
 import { createAlert, matchService } from '../../../modules/vline/vline-inform.mjs'
 import chaiExclude from 'chai-exclude'

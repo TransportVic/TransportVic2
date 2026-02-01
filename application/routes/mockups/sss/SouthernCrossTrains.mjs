@@ -1,13 +1,13 @@
 import async from 'async'
 import urls from '../../../../urls.json' with { type: 'json' }
-import utils from '../../../../utils.js'
+import utils from '../../../../utils.mjs'
 import cheerio from 'cheerio'
 import termini from '../../../../additional-data/termini-to-lines.js'
 import getMetroDepartures from '../../../../modules/metro-trains/get-departures.mjs'
 import getVLineStops from './SSS-Lines.mjs'
-import getMetroStops from '../../../../additional-data/route-stops.js'
+import getMetroStops from '../../../../additional-data/route-stops.mjs'
 import TrainUtils from '../TrainUtils.mjs'
-import { getDayOfWeek } from '../../../../public-holidays.js'
+import { getDayOfWeek } from '../../../../public-holidays.mjs'
 
 const emptyCars = []
 

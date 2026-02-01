@@ -1,7 +1,7 @@
 import express from 'express'
-import utils from '../../utils.js'
+import utils from '../../utils.mjs'
 import async from 'async'
-import { getPHDayOfWeek, getPublicHolidayName, isNightNetworkRunning } from '../../public-holidays.js'
+import { getPHDayOfWeek, getPublicHolidayName, isNightNetworkRunning } from '../../public-holidays.mjs'
 
 const router = new express.Router()
 

@@ -1,6 +1,6 @@
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 
-import utils from '../../utils.js'
+import utils from '../../utils.mjs'
 import urls from '../../urls.json' with { type: 'json' }
 import stationCodes from '../../additional-data/station-codes.json' with { type: 'json' }
 import getTripID from '../../modules/new-tracker/metro-rail-bus/get-trip-id.mjs'

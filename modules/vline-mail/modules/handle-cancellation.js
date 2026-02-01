@@ -1,6 +1,6 @@
-const utils = require('../../../utils')
+const utils = require('../../../utils.mjs')
 const async = require('async')
-const postDiscordUpdate = require('../../discord-integration')
+const postDiscordUpdate = require('../../discord-integration.mjs')
 const bestStop = require('./find-best-stop')
 const matchTrip = require('./match-trip')
 

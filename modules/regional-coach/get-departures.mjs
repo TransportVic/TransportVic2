@@ -1,7 +1,7 @@
 import { getDepartures } from '../departures/get-departures.mjs'
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
-import destinationOverrides from '../../additional-data/coach-stops.js'
-import utils from '../../utils.js'
+import destinationOverrides from '../../additional-data/coach-stops.mjs'
+import utils from '../../utils.mjs'
 
 const { TRANSIT_MODES } = GTFS_CONSTANTS
 

@@ -17,7 +17,7 @@ import PathwayGenerator from '../../../modules/journey-planner/gtfs-generator/ge
 import TransferGenerator from '../../../modules/journey-planner/gtfs-generator/generators/TransferGenerator.mjs'
 import tripStops from './sample-data/trip-stops.mjs'
 import alameinTrip from './sample-data/alamein-trip.mjs'
-import utils from '../../../utils.js'
+import utils from '../../../utils.mjs'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)

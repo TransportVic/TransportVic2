@@ -5,18 +5,18 @@ html(lang='en-GB')
     meta(charset='UTF-8')
 
     link(rel='preconnect' href=staticBase)
-      
+
     link(rel='preload' as='font' href=`${staticBase}/static/fonts/Nunito.woff2` type='font/woff2' crossorigin='anonymous')
     link(rel='preload' as='style' href=`${staticBase}/static/css/base-style.css`)
 
     link(rel='stylesheet' href=`${staticBase}/static/css/base-style.css`)
-    script(src=`${staticBase}/static/scripts/util.js`)
-    
+    script(src=`${staticBase}/static/js/app.js` type='module')
+
     -
       let description = 'A transport app for Victoria'
       let title = 'TransportVic'
       let keywords = ''
-      
+
     block head
     block style
 
@@ -61,9 +61,11 @@ html(lang='en-GB')
       div#header-right
         block header-right
         a#home-button(href='/') Home
-    main#content
-      block content
+    div#page-content
+      main#content
+        block content
+      div#map
     
     block postStyle
     block scripts
-    script(src=`${staticBase}/static/scripts/sw-load.js`)
+    //- script(src=`${staticBase}/static/scripts/sw-load.js`)

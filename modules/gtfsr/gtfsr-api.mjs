@@ -1,4 +1,4 @@
-import utils from '../../utils.js'
+import utils from '../../utils.mjs'
 import fs from 'fs/promises'
 import path from 'path'
 import config from '../../config.json' with { type: 'json' }

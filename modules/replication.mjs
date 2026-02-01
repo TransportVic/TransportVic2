@@ -1,7 +1,7 @@
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../config.json' with { type: 'json' }
 import os from 'os'
-import utils from '../utils.js'
+import utils from '../utils.mjs'
 
 function randomSleepTime() {
   return Math.random() * 3 + 0.2

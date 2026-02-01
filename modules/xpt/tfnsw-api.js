@@ -1,4 +1,4 @@
-const utils = require('../../utils')
+const utils = require('../../utils.mjs')
 const protobuf = require('protocol-buffers')
 const fs = require('fs')
 const path = require('path')
