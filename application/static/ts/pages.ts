@@ -32,9 +32,10 @@ export class IndexPage extends Page {
   }
 
   showBanner() {
-    const data = this.state.banner
-    const banner = $('.popup')! as HTMLAnchorElement
+    const banner = $('.popup') as HTMLAnchorElement
+    if (!banner) return
 
+    const data = this.state.banner
     banner.href = data.link;
     ($('img', banner) as HTMLImageElement).alt = data.alt;
     ($('span', banner) as HTMLSpanElement).textContent = data.text;
