@@ -49,7 +49,7 @@ const processKVPairs = (data: string) => data
   .split('&')
   .filter(Boolean)
   .map(e => e.split('='))
-  .reduce((acc: Record<string, string>, e) => ({ ...acc, [e[0]]: decodeURIComponent(e[1].replace(/\+/g, ' ')) }), {})
+  .reduce((acc: Record<string, string>, e) => ({ ...acc, [e[0]]: decodeURIComponent((e[1] || 'true').replace(/\+/g, ' ')) }), {})
 
 export const search = {
   hash: processKVPairs(location.hash),

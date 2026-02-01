@@ -1,5 +1,6 @@
 import { BookmarksPage } from './bookmarks.js'
-import { IndexPage, NearbyPage, SearchPage } from './pages.js'
+import { NearbyPage } from './nearby.js'
+import { IndexPage, SearchPage } from './pages.js'
 import { RunPageFactory } from './runs.js'
 import { TimingPageFactory } from './timings.js'
 import { TrackerPageFactory } from './tracker.js'
