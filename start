@@ -4,6 +4,8 @@ DIRNAME=$(dirname "$0")
 cd $DIRNAME
 . $DIRNAME/.env
 
+source $HOME/.bashrc
+
 if [ "$NODE_ENV" == "dev" ]; then
   npm run dev
 else
