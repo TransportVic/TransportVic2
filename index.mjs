@@ -1,7 +1,8 @@
 global.startTime = +new Date()
+import utils from './utils.mjs'
+if (!process.env.NODE_ENV) await utils.setEnv()
 
 import _loggers from './init-loggers.mjs'
-import _utils from './utils.mjs'
 import config from './config.json' with { type: 'json' }
 import MainServer from './server/MainServer.mjs'
 
