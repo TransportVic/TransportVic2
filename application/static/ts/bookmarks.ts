@@ -37,7 +37,7 @@ type BookmarkedStop = {
   id: string,
   stopName: string,
   suburb: string,
-  modes: Mode[]
+  mode: Mode
 }
 
 export class Bookmarks {
@@ -53,24 +53,19 @@ export class Bookmarks {
   }
 
   static isStopBookmarked(id: string, mode: Mode) {
-    const matchingStop = this.getBookmarkData().find(stop => stop.id === id)
-    if (!matchingStop) return false
-    return matchingStop.modes.includes(mode)
+    return this.getBookmarkData().some(stop => stop.id === id && stop.mode === mode)
   }
 
   static addStopBookmark(id: string, stopName: string, suburb: string, mode: Mode) {
     const bookmarks = this.getBookmarkData()
-    const matchingStop = bookmarks.find(stop => stop.id === id)
-    if (matchingStop) {
-      if (!matchingStop.modes.includes(mode)) matchingStop.modes.push(mode)
-      return this.setBookmarkData(bookmarks)
-    }
+    const matchingStop = bookmarks.find(stop => stop.id === id && stop.mode === mode)
+    if (matchingStop) return
 
     bookmarks.push({
       id,
       stopName,
       suburb,
-      modes: [ mode ]
+      mode
     })
 
     this.setBookmarkData(bookmarks)
@@ -78,11 +73,13 @@ export class Bookmarks {
 
   static removeStopBookmark(id: string, mode: string) {
     const bookmarks = this.getBookmarkData()
-    const matchingStop = bookmarks.find(stop => stop.id === id)
-    if (!matchingStop) return
+    const matchingIndex = bookmarks.findIndex(stop => stop.id === id && stop.mode === mode)
+    if (matchingIndex === -1) return
     
-    matchingStop.modes = matchingStop.modes.filter(m => m !== mode)
-    this.setBookmarkData(bookmarks.filter(stop => stop.modes.length > 0))
+    this.setBookmarkData([
+      ...bookmarks.slice(0, matchingIndex),
+      ...bookmarks.slice(matchingIndex + 1)
+    ])
   }
 
 }
@@ -95,13 +92,22 @@ export class BookmarksPage extends Page {
 
   setup() {
     const bookmarks = Bookmarks.getBookmarkData()
+    if (!bookmarks.length) {
+      const content = $('#content')!
+      content.className = 'none'
+      content.innerHTML = `
+        <h2>Whoops... You've got nothing bookmarked</h2>
+        <img src="/static/images/home/404.svg" />
+        <div>
+          <a href="/">Try going home</a>
+          <span>&nbsp;Or&nbsp;</span>
+          <a href="/search">Searching for a stop</a>
+        </div>`
+    }
+
     const html = bookmarks.map(this.getStopHTML.bind(this)).join('')
 
     $('#results')!.innerHTML = html
-  }
-
-  getStopHTML(stop: BookmarkedStop): string {
-    return stop.modes.map(mode => this.getStopHTMLForMode(stop, mode)).join('')
   }
 
   getStopLink(stop: BookmarkedStop, mode: Mode) {
@@ -115,7 +121,8 @@ export class BookmarksPage extends Page {
     return parts.join('/')
   }
 
-  getStopHTMLForMode(stop: BookmarkedStop, mode: Mode) {
+  getStopHTML(stop: BookmarkedStop) {
+    const mode = stop.mode
     return `
 <a class="${cssNames[mode]} result" href="${this.getStopLink(stop, mode)}">
   <div class="leftContainer">
