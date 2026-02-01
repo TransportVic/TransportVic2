@@ -15,7 +15,6 @@ export default [
   { path: '/bus/timings', router: 'timing-pages/Bus.mjs', enable: modules.Next4 && modules.Next4.bus },
   { path: '/tram/timings', router: 'timing-pages/Tram.mjs', enable: modules.Next4 && modules.Next4.tram },
   { path: '/ferry/timings', router: 'timing-pages/Ferry.mjs', enable: modules.Next4 && modules.Next4.ferry },
-  { path: '/heritage/timings', router: 'timing-pages/HeritageTrain.mjs', enable: modules.Next4 && modules.Next4.heritage },
 
   { path: '/metro/run', router: 'run-pages/MetroTrains.mjs' },
   { path: '/vline/run', router: 'run-pages/VLineTrains.mjs' },

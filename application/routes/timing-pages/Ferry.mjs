@@ -1,5 +1,5 @@
 import express from 'express'
-import getDepartures from '../../../modules/ferry/get-departures.js'
+import getDepartures from '../../../modules/ferry/get-departures.mjs'
 import utils from '../../../utils.mjs'
 import timingUtils from './timing-utils.mjs'
 
