@@ -6,8 +6,8 @@
   "scripts": {
     "test": "mocha './{,!(node_modules)/**}/*.test.mjs'",
     "test-report": "mocha './{,!(node_modules)/**}/*.test.mjs' --reporter mochawesome --reporter-options output=test-report.html",
-    "app": "npx tsc && node --max-old-space-size=4096 index.mjs",
-    "dev": "nodemon --ext \"js,mjs,ts,json\" --ignore application/static/js --exec \"npm run app\""
+    "app": "node --max-old-space-size=4096 index.mjs",
+    "dev": "nodemon --ext \"js,mjs,ts,json\" --ignore application/static/js --exec \"npx tsc && npm run app\""
   },
   "author": "",
   "license": "ISC",
