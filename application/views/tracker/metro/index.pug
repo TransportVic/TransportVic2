@@ -52,6 +52,8 @@ block content
           option Williamstown
           option City Circle
         span Alamein
+    div.inputSection
+      input(type="text" maxlength="10" name="date" value="" placeholder="DD/MM/YYYY (Blank for today)" autocomplete="off")
       input(type="submit" value="Go")
   form(action='/metro/tracker/consist' method='get')#byConsist
     label(for="consist") By Consist:

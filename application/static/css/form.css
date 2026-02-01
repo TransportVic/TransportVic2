@@ -60,7 +60,7 @@ input[type="submit"] {
   font-family: Default-Font;
 }
 
-input {
+input, .customDropdown {
   margin: calc(0.2vw + 0.2vh) 0;
 }
 
@@ -77,7 +77,6 @@ div.submissionRow {
 
 div.customDropdown {
   position: relative;
-  margin: 0;
   display: inline-block;
 }
 
