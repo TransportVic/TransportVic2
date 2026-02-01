@@ -79,6 +79,7 @@ self.addEventListener('install', async event => {
       '/static/images/decals/ac.svg',
       '/static/images/decals/wheelchair.svg',
 
+      '/static/images/decals/clock.svg',
       '/static/images/decals/bookmark.svg',
       '/static/images/decals/bookmark-filled.svg',
       '/static/images/decals/map.svg',

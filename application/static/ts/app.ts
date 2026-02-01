@@ -66,11 +66,11 @@ export class App {
 
       try {
         await page.load()
+        window.history.pushState(page.serialise(), '', targetURL)
+
         await page.setup(this)
 
-        window.history.pushState(page.serialise(), '', targetURL)
         this.setCurrentPage(page)
-
         page.scroll()
       } catch (e) {
         console.error('An error occurred setting up the page', e)
