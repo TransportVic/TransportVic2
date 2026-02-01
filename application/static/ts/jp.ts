@@ -1,6 +1,6 @@
 import { App } from './app.js'
-import { APP_RESTORE_KEY, BASE_STATE, Mode, modeCSSNames, modeHumanNames, modeIconNames, Page, PageState } from './types.js'
-import { $, inputTimeout, search } from './util.js'
+import { BASE_STATE, Mode, modeCSSNames, modeHumanNames, modeIconNames, Page, PageState } from './types.js'
+import { $, inputTimeout } from './util.js'
 
 type JourneyPageState = PageState & {
   origin: {
@@ -39,6 +39,16 @@ const shortModes: Record<string, Mode> = {
   unknown: 'unknown'
 }
 
+const longModes: Record<Mode, string> = {
+  'bus': 'bus',
+  'tram': 'tram',
+  'coach': 'regional coach',
+  'vline': 'regional train',
+  'metro': 'metro train',
+  'ferry': 'ferry',
+  'unknown': 'unknown'
+}
+
 export default class JourneyPage extends Page {
 
   protected state: JourneyPageState = {
@@ -62,6 +72,8 @@ export default class JourneyPage extends Page {
   setup(app: App): void {
     this.setupJourneyInputs('origin', 'destination')
     this.setupJourneyInputs('destination', 'origin')
+    this.setDepartureTime()
+    this.setupEventListeners()
   }
 
   setupJourneyInputs(type: StopType, clear: StopType) {
@@ -73,6 +85,58 @@ export default class JourneyPage extends Page {
     $('.stop-suggestions', parent)!.addEventListener('click', this.handleStopClick.bind(this,
       type, parent
     ))
+  }
+
+  setupEventListeners() {
+    $('#plan-journey')?.addEventListener('click', event => {
+      event.preventDefault()
+      this.planJourney()
+    })
+  }
+
+  async planJourney() {
+    if (!this.state.origin.stop || !this.state.destination.stop) return
+
+    const data = await (await fetch('/journey/plan', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        arriveBy: ($('#journey-time-type') as HTMLInputElement).value === 'Arrival',
+        originStop: {
+          id: this.state.origin.stop.id,
+          mode: longModes[this.state.origin.stop.mode]
+        },
+        destinationStop: {
+          id: this.state.destination.stop.id,
+          mode: longModes[this.state.destination.stop.mode]
+        },
+        dateTime: ($('#departure-time') as HTMLInputElement).valueAsDate
+      })
+    })).text()
+
+    console.log(data)
+  }
+
+  protected formatDate(time: Date) {
+    return [
+      time.getFullYear(),
+      (time.getMonth() + 1).toString().padStart(2, '0'),
+      (time.getDate()).toString().padStart(2, '0')
+    ].join('-')
+  }
+
+  protected formatTime(time: Date) {
+    return [
+      time.getHours().toString().padStart(2, '0'),
+      time.getMinutes().toString().padStart(2, '0')
+    ].join(':')
+  }
+
+  setDepartureTime() {
+    const time = new Date();
+    ($('#departure-time') as HTMLInputElement).value = `${this.formatDate(time)}T${this.formatTime(time)}`;
   }
 
   async fetchSuggestedStops(type: StopType, parent: HTMLDivElement, otherParent: HTMLDivElement, query: string) {
@@ -94,7 +158,7 @@ export default class JourneyPage extends Page {
   handleStopClick(type: StopType, parent: HTMLDivElement, event: PointerEvent) {
     const suggestionsList = $('.stop-suggestions', parent)! as HTMLElement
     const inputBox = $('input', parent)! as HTMLInputElement
-    const target = (event.target as HTMLElement).closest('div.result')
+    const target = (event.target as HTMLElement).closest('div.stop-result')
     if (!target) return
 
     const stopIndex = Array.from(suggestionsList.children).indexOf(target)
@@ -110,10 +174,10 @@ export default class JourneyPage extends Page {
       id: stop.id, mode: shortModes[mode], name: stop.name, suburb: stop.suburb
     })))
 
-    const html = this.stopsList.map(stop => `<div class="${modeCSSNames[stop.mode]} result">
+    const html = this.stopsList.map(stop => `<div class="${modeCSSNames[stop.mode]} stop-result">
       <div class="left-container">
         <img src="/static/images/clear-icons/${modeIconNames[stop.mode]}.svg">
-      </div><div class="result-details">
+      </div><div class="stop-result-details">
         <span>${modeHumanNames[stop.mode]} in ${stop.suburb}</span>
         <span>${stop.name}</span>
       </div>

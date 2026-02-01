@@ -48,9 +48,9 @@
 
 
 div.journey-endpoints {
-  --endpoint-height: calc(10vh + 10vw);
+  --settings-height: calc(10vh + 10vw);
 
-  height: var(var(--endpoint-height));
+  height: var(var(--settings-height));
   display: flex;
   background-color: #0f0f0f;
   justify-content: space-evenly;
@@ -60,28 +60,28 @@ div.journey-endpoints {
 
 div.journey-endpoint-inputs {
   --textbox-width: 80vw;
-  --textbox-padding-in: calc(var(--endpoint-height) * 0.1);
-  --textbox-padding-bl: calc(var(--endpoint-height) * 0.02);
-  --textbox-br: calc(var(--endpoint-height) * 0.1);
+  --textbox-padding-in: calc(var(--settings-height) * 0.1);
+  --textbox-padding-bl: calc(var(--settings-height) * 0.02);
+  --textbox-br: calc(var(--settings-height) * 0.1);
 
-  height: var(--endpoint-height);
+  height: var(--settings-height);
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
 }
 
 div.journey-dotted-lines img {
-  height: calc(var(--endpoint-height) * 0.65);
+  height: calc(var(--settings-height) * 0.65);
 }
 
 div.journey-endpoint-inputs > div > input {
   width: var(--textbox-width);
-  height: calc(var(--endpoint-height) * 0.33);
+  height: calc(var(--settings-height) * 0.33);
   border: none;
   border-radius: var(--textbox-br);
   outline: none;
   text-align: left;
-  font-size: calc(var(--endpoint-height) * 0.22);
+  font-size: calc(var(--settings-height) * 0.22);
   padding-inline: var(--textbox-padding-in);
   padding-block: var(--textbox-padding-bl);
   background-color: #e0e0e0;
@@ -110,24 +110,25 @@ div.journey-endpoint-inputs > div.show-suggestions > input {
 
 div.journey-endpoint-inputs > div.show-suggestions > div.stop-suggestions {
   display: block;
+  z-index: 9999;
 }
 
-.stop-suggestions .result {
+.stop-suggestions .stop-result {
   display: flex;
   background-color: #2a2a2a;
 }
 
-.stop-suggestions .result:nth-child(even) {
+.stop-suggestions .stop-result:nth-child(even) {
   background-color: #202020;
 }
 
-.result {
+.stop-result {
   --left-container-w: calc(4vw + 4vh);
   --result-content-margin-l: calc(1vw + 1vh);
   --result-content-w: calc(var(--textbox-width) - var(--left-container-w) - var(--result-content-margin-l));
 }
 
-.left-container {
+.stop-result .left-container {
   width: var(--left-container-w);
   height: calc(5vw + 5vh);
 
@@ -137,11 +138,11 @@ div.journey-endpoint-inputs > div.show-suggestions > div.stop-suggestions {
   flex-direction: column;
 }
 
-.left-container img {
+.stop-result .left-container img {
   width: calc(3vw + 2vh);
 }
 
-.result-details {
+.stop-result-details {
   display: flex;
   align-items: left;
   justify-content: center;
@@ -152,13 +153,17 @@ div.journey-endpoint-inputs > div.show-suggestions > div.stop-suggestions {
   width: var(--result-content-w);
 }
 
-.result-details > span:nth-child(1) {
+.stop-result-details > span:nth-child(1) {
   color: #8f8f8f;
   font-size: calc(0.9vw + 1.6vh);
   width: var(--result-content-w);
+
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+  white-space: nowrap;
 }
 
-.result-details > span:nth-child(2) {
+.stop-result-details > span:nth-child(2) {
   font-size: calc(1.2vw + 1.8vh);
   margin-top: calc(-0.2vw - 0.4vh);
   width: var(--result-content-w);
@@ -166,4 +171,124 @@ div.journey-endpoint-inputs > div.show-suggestions > div.stop-suggestions {
   text-overflow: ellipsis;
   overflow-x: hidden;
   white-space: nowrap;
+}
+
+div.journey-settings {
+  --settings-height: calc(4vh + 4vw);
+  --settings-font: calc(1.6vw + 1.6vh);
+  --dropdown-width: calc(9vw + 8vh);
+  --input-height: calc(2.1vw + 2.1vh);
+
+  height: var(--settings-height);
+  display: flex;
+  background-color: #0f0f0f;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
+
+div.journey-settings div.customDropdown {
+  margin-inline: 2vw;
+}
+
+div.customDropdown {
+  position: relative;
+  display: inline-block;
+}
+
+div.customDropdown select {
+  position: absolute;
+  opacity: 0;
+
+  width: calc(var(--dropdown-width) * 1.05);
+  height: calc(var(--input-height) + 0.1vw + 0.1vh);
+  padding-left: calc(0.5vw + 0.5vh);
+
+  font-size: var(--settings-font);
+}
+
+div.customDropdown span {
+  width: var(--dropdown-width);
+  height: var(--input-height);
+  padding-top: calc(0.1vw + 0.1vh);
+  padding-left: calc(0.5vw + 0.5vh);
+  border: none;
+  border-radius: calc(0.5vw + 0.5vh);
+
+  background-color: #e0e0e0;
+  color: #000000;
+
+  display: block;
+  font-size: var(--settings-font);
+}
+
+div.customDropdown span::after {
+  content: '';
+  border: solid #000000;
+  border-width: 0 calc(0.2vw + 0.2vh) calc(0.2vw + 0.2vh) 0;
+  display: inline-block;
+  padding: calc(0.25vw + 0.25vh);
+
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+  float: right;
+
+  margin-top: calc(0.6vw + 0.6vh);
+  margin-right: calc(0.5vw + 0.5vh)
+}
+
+div.journey-settings input {
+  border: none;
+  border-radius: calc(0.5vw + 0.5vh);
+  font-size: var(--settings-font);
+  outline: none;
+  text-align: left;
+  
+  height: var(--input-height);
+  padding-top: calc(0.1vw + 0.1vh);
+  padding-left: calc(0.5vw + 0.5vh);
+  
+  background-color: #e0e0e0;
+  appearance: none;
+  -moz-appearance: textfield;
+  font-family: Default-Font;
+}
+
+@media screen and (max-width: 440px) {
+
+  div.journey-settings {
+    --settings-height: calc(6.8vh + 6.8vw);
+    --settings-font: calc(1.9vw + 1.9vh);
+    --dropdown-width: calc(14vw + 14vh);
+    --input-height: calc(2.8vw + 2.8vh);
+
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  div.customDropdown span,
+  div.journey-settings input {
+    padding-top: calc(0.25vw + 0.25vh);
+  }
+
+}
+
+div.plan-button-row {
+  --plan-row-height: calc(5vw + 5vh);
+  height: var(--plan-row-height);
+  display: flex;
+  background-color: #0f0f0f;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
+
+div.plan-button-row input#plan-journey {
+  font-size: calc(var(--plan-row-height) * 0.35);
+  padding-block: calc(var(--plan-row-height) * 0.1);
+  padding-inline: calc(var(--plan-row-height) * 0.4);
+
+  outline: none;
+  border: none;
+  border-radius: calc(0.5vw + 0.5vh);
 }

@@ -24,3 +24,12 @@ block content
       div.journey-destination
         input#journey-destination-input(placeholder='Destination')
         div.stop-suggestions
+  div.journey-settings
+    div.customDropdown.departure-type
+      select#journey-time-type(autocomplete="off")
+        option Departing
+        option Arriving
+      span Departing
+    input#departure-time(type="datetime-local")
+  div.plan-button-row
+    input#plan-journey(type='button' value='Plan Journey')
