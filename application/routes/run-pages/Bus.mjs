@@ -74,7 +74,13 @@ async function pickBestTrip(data, db, tripDB) {
   }
 
   let gtfsTrip = await db.getCollection('gtfs timetables').findDocument(query)
-  let liveTrip = await db.getCollection('live timetables').findDocument(query)
+  let liveTrips = await db.getCollection('live timetables').findDocuments(query).toArray()
+
+  let liveTrip
+  if (liveTrips.length === 1) liveTrip = liveTrips[0]
+  else if (liveTrips.length > 1) {
+    liveTrip = liveTrips.find(trip => trip.updateTime)
+  }
 
   let referenceTrip = liveTrip || gtfsTrip
 

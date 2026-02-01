@@ -63,13 +63,13 @@ export async function fetchGTFSRTrips(db, tripDB, existingTrips) {
     return acc
   }, {})
 
-  const tripData = await db.getCollection('live timetables').findDocuments({
+  const tripData = newRunIDs.length ? await db.getCollection('live timetables').findDocuments({
     mode: 'bus',
     $or: Object.keys(groupedRuns).map(operationDay => ({
       operationDays: operationDay,
       runID: { $in: groupedRuns[operationDay].map(run => run.runID) }
     }))
-  }).toArray()
+  }).toArray() : []
 
   for (let trip of tripData) existingTrips[BusTripUpdater.getTripCacheValue(trip)] = LiveTimetable.fromDatabase(trip)
   global.loggers.trackers.bus.debug('Fetched trip data from DB')
