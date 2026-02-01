@@ -260,7 +260,7 @@ async function getScheduledDepartures(stopGTFSIDs, db, mode, timeout, useLive, t
       routeNumber,
       sortNumber,
       operator,
-      codedOperator: utils.encodeName(operator.replace(/ \(.+/, '')),
+      codedOperator: utils.encodeName(operator),
       loopDirection,
       stopGTFSID: currentStop.stopGTFSID,
       operationDay
