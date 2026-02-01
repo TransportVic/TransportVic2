@@ -102,7 +102,9 @@ export class BookmarksPage extends Page {
           <a href="/">Try going home</a>
           <span>&nbsp;Or&nbsp;</span>
           <a href="/search">Searching for a stop</a>
-        </div>`
+        </div>
+      `
+      return
     }
 
     const html = bookmarks.map(this.getStopHTML.bind(this)).join('')

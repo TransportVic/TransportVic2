@@ -3,6 +3,7 @@ import { BASE_STATE, Page, PageFactory, PageState } from './types.js'
 import { $, deleteElem } from './util.js'
 
 type TimingPageState = PageState & {
+  valid: boolean,
   departureFilter: string,
   departureResults: string,
   lastUpdateTime: number,
@@ -25,6 +26,7 @@ export class TimingPage extends Page {
   private updateInterval: number = -1
   protected state: TimingPageState = {
     ...BASE_STATE,
+    valid: false,
     departureFilter: '',
     departureResults: '',
     lastUpdateTime: -1,
@@ -49,13 +51,15 @@ export class TimingPage extends Page {
     const departureFilter = this.getDepartureFilter()
     const departureTime = this.state.departureTime
 
-    const departureResults = await (await fetch(this.url, {
+    const response = await fetch(this.url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(departureTime ? {
         departureTime: new Date(departureTime).toISOString()
       }: {})
-    })).text()
+    })
+    if (response.status !== 200) return
+    const departureResults = await response.text()
 
     this.setDepartureResults(departureFilter, departureResults)
     this.updateState(departureFilter, departureResults, +new Date())
@@ -161,10 +165,23 @@ export class TimingPage extends Page {
   }
 
   async getInitialState(): Promise<TimingPageState> {
-    const departureResults = $('#departures')!.innerHTML
+    const departures = $('#departures') as HTMLDivElement
 
+    if (!departures) {
+      return {
+        ...await super.getInitialState(), 
+        valid: false,
+        departureFilter: '',
+        departureResults: '',
+        lastUpdateTime: -1,
+        departureTime: null
+      }
+    }
+
+    const departureResults = departures.innerHTML
     return {
       ...await super.getInitialState(),
+      valid: true,
       content: $('main')!.innerHTML.replace(departureResults, ''),
       departureFilter: this.getDepartureFilter(),
       departureResults,
@@ -174,6 +191,8 @@ export class TimingPage extends Page {
   }
 
   setup(): void {
+    if (!this.state.valid) return
+
     this.updateInterval = setInterval(this.updateBody.bind(this), 30 * 1000)
     const textbar = $('#textbar') as HTMLInputElement | undefined
 
@@ -193,6 +212,7 @@ export class TimingPage extends Page {
 
   restore() {
     super.restore()
+    if (!this.state.valid) return
 
     const textbar = $('#textbar') as HTMLInputElement | undefined
     if (this.state.departureFilter && textbar) textbar.value = this.state.departureFilter

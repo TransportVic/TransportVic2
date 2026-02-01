@@ -131,14 +131,14 @@ export class App {
 
 pageReady(async () => {
   const app = new App(new URL(location.toString()))
+  window.app = app
+
   await app.initialise()
   app.watchLinks(document)
   app.watchPopState(window)
   await app.setup()
 
   await app.loadServiceWorker()
-
-  window.app = app
 })
 
 declare global {

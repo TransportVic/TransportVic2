@@ -29,9 +29,12 @@ export class RunPage extends Page {
   }
 
   async updateBody() {
-    const runData = await (await fetch(this.url, {
+    const response = await fetch(this.url, {
       method: 'POST'
-    })).text()
+    })
+
+    if (response.status !== 200) return
+    const runData = await response.text()
 
     this.updateState(runData)
     this.replaceMainContent(runData)

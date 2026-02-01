@@ -68,13 +68,15 @@ export class NearbyPage extends Page {
     const { coords } = position
     const { latitude, longitude } = coords
 
-    const nearbyResults = await (await fetch('/nearby', {
+    const response = await fetch('/nearby', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         latitude, longitude
       })
-    })).text()
+    })
+    if (response.status !== 200) return
+    const nearbyResults = await response.text()
 
     this.updateState(nearbyResults)
     this.showResults()
