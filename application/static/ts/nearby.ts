@@ -1,5 +1,8 @@
-import { BASE_STATE, Page, PageState } from './types.js'
-import { $ } from './util.js'
+import { App } from './app.js'
+import { APP_RESTORE_KEY, BASE_STATE, Page, PageState } from './types.js'
+import { $, search } from './util.js'
+
+const RESTORE_CUTOFF = 1000 * 60 * 30 // 30 minutes
 
 type NearbyPageState = PageState & {
   nearbyResults: string
@@ -26,7 +29,30 @@ export class NearbyPage extends Page {
     await this.replacePageData(await fetch('/nearby'))
   }
 
-  setup(): void {
+  async restoreApp(app: App): Promise<boolean> {
+    const savedData = localStorage.getItem(APP_RESTORE_KEY)
+    if (!savedData) return false
+
+    const lastPage = JSON.parse(savedData) as PageState
+    const timeSinceLoaded = +new Date() - lastPage.pageLoaded
+    if (timeSinceLoaded > RESTORE_CUTOFF) return false
+
+    const targetURL = new URL(lastPage.url)
+    if (targetURL.pathname === this.getURL().pathname) return false
+
+    const factory = app.getFactory(targetURL)
+    if (!factory) return false
+
+    const restoredPage = factory.unserialise(targetURL, lastPage)
+    console.log('Restoring', targetURL, restoredPage)
+    await app.restorePage(restoredPage)
+
+    return true
+  }
+
+  async setup(app: App): Promise<void> {
+    if (search().query.app && await this.restoreApp(app)) return
+
     this.watchID = window.navigator.geolocation.watchPosition(
       this.processPosition.bind(this),
       this.processError.bind(this), {

@@ -7,7 +7,7 @@ import { TrackerPageFactory } from './tracker.js'
 import { Page, PathPageFactory, StaticPageFactory } from './types.js'
 import { pageReady } from './util.js'
 
-class App {
+export class App {
 
   private currentPage: Page | null = null
 
@@ -39,7 +39,6 @@ class App {
 
     this.currentPage.setupDropdowns()
     await this.currentPage.initialiseState()
-    this.currentPage.replacePageState()
   }
 
   watchLinks(document: Document) {
@@ -64,7 +63,7 @@ class App {
 
       try {
         await page.load()
-        await page.setup()
+        await page.setup(this)
       } catch (e) {
         console.error('An error occurred setting up the page', e)
       }
@@ -78,7 +77,7 @@ class App {
     this.currentPage?.destroy()
 
     await page.restore()
-    await page.setup()
+    await page.setup(this)
 
     this.setCurrentPage(page)
   }
@@ -99,7 +98,9 @@ class App {
   }
 
   async setup() {
-    if (this.currentPage) await this.currentPage.setup()
+    if (!this.currentPage) return
+    await this.currentPage.setup(this)
+    this.currentPage.replacePageState()
   }
 
   setCurrentPage(page: Page) {

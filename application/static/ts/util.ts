@@ -51,10 +51,10 @@ const processKVPairs = (data: string) => data
   .map(e => e.split('='))
   .reduce((acc: Record<string, string>, e) => ({ ...acc, [e[0]]: decodeURIComponent((e[1] || 'true').replace(/\+/g, ' ')) }), {})
 
-export const search = {
+export const search = () => ({
   hash: processKVPairs(location.hash),
   query: processKVPairs(location.search),
-}
+})
 
 export function inputTimeout(elem: HTMLInputElement, callback: CallableFunction) {
   let timeoutID = -1

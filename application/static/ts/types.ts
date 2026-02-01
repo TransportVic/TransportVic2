@@ -1,3 +1,4 @@
+import { App } from './app.js'
 import { $, deleteElem } from './util.js'
 
 export const APP_RESTORE_KEY = 'transportvic.pwa-last-page'
@@ -13,14 +14,16 @@ export type PageState = {
   header: string,
   content: string,
   docHeader: string,
-  pageLoaded: number
+  pageLoaded: number,
+  url: string
 }
 
 export const BASE_STATE: PageState = {
   header: '',
   content: '',
   docHeader: '',
-  pageLoaded: 0
+  pageLoaded: 0,
+  url: 'https://transportvic.me'
 } as const
 
 export abstract class Page {
@@ -33,7 +36,7 @@ export abstract class Page {
   }
 
   abstract load(): Promise<void> | void
-  abstract setup(): Promise<void> | void
+  abstract setup(app: App): Promise<void> | void
   abstract destroy(): Promise<void> | void
 
   getURL() { return this.url }
@@ -52,11 +55,6 @@ export abstract class Page {
       header: headerElem || document.createElement('nav'),
       headerTags
     }
-  }
-
-  private getExistingStyles(): HTMLLinkElement[] {
-    return [...document.querySelectorAll('link')]
-      .filter(link => link.getAttribute('rel') === 'stylesheet')
   }
 
   protected replaceHeaderContent(newHeaderHTML: string) {
@@ -107,7 +105,8 @@ export abstract class Page {
       header: $('nav')?.innerHTML || '',
       content: $('main')?.innerHTML || '',
       docHeader: $('head')?.innerHTML || '',
-      pageLoaded: +new Date()
+      pageLoaded: +new Date(),
+      url: this.getURL().toString()
     }
   }
 
@@ -128,7 +127,7 @@ export abstract class Page {
   setState(state: PageState) { this.state = state }
 
   replacePageState() {
-    window.history.replaceState(this.serialise(), '')
+    window.history.replaceState(this.serialise(), '', this.getURL())
     this.markPageAsActive()
   }
   
@@ -176,7 +175,7 @@ export class StaticPage extends Page {
     await this.replacePageData(await fetch(this.path))
   }
 
-  setup() {}
+  setup(app: App) {}
   destroy() {}
 
 }
