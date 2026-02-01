@@ -51,7 +51,8 @@ async function expandDay(refDay, missingDays) {
       update: {
         $unset: { calendarID: '' },
         $set: {
-          operationDays: [...new Set(trip.operationDays.concat(missingDays))]
+          operationDays: [...new Set(trip.operationDays.concat(missingDays))],
+          gtfsReferenceOnly: true
         }
       }
     }

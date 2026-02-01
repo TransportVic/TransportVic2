@@ -25,7 +25,7 @@ async function loadOperationalTT(db, operationDay) {
     totalSeen += trips.length
     console.log('Fetched', trips.length, 'trips to process')
 
-    const bulkUpdate = trips.map(trip => convertToLive(trip, operationDay)).map(trip => ({
+    const bulkUpdate = trips.filter(trip => !trip.gtfsReferenceOnly).map(trip => convertToLive(trip, operationDay)).map(trip => ({
       replaceOne: {
         filter: { mode: trip.mode, operationDays: trip.operationDays, runID: trip.runID },
         replacement: trip,
