@@ -48,15 +48,19 @@ export class IndexPage extends Page {
 
   destroy() {}
 
-  async getInitialState() {
+  async getInitialState(): Promise<IndexPageState> {
     try {
       const banner = JSON.parse(await (await fetch('/home-banner')).text()) as BannerData
       return {
-        ...super.getInitialState(),
+        ...await super.getInitialState(),
         banner
       }
     } catch (e) {}
-    return this.state
+
+    return {
+      ...await super.getInitialState(),
+      banner: this.state.banner
+    }
   }
 
   updateState(banner: BannerData) {

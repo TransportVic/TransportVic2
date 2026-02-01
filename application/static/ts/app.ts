@@ -1,4 +1,5 @@
 import { BookmarksPage } from './bookmarks.js'
+import { Error500Page } from './errors.js'
 import { NearbyPage } from './nearby.js'
 import { IndexPage, SearchPage } from './pages.js'
 import { RunPageFactory } from './runs.js'
@@ -21,6 +22,7 @@ export class App {
     new RunPageFactory(),
     new TrackerPageFactory(),
     new StaticPageFactory('/mockups'),
+    new StaticPageFactory('/500'),
   ] as const
 
   constructor(landingPage: URL) {
@@ -64,12 +66,18 @@ export class App {
       try {
         await page.load()
         await page.setup(this)
+
+        window.history.pushState(page.serialise(), '', targetURL)
+        this.setCurrentPage(page)
       } catch (e) {
         console.error('An error occurred setting up the page', e)
-      }
 
-      window.history.pushState(page.serialise(), '', targetURL)
-      this.setCurrentPage(page)
+        const errorPage = new Error500Page(targetURL)
+        await errorPage.load()
+
+        window.history.pushState(errorPage.serialise(), '', errorPage.getURL())
+        this.setCurrentPage(errorPage)
+      }
     })
   }
 

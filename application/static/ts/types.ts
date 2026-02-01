@@ -43,6 +43,8 @@ export abstract class Page {
 
   protected async getPageContent(req: Response): Promise<PageContent> {
     const htmlResponse = await req.text()
+    if (500 <= req.status && req.status < 600) throw new Error('500')
+
     const dummyElem = document.createElement('html')
     dummyElem.innerHTML = htmlResponse
 
