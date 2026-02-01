@@ -51,7 +51,10 @@ export class NearbyPage extends Page {
   }
 
   async setup(app: App): Promise<void> {
-    if (search().query.app && await this.restoreApp(app)) return
+    if (search().query.app) {
+      if (await this.restoreApp(app)) return
+      this.url.search = ''
+    }
 
     this.watchID = window.navigator.geolocation.watchPosition(
       this.processPosition.bind(this),

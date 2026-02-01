@@ -2,7 +2,7 @@ import { BASE_STATE, Page, PageFactory, PageState } from './types.js'
 import { $ } from './util.js'
 
 type RunPageState = PageState & {
-  runData: string
+  lastUpdateTime: number
 }
 
 export class RunPageFactory extends PageFactory {
@@ -19,6 +19,10 @@ export class RunPageFactory extends PageFactory {
 export class RunPage extends Page {
 
   private updateInterval: number = -1
+  protected state: RunPageState = {
+    ...BASE_STATE,
+    lastUpdateTime: -1
+  }
 
   async load() {
     await this.replacePageData(await fetch(this.url))
@@ -44,6 +48,13 @@ export class RunPage extends Page {
     this.checkViperLink()
   }
 
+  async getInitialState(): Promise<RunPageState> {
+    return {
+      ...await super.getInitialState(),
+      lastUpdateTime: +new Date()
+    }
+  }
+
   checkViperLink() {
     const text = $('#viper-link')
 
@@ -57,6 +68,12 @@ export class RunPage extends Page {
 
   destroy() {
     clearInterval(this.updateInterval)
+  }
+
+  restore() {
+    super.restore()
+
+    if ((+new Date() - this.state.lastUpdateTime) > 1000 * 15) this.updateBody()
   }
 
 }
