@@ -69,6 +69,8 @@ export class App {
 
         window.history.pushState(page.serialise(), '', targetURL)
         this.setCurrentPage(page)
+
+        page.scroll()
       } catch (e) {
         console.error('An error occurred setting up the page', e)
 

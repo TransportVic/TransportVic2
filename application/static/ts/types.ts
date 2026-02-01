@@ -39,6 +39,10 @@ export abstract class Page {
   abstract setup(app: App): Promise<void> | void
   abstract destroy(): Promise<void> | void
 
+  scroll() {
+    window.scrollTo(0, 0)
+  }
+
   getURL() { return this.url }
 
   protected async getPageContent(req: Response): Promise<PageContent> {

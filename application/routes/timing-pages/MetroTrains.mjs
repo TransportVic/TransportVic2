@@ -11,7 +11,7 @@ async function loadDepartures(req, res) {
     cleanName: req.params.stationName + '-railway-station'
   })
 
-  let metroPlatform = station ? station.bays.find(bay => bay.mode === 'metro train') : null
+  let metroPlatform = station ? station.bays.find(bay => bay.mode === 'metro train' && !bay.parentStopGTFSID) : null
 
   if (!station || !metroPlatform) {
     return res.status(404).render('errors/no-stop')
@@ -38,7 +38,7 @@ async function loadDepartures(req, res) {
     let destination = trip.destination.slice(0, -16)
     let destinationArrivalTime = trip.destinationArrivalTime
 
-    let stopGTFSID = metroPlatform.parentStopGTFSID
+    let stopGTFSID = metroPlatform.stopGTFSID
 
     if (departure.formingTrip && departure.formingType === 'CITY_LOOP') {
       let formingTrip = departure.formingTrip

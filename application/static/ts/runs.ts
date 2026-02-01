@@ -1,5 +1,5 @@
 import { BASE_STATE, Page, PageFactory, PageState } from './types.js'
-import { $ } from './util.js'
+import { $, search } from './util.js'
 
 type RunPageState = PageState & {
   lastUpdateTime: number
@@ -53,6 +53,22 @@ export class RunPage extends Page {
       ...await super.getInitialState(),
       lastUpdateTime: +new Date()
     }
+  }
+
+  scroll() {
+    const hash = search().hash
+    const stop = Object.keys(hash)[0]
+    if (!stop) return
+
+    const parts = stop.match(/^stop-.+$/)
+    if (!parts) return
+
+    const stopRow = document.getElementById(stop)
+    if (!stopRow) return
+
+    stopRow.scrollIntoView({
+      behavior: 'smooth'
+    })
   }
 
   checkViperLink() {
