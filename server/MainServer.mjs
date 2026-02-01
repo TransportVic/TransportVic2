@@ -14,7 +14,7 @@ const __dirname = path.dirname(__filename)
 
 const hostname = os.hostname()
 
-if (modules.tracker && modules.tracker.tram) await import('../modules/trackers/tram.js')
+if (modules.tracker && modules.tracker.tram) await import('../modules/trackers/tram.mjs')
 
 if (modules.tracker && modules.tracker.xpt) await import('../modules/xpt/xpt-updater.js')
 
