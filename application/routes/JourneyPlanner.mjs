@@ -3,6 +3,12 @@ import utils from '../../utils.mjs'
 import { findStops } from './Search.mjs'
 import escapeRegexString from 'escape-regex-string'
 import JourneyPlanner from '../model/jp/JourneyPlanner.mjs'
+import pug from 'pug'
+import path from 'path'
+
+const renderJourney = () => pug.compileFile(
+  path.join(import.meta.dirname, '..', 'views', 'jp', 'journey.pug')
+)
 
 const router = new express.Router()
 
@@ -35,7 +41,13 @@ router.post('/plan', async (req, res) => {
   const planner = new JourneyPlanner(res.db)
   const plan = await planner.plan(originStop, destinationStop, new Date(dateTime), arriveBy)
 
-  res.json(plan)
+  if (plan.error) return res.json(plan)
+
+  res.json({
+    journeys: plan.journeys.map(journey => ({
+      html: renderJourney()({ journey })
+    }))
+  })
 })
 
 export default router
