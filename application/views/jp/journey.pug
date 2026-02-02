@@ -1,5 +1,6 @@
 -
   const shortModes = {
+    skybus: 'skybus',
     bus: 'bus',
     tram: 'tram',
     'regional coach': 'coach',
@@ -11,6 +12,7 @@
   }
 
   const modeIcons =  {
+    'skybus': 'bus',
     bus: 'bus',
     tram: 'tram',
     coach: 'bus',
@@ -21,33 +23,39 @@
     'foot': 'walk'
   }
 
+- const id = Math.random().toString().slice(2)
 div.journey
-  div.journey-header
-    span.start-time #{journey.startTime.format('HH:mm')} - #{journey.endTime.format('HH:mm')}
-    -
-      let duration = []
-      const hours = Math.floor(journey.duration.asHours())
-      const minutes = Math.floor(journey.duration.asMinutes() - hours * 60)
-      if (hours === 1) duration.push(`1 hr`)
-      else if (hours > 1) duration.push(`${hours} hrs`)
+  input.journey-expand-checkbox(type='checkbox' id=`journey-expansion-${id}`)
+  label.journey-summary(for=`journey-expansion-${id}` tabindex='0')
+    div.journey-header
+      span.start-time #{journey.startTime.format('HH:mm')} - #{journey.endTime.format('HH:mm')}
+      -
+        let duration = []
+        const hours = Math.floor(journey.duration.asHours())
+        const minutes = Math.floor(journey.duration.asMinutes() - hours * 60)
+        if (hours === 1) duration.push(`1 hr`)
+        else if (hours > 1) duration.push(`${hours} hrs`)
 
-      duration.push(`${minutes} min`)
-    span.duration #{duration.join(' ')}
-  div.journey-overview
-    for leg of journey.legs.slice(0, 5)
-      - let legMode = shortModes[leg.mode]
-      div.journey-leg
-        if legMode === 'foot'
-          div.walk-icon
-            img(src=`${staticBase}/static/images/clear-icons/walk.svg`)
-        else
-          div(class=`leg-pill ${legMode}`)
-            img(src=`${staticBase}/static/images/clear-icons/${modeIcons[legMode]}.svg`)
-            if ['metro', 'vline'].includes(legMode)
-              span #{stationCodes[leg.routeName]}
-            else
-              span #{leg.routeNumber || ''}
-    if journey.legs.length > 5
-      div.journey-leg
-        div.remaining-leg-counter
-          span ... +#{journey.legs.length - 5}
+        duration.push(`${minutes} min`)
+      span.duration #{duration.join(' ')}
+    div.journey-overview
+      for leg of journey.legs.slice(0, 5)
+        - let legMode = shortModes[leg.mode]
+        div.journey-leg
+          if legMode === 'foot'
+            div.walk-icon
+              img(src=`${staticBase}/static/images/clear-icons/walk.svg`)
+          else
+            div(class=`leg-pill ${legMode}`)
+              img(src=`${staticBase}/static/images/clear-icons/${modeIcons[legMode]}.svg`)
+              if ['metro', 'vline'].includes(legMode) || (legMode === 'coach' && stationCodes[leg.routeName])
+                span #{stationCodes[leg.routeName]}
+              else if leg.routeNumber
+                span #{leg.routeNumber}
+      if journey.legs.length > 5
+        div.journey-leg
+          div.remaining-leg-counter
+            span ... +#{journey.legs.length - 5}
+  
+  div.journey-details
+    span hidden!!

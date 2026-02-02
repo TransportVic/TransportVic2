@@ -4,6 +4,7 @@
 .vline { --colour: #6b4d9e; }
 .coach { --colour: #9582b5; }
 .ferry { --colour: #03998f; }
+.skybus { --colour: #ee3124; }
 
 .busStop .left-container {
   background-color: #d7832c;
@@ -386,4 +387,12 @@ div.remaining-leg-counter {
   align-items: center;
 
   font-size: calc(1.4vw + 1.4vh);
+}
+
+input.journey-expand-checkbox {
+  display: none;
+}
+
+input.journey-expand-checkbox:not(:checked) ~ label ~ div.journey-details {
+  display: none;
 }

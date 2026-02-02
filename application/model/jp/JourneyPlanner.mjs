@@ -29,7 +29,7 @@ export default class JourneyPlanner {
         const matchingTrip = tripID ? await gtfsTimetables.findDocument({ tripID }) : null
 
         return {
-          mode: matchingTrip?.mode || leg.mode,
+          mode: matchingTrip ? (matchingTrip.routeGTFSID.startsWith('11-') ? 'skybus' : matchingTrip.mode) : leg.mode,
           routeName: matchingTrip?.routeName,
           routeNumber: matchingTrip?.routeNumber,
           legStartTime: utils.parseTime(leg.aimedStartTime),
