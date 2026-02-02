@@ -331,16 +331,16 @@ div.plan-button-row input#plan-journey {
   flex-direction: row;
 }
 
-.journey-leg {
+.journey-overview .journey-leg {
   display: inline-block;
   margin-inline: calc(0.3vw + 0.3vh);
 }
 
-.journey-leg:first-child {
+.journey-overview .journey-leg:first-child {
   margin-inline-start: 0;
 }
 
-.journey-leg:last-child {
+.journey-overview .journey-leg:last-child {
   margin-inline-end: 0;
 }
 
@@ -376,8 +376,9 @@ div.walk-icon {
   align-items: center;
 }
 
-div.walk-icon img {
-  height: calc(1.4vw + 1.4vh);
+div.walk-icon img,
+.leg-wait .wait-icon img {
+  height: calc(1.7vw + 1.7vh);
 }
 
 div.remaining-leg-counter {
@@ -395,4 +396,90 @@ input.journey-expand-checkbox {
 
 input.journey-expand-checkbox:not(:checked) ~ label ~ div.journey-details {
   display: none;
+}
+
+.journey-details {
+  background-color: #272727;
+}
+
+.journey-details .journey-leg,
+.journey-details .leg-wait {
+  padding-block: calc(1vw + 1vh);
+}
+
+.journey-details .journey-leg.merged-leg {
+  padding-top: 0;
+  margin-top: calc(-1vw - 1vh);
+}
+
+.journey-leg ~ .leg-wait {
+  display: flex;
+  align-items: center;
+}
+
+.leg-wait .wait-icon {
+  width: calc(6vw + 6vh);
+  margin-left: calc(1vw + 1vh);
+  display: flex;
+  justify-content: center;
+}
+
+.journey-leg ~ .leg-wait span.wait-time {
+  padding-left: calc(2.5vw + 2vh);
+  font-size: calc(1.4vw + 1.4vh);
+}
+
+.journey-details .journey-leg .leg-time,
+.journey-details .journey-leg .detail-filler {
+  width: calc(5vw + 5vh);
+  display: inline-block;
+  font-size: calc(1.5vw + 1.5vh);
+  text-align: right;
+  padding-right: calc(1vw + 1vh);
+  vertical-align: text-top;
+}
+
+.journey-details .journey-leg .leg-location {
+  width: calc(60vw + 5vh);
+  font-size: calc(1.5vw + 1.5vh);
+  text-align: left;
+  padding-left: calc(1vw + 1vh);
+
+  vertical-align: text-top;
+  display: -webkit-inline-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+}
+
+.journey-details .journey-leg .detail-filler {
+  margin-left: calc(1vw + 1vh);
+
+  display: flex;
+}
+
+.journey-details .journey-leg .leg-details {
+  display: flex;
+  align-items: center;
+}
+
+.journey-details .journey-leg .journey-leg-pill {
+  height: calc(6vw + 6vh);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.leg-details .detail-filler .walk-icon {
+  width: calc(6.5vw + 6.5vh);
+}
+
+.journey-details .journey-leg .leg-detail-container {
+  padding-left: calc(2.5vw + 2vh);
+  height: calc(6vw + 6vh);
+  font-size: calc(1.4vw + 1.4vh);
+
+  display: inline-flex;
+  align-items: center;
 }

@@ -8,7 +8,7 @@
     'metro train': 'metro',
     ferry: 'ferry',
     unknown: 'unknown',
-    'foot': 'foot'
+    foot: 'foot'
   }
 
   const modeIcons =  {
@@ -20,8 +20,34 @@
     metro: 'metro',
     ferry: 'ferry',
     unknown: 'unknown',
-    'foot': 'walk'
+    foot: 'walk'
   }
+
+  const modeHumanNames = {
+    'skybus': 'Skybus',
+    bus: 'Bus',
+    tram: 'Tram',
+    coach: 'Coach',
+    vline: 'V/Line',
+    metro: 'Train',
+    ferry: 'Ferry',
+    unknown: 'Unknown',
+    foot: 'Walk'
+  }
+
+mixin legPill(leg)
+  - let legMode = shortModes[leg.mode]
+  div.journey-leg-pill
+    if legMode === 'foot'
+      div.walk-icon
+        img(src=`${staticBase}/static/images/clear-icons/walk.svg`)
+    else
+      div(class=`leg-pill ${legMode}`)
+        img(src=`${staticBase}/static/images/clear-icons/${modeIcons[legMode]}.svg`)
+        if ['metro', 'vline'].includes(legMode) || (legMode === 'coach' && stationCodes[leg.routeName])
+          span #{stationCodes[leg.routeName]}
+        else if leg.routeNumber
+          span #{leg.routeNumber}
 
 - const id = Math.random().toString().slice(2)
 div.journey
@@ -36,26 +62,52 @@ div.journey
         if (hours === 1) duration.push(`1 hr`)
         else if (hours > 1) duration.push(`${hours} hrs`)
 
-        duration.push(`${minutes} min`)
+        if (minutes > 0) duration.push(`${minutes} min`)
       span.duration #{duration.join(' ')}
     div.journey-overview
       for leg of journey.legs.slice(0, 5)
-        - let legMode = shortModes[leg.mode]
         div.journey-leg
-          if legMode === 'foot'
-            div.walk-icon
-              img(src=`${staticBase}/static/images/clear-icons/walk.svg`)
-          else
-            div(class=`leg-pill ${legMode}`)
-              img(src=`${staticBase}/static/images/clear-icons/${modeIcons[legMode]}.svg`)
-              if ['metro', 'vline'].includes(legMode) || (legMode === 'coach' && stationCodes[leg.routeName])
-                span #{stationCodes[leg.routeName]}
-              else if leg.routeNumber
-                span #{leg.routeNumber}
+          +legPill(leg)
       if journey.legs.length > 5
         div.journey-leg
           div.remaining-leg-counter
             span ... +#{journey.legs.length - 5}
   
   div.journey-details
-    span hidden!!
+    for [leg, i] of journey.legs.map((leg, i) => [leg, i])
+      -
+        let legMode = shortModes[leg.mode]
+        let previousLeg = journey.legs[i - 1]
+        let waitTime = previousLeg ? leg.legStartTime.diff(previousLeg.legEndTime, 'minutes') : null
+        let sameStopTime = previousLeg && waitTime === 0
+
+      if !sameStopTime && previousLeg
+        div.leg-wait
+          div.wait-icon
+            img(src=`${staticBase}/static/images/decals/clock.svg`)
+          span.wait-time Wait #{waitTime} minutes
+      div(class=`journey-leg ${sameStopTime ? 'merged-leg' : ''}`)
+        if !sameStopTime
+          div.leg-start
+            span.leg-time #{leg.legStartTime.format('HH:mm')}
+            span.leg-location #{leg.legOrigin.name}
+        div.leg-details
+          div.detail-filler
+            +legPill(leg)
+          div.leg-detail-container
+            if leg.legOrigin.name.split('/')[0] === leg.legDestination.name.split('/')[0] && legMode === 'foot'
+              -
+                let previousRoad = leg.legOrigin.name.split('/')[1]
+                let currentRoad = leg.legDestination.name.split('/')[1]
+
+              if leg.legDestination.bay
+                span Walk to #{leg.legDestination.bay}
+              else if previousRoad !== currentRoad && currentRoad
+                span Walk to #{currentRoad}
+              else
+                span Walk to #{leg.tripDestination.split('/')[0].replace('Railway Station', 'Station')}
+            else
+              span #{modeHumanNames[legMode]} to #{leg.tripDestination.split('/')[0].replace('Railway Station', 'Station')}
+        div.leg-end
+          span.leg-time #{leg.legEndTime.format('HH:mm')}
+          span.leg-location #{leg.legDestination.name}

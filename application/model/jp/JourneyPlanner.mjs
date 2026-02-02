@@ -4,6 +4,7 @@ import fs from 'fs/promises'
 import async from 'async'
 import mock from './mock.mjs'
 import moment from 'moment'
+import busBays from '../../../additional-data/bus-data/bus-bays.mjs'
 
 const query = (await fs.readFile(path.join(import.meta.dirname, 'jp.graphql'))).toString()
 
@@ -36,11 +37,16 @@ export default class JourneyPlanner {
           legEndTime: utils.parseTime(leg.aimedEndTime),
           duration: moment.duration(leg.duration * 1000),
           legOrigin: {
-            name: leg.fromPlace.name
+            name: leg.fromPlace.name,
+            bay: busBays[leg.fromPlace.quay?.id.slice(4)],
+            stopGTFSID: leg.fromPlace.quay?.id.slice(4)
           },
           legDestination: {
-            name: leg.toPlace.name
+            name: leg.toPlace.name,
+            bay: busBays[leg.toPlace.quay?.id.slice(4)],
+            stopGTFSID: leg.toPlace.quay?.id.slice(4)
           },
+          tripDestination: matchingTrip ? matchingTrip.destination : leg.toPlace.name,
           path: leg.pointsOnLink.points,
           steps: leg.steps
         }
