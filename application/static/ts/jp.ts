@@ -112,7 +112,7 @@ export default class JourneyPage extends Page {
           id: this.state.destination.stop.id,
           mode: longModes[this.state.destination.stop.mode]
         },
-        dateTime: ($('#departure-time') as HTMLInputElement).valueAsDate
+        dateTime: new Date(($('#departure-time') as HTMLInputElement).value).toISOString()
       })
     })).text())
 
