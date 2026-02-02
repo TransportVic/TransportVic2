@@ -1,3 +1,10 @@
+.bus { --colour: #d7832c; }
+.metro { --colour: #3483db; }
+.tram { --colour: #1a942a; }
+.vline { --colour: #6b4d9e; }
+.coach { --colour: #9582b5; }
+.ferry { --colour: #03998f; }
+
 .busStop .left-container {
   background-color: #d7832c;
 }
@@ -291,4 +298,92 @@ div.plan-button-row input#plan-journey {
   outline: none;
   border: none;
   border-radius: calc(0.5vw + 0.5vh);
+}
+
+.journey {
+
+}
+
+.journey-header {
+  height: calc(4vw + 4vh);
+  display: flex;
+  flex-direction: row;
+
+  font-size: calc(2vw + 2vh);
+  justify-content: space-between;
+}
+
+.journey-header span.start-time {
+  margin-top: calc(0.6vw + 0.6vh);
+  margin-left: calc(1vw + 1vh);
+}
+
+.journey-header span.duration {
+  margin-top: calc(0.6vw + 0.6vh);
+  margin-right: calc(1vw + 1vh);
+}
+
+.journey-overview {
+  height: calc(4vw + 4vh);
+  margin-inline: calc(1vw + 1vh);
+  display: flex;
+  flex-direction: row;
+}
+
+.journey-leg {
+  display: inline-block;
+  margin-inline: calc(0.3vw + 0.3vh);
+}
+
+.journey-leg:first-child {
+  margin-inline-start: 0;
+}
+
+.journey-leg:last-child {
+  margin-inline-end: 0;
+}
+
+.leg-pill {
+  width: calc(6.5vw + 6.5vh);
+  height: calc(3vw + 3vh);
+
+  display: inline-flex;
+
+  border: calc(0.25vw + 0.25vh) solid var(--colour);
+  border-radius: calc(3vw + 3vh);
+
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  box-sizing: border-box;
+}
+
+.leg-pill img {
+  height: calc(1.4vw + 1.4vh);
+}
+
+.leg-pill span {
+  font-size: calc(1.4vw + 1.4vh);
+  margin-left: calc(0.4vw + 0.4vh);
+}
+
+div.walk-icon {
+  height: calc(3vw + 3vh);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+div.walk-icon img {
+  height: calc(1.4vw + 1.4vh);
+}
+
+div.remaining-leg-counter {
+  height: calc(3vw + 3vh);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-size: calc(1.4vw + 1.4vh);
 }

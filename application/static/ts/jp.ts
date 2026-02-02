@@ -97,7 +97,7 @@ export default class JourneyPage extends Page {
   async planJourney() {
     if (!this.state.origin.stop || !this.state.destination.stop) return
 
-    const data = await (await fetch('/journey/plan', {
+    const data = JSON.parse(await (await fetch('/journey/plan', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -114,7 +114,10 @@ export default class JourneyPage extends Page {
         },
         dateTime: ($('#departure-time') as HTMLInputElement).valueAsDate
       })
-    })).text()
+    })).text())
+
+    const innerHTML = data.journeys.map((journey: { html: string }) => journey.html).join('')
+    $('#journey-results')!.innerHTML = innerHTML
 
     console.log(data)
   }

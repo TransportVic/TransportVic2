@@ -1,4 +1,53 @@
+-
+  const shortModes = {
+    bus: 'bus',
+    tram: 'tram',
+    'regional coach': 'coach',
+    'regional train': 'vline',
+    'metro train': 'metro',
+    ferry: 'ferry',
+    unknown: 'unknown',
+    'foot': 'foot'
+  }
+
+  const modeIcons =  {
+    bus: 'bus',
+    tram: 'tram',
+    coach: 'bus',
+    vline: 'vline',
+    metro: 'metro',
+    ferry: 'ferry',
+    unknown: 'unknown',
+    'foot': 'walk'
+  }
+
 div.journey
   div.journey-header
-    span #{journey.startTime.format('HH:mm')} - #{journey.endTime.format('HH:mm')}
-  - console.log(journey)
+    span.start-time #{journey.startTime.format('HH:mm')} - #{journey.endTime.format('HH:mm')}
+    -
+      let duration = []
+      const hours = Math.floor(journey.duration.asHours())
+      const minutes = Math.floor(journey.duration.asMinutes() - hours * 60)
+      if (hours === 1) duration.push(`1 hr`)
+      else if (hours > 1) duration.push(`${hours} hrs`)
+
+      duration.push(`${minutes} min`)
+    span.duration #{duration.join(' ')}
+  div.journey-overview
+    for leg of journey.legs.slice(0, 5)
+      - let legMode = shortModes[leg.mode]
+      div.journey-leg
+        if legMode === 'foot'
+          div.walk-icon
+            img(src=`${staticBase}/static/images/clear-icons/walk.svg`)
+        else
+          div(class=`leg-pill ${legMode}`)
+            img(src=`${staticBase}/static/images/clear-icons/${modeIcons[legMode]}.svg`)
+            if ['metro', 'vline'].includes(legMode)
+              span #{stationCodes[leg.routeName]}
+            else
+              span #{leg.routeNumber || ''}
+    if journey.legs.length > 5
+      div.journey-leg
+        div.remaining-leg-counter
+          span ... +#{journey.legs.length - 5}

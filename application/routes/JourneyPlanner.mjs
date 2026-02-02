@@ -1,10 +1,17 @@
 import express from 'express'
 import utils from '../../utils.mjs'
+import config from '../../config.json' with { type: 'json' }
 import { findStops } from './Search.mjs'
 import escapeRegexString from 'escape-regex-string'
 import JourneyPlanner from '../model/jp/JourneyPlanner.mjs'
 import pug from 'pug'
 import path from 'path'
+import rawStationCodes from '../../additional-data/station-codes.json' with { type: 'json' }
+
+const stationCodes = {}
+Object.keys(rawStationCodes).forEach(stationCode => {
+  stationCodes[rawStationCodes[stationCode]] = stationCode
+})
 
 const renderJourney = () => pug.compileFile(
   path.join(import.meta.dirname, '..', 'views', 'jp', 'journey.pug')
@@ -27,7 +34,7 @@ router.post('/stops', async (req, res) => {
     suburb: stop.suburb[0],
     name: stop.mergeName,
     modes: [...new Set(stop.bays.map(bay => bay.mode))]
-  })))
+  })).slice(0, 20))
 })
 
 router.post('/plan', async (req, res) => {
@@ -45,7 +52,11 @@ router.post('/plan', async (req, res) => {
 
   res.json({
     journeys: plan.journeys.map(journey => ({
-      html: renderJourney()({ journey })
+      html: renderJourney()({
+        journey,
+        staticBase: config.staticBase || '',
+        stationCodes
+      })
     }))
   })
 })
