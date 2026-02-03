@@ -70,6 +70,7 @@ export class TimingPage extends Page {
     if (!query) return
 
     const departureDivs = [ ...document.querySelectorAll('#departures .departure') ] as HTMLElement[]
+    const lowercaseQuery = query.toLowerCase()
 
     for (const departureDiv of departureDivs) {
       const stopAtElem = departureDiv.querySelector('[name=stops-at]') as HTMLInputElement 
@@ -79,7 +80,7 @@ export class TimingPage extends Page {
       const stopsAt = stopAtElem.value.toLowerCase().split(',')
       const platform = platformElem.value.toLowerCase()
       const line = lineElem.value.toLowerCase()
-
+      
       const platformNumber = (platform.match(/(\d+)/) || ['', ''])[1]
       const platformEnd = (platform.match(/\d+([A-Za-z])$/) || ['', ''])[1]
 
@@ -87,9 +88,9 @@ export class TimingPage extends Page {
         (platformEnd ? platform.startsWith(query.toLowerCase()) : false)
 
       const departureMatches = 
-        stopsAt.some(stop => stop.includes(query))
+        stopsAt.some(stop => stop.includes(lowercaseQuery))
         || platformMatches
-        || line.includes(query)
+        || line.includes(lowercaseQuery)
 
       if (!departureMatches) deleteElem(departureDiv)
     }

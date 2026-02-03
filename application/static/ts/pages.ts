@@ -47,7 +47,6 @@ export class IndexPage extends Page {
   }
 
   async setup(app: App) {
-    console.log('setup', this.state.banner)
     try {
       if (!this.state.banner) {
         const banner = JSON.parse(await (await fetch('/home-banner')).text()) as BannerData
