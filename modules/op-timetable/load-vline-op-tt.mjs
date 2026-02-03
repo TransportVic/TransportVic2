@@ -478,7 +478,7 @@ export default async function loadOperationalTT(db, tripDB, ptvAPI) {
       continue
     }
 
-    pattern.forcedVehicle = vlineTrip.consist
+    if (vlineTrip.consist) pattern.forcedVehicle = vlineTrip.consist
     outputTrips.push({
       replaceOne: {
         filter: pattern.getDBKey(),
@@ -495,7 +495,7 @@ export default async function loadOperationalTT(db, tripDB, ptvAPI) {
     if (scheduledTDN) {
       let matchingTrip = await findMatchingTrip(operationDay, opDayFormat, scheduledTDN, vlineTrip, db)
       if (matchingTrip) {
-        matchingTrip.forcedVehicle = vlineTrip.consist
+        if (vlineTrip.consist) matchingTrip.forcedVehicle = vlineTrip.consist
         outputTrips.push({
           replaceOne: {
             filter: matchingTrip.getDBKey(),
