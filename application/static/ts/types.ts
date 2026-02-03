@@ -210,7 +210,7 @@ export class StaticPage extends Page {
   }
 
   async load(): Promise<any> {
-    await this.replacePageData(await fetch(this.path))
+    await this.replacePageData(await fetch(this.getURL()))
   }
 
   setup(app: App) {}

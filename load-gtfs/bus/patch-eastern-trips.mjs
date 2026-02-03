@@ -1,11 +1,10 @@
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../config.json' with { type: 'json' }
-import utils from '../../utils.mjs'
 
 const database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
 await database.connect()
 
-const gtfsTimetables = await database.getCollection('gtfs timetables')
+const gtfsTimetables = await database.getCollection('gtfs-gtfs timetables')
 
 const depots = [ 19, 22, 29 ]
 
