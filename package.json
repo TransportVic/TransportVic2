@@ -16,7 +16,7 @@
     "@transportme/database": "^1.0.53",
     "@transportme/load-ptv-gtfs": "^1.4.37",
     "@transportme/logger": "^1.0.1",
-    "@transportme/ptv-api": "^1.0.41",
+    "@transportme/ptv-api": "^1.0.42",
     "@transportme/server-template": "^1.0.10",
     "@transportme/transportvic-utils": "^1.0.5",
     "@transportme/vline-mail-server": "^1.0.5",
