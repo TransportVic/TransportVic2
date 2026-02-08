@@ -27,7 +27,12 @@ if trip.runID
       - let { size, type } = trip.vehicle
         div.vehicle
           span #{size}x 
-          img(src=`/static/images/icons/${type.toLowerCase()}.svg`)
+          if trip.vehicle.consist.includes('707M')
+            img(src=`/static/images/icons/siemens-707.svg`)
+          else if trip.vehicle.consist.includes('809M') || trip.vehicle.consist.includes('819M')
+            img(src=`/static/images/icons/siemens-pride.svg`)
+          else
+            img(src=`/static/images/icons/${type.toLowerCase()}.svg`)
   if trip.vehicle && trip.vehicle.consist.length
     div.liveConsist
       span.header Live Tracking
