@@ -1,4 +1,4 @@
-const version = '4'
+const version = '5'
 const cacheName = `transportvic-new-${version}`
 
 async function cacheFiles(files) {
@@ -113,8 +113,12 @@ self.addEventListener('install', async event => {
 
       '/static/images/icons/comeng.svg',
       '/static/images/icons/siemens.svg',
+      '/static/images/icons/siemens-707.svg',
+      '/static/images/icons/siemens-pride.svg',
       '/static/images/icons/xtrapolis.svg',
+      '/static/images/icons/xtrapolis-aboriginal.svg',
       '/static/images/icons/hcmt.svg',
+      '/static/images/icons/hcmt-aboriginal.svg',
       '/static/images/icons/hitachi.svg',
 
       '/static/images/icons/n.svg',

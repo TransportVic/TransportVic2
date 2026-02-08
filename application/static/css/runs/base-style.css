@@ -43,10 +43,10 @@ div.vehicle {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-around;
 
-  width: calc(6vw + 6vh);
-  margin-right: calc(1.2vw + 1.2vh);
+  width: calc(7vw + 7vh);
+  margin-right: calc(1.3vw + 1.3vh);
 }
 
 div.vehicle img {

@@ -8,7 +8,7 @@ mkdir public/static
 mkdir public/mockups
 mkdir public/mockups/static
 
-node modules/optimise-svg.js
+node modules/optimise-svg.mjs
 cp -R application/static/app-content public/static/
 cp -R application/static/fonts public/static/
 cp -R application/static/images public/static/

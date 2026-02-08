@@ -31,6 +31,10 @@ if trip.runID
             img(src=`/static/images/icons/siemens-707.svg`)
           else if trip.vehicle.consist.includes('809M') || trip.vehicle.consist.includes('819M')
             img(src=`/static/images/icons/siemens-pride.svg`)
+          else if trip.vehicle.consist.includes('9024')
+            img(src=`/static/images/icons/hcmt-aboriginal.svg`)
+          else if trip.vehicle.consist.includes('933M') || trip.vehicle.consist.includes('853M') || trip.vehicle.consist.includes('854M')
+            img(src=`/static/images/icons/xtrapolis-aboriginal.svg`)
           else
             img(src=`/static/images/icons/${type.toLowerCase()}.svg`)
   if trip.vehicle && trip.vehicle.consist.length

@@ -4,9 +4,9 @@
    sodipodi:docname="siemens-pride.svg"
    id="svg8"
    version="1.1"
-   viewBox="0 0 405.37586 265.37494"
-   height="265.37494mm"
-   width="405.37585mm"
+   viewBox="0 0 995.76093 623.33985"
+   height="623.33984mm"
+   width="995.76093mm"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -19,9 +19,9 @@
      inkscape:window-maximized="1"
      inkscape:window-y="25"
      inkscape:window-x="0"
-     inkscape:cy="643.65226"
-     inkscape:cx="2065.2155"
-     inkscape:zoom="0.12662117"
+     inkscape:cy="717.59897"
+     inkscape:cx="2225.3945"
+     inkscape:zoom="0.17906938"
      showgrid="false"
      id="namedview1633"
      inkscape:window-height="847"
@@ -54,17 +54,17 @@
      id="rect5661"
      width="405.37585"
      height="265.37494"
-     x="3.5527137e-15"
-     y="0" />
+     x="7.1054274e-15"
+     y="20.054132" />
   <path
      sodipodi:nodetypes="cscccc"
      inkscape:connector-curvature="0"
      id="path5566"
-     d="m 613.35927,603.03961 c -29.13012,0 -306.85361,0.0623 -315.42129,0.0623 -8.56768,0 -3.04629,-26.08384 -3.04629,-26.08384 l 40.7364,-91.40896 245.0232,0.53853 z"
+     d="m 655.6926,623.09374 c -29.13012,0 -306.85361,0.0623 -315.42129,0.0623 -8.56768,0 -3.04629,-26.08384 -3.04629,-26.08384 l 40.7364,-91.40896 245.0232,0.53853 z"
      style="fill:#0c0c0c;fill-opacity:1;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
   <g
      id="g5596"
-     transform="matrix(2.5958051,2.7657603,-2.7657603,2.5958051,822.88346,-50.704398)">
+     transform="matrix(2.5958051,2.7657603,-2.7657603,2.5958051,865.21679,-30.650268)">
     <path
        fill="#ed4c5c"
        d="M 52.382,5.075 C 40.137,3.203 24.137,28.036 9.213,20.497 8.631,18.922 8.07,17.339 7.488,15.767 25.077,19.105 33.07,-2.995 50.658,0.345 c 0.584,1.572 1.14,3.156 1.724,4.73"
@@ -106,7 +106,7 @@
     </g>
   </g>
   <g
-     transform="matrix(1.339776,0,0,1.339776,369.29135,13.99452)"
+     transform="matrix(1.339776,0,0,1.339776,411.62468,34.048652)"
      id="layer1">
     <path
        sodipodi:nodetypes="cssssssssssssssssccccc"
@@ -201,7 +201,7 @@
        id="path953" />
   </g>
   <g
-     transform="matrix(0.79130939,0,0,0.79130939,48.502701,-152.97766)"
+     transform="matrix(0.79130939,0,0,0.79130939,90.836033,-132.92353)"
      id="g5564">
     <path
        style="fill:#161616;fill-opacity:1;stroke:none;stroke-width:0.264583px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
