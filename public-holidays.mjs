@@ -12,7 +12,11 @@ let gtfsTimetables
 
 if (!isInTest) {
   try {
-    await database.connect()
+    await database.connect({
+      serverSelectionTimeoutMS: 4000,
+      connectTimeoutMS: 4000,
+      heartbeatFrequencyMS: 10000
+    })
     gtfsTimetables = await database.getCollection('gtfs timetables')
   } catch (e) {
     console.error('Failed to connect to database', e)
