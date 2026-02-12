@@ -26,25 +26,36 @@ let suburbOverride = {
 }
 
 if (!isInTest) {
-  await database.connect()
-  let coachStops = await database.getCollection('stops').findDocuments({
-    'bays.mode': 'regional coach'
-  }).toArray()
-
-  coachStops.forEach(stop => {
-    stop.bays.forEach(bay => {
-      if (!bay.mode === 'regional coach') return
-
-      let suburb = bay.suburb
-      let fullName = `${bay.fullStopName.replace('Shopping Centre', 'SC')} ${suburb}`
-      let fullNameOverride = `${bay.fullStopName.replace('Shopping Centre', 'SC')}`
-
-      if (overrides[fullNameOverride]) return stops[fullName] = overrides[fullNameOverride]
-
-      let correctedSuburb = suburb.replace(/\: \d{4}/, '').replace(/, \w*$/, '').trim()
-      stops[fullName] = suburbOverride[correctedSuburb] || correctedSuburb
+  try {
+    await database.connect({
+      serverSelectionTimeoutMS: 4000,
+      connectTimeoutMS: 4000,
+      heartbeatFrequencyMS: 10000
     })
-  })
+
+    let coachStops = await database.getCollection('stops').findDocuments({
+      'bays.mode': 'regional coach'
+    }).toArray()
+
+    coachStops.forEach(stop => {
+      stop.bays.forEach(bay => {
+        if (!bay.mode === 'regional coach') return
+
+        let suburb = bay.suburb
+        let fullName = `${bay.fullStopName.replace('Shopping Centre', 'SC')} ${suburb}`
+        let fullNameOverride = `${bay.fullStopName.replace('Shopping Centre', 'SC')}`
+
+        if (overrides[fullNameOverride]) return stops[fullName] = overrides[fullNameOverride]
+
+        let correctedSuburb = suburb.replace(/\: \d{4}/, '').replace(/, \w*$/, '').trim()
+        stops[fullName] = suburbOverride[correctedSuburb] || correctedSuburb
+      })
+    })
+
+    await database.close()
+  } catch (e) {
+    console.error('Failed to connect to DB', e)
+  }
 }
 
 export default function (stop) {

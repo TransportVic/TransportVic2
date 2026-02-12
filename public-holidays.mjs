@@ -11,8 +11,12 @@ const isInTest = typeof global.it === 'function'
 let gtfsTimetables
 
 if (!isInTest) {
-  await database.connect()
-  gtfsTimetables = await database.getCollection('gtfs timetables')
+  try {
+    await database.connect()
+    gtfsTimetables = await database.getCollection('gtfs timetables')
+  } catch (e) {
+    console.error('Failed to connect to database', e)
+  }
 }
 
 const rawEvents = ical.sync.parseFile(path.join(import.meta.dirname, 'transportvic-data/calendar/vic-public-holidays/vic-holidays.ics'))
@@ -59,6 +63,8 @@ export async function getPHDayOfWeek(time) {
   if (eventCache[day]) {
     if (dayCache[day]) {
       return dayCache[day]
+    } else if (!gtfsTimetables) {
+      return null
     } else {
       let count782 = await gtfsTimetables.countDocuments({
         operationDays: day,
@@ -104,6 +110,7 @@ export async function isNightNetworkRunning(time) {
 
   let day = utils.getYYYYMMDD(time)
   if (nightNetworkRunning[day]) return nightNetworkRunning[day]
+  if (!gtfsTimetables) return false
 
   let train = await gtfsTimetables.findDocument({
     operationDays: day,
