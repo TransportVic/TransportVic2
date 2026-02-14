@@ -39,7 +39,7 @@ function getDistantWeekdays(allAvailableDays) {
 
 function getDistantSaturday(allAvailableDays) {
   let saturdays = allAvailableDays.filter(day => {
-    let phName = publicHolidays.getPublicHolidayName(day)
+    let phName = getPublicHolidayName(day)
     if (phName) return false
 
     let dayOfWeek = day.day()
@@ -55,7 +55,7 @@ function getDistantSaturday(allAvailableDays) {
 
 function getDistantSunday(allAvailableDays) {
   let sundays = allAvailableDays.filter(day => {
-    let phName = publicHolidays.getPublicHolidayName(day)
+    let phName = getPublicHolidayName(day)
     if (phName) return false
 
     let dayOfWeek = day.day()
