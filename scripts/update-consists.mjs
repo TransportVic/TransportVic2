@@ -50,6 +50,8 @@ types = types.concat(parsedHCMT.map(train => ({
   [e.leadingCar]: e
 }), {})
 
-await fs.writeFile(path.join(__dirname, '../additional-data/metro-tracker/metro-consists.json'), JSON.stringify(consists))
-await fs.writeFile(path.join(__dirname, '../additional-data/metro-tracker/metro-types.json'), JSON.stringify(types))
+if (Object.keys(types).length > 0) {
+  await fs.writeFile(path.join(__dirname, '../additional-data/metro-tracker/metro-consists.json'), JSON.stringify(consists))
+  await fs.writeFile(path.join(__dirname, '../additional-data/metro-tracker/metro-types.json'), JSON.stringify(types))
+}
 process.exit()
