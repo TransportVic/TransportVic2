@@ -109,7 +109,7 @@ export class MTMTripReader extends GTFSReaders.GTFSTripReader {
   processEntity(data) {
     let tripData = {
       routeGTFSID: this.getRouteMapping(data.route_id),
-      calendar: this.getCalendar(data.service_id),
+      calendar: this.getCalendar(data.service_id.trim()),
       id: data.trip_id,
       shapeID: data.shape_id,
       headsign: data.trip_headsign,

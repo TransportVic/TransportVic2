@@ -28,8 +28,6 @@ let mainCommands = [
   ['bus/load-flexiride-data.mjs'],
   ['bus/mildura/cleanup-mildura-routes.mjs'],
 
-  ['bus/patch-eastern-trips.mjs'],
-
   ['metro/download-metro-timetables.mjs'],
   ['metro/load-metro-timetables.mjs'],
 
