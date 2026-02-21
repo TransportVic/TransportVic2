@@ -58,6 +58,8 @@ export const BASE_STATE: PageState = {
   url: 'https://transportvic.me'
 } as const
 
+const BASE_STYLE = '/static/css/base-style.css'
+
 export abstract class Page {
 
   protected state: PageState = {
@@ -112,7 +114,21 @@ export abstract class Page {
   }
 
   protected replaceDocumentHeaderContent(content: string) {
-    document.head.innerHTML = content
+    const elem = document.createElement('div')
+    elem.innerHTML = content
+
+    const existingTags = Array.from(document.head.children) as HTMLElement[]
+    const newTags = Array.from(elem.children) as HTMLElement[]
+
+    for (const tag of existingTags) {
+      if (tag.hasAttribute('href') && tag.getAttribute('href')!.endsWith(BASE_STYLE)) continue
+      deleteElem(tag)
+    }
+
+    for (const tag of newTags) {
+      if (tag.hasAttribute('href') && tag.getAttribute('href')!.endsWith(BASE_STYLE)) continue
+      document.head.appendChild(tag)
+    }
   }
 
   protected async replacePageData(req: Response): Promise<void> {
