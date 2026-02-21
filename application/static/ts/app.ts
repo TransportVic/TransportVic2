@@ -82,11 +82,8 @@ export class App {
       } catch (e) {
         console.error('An error occurred setting up the page', e)
 
-        const errorPage = new Error500Page(targetURL)
-        await errorPage.load()
-
-        window.history.pushState(errorPage.serialise(), '', errorPage.getURL())
-        this.setCurrentPage(errorPage)
+        // Fallback to traditional page load
+        window.location.href = targetURL.toString()
       }
     })
   }

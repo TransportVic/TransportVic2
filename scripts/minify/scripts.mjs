@@ -35,12 +35,15 @@ async function run(inFolder, outFolder) {
     await fs.mkdir(newFolder)
   }
 
-  for (let file of allJSFiles.filter(f => f.file)) {
-    let newFile = path.join(outFolder, file.path.slice(inFolder.length + 1))
+  for (const file of allJSFiles.filter(f => f.file)) {
+    const newFile = path.join(outFolder, file.path.slice(inFolder.length + 1))
 
     if ((file.path.endsWith('.js') || file.path.endsWith('.mjs')) && !file.path.includes('vendor')) {
-      let content = await fs.readFile(file.path)
-      let minified = UglifyJS.minify(content.toString())
+      const content = await fs.readFile(file.path)
+      const minified = UglifyJS.minify(content.toString(), {
+        webkit: true
+      })
+
       await fs.writeFile(newFile, minified.code)
     } else {
       await fs.copyFile(file.path, newFile)
