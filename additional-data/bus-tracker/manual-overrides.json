@@ -773,7 +773,7 @@
   "K682": "Kinetic (Fitzroy North)",
   "K683": "Kinetic (Fitzroy North)",
   "K684": "Kinetic (Fitzroy North)",
-  "K685": "Kinetic (Preston)",
+  "K685": "Kinetic (Fitzroy North)",
   "K686": "Kinetic (Fitzroy North)",
   "K761": "Kinetic (Fitzroy North)",
   "K762": "Kinetic (Fitzroy North)",
@@ -1196,5 +1196,11 @@
   "SY75": "Mitchell Transit (Kilmore)",
   "SY76": "Mitchell Transit (Kilmore)",
 
-  "TS1": "Transit Systems (Footscray)"
+  "TS1": "Transit Systems (Footscray)",
+
+  "CO13": "CDC Melbourne (Oakleigh)",
+  "CO23": "CDC Melbourne (Oakleigh)",
+  "CO34": "CDC Melbourne (Oakleigh)",
+  "CO35": "CDC Melbourne (Oakleigh)",
+  "CO89": "CDC Melbourne (Oakleigh)"
 }
