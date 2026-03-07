@@ -1,0 +1,2 @@
+stop_id,stop_code,stop_name,stop_desc,stop_lat,stop_lon,zone_id,stop_url,location_type,parent_station
+ANZ_D,ANZ_D,Anzac,,-37.833224,144.973109,,,0,

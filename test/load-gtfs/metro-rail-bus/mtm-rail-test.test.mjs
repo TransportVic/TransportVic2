@@ -21,6 +21,8 @@ const stopsFile = path.join(__dirname, 'sample-data', 'stops.txt')
 
 const nptStopsFile = path.join(__dirname, 'sample-data', 'npt_stops.txt')
 
+const anzStopFiles = path.join(__dirname, 'sample-data', 'stops_anz.txt')
+
 describe('The GTFS Loaders with the MTM Website Rail data', () => {
   describe('The stop loader', () => {
     it('Changes "Fed Square" to Flinders Street', async () => {
@@ -82,6 +84,21 @@ describe('The GTFS Loaders with the MTM Website Rail data', () => {
       expect(await stops.findDocument({ 
         'stopName': 'North Richmond Railway Station'
       })).to.exist
+    })
+
+    it('Loads MTP stations', async () => {
+      let database = new LokiDatabaseConnection('test-db')
+      let stops = await database.createCollection('stops')
+
+      const stopLoader = new MTMRailStopLoader(anzStopFiles, 'kinetic', database, () => 'Suburb')
+      await stopLoader.loadStops()
+
+      const stop = await stops.findDocument({ 
+        'bays.stopGTFSID': 'RAIL_kinetic_ANZ_D'
+      })
+
+      expect(stop).to.exist
+      expect(stop.stopName).to.equal('Anzac Railway Station')
     })
   })
 
