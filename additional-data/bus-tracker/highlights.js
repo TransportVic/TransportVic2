@@ -25,7 +25,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'Kinetic Specials',
-  track: ['K406', 'K407', 'K408', 'K409', 'K410', 'K411', 'K761', 'K762'],
+  track: ['K201', 'K406', 'K407', 'K408', 'K409', 'K410', 'K411', 'K761', 'K762'],
   routes: [],
   type: 'exclude'
 }, {
