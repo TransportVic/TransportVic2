@@ -65,7 +65,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'CDC Geelong Specials',
-  track: ['CG103', 'CG105', 'CG106', 'CG107', 'CG113', 'CG116'],
+  track: ['CG102', 'CG103', 'CG105', 'CG106', 'CG107', 'CG113', 'CG116'],
   routes: [],
   type: 'exclude'
 }, {
@@ -127,6 +127,11 @@ module.exports = [{
 }, {
   name: 'McKenzies Specials',
   track: ['MK30', 'MK50'],
+  routes: [],
+  type: 'exclude'
+}, {
+  name: 'Christians Specials',
+  track: ['C761'],
   routes: [],
   type: 'exclude'
 }]
