@@ -167,12 +167,15 @@ async function pickBestTrip(data, db, tripDB) {
       referenceTrip: gtfsTrip
     }, db)
 
+    let refHasLive = referenceTrip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
     if (!trip && referenceTrip)  {
-      let isLive = referenceTrip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
-      return { trip: referenceTrip, tripStartTime, isLive } // Request must have failed, but we have a reference trip
+      return { trip: referenceTrip, tripStartTime, isLive: refHasLive } // Request must have failed, but we have a reference trip
     }
 
     let isLive = trip.stopTimings.some(stop => !!stop.estimatedDepartureTime)
+    if (!isLive && refHasLive) {
+      return { trip: referenceTrip, tripStartTime, isLive: true } // No realtime from PTV but reference trip already has live data
+    }
 
     return { trip, tripStartTime, isLive }
   } catch (e) {

@@ -165,6 +165,11 @@ async function getDeparturesFromPTV(stop, db, time, discardUnmatched) {
       let minutesDiff = currentStop.departureTimeMinutes - firstStop.departureTimeMinutes
       let originDepartureTime = scheduledDepartureTime.clone().add(-minutesDiff, 'minutes')
 
+      if (!estimatedDepartureTime && currentStop && currentStop.estimatedDepartureTime) {
+        estimatedDepartureTime = utils.parseTime(currentStop.estimatedDepartureTime)
+        actualDepartureTime = estimatedDepartureTime
+      }
+
       mappedDepartures.push({
         trip,
         originDepartureTime,
