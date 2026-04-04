@@ -1715,7 +1715,7 @@ describe('The trip updater module', () => {
     })
   })
 
-  it.only('Does not update scheduled departure times for trips starting in the DST 2-3am danger zone', async () => {
+  it('Does not update scheduled departure times for trips starting in the DST 2-3am danger zone', async () => {
     const database = new LokiDatabaseConnection('test-db')
     const stops = await database.createCollection('stops')
     const routes = await database.createCollection('routes')

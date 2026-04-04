@@ -1,6 +1,7 @@
 import utils from '../../utils.mjs'
 import allRouteStops from '../../additional-data/metro-data/metro-routes.json' with { type: 'json' }
 import metroTypes from '../../additional-data/metro-tracker/metro-types.json' with { type: 'json' }
+import { getNonDSTMinutesPastMidnight, isDSTChange } from '../dst/dst.mjs'
 
 const clone = o => JSON.parse(JSON.stringify(o))
 
@@ -217,6 +218,17 @@ export class LiveTimetable {
       return returnData
     }
     return null
+  }
+
+  isWithinDSTDangerTime() {
+    if (isDSTChange(this.#operationDay)) { // Sunday
+      // Trip starts before 4am
+      return getNonDSTMinutesPastMidnight(this.stops[0].scheduledDepartureTime) < 4 * 60
+    } else if (isDSTChange(this.#operationDay.clone().add(1, 'day')) && this.stops[0].departureTimeMinutes > 1440) { // Saturday
+      return getNonDSTMinutesPastMidnight(this.stops[0].scheduledDepartureTime) < 4 * 60
+    }
+
+    return false
   }
 
   #getVariant(rawVariants) {

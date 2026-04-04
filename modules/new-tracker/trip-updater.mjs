@@ -227,6 +227,8 @@ export default class TripUpdater {
     let existingStops = timetable.getStopNames()
     const dbStops = await db.getCollection('stops')
 
+    const dstDangerZone = timetable.isWithinDSTDangerTime()
+
     for (let stop of trip.stops) {
       if (stop.stopGTFSID) {
         await timetable.updateStopByID(stop.stopGTFSID, stop.stopSequence, dbStops, stop)
@@ -247,7 +249,7 @@ export default class TripUpdater {
       if (typeof stop.cancelled !== 'undefined') updatedData.cancelled = stop.cancelled
       else if (!skipStopCancellation) updatedData.cancelled = false
 
-      if (stop.scheduledDepartureTime) updatedData.scheduledDepartureTime = stop.scheduledDepartureTime.toISOString()
+      if (stop.scheduledDepartureTime && !dstDangerZone) updatedData.scheduledDepartureTime = stop.scheduledDepartureTime.toISOString()
       if (stop.estimatedDepartureTime) updatedData.estimatedDepartureTime = stop.estimatedDepartureTime.toISOString()
       if (stop.estimatedArrivalTime) updatedData.estimatedArrivalTime = stop.estimatedArrivalTime.toISOString()
 
