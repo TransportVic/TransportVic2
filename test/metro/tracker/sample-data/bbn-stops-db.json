@@ -8649,5 +8649,558 @@
       "upwey-railway-station-main-street",
       "upwey-railway-station-burwood-highway"
     ]
+  },
+  {
+    "_id": "69c7080cd366f8bf67f024f4",
+    "stopName": "Croydon Railway Station",
+    "suburb": [
+      "Croydon"
+    ],
+    "cleanSuburbs": [
+      "croydon"
+    ],
+    "bays": [
+      {
+        "originalName": "Croydon Railway Station",
+        "fullStopName": "Croydon Railway Station",
+        "stopGTFSID": "vic:rail:CDN",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.28048737,
+            -37.79530018
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Croydon",
+        "services": [
+          {
+            "routeGTFSID": "2-LIL",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-LIL",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "2-LIL",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-LIL",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          }
+        ],
+        "stopType": "station",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Croydon Station",
+        "fullStopName": "Croydon Railway Station",
+        "stopGTFSID": "12168",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.28070162,
+            -37.79536639
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Croydon",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:CDN",
+        "platform": "1"
+      },
+      {
+        "originalName": "Croydon Station",
+        "fullStopName": "Croydon Railway Station",
+        "stopGTFSID": "12169",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.28050862,
+            -37.79536357
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Croydon",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:CDN",
+        "platform": "2"
+      },
+      {
+        "originalName": "Croydon_Down",
+        "fullStopName": "Croydon Railway Station",
+        "stopGTFSID": "RAIL_kinetic_CDN_Down",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.280071,
+            -37.795806
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Croydon",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Croydon_UP",
+        "fullStopName": "Croydon Railway Station",
+        "stopGTFSID": "RAIL_kinetic_CDN_Up",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.2804063,
+            -37.79497516
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Croydon",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Croydon Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "croydon-railway-station",
+    "cleanNames": [
+      "croydon-railway-station",
+      "croydon-railway-station-railway-avenue"
+    ]
+  },
+  {
+    "_id": "69c7080cd366f8bf67f04966",
+    "stopName": "Lilydale Railway Station",
+    "suburb": [
+      "Lilydale"
+    ],
+    "cleanSuburbs": [
+      "lilydale"
+    ],
+    "bays": [
+      {
+        "originalName": "Lilydale Railway Station",
+        "fullStopName": "Lilydale Railway Station",
+        "stopGTFSID": "vic:rail:LIL",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.34582227,
+            -37.75721264
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Lilydale",
+        "services": [
+          {
+            "routeGTFSID": "2-LIL",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-LIL",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "2-LIL",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          }
+        ],
+        "stopType": "station",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Lilydale Station",
+        "fullStopName": "Lilydale Railway Station",
+        "stopGTFSID": "12164",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.34572,
+            -37.757343
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Lilydale",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:LIL",
+        "platform": "1"
+      },
+      {
+        "originalName": "Lilydale Station",
+        "fullStopName": "Lilydale Railway Station",
+        "stopGTFSID": "12165",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.345646,
+            -37.757306
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Lilydale",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:LIL",
+        "platform": "2"
+      },
+      {
+        "originalName": "Lilydale_Down",
+        "fullStopName": "Lilydale Railway Station",
+        "stopGTFSID": "RAIL_kinetic_LIL_Down",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.3456859,
+            -37.75757974
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Lilydale",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Lilydale_UP",
+        "fullStopName": "Lilydale Railway Station",
+        "stopGTFSID": "RAIL_kinetic_LIL_Up",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.3457959,
+            -37.75745251
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Lilydale",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Lilydale Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "lilydale-railway-station",
+    "cleanNames": [
+      "lilydale-railway-station",
+      "lilydale-railway-station-west-william-street",
+      "lilydale-railway-station-east-william-street",
+      "lilydale-railway-station-main-street"
+    ]
+  },
+  {
+    "_id": "69c7080cd366f8bf67f03740",
+    "stopName": "Mooroolbark Railway Station",
+    "suburb": [
+      "Mooroolbark"
+    ],
+    "cleanSuburbs": [
+      "mooroolbark"
+    ],
+    "bays": [
+      {
+        "originalName": "Mooroolbark Railway Station",
+        "fullStopName": "Mooroolbark Railway Station",
+        "stopGTFSID": "vic:rail:MLK",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.3124024,
+            -37.78474883
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Mooroolbark",
+        "services": [
+          {
+            "routeGTFSID": "2-LIL",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-LIL",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "2-LIL",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-LIL",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          }
+        ],
+        "stopType": "station",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Mooroolbark Station",
+        "fullStopName": "Mooroolbark Railway Station",
+        "stopGTFSID": "12166",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.31307216,
+            -37.78475842
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Mooroolbark",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:MLK",
+        "platform": "1"
+      },
+      {
+        "originalName": "Mooroolbark Station",
+        "fullStopName": "Mooroolbark Railway Station",
+        "stopGTFSID": "12167",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.31303994,
+            -37.78467685
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Mooroolbark",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:MLK",
+        "platform": "2"
+      },
+      {
+        "originalName": "Mooroolbark_Down",
+        "fullStopName": "Mooroolbark Railway Station",
+        "stopGTFSID": "RAIL_kinetic_MLK_Down",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.3119735,
+            -37.78500731
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Mooroolbark",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Mooroolbark_UP",
+        "fullStopName": "Mooroolbark Railway Station",
+        "stopGTFSID": "RAIL_kinetic_MLK_Up",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.3129754,
+            -37.78500625
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Mooroolbark",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Mooroolbark Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "mooroolbark-railway-station",
+    "cleanNames": [
+      "mooroolbark-railway-station",
+      "mooroolbark-railway-station-brice-avenue"
+    ]
+  },
+  {
+    "_id": "69c7080cd366f8bf67f04477",
+    "stopName": "Ringwood East Railway Station",
+    "suburb": [
+      "Ringwood East"
+    ],
+    "cleanSuburbs": [
+      "ringwood-east"
+    ],
+    "bays": [
+      {
+        "originalName": "Ringwood East Railway Station",
+        "fullStopName": "Ringwood East Railway Station",
+        "stopGTFSID": "vic:rail:RWE",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.25019091,
+            -37.81196804
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Ringwood East",
+        "services": [
+          {
+            "routeGTFSID": "2-LIL",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-LIL",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          }
+        ],
+        "screenServices": [
+          {
+            "routeGTFSID": "2-LIL",
+            "gtfsDirection": 1,
+            "routeNumber": null
+          },
+          {
+            "routeGTFSID": "2-LIL",
+            "gtfsDirection": 0,
+            "routeNumber": null
+          }
+        ],
+        "stopType": "station",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Ringwood East Station",
+        "fullStopName": "Ringwood East Railway Station",
+        "stopGTFSID": "12170",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.25086705,
+            -37.81171674
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Ringwood East",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:RWE",
+        "platform": "1"
+      },
+      {
+        "originalName": "Ringwood East Station",
+        "fullStopName": "Ringwood East Railway Station",
+        "stopGTFSID": "12171",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.25087968,
+            -37.81166285
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Ringwood East",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": "vic:rail:RWE",
+        "platform": "2"
+      },
+      {
+        "originalName": "Ringwood East_Down",
+        "fullStopName": "Ringwood East Railway Station",
+        "stopGTFSID": "RAIL_kinetic_RWE_Down",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.250101,
+            -37.812174
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Ringwood East",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      },
+      {
+        "originalName": "Ringwood East_UP",
+        "fullStopName": "Ringwood East Railway Station",
+        "stopGTFSID": "RAIL_kinetic_RWE_Up",
+        "location": {
+          "type": "Point",
+          "coordinates": [
+            145.250396,
+            -37.81219625
+          ]
+        },
+        "stopNumber": null,
+        "mode": "metro train",
+        "suburb": "Ringwood East",
+        "services": [],
+        "screenServices": [],
+        "stopType": "stop",
+        "parentStopGTFSID": null
+      }
+    ],
+    "mergeName": "Ringwood East Railway Station",
+    "services": [],
+    "screenServices": [],
+    "cleanName": "ringwood-east-railway-station",
+    "cleanNames": [
+      "ringwood-east-railway-station",
+      "ringwood-east-railway-station-railway-avenue"
+    ]
   }
 ]

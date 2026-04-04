@@ -5,6 +5,8 @@ import { PTVAPI, StubAPI } from '@transportme/ptv-api'
 import { getDepartures } from '../../../modules/new-tracker/metro/metro-trips-departures.mjs'
 import MetroTripUpdater from '../../../modules/metro-trains/trip-updater.mjs'
 
+import bbnStops from '../tracker/sample-data/bbn-stops-db.json' with { type: 'json' }
+
 import pkmStops from '../tracker/sample-data/pkm-stops-db.json' with { type: 'json' }
 import gtfsr_EPH from '../tracker/sample-data/gtfsr-eph.json' with { type: 'json' }
 import pkmSchTrip from '../tracker/sample-data/eph-sch.json' with { type: 'json' }
@@ -19,6 +21,9 @@ import cclDepartures from '../tracker/sample-data/ccl-departures.json' with { ty
 import td7509 from './sample-data/tdn-7509-math.json' with { type: 'json' }
 import TripUpdater from '../../../modules/new-tracker/trip-updater.mjs'
 import { LiveTimetable } from '../../../modules/schema/live-timetable.mjs'
+import td3326DST from './sample-data/td3326-dst.mjs'
+import ptvApi3326DST from './sample-data/ptv-api-3326-dst.mjs'
+import getTripUpdateData from '../../../modules/metro-trains/get-stopping-pattern.mjs'
 
 let clone = o => JSON.parse(JSON.stringify(o))
 
@@ -1708,5 +1713,35 @@ describe('The trip updater module', () => {
       expect(trip.stopTimings[0].stopName).to.equal('Southern Cross Railway Station')
       expect(trip.stopTimings[0].platform).to.equal('16')
     })
+  })
+
+  it.only('Does not update scheduled departure times for trips starting in the DST 2-3am danger zone', async () => {
+    const database = new LokiDatabaseConnection('test-db')
+    const stops = await database.createCollection('stops')
+    const routes = await database.createCollection('routes')
+    const liveTimetables = await database.createCollection('live timetables')
+    await stops.createDocuments(clone(bbnStops))
+
+    const stubAPI = new StubAPI()
+    stubAPI.setResponses([ ptvApi3326DST ])
+    const ptvAPI = new PTVAPI(stubAPI)
+
+    await routes.createDocument({
+      "mode" : "metro train",
+      "routeName" : "Lilydale",
+      "cleanName" : "lilydale",
+      "routeNumber" : null,
+      "routeGTFSID" : "2-LIL",
+      "operators" : [
+        "Metro"
+      ],
+    })
+
+    await liveTimetables.createDocument(clone(td3326DST))
+
+    const tripData = await getTripUpdateData('3326', ptvAPI)
+    const td3326 = await MetroTripUpdater.updateTrip(database, database, tripData)
+
+    expect(td3326.stops[0].scheduledDepartureTime.toISOString()).to.equal('2026-04-04T15:48:00.000Z')
   })
 })
