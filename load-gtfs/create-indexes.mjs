@@ -289,6 +289,11 @@ async function createBusRegoIndex(busRegos) {
   await busRegos.createIndex({
     operator: 1
   }, {name: 'operator index'})
+
+  await busRegos.createIndex({
+    parentFleetNumber: 1,
+    rego: 1
+  }, {name: 'parent fleet number index', sparse: true})
 }
 
 async function createMetroNotifyIndex(metroNotify) {
