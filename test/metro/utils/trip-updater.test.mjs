@@ -1710,7 +1710,7 @@ describe('The trip updater module', () => {
       })
 
       const trip = Object.values(existingTrips)[0].toDatabase()
-      expect(trip.vehicle.consist[0]).to.equal('9001')
+      expect(trip.vehicle.consist[0][0]).to.equal('9001')
       expect(trip.stopTimings[0].stopName).to.equal('Southern Cross Railway Station')
       expect(trip.stopTimings[0].platform).to.equal('16')
     })

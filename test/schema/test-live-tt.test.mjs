@@ -44,8 +44,8 @@ describe('The LiveTimetable class', () => {
       size: 6,
       type: 'Xtrapolis',
       consist: [
-        '189M', '1395T', '190M',
-        '875M', '1638T', '876M'
+        ['189M', '1395T', '190M'],
+        ['875M', '1638T', '876M']
       ]
     })
 
@@ -98,8 +98,8 @@ describe('The LiveTimetable class', () => {
       size: 6,
       type: 'Xtrapolis',
       consist: [
-        '189M', '1395T', '190M',
-        '875M', '1638T', '876M'
+        ['189M', '1395T', '190M'],
+        ['875M', '1638T', '876M']
       ]
     })
 
@@ -286,11 +286,11 @@ describe('The LiveTimetable class', () => {
   it('Should allow setting a vehicle type', () => {
     let timetable = LiveTimetable.fromDatabase(ccl0735)
     expect(timetable.vehicle).to.be.null
-    timetable.consist = ['189M', '1395T', '190M']
+    timetable.consist = [['189M', '1395T', '190M']]
     let expectedVehicle = {
       size: 3,
       type: 'Xtrapolis',
-      consist: ['189M', '1395T', '190M']
+      consist: [['189M', '1395T', '190M']]
     }
 
     expect(timetable.vehicle).to.deep.equal(expectedVehicle)
@@ -305,11 +305,11 @@ describe('The LiveTimetable class', () => {
   it('Should not create change log entries if the fleet does not change', () => {
     let timetable = LiveTimetable.fromDatabase(ccl0735)
     expect(timetable.vehicle).to.be.null
-    timetable.consist = ['189M', '1395T', '190M', '875M', '1638T', '876M']
+    timetable.consist = [['189M', '1395T', '190M'], ['875M', '1638T', '876M']]
     let expectedVehicle = {
       size: 6,
       type: 'Xtrapolis',
-      consist: ['189M', '1395T', '190M', '875M', '1638T', '876M']
+      consist: [['189M', '1395T', '190M'], ['875M', '1638T', '876M']]
     }
 
     expect(timetable.vehicle).to.deep.equal(expectedVehicle)
@@ -320,7 +320,7 @@ describe('The LiveTimetable class', () => {
       newVal: expectedVehicle
     })
 
-    timetable.consist = ['189M', '1395T', '190M', '875M', '1638T', '876M']
+    timetable.consist = [['189M', '1395T', '190M'], ['875M', '1638T', '876M']]
     expect(timetable.changes.length).to.equal(1)
   })
 
@@ -329,19 +329,14 @@ describe('The LiveTimetable class', () => {
     let expectedVehicle = {
       size: 6,
       type: 'Xtrapolis',
-      consist: ['189M', '1395T', '190M', '875M', '1638T', '876M']
+      consist: [['189M', '1395T', '190M'], ['875M', '1638T', '876M']]
     }
     expect(timetable.vehicle).to.be.null
 
-    timetable.consist = [
-      '189M', '1395T', '190M',
-      '875M', '1638T', '876M'
-    ]
+    timetable.consist = [['189M', '1395T', '190M'], ['875M', '1638T', '876M']]
     expect(timetable.vehicle).to.deep.equal(expectedVehicle)
 
-    timetable.consist = [
-      '189M', '1395T', '190M'
-    ]
+    timetable.consist = [['189M', '1395T', '190M']]
     expect(timetable.vehicle).to.deep.equal(expectedVehicle)
     expect(timetable.changes.length).to.equal(1)
   })
@@ -350,14 +345,11 @@ describe('The LiveTimetable class', () => {
     let timetable = LiveTimetable.fromDatabase(ccl0735)
     expect(timetable.vehicle).to.be.null
 
-    timetable.consist = [
-      '189M', '1395T', '190M',
-      '875M', '1638T', '876M'
-    ]
+    timetable.consist = [['189M', '1395T', '190M'], ['875M', '1638T', '876M']]
     expect(timetable.vehicle).to.deep.equal({
       size: 6,
       type: 'Xtrapolis',
-      consist: ['189M', '1395T', '190M', '875M', '1638T', '876M']
+      consist: [['189M', '1395T', '190M'], ['875M', '1638T', '876M']]
     })
     expect(timetable.changes[0]).excluding('timestamp').excluding('source').to.deep.equal({
       type: 'veh-change',
@@ -366,13 +358,11 @@ describe('The LiveTimetable class', () => {
     })
     
     let oldVehicle = clone(timetable.vehicle)
-    timetable.consist = [
-      '39M', '1320T', '40M'
-    ]
+    timetable.consist = [['39M', '1320T', '40M']]
     expect(timetable.vehicle).to.deep.equal({
       size: 3,
       type: 'Xtrapolis',
-      consist: ['39M', '1320T', '40M']
+      consist: [['39M', '1320T', '40M']]
     })
     expect(timetable.changes[1]).excluding('timestamp').excluding('source').to.deep.equal({
       type: 'veh-change',
@@ -385,13 +375,11 @@ describe('The LiveTimetable class', () => {
     let timetable = LiveTimetable.fromDatabase(ccl0735)
     expect(timetable.vehicle).to.be.null
 
-    timetable.consist = [
-      '189M', '1395T', '190M'
-    ]
+    timetable.consist = [['189M', '1395T', '190M']]
     expect(timetable.vehicle).to.deep.equal({
       size: 3,
       type: 'Xtrapolis',
-      consist: ['189M', '1395T', '190M']
+      consist: [['189M', '1395T', '190M']]
     })
     expect(timetable.changes[0]).excluding('timestamp').excluding('source').to.deep.equal({
       type: 'veh-change',
@@ -400,13 +388,11 @@ describe('The LiveTimetable class', () => {
     })
 
     let oldVehicle = clone(timetable.vehicle)
-    timetable.consist = [
-      '875M', '1638T', '876M'
-    ]
+    timetable.consist = [['875M', '1638T', '876M']]
     expect(timetable.vehicle).to.deep.equal({
       size: 6,
       type: 'Xtrapolis',
-      consist: ['189M', '1395T', '190M', '875M', '1638T', '876M']
+      consist: [['189M', '1395T', '190M'], ['875M', '1638T', '876M']]
     })
     expect(timetable.changes[1]).excluding('timestamp').excluding('source').to.deep.equal({
       type: 'veh-change',
@@ -419,22 +405,18 @@ describe('The LiveTimetable class', () => {
     let timetable = LiveTimetable.fromDatabase(ccl0735)
     expect(timetable.vehicle).to.be.null
 
-    timetable.consist = [
-      '189M', '1395T', '190M'
-    ]
+    timetable.consist = [['189M', '1395T', '190M']]
     expect(timetable.vehicle).to.deep.equal({
       size: 3,
       type: 'Xtrapolis',
-      consist: ['189M', '1395T', '190M']
+      consist: [['189M', '1395T', '190M']]
     })
 
-    timetable.consist = [
-      '189M', '1395T', '190M'
-    ]
+    timetable.consist = [['189M', '1395T', '190M']]
     expect(timetable.vehicle).to.deep.equal({
       size: 3,
       type: 'Xtrapolis',
-      consist: ['189M', '1395T', '190M']
+      consist: [['189M', '1395T', '190M']]
     })
   })
 
@@ -443,11 +425,11 @@ describe('The LiveTimetable class', () => {
     let expectedVehicle = {
       size: 3,
       type: 'Xtrapolis',
-      consist: ['189M', '1395T', '190M']
+      consist: [['189M', '1395T', '190M']]
     }
     expect(timetable.vehicle).to.be.null
 
-    timetable.consist = ['189M', '1395T', '190M']
+    timetable.consist = [['189M', '1395T', '190M']]
     expect(timetable.vehicle).to.deep.equal(expectedVehicle)
     timetable.consist = null
     expect(timetable.vehicle).to.deep.equal(expectedVehicle)
@@ -461,16 +443,16 @@ describe('The LiveTimetable class', () => {
     let expectedVehicle = {
       size: 3,
       type: 'Xtrapolis',
-      consist: ['189M', '1395T', '190M']
+      consist: [['189M', '1395T', '190M']]
     }
     let forcedVehicle = {
       size: 7,
       type: 'Steam Train',
-      consist: ['N456', '1M', '9001'],
+      consist: [['N456'], ['1M'], ['9001']],
       icon: 'AClass'
     }
     let expectedForcedVehicle = { ...forcedVehicle, forced: true }
-    timetable.consist = ['189M', '1395T', '190M']
+    timetable.consist = [['189M', '1395T', '190M']]
     expect(timetable.vehicle).to.deep.equal(expectedVehicle)
     expect(timetable.changes[0]).excluding('timestamp').excluding('source').to.deep.equal({
       type: 'veh-change',
@@ -482,7 +464,7 @@ describe('The LiveTimetable class', () => {
     expect(timetable.vehicle).to.deep.equal(expectedForcedVehicle)
 
     // Setting the consist here should no longer apply
-    timetable.consist = ['189M', '1395T', '190M']
+    timetable.consist = [['189M', '1395T', '190M']]
     expect(timetable.vehicle).to.deep.equal(expectedForcedVehicle)
 
     expect(timetable.changes[1]).excluding('timestamp').excluding('source').to.deep.equal({
@@ -497,27 +479,27 @@ describe('The LiveTimetable class', () => {
     let forcedVehicle = {
       size: 7,
       type: 'Steam Train',
-      consist: ['N456', '1M', '9001'],
+      consist: [['N456'], ['1M'], ['9001']],
       icon: 'AClass'
     }
     timetable.forcedVehicle = forcedVehicle
     let newTimetable = LiveTimetable.fromDatabase(timetable.toDatabase())
     expect(newTimetable.vehicle.forced).to.be.true
 
-    newTimetable.consist = ['189M', '1395T', '190M']
-    expect(newTimetable.vehicle.consist).to.deep.equal(['N456', '1M', '9001'])
+    newTimetable.consist = [['189M', '1395T', '190M']]
+    expect(newTimetable.vehicle.consist).to.deep.equal([['N456'], ['1M'], ['9001']])
     expect(newTimetable.vehicle.icon).to.equal('AClass')
   })
 
   it('Should still lookup the metro fleet type if forced but not specified', () => {
     let timetable = LiveTimetable.fromDatabase(ccl0735)
     let forcedVehicle = {
-      consist: ['875M', '1638T', '876M'],
+      consist: [['875M', '1638T', '876M']],
     }
     let expectedForcedVehicle = {
       size: 3,
       type: 'Xtrapolis',
-      consist: ['875M', '1638T', '876M'],
+      consist: [['875M', '1638T', '876M']],
       forced: true
     }
 
@@ -533,7 +515,7 @@ describe('The LiveTimetable class', () => {
 
   it('Should allow exporting to a metro trips tracker format', () => {
     let timetable = LiveTimetable.fromDatabase(ccl0735)
-    timetable.consist = ['189M', '1395T', '190M']
+    timetable.consist = [['189M', '1395T', '190M']]
     expect(timetable.toTrackerDatabase()).to.deep.equal({
       date: '20250405',
       routeGTFSID: '2-CCL',
@@ -558,7 +540,7 @@ describe('The LiveTimetable class', () => {
     for (let i = 0; i < 4; i++) timetable.stops[i].cancelled = true
     // Cancel CWD-FSS, terminates VPK now
     for (let i = timetable.stops.length - 5; i < timetable.stops.length; i++) timetable.stops[i].cancelled = true
-    timetable.consist = ['189M', '1395T', '190M', '857M', '1638T', '876M']
+    timetable.consist = [['189M', '1395T', '190M'], ['857M', '1638T', '876M']]
 
     expect(timetable.toTrackerDatabase()).to.deep.equal({
       date: '20250410',
@@ -590,7 +572,7 @@ describe('The LiveTimetable class', () => {
     timetable.forcedVehicle = {
       size: 7,
       type: 'Steam Train',
-      consist: ['N456', '1M', '9001'],
+      consist: [['N456'], ['1M'], ['9001']],
       icon: 'AClass'
     }
 
@@ -648,14 +630,14 @@ describe('The LiveTimetable class', () => {
 
       let timetable = LiveTimetable.fromDatabase(mdd1000)
       timetable.forming = '9999'
-      timetable.consist = ['703M', '2502T', '704M']
+      timetable.consist = [['703M', '2502T', '704M']]
 
       expect(timetable.vehicle).to.deep.equal({
         size: 6,
         type: 'Xtrapolis',
         consist: [
-          '189M', '1395T', '190M',
-          '875M', '1638T', '876M'
+          ['189M', '1395T', '190M'],
+          ['875M', '1638T', '876M']
         ]
       })
     })
@@ -665,12 +647,12 @@ describe('The LiveTimetable class', () => {
 
       let timetable = LiveTimetable.fromDatabase(mdd1000)
       timetable.forming = '9999'
-      timetable.consist = ['703M', '2502T', '704M']
+      timetable.consist = [['703M', '2502T', '704M']]
 
       expect(timetable.vehicle).to.deep.equal({
         size: 3,
         type: 'Siemens',
-        consist: [ '703M', '2502T', '704M' ]
+        consist: [[ '703M', '2502T', '704M' ]]
       })
     })
 
@@ -680,12 +662,12 @@ describe('The LiveTimetable class', () => {
 
       let timetable = LiveTimetable.fromDatabase(trip)
       timetable.forming = '9999'
-      timetable.consist = ['703M', '2502T', '704M']
+      timetable.consist = [['703M', '2502T', '704M']]
 
       expect(timetable.vehicle).to.deep.equal({
         size: 3,
         type: 'Siemens',
-        consist: [ '703M', '2502T', '704M' ]
+        consist: [[ '703M', '2502T', '704M' ]]
       })
     })
 
@@ -693,14 +675,14 @@ describe('The LiveTimetable class', () => {
       let timetable = LiveTimetable.fromDatabase(mdd1000)
       timetable.forming = '9999'
       timetable.forcedVehicle = {
-        consist: ['703M', '2502T', '704M']
+        consist: [['703M', '2502T', '704M']]
       }
 
       expect(timetable.vehicle).to.deep.equal({
         size: 3,
         type: 'Siemens',
         forced: true,
-        consist: [ '703M', '2502T', '704M' ]
+        consist: [[ '703M', '2502T', '704M' ]]
       })
     })
 
@@ -727,11 +709,11 @@ describe('The LiveTimetable class', () => {
     let timetable = LiveTimetable.fromDatabase(ccl0735)
     expect(timetable.vehicle).to.be.null
 
-    timetable.consist = ['665M', '1182T', '666M']
+    timetable.consist = [['665M', '1182T', '666M']]
     expect(timetable.vehicle).to.deep.equal({
       size: 3,
       type: 'Comeng',
-      consist: ['665M', '1182T', '666M'],
+      consist: [['665M', '1182T', '666M']],
       variant: 'NS'
     })
   })
@@ -740,11 +722,11 @@ describe('The LiveTimetable class', () => {
     let timetable = LiveTimetable.fromDatabase(ccl0735)
     expect(timetable.vehicle).to.be.null
 
-    timetable.consist = ['329M', '1015T', '366M', '328M', '1014T', '464M']
+    timetable.consist = [['329M', '1015T', '366M'], ['328M', '1014T', '464M']]
     expect(timetable.vehicle).to.deep.equal({
       size: 6,
       type: 'Comeng',
-      consist: ['329M', '1015T', '366M', '328M', '1014T', '464M'],
+      consist: [['329M', '1015T', '366M'], ['328M', '1014T', '464M']],
       variant: 'SS'
     })
   })
@@ -753,11 +735,11 @@ describe('The LiveTimetable class', () => {
     let timetable = LiveTimetable.fromDatabase(ccl0735)
     expect(timetable.vehicle).to.be.null
 
-    timetable.consist = ['665M', '1182T', '666M', '328M', '1014T', '464M']
+    timetable.consist = [['665M', '1182T', '666M'], ['328M', '1014T', '464M']]
     expect(timetable.vehicle).to.deep.equal({
       size: 6,
       type: 'Comeng',
-      consist: ['665M', '1182T', '666M', '328M', '1014T', '464M'],
+      consist: [['665M', '1182T', '666M'], ['328M', '1014T', '464M']],
       variant: 'Mixed'
     })
   })
@@ -766,19 +748,19 @@ describe('The LiveTimetable class', () => {
     let timetable = LiveTimetable.fromDatabase(ccl0735)
     expect(timetable.vehicle).to.be.null
 
-    timetable.consist = ['665M', '1182T', '666M']
+    timetable.consist = [['665M', '1182T', '666M']]
     expect(timetable.vehicle).to.deep.equal({
       size: 3,
       type: 'Comeng',
-      consist: ['665M', '1182T', '666M'],
+      consist: [['665M', '1182T', '666M']],
       variant: 'NS'
     })
 
-    timetable.consist = ['665M', '1182T', '666M', '328M', '1014T', '464M']
+    timetable.consist = [['665M', '1182T', '666M'], ['328M', '1014T', '464M']]
     expect(timetable.vehicle).to.deep.equal({
       size: 6,
       type: 'Comeng',
-      consist: ['665M', '1182T', '666M', '328M', '1014T', '464M'],
+      consist: [['665M', '1182T', '666M'], ['328M', '1014T', '464M']],
       variant: 'Mixed'
     })
   })
@@ -787,19 +769,19 @@ describe('The LiveTimetable class', () => {
     let timetable = LiveTimetable.fromDatabase(ccl0735)
     expect(timetable.vehicle).to.be.null
 
-    timetable.consist = ['665M', '1182T', '666M']
+    timetable.consist = [['665M', '1182T', '666M']]
     expect(timetable.vehicle).to.deep.equal({
       size: 3,
       type: 'Comeng',
-      consist: ['665M', '1182T', '666M'],
+      consist: [['665M', '1182T', '666M']],
       variant: 'NS'
     })
 
-    timetable.consist = ['328M', '1014T', '464M']
+    timetable.consist = [['328M', '1014T', '464M']]
     expect(timetable.vehicle).to.deep.equal({
       size: 6,
       type: 'Comeng',
-      consist: ['665M', '1182T', '666M', '328M', '1014T', '464M'],
+      consist: [['665M', '1182T', '666M'], ['328M', '1014T', '464M']],
       variant: 'Mixed'
     })
   })
