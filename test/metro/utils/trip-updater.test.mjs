@@ -654,7 +654,7 @@ describe('The trip updater module', () => {
 
     expect(await liveTimetables.countDocuments({})).to.equal(1)
 
-    let tripUdate = {
+    let tripUpdate = {
       operationDays: '20240224',
       runID: 'R202',
       routeGTFSID: '2-RCE',
@@ -687,7 +687,7 @@ describe('The trip updater module', () => {
       cancelled: false
     }
 
-    let trip = await MetroTripUpdater.updateTrip(database, database, tripUdate)
+    let trip = await MetroTripUpdater.updateTrip(database, database, tripUpdate)
     expect(trip.stops[0].stopName).to.equal('Showgrounds Railway Station')
     expect(trip.stops[0].additional).to.be.false
     expect(trip.stops[0].cancelled).to.be.false
@@ -741,7 +741,7 @@ describe('The trip updater module', () => {
 
     expect(await liveTimetables.countDocuments({})).to.equal(1)
 
-    let tripUdate = {
+    let tripUpdate = {
       operationDays: '20240224',
       runID: 'R205',
       routeGTFSID: '2-RCE',
@@ -769,7 +769,7 @@ describe('The trip updater module', () => {
       cancelled: false
     }
 
-    let trip = await MetroTripUpdater.updateTrip(database, database, tripUdate)
+    let trip = await MetroTripUpdater.updateTrip(database, database, tripUpdate)
     expect(trip.stops[0].stopName).to.equal('Flinders Street Railway Station')
     expect(trip.stops[0].additional).to.be.true
     expect(trip.stops[0].cancelled).to.be.false
@@ -816,7 +816,7 @@ describe('The trip updater module', () => {
 
     expect(await liveTimetables.countDocuments({})).to.equal(1)
 
-    let tripUdate = {
+    let tripUpdate = {
       operationDays: '20240224',
       runID: 'R205',
       routeGTFSID: '2-RCE',
@@ -829,7 +829,7 @@ describe('The trip updater module', () => {
       cancelled: false
     }
 
-    let trip = await MetroTripUpdater.updateTrip(database, database, tripUdate)
+    let trip = await MetroTripUpdater.updateTrip(database, database, tripUpdate)
 
     expect(trip.stops[2].stopName).to.equal('Showgrounds Railway Station')
     expect(trip.stops[2].platform).to.equal('2')
@@ -911,7 +911,7 @@ describe('The trip updater module', () => {
     await liveTimetables.createDocument(dbTrip)
     expect(await liveTimetables.countDocuments({})).to.equal(1)
 
-    let tripUdate = {
+    let tripUpdate = {
       operationDays: '20240224',
       runID: 'R202',
       routeGTFSID: '2-RCE',
@@ -929,7 +929,7 @@ describe('The trip updater module', () => {
       cancelled: false
     }
 
-    let trip = await MetroTripUpdater.updateTrip(database, database, tripUdate)
+    let trip = await MetroTripUpdater.updateTrip(database, database, tripUpdate)
 
     expect(trip.stops[1].stopName).to.equal('Flinders Street Railway Station')
     expect(trip.stops[1].scheduledDepartureTime.toISOString()).to.equal('2024-02-23T22:39:00.000Z')
@@ -960,16 +960,16 @@ describe('The trip updater module', () => {
       "cleanName" : "flemington-racecourse"
     })
     await liveTimetables.createDocument(clone(tdR205))
-    let tripUdate = {
+    let tripUpdate = {
       operationDays: '20240224',
       runID: 'R205',
       routeGTFSID: '2-RCE',
       stops: [],
       cancelled: false,
-      consist: ['9001', '9101', '9201', '9301', '9701', '9801', '9901']
+      consist: [['9001', '9101', '9201', '9301', '9701', '9801', '9901']]
     }
 
-    let trip = await MetroTripUpdater.updateTrip(database, database, tripUdate)
+    let trip = await MetroTripUpdater.updateTrip(database, database, tripUpdate)
     expect(trip.vehicle.type).to.equal('HCMT')
 
     let trackerEntry = await metroTrips.findDocument({})
@@ -1575,21 +1575,21 @@ describe('The trip updater module', () => {
     let trip = await MetroTripUpdater.updateTrip(database, database, {
       operationDays: '20240224',
       runID: 'R205',
-      consist: ['9001', '9101', '9201', '9301', '9701', '9801', '9901']
+      consist: [['9001', '9101', '9201', '9301', '9701', '9801', '9901']]
     })
     expect(trip.vehicle.type).to.equal('HCMT')
 
     let trip2 = await MetroTripUpdater.updateTrip(database, database, {
       operationDays: '20240224',
       runID: 'R205',
-      consist: ['831M', '2566T', '832M']
+      consist: [['831M', '2566T', '832M']]
     })
     expect(trip2.vehicle.type).to.equal('Siemens')
 
     let trip3 = await MetroTripUpdater.updateTrip(database, database, {
       operationDays: '20240224',
       runID: 'R205',
-      consist: ['9001', '9101', '9201', '9301', '9701', '9801', '9901']
+      consist: [['9001', '9101', '9201', '9301', '9701', '9801', '9901']]
     }, {
       deconflictConsist: true
     })
@@ -1604,7 +1604,7 @@ describe('The trip updater module', () => {
         routeGTFSID: '2-RCE',
         stops: [],
         cancelled: false,
-        consist: ['9001', '9101', '9201', '9301', '9701', '9801', '9901']
+        consist: [['9001', '9101', '9201', '9301', '9701', '9801', '9901']]
       })).to.be.true
 
       expect(TripUpdater.isNonStopUpdate({
@@ -1639,16 +1639,16 @@ describe('The trip updater module', () => {
         "cleanName" : "flemington-racecourse"
       })
       await liveTimetables.createDocument(clone(tdR205))
-      let tripUdate = {
+      let tripUpdate = {
         operationDays: '20240224',
         runID: 'R205',
         routeGTFSID: '2-RCE',
         stops: [],
         cancelled: false,
-        consist: ['9001', '9101', '9201', '9301', '9701', '9801', '9901']
+        consist: [['9001', '9101', '9201', '9301', '9701', '9801', '9901']]
       }
 
-      await MetroTripUpdater.updateTrip(database, database, tripUdate)
+      await MetroTripUpdater.updateTrip(database, database, tripUpdate)
 
       let trip = await liveTimetables.findDocument({})
       expect(trip.origin).to.equal('Southern Cross Railway Station')
@@ -1702,7 +1702,7 @@ describe('The trip updater module', () => {
         routeGTFSID: '2-RCE',
         stops: [],
         cancelled: false,
-        consist: ['9001', '9101', '9201', '9301', '9701', '9801', '9901']
+        consist: [['9001', '9101', '9201', '9301', '9701', '9801', '9901']]
       }, {
         skipWrite: true,
         skipStopCancellation: true,
@@ -1764,17 +1764,18 @@ describe('The trip updater module', () => {
       ],
       "cleanName" : "flemington-racecourse"
     })
+
     await liveTimetables.createDocument(clone(tdR205))
-    let tripUdate = {
+    const tripUpdate = {
       operationDays: '20240224',
       runID: 'R205',
       routeGTFSID: '2-RCE',
       stops: [],
       cancelled: false,
-      consist: [ '8103', '8203', '8303', '8403', '8503', '8603' ]
+      consist: [[ '8103', '8203', '8303', '8403', '8503', '8603' ]]
     }
 
-    let trip = await MetroTripUpdater.updateTrip(database, database, tripUdate)
+    let trip = await MetroTripUpdater.updateTrip(database, database, tripUpdate)
     expect(trip.vehicle.type).to.equal('XT2')
 
     let trackerEntry = await metroTrips.findDocument({})
@@ -1807,7 +1808,7 @@ describe('The trip updater module', () => {
     await stops.createDocuments(clone(pkmStops))
     await liveTimetables.createDocument(clone(tdnC458))
 
-    let tripUdate = {
+    let tripUpdate = {
       operationDays: '20260518',
       runID: 'C458',
       routeGTFSID: '2-CBE',
@@ -1823,7 +1824,7 @@ describe('The trip updater module', () => {
       cancelled: false
     }
 
-    await MetroTripUpdater.updateTrip(database, database, tripUdate)
+    await MetroTripUpdater.updateTrip(database, database, tripUpdate)
     let trip = await liveTimetables.findDocument({})
     expect(trip.operationDays).to.equal('20260518')
     expect(trip.runID).to.equal('C458')
@@ -1836,5 +1837,51 @@ describe('The trip updater module', () => {
     expect(wtl.scheduledDepartureTime).to.equal('2026-05-18T00:44:00.000Z')
 
     expect(wtl.estimatedDepartureTime).to.equal('2026-05-18T00:45:00.000Z')
+  })
+
+  it('Saves the vehicle position data', async () => {
+    const database = new LokiDatabaseConnection('test-db')
+    const routes = await database.createCollection('routes')
+    const liveTimetables = await database.createCollection('live timetables')
+    const metroLocations = await database.createCollection('metro locations')
+
+    await routes.createDocument({
+      "mode" : "metro train",
+      "routeName" : "Flemington Racecourse",
+      "cleanName" : "flemington-racecourse",
+      "routeNumber" : null,
+      "routeGTFSID" : "2-RCE",
+      "operators" : [
+        "Metro"
+      ],
+      "cleanName" : "flemington-racecourse"
+    })
+
+    await liveTimetables.createDocument(clone(tdR205))
+    let tripUpdate = {
+      operationDays: '20240224',
+      runID: 'R205',
+      routeGTFSID: '2-RCE',
+      stops: [],
+      cancelled: false,
+      consist: [[ '9001', '9101', '9201', '9301', '9701', '9801', '9901' ]],
+      location: {
+        latitude: -37.811851501464844,
+        longitude: 145.25039672851562,
+        bearing: 248.7226104736328,
+        timestamp: 1775618546000,
+      }
+    }
+
+    await MetroTripUpdater.updateTrip(database, database, tripUpdate)
+    const positionEntry = await metroLocations.findDocument({ consist: '9001' })
+
+    expect(positionEntry.consist).to.deep.equal(['9001', '9101', '9201', '9301', '9701', '9801', '9901'])
+    expect(positionEntry.timestamp).to.equal(1775618546000)
+    expect(positionEntry.bearing).to.equal(248.7226104736328)
+    expect(positionEntry.location).to.deep.equal({
+      type: 'Point',
+      coordinates: [ 145.25039672851562, -37.811851501464844 ]
+    })
   })
 })
