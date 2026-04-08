@@ -36,9 +36,17 @@ export default class BusTracker extends Tracker {
     }
   }
 
+  async getChildRegos(consist) {
+    return await this.#regos.distinct('rego', { parentFleetNumber: consist })
+  }
+
   async getFleetQuery(consist, options) {
     return {
-      consist: await this.getBusRego(consist) || consist
+      consist: {
+        $in: [ await this.getBusRego(consist) || consist ].concat(
+          await this.getChildRegos(consist)
+        )
+      }
     }
   }
 
