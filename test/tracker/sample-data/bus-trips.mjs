@@ -531,5 +531,32 @@ export default [
     consist: [ 'BS02HB' ],
     routeNumber: '384',
     depot: '42'
+  },
+
+  {
+    date: '20260407',
+    routeGTFSID: '4-383',
+    routeName: 'Palisades - University Hill',
+    runID: '42-383--MF-84',
+    origin: 'University Hill/Chancellor Avenue',
+    destination: 'Quarry Hill Drive/Meridian Drive',
+    departureTime: '10:11',
+    destinationArrivalTime: '10:47',
+    consist: [ '9144AO' ],
+    routeNumber: '383',
+    depot: '42'
+  },
+  {
+    date: '20260407',
+    routeGTFSID: '4-383',
+    routeName: 'Palisades - University Hill',
+    runID: '42-383--MF-86',
+    origin: 'University Hill/Chancellor Avenue',
+    destination: 'Quarry Hill Drive/Meridian Drive',
+    departureTime: '11:31',
+    destinationArrivalTime: '12:07',
+    consist: [ 'BS10IL' ],
+    routeNumber: '383',
+    depot: '42'
   }
 ]

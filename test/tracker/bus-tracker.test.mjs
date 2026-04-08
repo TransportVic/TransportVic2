@@ -120,4 +120,17 @@ describe('The BusTracker class', () => {
       data: [ '7509AO', 'CO171' ]
     }])
   })
+
+  it('Matches vehicles matched as a parent when searching by fleet', async () => {
+    const db = new LokiDatabaseConnection()
+    const tripsColl = db.getCollection('bus trips')
+    const regosColl = db.getCollection('bus regos')
+    await tripsColl.createDocuments(clone(busTrips))
+    await regosColl.createDocuments(clone(busRegos))
+
+    const tracker = new BusTracker(db)
+    const trips = await tracker.getTripsByFleet('D734', { date: '20260407' })
+    expect(trips[0].runID).to.equal('42-383--MF-84')
+    expect(trips[1].runID).to.equal('42-383--MF-86')
+  })
 })
