@@ -190,8 +190,9 @@ export default class TripUpdater {
     if (trip.consist) {
       const flattenedConsist = trip.consist.reduce((acc, e) => acc.concat(e), [])
       const mismatch = !timetable.vehicle || (timetable.vehicle.consist.join('-') !== flattenedConsist.join('-'))
-      if (mismatch && !deconflictConsist) timetable.consist = flattenedConsist
+      if (mismatch && !deconflictConsist) timetable.consist = trip.consist
     } else if (trip.forcedVehicle) timetable.forcedVehicle = trip.forcedVehicle
+    if (trip.location) timetable.location = trip.location
 
     timetable.runID = trip.runID
   }

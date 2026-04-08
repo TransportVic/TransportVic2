@@ -965,7 +965,7 @@ describe('The trip updater module', () => {
       routeGTFSID: '2-RCE',
       stops: [],
       cancelled: false,
-      consist: ['9001', '9101', '9201', '9301', '9701', '9801', '9901']
+      consist: [['9001', '9101', '9201', '9301', '9701', '9801', '9901']]
     }
 
     let trip = await MetroTripUpdater.updateTrip(database, database, tripUpdate)
@@ -1574,21 +1574,21 @@ describe('The trip updater module', () => {
     let trip = await MetroTripUpdater.updateTrip(database, database, {
       operationDays: '20240224',
       runID: 'R205',
-      consist: ['9001', '9101', '9201', '9301', '9701', '9801', '9901']
+      consist: [['9001', '9101', '9201', '9301', '9701', '9801', '9901']]
     })
     expect(trip.vehicle.type).to.equal('HCMT')
 
     let trip2 = await MetroTripUpdater.updateTrip(database, database, {
       operationDays: '20240224',
       runID: 'R205',
-      consist: ['831M', '2566T', '832M']
+      consist: [['831M', '2566T', '832M']]
     })
     expect(trip2.vehicle.type).to.equal('Siemens')
 
     let trip3 = await MetroTripUpdater.updateTrip(database, database, {
       operationDays: '20240224',
       runID: 'R205',
-      consist: ['9001', '9101', '9201', '9301', '9701', '9801', '9901']
+      consist: [['9001', '9101', '9201', '9301', '9701', '9801', '9901']]
     }, {
       deconflictConsist: true
     })
@@ -1603,7 +1603,7 @@ describe('The trip updater module', () => {
         routeGTFSID: '2-RCE',
         stops: [],
         cancelled: false,
-        consist: ['9001', '9101', '9201', '9301', '9701', '9801', '9901']
+        consist: [['9001', '9101', '9201', '9301', '9701', '9801', '9901']]
       })).to.be.true
 
       expect(TripUpdater.isNonStopUpdate({
@@ -1644,7 +1644,7 @@ describe('The trip updater module', () => {
         routeGTFSID: '2-RCE',
         stops: [],
         cancelled: false,
-        consist: ['9001', '9101', '9201', '9301', '9701', '9801', '9901']
+        consist: [['9001', '9101', '9201', '9301', '9701', '9801', '9901']]
       }
 
       await MetroTripUpdater.updateTrip(database, database, tripUpdate)
@@ -1701,7 +1701,7 @@ describe('The trip updater module', () => {
         routeGTFSID: '2-RCE',
         stops: [],
         cancelled: false,
-        consist: ['9001', '9101', '9201', '9301', '9701', '9801', '9901']
+        consist: [['9001', '9101', '9201', '9301', '9701', '9801', '9901']]
       }, {
         skipWrite: true,
         skipStopCancellation: true,
@@ -1709,7 +1709,7 @@ describe('The trip updater module', () => {
       })
 
       const trip = Object.values(existingTrips)[0].toDatabase()
-      expect(trip.vehicle.consist[0]).to.equal('9001')
+      expect(trip.vehicle.consist[0][0]).to.equal('9001')
       expect(trip.stopTimings[0].stopName).to.equal('Southern Cross Railway Station')
       expect(trip.stopTimings[0].platform).to.equal('16')
     })
@@ -1770,7 +1770,7 @@ describe('The trip updater module', () => {
       routeGTFSID: '2-RCE',
       stops: [],
       cancelled: false,
-      consist: ['9001', '9101', '9201', '9301', '9701', '9801', '9901'],
+      consist: [['9001', '9101', '9201', '9301', '9701', '9801', '9901']],
       location: {
         latitude: -37.811851501464844,
         longitude: 145.25039672851562,

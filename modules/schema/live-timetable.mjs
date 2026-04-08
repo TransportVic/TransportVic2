@@ -154,6 +154,10 @@ export class LiveTimetable {
   _vehicleForced = false
   _vehicle
 
+  _vehicleCars
+
+  #location
+
   #stops = []
 
   #formedBy
@@ -236,7 +240,8 @@ export class LiveTimetable {
     return variants.length === 1 ? variants[0] : variants.length > 1 ? 'Mixed' : undefined
   }
 
-  setConsist(consist, forceUpdate) {
+  setConsist(fullConsist, forceUpdate) {
+    const consist = fullConsist ? fullConsist.reduce((acc, e) => acc.concat(e), []) : []
     if (!forceUpdate) {
       if (!consist || !consist.length || this._vehicleForced) return
       let hasFormingChange = this.changes.find(change => change.type === 'forming-change')
@@ -252,16 +257,17 @@ export class LiveTimetable {
     let typeDescriptor = type ? type.type : 'Unknown'
 
     let variant = this.#getVariant([ type?.variant, rearType?.variant ])
-    let newVal = { size: consist.length, type: typeDescriptor, consist }
+    let newVal = { size: consist.length, type: typeDescriptor, consist: fullConsist }
     if (variant) newVal.variant = variant
 
     if (this._vehicle) {
+      const originalConsist = this._vehicle.consist.reduce((acc, e) => acc.concat(e), [])
       if (consist.length === 3 && this._vehicle.size === 6) {
-        if (this._vehicle.consist.includes(consist[0])) return
+        if (originalConsist.includes(consist[0])) return
       } else if (consist.length === 3 && this._vehicle.size === 3 && typeDescriptor === this._vehicle.type) {
-        if (consist[0] === this._vehicle.consist[0]) return
+        if (consist[0] === originalConsist[0]) return
         let oldVal = { ...this._vehicle, consist: this._vehicle.consist.slice(0) }
-        let newVal = { ...this._vehicle, size: 6, consist: this._vehicle.consist.concat(consist) }
+        let newVal = { ...this._vehicle, size: 6, consist: this._vehicle.consist.concat(fullConsist) }
 
         let variant = this.#getVariant([ oldVal?.variant, type?.variant ])
         if (variant) newVal.variant = variant
@@ -274,7 +280,7 @@ export class LiveTimetable {
 
         this._vehicle = newVal
         return
-      } else if (consist.join('-') === this._vehicle.consist.join('-')) return
+      } else if (consist.join('-') === originalConsist.join('-')) return
     }
 
     this.addChange({
@@ -314,6 +320,20 @@ export class LiveTimetable {
       newVal
     })
   }
+
+  set location(location) {
+    if (this.#location && this.location.timestamp > location.timestamp) return
+
+    this.#location = {
+      timestamp: location.timestamp,
+      location: {
+        type: 'Point',
+        coordinates: [ location.longitude, location.latitude ]
+      },
+      bearing: location.bearing || null
+    }
+  }
+  get location() { return this.#location }
 
   set gtfsDirection(direction) { this.#gtfsDirection = direction }
   set direction(direction) { this.#direction = direction }
@@ -501,6 +521,10 @@ export class LiveTimetable {
     }
   }
 
+  getLocationDatabaseKey() {
+    // TODO
+  }
+
   _getUpdatedOriginDest() {
     if (!this.stops.length) {
       const origin = this.#originalOrigin
@@ -554,7 +578,7 @@ export class LiveTimetable {
       destination: destination.slice(0, -16),
       departureTime,
       destinationArrivalTime,
-      consist: this._vehicle.consist
+      consist: this._vehicle.consist.reduce((acc, e) => acc.concat(e), [])
     }
 
     if (this._vehicleForced) {
