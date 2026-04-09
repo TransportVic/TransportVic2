@@ -77,7 +77,7 @@ async function getDeparturesFromPTV(stop, db, time, discardUnmatched) {
 
     if (bayType === 'regional') return // Bay does not have any live routes - skip requesting data and use scheduled
 
-    let {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/2/stop/${stopGTFSID}?gtfs=true&max_results=9&look_backwards=false&include_cancelled=true&expand=run&expand=route&expand=VehicleDescriptor&date_utc=${time.toISOString()}`)
+    let {departures, runs, routes} = await ptvAPI(`/v3/departures/route_type/2/stop/${stopGTFSID}?gtfs=true&max_results=9&look_backwards=false&include_cancelled=true&expand=run&expand=route&expand=VehicleDescriptor&date_utc=${time.clone().add(-1.5, 'minutes').toISOString()}`)
 
     let seenIDs = []
     await async.forEach(departures, async busDeparture => {
