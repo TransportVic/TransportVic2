@@ -25,7 +25,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'Kinetic Specials',
-  track: ['K201', 'K406', 'K407', 'K408', 'K409', 'K410', 'K411', 'K761', 'K762'],
+  track: ['K201', 'K403', 'K404', 'K405', 'K406', 'K407', 'K408', 'K409', 'K410', 'K411', 'K761', 'K762'],
   routes: [],
   type: 'exclude'
 }, {
@@ -60,9 +60,8 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'CDC Wyndham Specials',
-  track: ['CW10', 'CW106', 'CW107', 'CW336', 'CW338', 'CW339', 'CW340', 'CW341',
-    'CW1', 'CW2', 'CW3', 'CW11', 'CW14', 'CW49', 'CW50', 'CW80', 'CW145', 'CW337',
-    'CW442', 'CW443', 'CW447', 'CW451', 'CW452', 'CW453', 'CW454', 'CW455'
+  track: ['CW10', 'CW106', 'CW107', 'CW338', 'CW339', 'CW340', 'CW341',
+    'CW336', 'CW337', 'CW342', 'CW343', 'CW451', 'CW452', 'CW453', 'CW454'
   ],
   routes: [],
   type: 'exclude'
