@@ -1744,4 +1744,45 @@ describe('The trip updater module', () => {
 
     expect(td3326.stops[0].scheduledDepartureTime.toISOString()).to.equal('2026-04-04T15:48:00.000Z')
   })
+
+  it('Sets XT2 data', async () => {
+    let database = new LokiDatabaseConnection('test-db')
+    let stops = await database.createCollection('stops')
+    let routes = await database.createCollection('routes')
+    let liveTimetables = await database.createCollection('live timetables')
+    let metroTrips = await database.createCollection('metro trips')
+
+    await routes.createDocument({
+      "mode" : "metro train",
+      "routeName" : "Flemington Racecourse",
+      "cleanName" : "flemington-racecourse",
+      "routeNumber" : null,
+      "routeGTFSID" : "2-RCE",
+      "operators" : [
+        "Metro"
+      ],
+      "cleanName" : "flemington-racecourse"
+    })
+    await liveTimetables.createDocument(clone(tdR205))
+    let tripUdate = {
+      operationDays: '20240224',
+      runID: 'R205',
+      routeGTFSID: '2-RCE',
+      stops: [],
+      cancelled: false,
+      consist: [ '8103', '8203', '8303', '8403', '8503', '8603' ]
+    }
+
+    let trip = await MetroTripUpdater.updateTrip(database, database, tripUdate)
+    expect(trip.vehicle.type).to.equal('XT2')
+
+    let trackerEntry = await metroTrips.findDocument({})
+    expect(trackerEntry.date).to.equal('20240224')
+    expect(trackerEntry.runID).to.equal('R205')
+    expect(trackerEntry.origin).to.equal('Southern Cross')
+    expect(trackerEntry.departureTime).to.equal('09:49')
+    expect(trackerEntry.destination).to.equal('Showgrounds')
+    expect(trackerEntry.destinationArrivalTime).to.equal('10:01')
+    expect(trackerEntry.consist).to.deep.equal([ '8103', '8203', '8303', '8403', '8503', '8603' ])
+  })
 })
