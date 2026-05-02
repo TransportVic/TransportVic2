@@ -17,6 +17,7 @@ import { updateRelatedTrips } from './metro/check-new-updates.mjs'
 import fs from 'fs/promises'
 import MetroTripUpdater from '../metro-trains/trip-updater.mjs'
 import { isPrimary } from '../replication.mjs'
+import { fetchGTFSRTrips } from './metro/metro-gtfsr-trips.mjs'
 
 export async function writeUpdatedTrips(db, tripDB, updatedTrips) {
   const tripBulkOperations = updatedTrips.map(timetable => (timetable.stops.length ? {
@@ -61,7 +62,7 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   ptvAPI.addMetroSite(new MetroSiteAPIInterface())
 
   let existingTrips = {}
-  // await fetchGTFSRTrips(mongoDB)
+  try { await fetchGTFSRTrips(database, tripDatabase, existingTrips) } catch(e) { console.error(e) }
   try { await fetchGTFSRFleet(database, tripDatabase, existingTrips) } catch(e) { console.error(e) }
   try { await fetchNotifyAlerts(database, ptvAPI) } catch(e) { console.error(e) }
   try { await fetchMetroSiteDepartures(database, tripDatabase, ptvAPI, existingTrips) } catch(e) { console.error(e) }
