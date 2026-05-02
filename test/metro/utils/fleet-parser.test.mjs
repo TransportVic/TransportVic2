@@ -28,8 +28,8 @@ describe('The fleet parser functions', () => {
       expect(getLeadingVehicles(getMotorVehicles('9002M-9902M'))).to.have.members(['9002'])
     })
 
-    it('Should handle XT2 in the format 8101M-8601M', () => {
-      expect(getLeadingVehicles(getMotorVehicles('8101M-8601M'))).to.have.members(['8101'])
+    it('Should handle XT2 in the format 8101M-8201T-8601M', () => {
+      expect(getLeadingVehicles(getMotorVehicles('8101M-8201T-8601M'))).to.have.members(['8101'])
     })
 
     it('Should handle junk being put through the API', () => {
