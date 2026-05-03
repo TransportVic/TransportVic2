@@ -55,13 +55,13 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'CDC Sunshine Specials',
-  track: ['CW416', 'CW445', 'CW446', 'CW447', 'CW453'],
+  track: ['CW416', 'CW445', 'CW446', 'CW447', 'CW451', 'CW452', 'CW453', 'CW454'],
   routes: [],
   type: 'exclude'
 }, {
   name: 'CDC Wyndham Specials',
   track: ['CW10', 'CW106', 'CW107', 'CW338', 'CW339', 'CW340', 'CW341',
-    'CW336', 'CW337', 'CW342', 'CW343', 'CW451', 'CW452', 'CW453', 'CW454'
+    'CW336', 'CW337', 'CW342', 'CW343'
   ],
   routes: [],
   type: 'exclude'
