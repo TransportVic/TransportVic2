@@ -62,7 +62,7 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   ptvAPI.addMetroSite(new MetroSiteAPIInterface())
 
   let existingTrips = {}
-  try { await fetchGTFSRTrips(database, tripDatabase, existingTrips) } catch(e) { console.error(e) }
+  //try { await fetchGTFSRTrips(database, tripDatabase, existingTrips) } catch(e) { console.error(e) }
   try { await fetchGTFSRFleet(database, tripDatabase, existingTrips) } catch(e) { console.error(e) }
   try { await fetchNotifyAlerts(database, ptvAPI) } catch(e) { console.error(e) }
   try { await fetchMetroSiteDepartures(database, tripDatabase, ptvAPI, existingTrips) } catch(e) { console.error(e) }
