@@ -17,6 +17,7 @@ export default function convertToLive(trip, departureDay) {
       stop.arrivalTime = scheduledArrUTC.format('HH:mm')
 
       scheduledUTC = scheduledArrUTC
+      stop.scheduledArrivalTime = scheduledUTC.toISOString()
     }
 
     if (stop.departureTimeMinutes) {
@@ -30,6 +31,7 @@ export default function convertToLive(trip, departureDay) {
     stop.scheduledDepartureTime = scheduledUTC.toISOString()
     stop.scheduledDepartureTimeMS = +scheduledUTC
     stop.actualDepartureTimeMS = +scheduledUTC
+    stop.estimatedArrivalTime = null
     stop.estimatedDepartureTime = null
     stop.cancelled = false
   }

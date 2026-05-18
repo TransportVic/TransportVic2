@@ -14,7 +14,9 @@ export class TimetableStop {
   #stopNumber
   #stopGTFSID
 
-  #schArrivalTime // TODO - separate arrival and departure times
+  #schArrivalTime
+  #estArrivalTime
+
   #schDepartureTime
   #estDepartureTime
 
@@ -32,14 +34,35 @@ export class TimetableStop {
   
   delayChanged = false
 
-  constructor(operationDayMoment, stopName, suburb, stopNumber, stopGTFSID, scheduledDepartureTime, estimatedDepartureTime, { platform, cancelled, additional, allowPickup, allowDropoff, track, express, stopDistance }) {
+  constructor(operationDayMoment,
+    stopName,
+    suburb,
+    stopNumber,
+    stopGTFSID,
+    scheduledDepartureTime,
+    estimatedDepartureTime, {
+      scheduledArrivalTime,
+      estimatedArrivalTime,
+      platform,
+      cancelled,
+      additional,
+      allowPickup,
+      allowDropoff,
+      track,
+      express,
+      stopDistance
+    }
+  ) {
     this.#operationDay = operationDayMoment
     this.#stopName = stopName
     this.#suburb = suburb
     this.#stopNumber = stopNumber
     this.#stopGTFSID = stopGTFSID
-    this.scheduledDepartureTime = scheduledDepartureTime
-    if (estimatedDepartureTime) this.estimatedDepartureTime = estimatedDepartureTime
+    this.scheduledDepartureTime = utils.parseTime(scheduledDepartureTime)
+    if (estimatedDepartureTime) this.estimatedDepartureTime = utils.parseTime(estimatedDepartureTime)
+
+    if (scheduledArrivalTime) this.#schArrivalTime = utils.parseTime(scheduledArrivalTime)
+    if (estimatedArrivalTime) this.#estArrivalTime = utils.parseTime(estimatedArrivalTime)
 
     if (typeof stopDistance !== 'undefined') this.#stopDistance = stopDistance
     if (platform) this.#platform = platform
@@ -66,6 +89,10 @@ export class TimetableStop {
 
   get scheduledDepartureTime() { return this.#schDepartureTime.clone() }
   get estimatedDepartureTime() { return this.#estDepartureTime ? this.#estDepartureTime.clone() : null }
+
+  get scheduledArrivalTime() { return this.#schArrivalTime ? this.#schArrivalTime.clone() : this.scheduledDepartureTime }
+  get estimatedArrivalTime() { return this.#estArrivalTime ? this.#estArrivalTime.clone() : null }
+
   get actualDepartureTime() { return this.estimatedDepartureTime || this.scheduledDepartureTime }
 
   get delay() { return this.actualDepartureTime.diff(this.scheduledDepartureTime) }
@@ -85,13 +112,25 @@ export class TimetableStop {
     }
   }
 
+  set scheduledArrivalTime(scheduledArrivalTime) {
+    this.#schArrivalTime = utils.parseTime(scheduledArrivalTime)
+  }
+
+  set estimatedArrivalTime(estimatedArrivalTime) {
+    if (estimatedArrivalTime) {
+      this.#estArrivalTime = utils.parseTime(estimatedArrivalTime)
+    } else {
+      this.#estArrivalTime = null
+    }
+  }
+
   set platform(platform) { this.#platform = platform }
   set cancelled(cancelled) { this.#cancelled = cancelled }
   set additional(additional) { this.#additional = additional }
 
-  get arrivalTime() { return utils.formatHHMM(this.#schDepartureTime) }
-  get ptArrivalTime() { return utils.formatPTHHMMForOpDay(this.#schDepartureTime, this.#operationDay) }
-  get arrivalTimeMinutes() { return this.#schDepartureTime.diff(this.#operationDay, 'minutes') }
+  get arrivalTime() { return this.#schArrivalTime ? utils.formatHHMM(this.#schArrivalTime) : this.departureTime }
+  get ptArrivalTime() { return this.#schArrivalTime ? utils.formatPTHHMMForOpDay(this.#schArrivalTime, this.#operationDay) : this.ptDepartureTime }
+  get arrivalTimeMinutes() { return this.#schArrivalTime ? this.#schArrivalTime.diff(this.#operationDay, 'minutes') : this.departureTimeMinutes }
 
   get departureTime() { return utils.formatHHMM(this.#schDepartureTime) }
   get ptDepartureTime() { return utils.formatPTHHMMForOpDay(this.#schDepartureTime, this.#operationDay) }
@@ -113,10 +152,15 @@ export class TimetableStop {
       arrivalTimeMinutes: this.arrivalTimeMinutes,
       departureTime: this.departureTime,
       departureTimeMinutes: this.departureTimeMinutes,
+
+      estimatedArrivalTime: this.#estArrivalTime ? this.estimatedArrivalTime.toISOString() : null,
+      scheduledArrivalTime: (this.scheduledArrivalTime || this.scheduledDepartureTime).toISOString(),
+
       estimatedDepartureTime: this.#estDepartureTime ? this.estimatedDepartureTime.toISOString() : null,
       scheduledDepartureTime: this.scheduledDepartureTime.toISOString(),
       scheduledDepartureTimeMS: +this.scheduledDepartureTime,
       actualDepartureTimeMS: +this.actualDepartureTime,
+
       platform: this.#platform,
       cancelled: this.#cancelled,
       additional: this.#additional,
@@ -416,6 +460,8 @@ export class LiveTimetable {
         stopData.scheduledDepartureTime,
         stopData.estimatedDepartureTime,
         {
+          ...(stopData.scheduledArrivalTime ? { scheduledArrivalTime: stopData.scheduledArrivalTime } : {}),
+          ...(stopData.estimatedArrivalTime ? { estimatedArrivalTime: stopData.estimatedArrivalTime } : {}),
           platform: stopData.platform,
           cancelled: stopData.cancelled,
           additional: stopData.additional,

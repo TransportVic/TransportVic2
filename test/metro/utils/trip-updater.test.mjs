@@ -24,6 +24,7 @@ import { LiveTimetable } from '../../../modules/schema/live-timetable.mjs'
 import td3326DST from './sample-data/td3326-dst.mjs'
 import ptvApi3326DST from './sample-data/ptv-api-3326-dst.mjs'
 import getTripUpdateData from '../../../modules/metro-trains/get-stopping-pattern.mjs'
+import tdnC458 from './sample-data/tdn-C458.mjs'
 
 let clone = o => JSON.parse(JSON.stringify(o))
 
@@ -1784,5 +1785,56 @@ describe('The trip updater module', () => {
     expect(trackerEntry.destination).to.equal('Showgrounds')
     expect(trackerEntry.destinationArrivalTime).to.equal('10:01')
     expect(trackerEntry.consist).to.deep.equal([ '8103', '8203', '8303', '8403', '8503', '8603' ])
+  })
+
+  it('Preserves stop arrival data', async () => {
+    let database = new LokiDatabaseConnection('test-db')
+    let stops = await database.createCollection('stops')
+    let routes = await database.createCollection('routes')
+    let liveTimetables = await database.createCollection('live timetables')
+    let metroTrips = await database.createCollection('metro trips')
+
+    await routes.createDocument({
+      "mode" : "metro train",
+      "routeName" : "Cranbournne",
+      "cleanName" : "cranbourne",
+      "routeNumber" : null,
+      "routeGTFSID" : "2-CBE",
+      "operators" : [
+        "Metro"
+      ]
+    })
+    await stops.createDocuments(clone(pkmStops))
+    await liveTimetables.createDocument(clone(tdnC458))
+
+    let tripUdate = {
+      operationDays: '20260518',
+      runID: 'C458',
+      routeGTFSID: '2-CBE',
+      stops: [
+        {
+          stopName: 'Westall Railway Station',
+          platform: '1',
+          scheduledDepartureTime: null,
+          cancelled: false,
+          estimatedDepartureTime: new Date('2026-05-18T00:45:00.000Z')
+        }
+      ],
+      cancelled: false
+    }
+
+    await MetroTripUpdater.updateTrip(database, database, tripUdate)
+    let trip = await liveTimetables.findDocument({})
+    expect(trip.operationDays).to.equal('20260518')
+    expect(trip.runID).to.equal('C458')
+
+    const wtl = trip.stopTimings.find(stop => stop.stopName === 'Westall Railway Station')
+    expect(wtl.arrivalTime).to.equal('10:43')
+    expect(wtl.departureTime).to.equal('10:44')
+
+    expect(wtl.scheduledArrivalTime).to.equal('2026-05-18T00:43:00.000Z')
+    expect(wtl.scheduledDepartureTime).to.equal('2026-05-18T00:44:00.000Z')
+
+    expect(wtl.estimatedDepartureTime).to.equal('2026-05-18T00:45:00.000Z')
   })
 })
