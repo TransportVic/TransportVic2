@@ -170,6 +170,9 @@ async function getDeparturesFromPTV(stop, db, time, discardUnmatched) {
         actualDepartureTime = estimatedDepartureTime
       }
 
+      // bad hack for non-live timetables
+      if (trip.operationDays instanceof Array) trip.operationDays = utils.getPTYYYYMMDD(originDepartureTime)
+
       mappedDepartures.push({
         trip,
         originDepartureTime,
