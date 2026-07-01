@@ -286,6 +286,7 @@ export class LiveTimetable {
 
   setConsist(fullConsist, forceUpdate) {
     if (!fullConsist) return
+    if (fullConsist instanceof Array && !(fullConsist[0] instanceof Array)) fullConsist = [ fullConsist ]
 
     const consist = fullConsist ? fullConsist.reduce((acc, e) => acc.concat(e), []) : []
     if (this._vehicle) {
@@ -545,12 +546,14 @@ export class LiveTimetable {
 
   getLocationDatabaseKeyValues() {
     if (!this._vehicle || !this.location) return []
+
+    // TODO: Temporary transition period for mix of array and non-array vehicle data
     return this._vehicle.consist.map(veh => ({
       key: {
-        consist: veh[0]
+        consist: veh instanceof Array ? veh[0] : veh
       },
       value: {
-        consist: veh,
+        consist: veh instanceof Array ? veh[0] : [ veh ],
         ...this.location
       }
     }))
@@ -787,6 +790,7 @@ export class MetroLiveTimetable extends LiveTimetable {
 
   setConsist(fullConsist, forceUpdate) {
     if (!fullConsist) return
+    if (fullConsist instanceof Array && !(fullConsist[0] instanceof Array)) fullConsist = [ fullConsist ]
 
     const consist = fullConsist.reduce((acc, e) => acc.concat(e), [])
     if (!forceUpdate) {

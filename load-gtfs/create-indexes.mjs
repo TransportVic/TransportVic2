@@ -326,6 +326,10 @@ async function createMetroNotifyIndex(metroNotify) {
 
 async function createLocationsIndex(locations) {
   await locations.createIndex({
+    consist: 1
+  }, { name: 'consist index', unique: 1 })
+
+  await locations.createIndex({
     consist: 1,
     timestamp: 1
   }, { name: 'locations index', unique: 1 })
