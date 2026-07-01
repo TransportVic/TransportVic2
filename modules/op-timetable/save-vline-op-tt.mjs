@@ -3,7 +3,7 @@ import config from '../../config.json' with { type: 'json' }
 import { GetPlatformServicesAPI, PTVAPI, PTVAPIInterface, VLineAPIInterface } from '@transportme/ptv-api'
 import fs from 'fs/promises'
 import path from 'path'
-import { getLogPath } from '../../init-loggers.mjs'
+import _, { getLogPath } from '../../init-loggers.mjs'
 
 class VLineLoggingAPIInterface extends VLineAPIInterface {
 
@@ -36,4 +36,6 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   ptvAPI.addVLine(vlineAPIInterface)
 
   await saveOperationalTT(ptvAPI, vlineAPIInterface)
+
+  global.loggers.opTT.log('[VLINE] Saved trip data')
 }

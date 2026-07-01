@@ -431,6 +431,7 @@ export default async function loadOperationalTT(db, tripDB, ptvAPI) {
     let existingTrip = await VLineTripUpdater.getTripByTDN(liveTimetables, vlineTrip.tdn, opDayFormat)
     if (existingTrip) {
       await updateExistingTrip(db, tripDB, existingTrip, vlineTrip)
+      tripData.push(existingTrip)
       continue
     }
 
@@ -531,6 +532,8 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let tripDatabase = new MongoDatabaseConnection(config.tripDatabaseURL, config.databaseName)
   await tripDatabase.connect()
 
+  global.loggers.opTT.log('[VLINE] Loading trips')
+
   const stubDepartures = process.argv.includes('--stub-departures')
 
   let ptvAPI = new PTVAPI(new PTVAPIInterface(config.ptvKeys[0].devID, config.ptvKeys[0].key))
@@ -540,13 +543,16 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
 
   ptvAPI.addVLine(vlineAPIInterface)
 
-  const missingTrips = await loadOperationalTT(database, tripDatabase, ptvAPI)
+  const { trips, missingTrips } = await loadOperationalTT(database, tripDatabase, ptvAPI)
+  global.loggers.opTT.log('[VLINE] Loaded', trips.length, 'trips')
   if (missingTrips.length) {
     const tripData = `Missing V/Line trips (${missingTrips.length}):\n` + missingTrips.map(
       ({ vlineTrip }) => `TD${vlineTrip.tdn}: ${vlineTrip.departureTime.toFormat('HH:mm')} ${vlineTrip.origin} - ${vlineTrip.destination}`
     ).join('\n')
     global.loggers.opTT.log('[VLINE] ' + tripData)
   }
+
+
 
   await database.close()
   await tripDatabase.close()
