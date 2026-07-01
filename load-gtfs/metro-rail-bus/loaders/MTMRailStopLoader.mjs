@@ -44,7 +44,7 @@ export class MTMRailStop extends GTFSTypes.GTFSStop {
   getFullStopName() {
     let parts
     let stopName
-    if (parts = this.rawStopName.match(/^([\w \.]*?)_?(Up|Down)$/i)) {
+    if (parts = this.rawStopName.match(/^([\w \.]*?)_?(Up|Down)\d*$/i)) {
       stopName = parts[1]
     } else if (parts = this.rawStopName.match(/^([\w \.]*?)(Up|Down)?[ _]?\(([\w ]+)\)/i)) {
       stopName = parts[1]

@@ -100,6 +100,50 @@ describe('The GTFS Loaders with the MTM Website Rail data', () => {
       expect(stop).to.exist
       expect(stop.stopName).to.equal('Anzac Railway Station')
     })
+
+    it('Matches numbers from the stop name', async () => {
+      let database = new LokiDatabaseConnection('test-db')
+      let stops = await database.createCollection('stops')
+
+      let stopLoader = new MTMRailStopLoader(stopsFile, 'donric', database, () => 'Suburb')
+      await stopLoader.loadStops()
+
+      let wtl = await stops.findDocument({
+        'bays.stopGTFSID': 'RAIL_donric_WTL_Down1'
+      })
+
+      expect(wtl).to.exist
+      expect(wtl.stopName).to.equal('Westall Railway Station')
+    })
+
+    it('Ignores brackets in the stop name', async () => {
+      let database = new LokiDatabaseConnection('test-db')
+      let stops = await database.createCollection('stops')
+
+      let stopLoader = new MTMRailStopLoader(stopsFile, 'donric', database, () => 'Suburb')
+      await stopLoader.loadStops()
+
+      let car = await stops.findDocument({ 'bays.stopGTFSID': 'RAIL_donric_CAR_Up' })
+      expect(car).to.exist
+      expect(car.stopName).to.equal('Carrum Railway Station')
+
+      let rmd = await stops.findDocument({ 'bays.stopGTFSID': 'RAIL_donric_RMD_Down1' })
+      expect(rmd).to.exist
+      expect(rmd.stopName).to.equal('Richmond Railway Station')
+
+      let pkd = await stops.findDocument({ 'bays.stopGTFSID': 'RAIL_donric_PKD_Up1' })
+      expect(pkd).to.exist
+      expect(pkd.stopName).to.equal('Parkdale Railway Station')
+
+      let mrn = await stops.findDocument({ 'bays.stopGTFSID': 'RAIL_donric_MRN_Down2' })
+      expect(mrn).to.exist
+      expect(mrn.stopName).to.equal('Moorabbin Railway Station')
+
+      let bms = await stops.findDocument({ 'bays.stopGTFSID': 'RAIL_donric_BMS_Up1' })
+      expect(bms).to.exist
+      expect(bms.stopName).to.equal('Broadmeadows Railway Station')
+    })
+
   })
 
   describe('The route loader', () => {
