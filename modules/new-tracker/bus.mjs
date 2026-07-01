@@ -39,9 +39,18 @@ async function writeUpdatedTrips(db, tripDB, updatedTrips) {
     }
   })).filter(op => !!op.replaceOne.filter)
 
+  const locationBulkOperations = updatedTrips.map(timetable => timetable.getLocationDatabaseKeyValues().map(({ key, value }) => ({
+    replaceOne: {
+      filter: key,
+      replacement: value,
+      upsert: true
+    }
+  }))).reduce((acc, e) => acc.concat(e), [])
+
   let promises = []
   if (tripBulkOperations.length) promises.push(db.getCollection('live timetables').bulkWrite(tripBulkOperations, { ordered: false }))
   if (consistBulkOperations.length && await isPrimary()) promises.push(tripDB.getCollection(BusTripUpdater.getTrackerDB()).bulkWrite(consistBulkOperations, { ordered: false }))
+  if (locationBulkOperations.length && await isPrimary()) promises.push(tripDB.getCollection(BusTripUpdater.getLocationDB()).bulkWrite(locationBulkOperations, { ordered: false }))
 
   await Promise.all(promises)
 }

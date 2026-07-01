@@ -22,7 +22,13 @@ export async function getFleetData(gtfsrAPI) {
       operationDays: gtfsrTripData.getOperationDay(),
       runID: gtfsrTripData.getTDN(),
       routeGTFSID: gtfsrTripData.getRouteID(),
-      consist: parseConsist(trip.vehicle.vehicle.id, metroConsists)
+      consist: parseConsist(trip.vehicle.vehicle.id, metroConsists),
+      location: {
+        latitude: trip.vehicle.position.latitude,
+        longitude: trip.vehicle.position.longitude,
+        bearing: trip.vehicle.position.bearing,
+        timestamp: trip.vehicle.timestamp,
+      }
     }
 
     trips[tripData.runID] = tripData

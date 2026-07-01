@@ -7,6 +7,7 @@ export default class BusTripUpdater extends TripUpdater {
 
   static getMode() { return GTFS_CONSTANTS.TRANSIT_MODES.bus }
   static getTrackerDB() { return 'bus trips' }
+  static getLocationDB() { return 'bus locations' }
 
   static createLiveTimetable(data) {
     return new BusLiveTimetable(...data)

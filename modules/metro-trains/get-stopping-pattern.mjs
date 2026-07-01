@@ -35,6 +35,12 @@ export default async function getTripUpdateData(runID, ptvAPI, { date = new Date
   if (trip.runData.vehicle) {
     tripData.consist = parseConsistFromMotors(trip.runData.vehicle.motorCars, metroConsists)
   }
+  if (trip.runData.position) tripData.location = {
+    latitude: trip.runData.position.geometry.coordinates[1],
+    longitude: trip.runData.position.geometry.coordinates[0],
+    bearing: trip.runData.position.properties.bearing,
+    timestamp: +trip.runData.position.properties.positionTime
+  }
 
   let lastStop = tripData.stops[tripData.stops.length - 1]
   let secondLastStop = tripData.stops[tripData.stops.length - 2]

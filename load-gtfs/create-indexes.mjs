@@ -324,11 +324,15 @@ async function createMetroNotifyIndex(metroNotify) {
   }, { name: 'suspensions index' })
 }
 
-async function createMetroLocationsIndex(metroLocations) {
-  await metroLocations.createIndex({
+async function createLocationsIndex(locations) {
+  await locations.createIndex({
+    consist: 1
+  }, { name: 'consist index', unique: 1 })
+
+  await locations.createIndex({
     consist: 1,
     timestamp: 1
-  }, { name: 'metro locations index', unique: 1 })
+  }, { name: 'locations index', unique: 1 })
 }
 
 async function createLiveTimetableIndex(liveTimetables) {
@@ -423,7 +427,11 @@ await createBusTripIndex(await tripDB.getCollection('bus trips'))
 await createSmartrakIndex(await tripDB.getCollection('smartrak ids'))
 await createBusRegoIndex(await tripDB.getCollection('bus regos'))
 await createMetroNotifyIndex(await mainDB.getCollection('metro notify'))
-await createMetroLocationsIndex(await mainDB.getCollection('metro locations'))
+
+await createLocationsIndex(await tripDB.getCollection('metro locations'))
+await createLocationsIndex(await tripDB.getCollection('bus locations'))
+await createLocationsIndex(await tripDB.getCollection('vline locations'))
+await createLocationsIndex(await tripDB.getCollection('tram locations'))
 
 console.log('Created indexes')
 

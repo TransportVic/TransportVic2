@@ -758,14 +758,14 @@ describe('The loadOperationalTT function', () => {
     await VLineTripUpdater.updateTrip(database, database, {
       operationDays: trip.operationDays,
       runID: '8741',
-      consist: [ 'VL00' ]
+      consist: [[ 'VL00' ]]
     })
 
     await loadOperationalTT(database, database, ptvAPI)
     let updatedTrip = await liveTimetables.findDocument({ runID: '8741' })
 
     expect(updatedTrip.vehicle).to.deep.equal({
-      consist: [ 'VL00' ],
+      consist: [[ 'VL00' ]],
       size: 3,
       type: 'VLocity'
     })

@@ -198,6 +198,10 @@ export class LiveTimetable {
   _vehicleForced = false
   _vehicle
 
+  _vehicleCars
+
+  #location
+
   #stops = []
 
   #formedBy
@@ -275,59 +279,38 @@ export class LiveTimetable {
     return false
   }
 
-  #getVariant(rawVariants) {
+  getVariant(rawVariants) {
     let variants = Array.from(new Set(rawVariants.filter(Boolean)).values())
     return variants.length === 1 ? variants[0] : variants.length > 1 ? 'Mixed' : undefined
   }
 
-  setConsist(consist, forceUpdate) {
-    if (!forceUpdate) {
-      if (!consist || !consist.length || this._vehicleForced) return
-      let hasFormingChange = this.changes.find(change => change.type === 'forming-change')
-      if (hasFormingChange && this.vehicle && this.vehicle.consist) {
-        let lastStop = this.stops[this.stops.length - 1]
-        // Block changes in the last 10min of the trip
-        if (lastStop && lastStop.scheduledDepartureTime.diff(utils.now(), 'minutes') < 10) return
-      }
-    }
+  setConsist(fullConsist, forceUpdate) {
+    if (!fullConsist) return
+    if (fullConsist instanceof Array && !(fullConsist[0] instanceof Array)) fullConsist = [ fullConsist ]
 
-    let type = metroTypes[consist[0]]
-    let rearType = consist[3] && metroTypes[consist[3]]
-    let typeDescriptor = type ? type.type : 'Unknown'
-
-    let variant = this.#getVariant([ type?.variant, rearType?.variant ])
-    let newVal = { size: consist.length, type: typeDescriptor, consist }
-    if (variant) newVal.variant = variant
-
+    const consist = fullConsist ? fullConsist.reduce((acc, e) => acc.concat(e), []) : []
     if (this._vehicle) {
-      if (consist.length === 3 && this._vehicle.size === 6) {
-        if (this._vehicle.consist.includes(consist[0])) return
-      } else if (consist.length === 3 && this._vehicle.size === 3 && typeDescriptor === this._vehicle.type) {
-        if (consist[0] === this._vehicle.consist[0]) return
-        let oldVal = { ...this._vehicle, consist: this._vehicle.consist.slice(0) }
-        let newVal = { ...this._vehicle, size: 6, consist: this._vehicle.consist.concat(consist) }
-
-        let variant = this.#getVariant([ oldVal?.variant, type?.variant ])
-        if (variant) newVal.variant = variant
-
-        this.addChange({
-          type: 'veh-change',
-          oldVal,
-          newVal
-        })
-
-        this._vehicle = newVal
-        return
-      } else if (consist.join('-') === this._vehicle.consist.join('-')) return
+      const originalConsist = this._vehicle.consist.reduce((acc, e) => acc.concat(e), [])
+      if (consist.join('-') === originalConsist.join('-')) return
     }
 
-    this.addChange({
-      type: 'veh-change',
-      oldVal: this._vehicle || null,
-      newVal
-    })
+    const oldVal = this._vehicle ? { ...this._vehicle } : null
+    if (!this._vehicle) {
+      const newVal = {
+        size: consist.length,
+        type: 'Unknown',
+        consist: fullConsist.slice(0)
+      }
 
-    this._vehicle = newVal
+      this._vehicle = newVal
+      this.addChange({
+        type: 'veh-change',
+        oldVal,
+        newVal
+      })
+
+      return
+    }
   }
 
   set consist(consist) {
@@ -358,6 +341,20 @@ export class LiveTimetable {
       newVal
     })
   }
+
+  set location(location) {
+    if (this.#location && this.location.timestamp > location.timestamp) return
+
+    this.#location = {
+      timestamp: location.timestamp,
+      location: {
+        type: 'Point',
+        coordinates: [ location.longitude, location.latitude ]
+      },
+      bearing: location.bearing || null
+    }
+  }
+  get location() { return this.#location }
 
   set gtfsDirection(direction) { this.#gtfsDirection = direction }
   set direction(direction) { this.#direction = direction }
@@ -420,7 +417,7 @@ export class LiveTimetable {
   get additional() { return this.#additional }
 
   static fromDatabase(timetable) {
-    let parsers = [ BusLiveTimetable, VLineLiveTimetable, LiveTimetable ]
+    let parsers = [ MetroLiveTimetable, BusLiveTimetable, VLineLiveTimetable, LiveTimetable ]
     for (let parser of parsers) if (parser.canProcessDBTrip(timetable)) return parser._fromDatabase(timetable)
   }
 
@@ -547,6 +544,21 @@ export class LiveTimetable {
     }
   }
 
+  getLocationDatabaseKeyValues() {
+    if (!this._vehicle || !this.location) return []
+
+    // TODO: Temporary transition period for mix of array and non-array vehicle data
+    return this._vehicle.consist.map(veh => ({
+      key: {
+        consist: veh instanceof Array ? veh[0] : veh
+      },
+      value: {
+        consist: veh instanceof Array ? veh : [ veh ],
+        ...this.location
+      }
+    }))
+  }
+
   _getUpdatedOriginDest() {
     if (!this.stops.length) {
       const origin = this.#originalOrigin
@@ -600,7 +612,7 @@ export class LiveTimetable {
       destination: destination.slice(0, -16),
       departureTime,
       destinationArrivalTime,
-      consist: this._vehicle.consist
+      consist: this._vehicle.consist.reduce((acc, e) => acc.concat(e), [])
     }
 
     if (this._vehicleForced) {
@@ -770,6 +782,83 @@ export class LiveTimetable {
 
 }
 
+export class MetroLiveTimetable extends LiveTimetable {
+
+  static canProcessDBTrip(timetable) {
+    return timetable.mode === 'metro train'
+  }
+
+  setConsist(fullConsist, forceUpdate) {
+    if (!fullConsist) return
+    if (fullConsist instanceof Array && !(fullConsist[0] instanceof Array)) fullConsist = [ fullConsist ]
+
+    const consist = fullConsist.reduce((acc, e) => acc.concat(e), [])
+    if (!forceUpdate) {
+      if (!consist || !consist.length || this._vehicleForced) return
+      let hasFormingChange = this.changes.find(change => change.type === 'forming-change')
+      if (hasFormingChange && this.vehicle && this.vehicle.consist) {
+        let lastStop = this.stops[this.stops.length - 1]
+        // Block changes in the last 10min of the trip
+        if (lastStop && lastStop.scheduledDepartureTime.diff(utils.now(), 'minutes') < 10) return
+      }
+    }
+
+    const firstVehicle = fullConsist[0]
+    const rearVehicle = fullConsist[1]
+    if (!firstVehicle) return
+
+    const type = metroTypes[firstVehicle[0]]
+    const rearType = rearVehicle && metroTypes[rearVehicle[0]]
+    let typeDescriptor = type ? type.type : 'Unknown'
+
+    let variant = this.getVariant([ type?.variant, rearType?.variant ])
+    let newVal = { size: consist.length, type: typeDescriptor, consist: fullConsist }
+    if (variant) newVal.variant = variant
+
+    if (this._vehicle) {
+      const originalConsist = this._vehicle.consist.reduce((acc, e) => acc.concat(e), [])
+      if (
+        fullConsist.length === 1 &&
+        consist.length === 3 &&
+        this._vehicle.consist.length === 2
+      ) {
+        if (originalConsist.includes(firstVehicle[0])) return
+      } else if (
+        fullConsist.length === 1 &&
+        consist.length === 3 &&
+        this._vehicle.consist.length === 1 && 
+        this._vehicle.size === 3 && 
+        typeDescriptor === this._vehicle.type
+      ) {
+        if (consist[0] === originalConsist[0]) return
+        let oldVal = { ...this._vehicle, consist: this._vehicle.consist.slice(0) }
+        let newVal = { ...this._vehicle, size: 6, consist: this._vehicle.consist.concat(fullConsist) }
+
+        let variant = this.getVariant([ oldVal?.variant, type?.variant ])
+        if (variant) newVal.variant = variant
+
+        this.addChange({
+          type: 'veh-change',
+          oldVal,
+          newVal
+        })
+
+        this._vehicle = newVal
+        return
+      } else if (consist.join('-') === originalConsist.join('-')) return
+    }
+
+    this.addChange({
+      type: 'veh-change',
+      oldVal: this._vehicle || null,
+      newVal
+    })
+
+    this._vehicle = newVal
+  }
+
+}
+
 export class VLineLiveTimetable extends LiveTimetable {
 
   static canProcessDBTrip(timetable) {
@@ -790,15 +879,19 @@ export class VLineLiveTimetable extends LiveTimetable {
     return consist.length
   }
 
-  setConsist(consist, forceUpdate) {
-    if (!consist.length) return
+  setConsist(fullConsist, forceUpdate) {
+    if (!fullConsist || !fullConsist.length) return
+    if (fullConsist instanceof Array && !(fullConsist[0] instanceof Array)) fullConsist = [ fullConsist ]
+
+    const consist = fullConsist.reduce((acc, e) => acc.concat(e), [])
+
     const type = this.#getType(consist)
     const size = this._vehicle ? this._vehicle.size : this.getMinimumSize(consist, type)
 
     const newVal = {
       size,
       type,
-      consist
+      consist: fullConsist
     }
 
     if (this._vehicle && consist.join('-') === this._vehicle.consist.join('-')) return

@@ -7,6 +7,7 @@ export default class VLineTripUpdater extends TripUpdater {
   
   static getMode() { return GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain }
   static getTrackerDB() { return 'vline trips' }
+  static getLocationDB() { return 'vline locations' }
 
   static createLiveTimetable(data) {
     return new VLineLiveTimetable(...data)
