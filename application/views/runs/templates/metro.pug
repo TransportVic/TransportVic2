@@ -24,26 +24,29 @@ if trip.runID
     else
       span Run #{trip.runID}
     if trip.vehicle
-      - let { size, type } = trip.vehicle
-        div.vehicle
-          span #{size}x 
-          if trip.vehicle.consist.includes('707M')
-            img(src=`${staticBase}/static/images/icons/siemens-707.svg`)
-          else if trip.vehicle.consist.includes('809M') || trip.vehicle.consist.includes('819M')
-            img(src=`${staticBase}/static/images/icons/siemens-pride.svg`)
-          else if trip.vehicle.consist.includes('9024')
-            img(src=`${staticBase}/static/images/icons/hcmt-aboriginal.svg`)
-          else if trip.vehicle.consist.includes('933M') || trip.vehicle.consist.includes('853M') || trip.vehicle.consist.includes('854M')
-            img(src=`${staticBase}/static/images/icons/xtrapolis-aboriginal.svg`)
-          else
-            img(src=`${staticBase}/static/images/icons/${type.toLowerCase()}.svg`)
+      -
+        let { size, type } = trip.vehicle
+        let consist = trip.vehicle.consist.reduce((a, e) => a.concat(e), [])
+      div.vehicle
+        span #{size}x 
+        if consist.includes('707M')
+          img(src=`${staticBase}/static/images/icons/siemens-707.svg`)
+        else if consist.includes('809M') || consist.includes('819M')
+          img(src=`${staticBase}/static/images/icons/siemens-pride.svg`)
+        else if consist.includes('9024')
+          img(src=`${staticBase}/static/images/icons/hcmt-aboriginal.svg`)
+        else if consist.includes('933M') || consist.includes('853M') || consist.includes('854M')
+          img(src=`${staticBase}/static/images/icons/xtrapolis-aboriginal.svg`)
+        else
+          img(src=`${staticBase}/static/images/icons/${type.toLowerCase()}.svg`)
   if trip.vehicle && trip.vehicle.consist.length
+    - let consist = trip.vehicle.consist.reduce((a, e) => a.concat(e), [])
     div.liveConsist
       span.header Live Tracking
-      if trip.vehicle.consist.includes('707M')
-        span#viper-link.consist #{trip.vehicle.consist.join('-')}
+      if consist.includes('707M')
+        span#viper-link.consist #{consist.join('-')}
       else
-        span.consist #{trip.vehicle.consist.join('-')}
+        span.consist #{consist.join('-')}
 
 if trip.isRailReplacementBus
   div.departure.noTiming

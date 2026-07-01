@@ -317,7 +317,8 @@ export default async function getDepartures(stop, db, tripDB, time, discardUnmat
         }
 
         if (trip.vehicle) {
-          const rego = trip.vehicle.consist[0]
+          const consist = trip.vehicle.consist[0]
+          const rego = consist instanceof Array ? consist[0] : consist
           const busData = await busRegos.findDocument({
             rego
           })
