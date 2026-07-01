@@ -65,6 +65,12 @@ export default async function getTripUpdateData(db, stop, ptvAPI, { skipTDN = []
       if (departure.runData.vehicle) {
         tripData.consist = parseConsistFromMotors(departure.runData.vehicle.motorCars, metroConsists)
       }
+      if (departure.runData.position) tripData.location = {
+        latitude: departure.runData.position.geometry.coordinates[1],
+        longitude: departure.runData.position.geometry.coordinates[0],
+        bearing: departure.runData.position.properties.bearing,
+        timestamp: +departure.runData.position.properties.positionTime
+      }
 
       tripUpdates[departure.runData.tdn] = {
         type: 'stop', data: tripData
