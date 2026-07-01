@@ -24,10 +24,10 @@ export default class MetroTripUpdater extends TripUpdater {
 
     if (secondLastStop && secondLastStop.cancelled && !lastStop.cancelled && lastStop.stopName === 'Flinders Street Railway Station') {
       let secondLastStopNonAMEX = timetable.stops.findLast((stop, i) => !stop.cancelled && i < lastNonAMEXStop)
-      if (secondLastStopNonAMEX && secondLastStopNonAMEX.stopName === 'Richmond Railway Station') {
+      if (secondLastStopNonAMEX && secondLastStopNonAMEX.estimatedDepartureTime && secondLastStopNonAMEX.stopName === 'Richmond Railway Station') {
         let rmdDelay = secondLastStopNonAMEX.estimatedDepartureTime.diff(secondLastStopNonAMEX.scheduledDepartureTime, 'minutes')
         return { lastStopDelay: rmdDelay - 10, lastStop, secondLastStop, lastNonAMEXStop }
-      } else if (secondLastStopNonAMEX && secondLastStopNonAMEX.stopName === 'North Melbourne Railway Station') {
+      } else if (secondLastStopNonAMEX && secondLastStopNonAMEX.estimatedDepartureTime && secondLastStopNonAMEX.stopName === 'North Melbourne Railway Station') {
         let nmeDelay = secondLastStopNonAMEX.estimatedDepartureTime.diff(secondLastStopNonAMEX.scheduledDepartureTime, 'minutes')
         return { lastStopDelay: nmeDelay - 3, lastStop, secondLastStop, lastNonAMEXStop }
       }
