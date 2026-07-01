@@ -8,7 +8,7 @@ import utils from '../../../utils.mjs'
 import _ from '../../../init-loggers.mjs'
 import fs from 'fs/promises'
 
-export async function getOutdatedTrips(database) {
+export async function getOutdatedTrips(database, existingTrips = {}) {
   let liveTimetables = await database.getCollection('live timetables')
   return (await liveTimetables.findDocuments({
     mode: 'metro train',
@@ -46,7 +46,7 @@ export async function getOutdatedTrips(database) {
 }
 
 export async function fetchOutdatedTrips(db, tripDB, ptvAPI, existingTrips = {}) {
-  let outdatedTDNs = await getOutdatedTrips(db)
+  let outdatedTDNs = await getOutdatedTrips(db, existingTrips)
   let updatedTrips = []
 
   for (let outdatedTDN of outdatedTDNs) {

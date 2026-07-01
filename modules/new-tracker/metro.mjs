@@ -68,11 +68,14 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   try { await fetchMetroSiteDepartures(database, tripDatabase, ptvAPI, existingTrips) } catch(e) { console.error(e) }
 
   try {
-    let updatedTrips = await fetchPTVDepartures(database, tripDatabase, ptvAPI, { existingTrips })
+    let updatedTrips = await fetchPTVDepartures(database, tripDatabase, ptvAPI, { existingTrips, stationCount: 3 })
     global.loggers.trackers.metro.log('> PTV Departures: Updating TDNs: ' + updatedTrips.map(trip => trip.runID).join(', '))
   } catch (e) { console.error(e) }
 
-  try { await fetchPTVTrips(database, tripDatabase, ptvAPI, existingTrips) } catch(e) { console.error(e) }
+  try {
+    await fetchPTVTrips(database, tripDatabase, ptvAPI, { existingTrips, stationCount: 3 })
+  } catch(e) { console.error(e) }
+
   try { await fetchNotifyTrips(database, tripDatabase, ptvAPI, existingTrips) } catch(e) { console.error(e) }
   try { await fetchCBDTrips(database, tripDatabase, ptvAPI, existingTrips) } catch(e) { console.error(e) }
   try { await fetchNotifySuspensions(database, tripDatabase, ptvAPI, existingTrips) } catch(e) { console.error(e) }

@@ -59,17 +59,35 @@ export async function getTrips(db, tripDB, ptvAPI, station, skipTDN = [], existi
   return updates
 }
 
-export async function fetchTrips(db, tripDB, ptvAPI, existingTrips = {}) {
+export async function fetchTrips(db, tripDB, ptvAPI, {
+  existingTrips = {},
+  stationCount = 1
+}) {
   let allStations = await db.getCollection('stops').findDocuments({
     'bays.mode': 'metro train'
   }).toArray()
   shuffleArray(allStations)
-  let station = allStations[0]
-  
-  global.loggers.trackers.metro.log('Loading next 5 trips from', station.stopName)
 
-  let updatedTrips = await getTrips(db, tripDB, ptvAPI, station, [], existingTrips)
-  global.loggers.trackers.metro.log('> PTV Trips: Updating TDNs: ' + updatedTrips.map(trip => trip.runID).join(', '))
+  let actualCount = Math.max(Math.min(stationCount, allStations.length), 0)
+
+  let updatedTrips = []
+
+  for (let i = 0; i < actualCount; i++) {
+    let station = allStations[i]
+  
+    global.loggers.trackers.metro.log('Loading next 5 trips from', station.stopName)
+
+    updatedTrips.push(...await getTrips(db, tripDB, ptvAPI, station, [], existingTrips))
+  }
+
+  const tdnSeen = new Set()
+  const filteredTrips = updatedTrips.filter(trip => {
+    if (tdnSeen.has(trip.runID)) return false
+    tdnSeen.add(trip.runID)
+    return true
+  })
+
+  global.loggers.trackers.metro.log('> PTV Trips: Updating TDNs: ' + filteredTrips.map(trip => trip.runID).join(', '))
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
@@ -81,7 +99,7 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
 
   let ptvAPI = new PTVAPI(new PTVAPIInterface(config.ptvKeys[0].devID, config.ptvKeys[0].key))
 
-  await fetchTrips(database, tripDatabase, ptvAPI)
+  await fetchTrips(database, tripDatabase, ptvAPI, { stationCount: 3 })
 
   process.exit(0)
 }
