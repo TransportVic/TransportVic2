@@ -553,7 +553,7 @@ export class LiveTimetable {
         consist: veh instanceof Array ? veh[0] : veh
       },
       value: {
-        consist: veh instanceof Array ? veh[0] : [ veh ],
+        consist: veh instanceof Array ? veh : [ veh ],
         ...this.location
       }
     }))
@@ -879,15 +879,19 @@ export class VLineLiveTimetable extends LiveTimetable {
     return consist.length
   }
 
-  setConsist(consist, forceUpdate) {
-    if (!consist.length) return
+  setConsist(fullConsist, forceUpdate) {
+    if (!fullConsist || !fullConsist.length) return
+    if (fullConsist instanceof Array && !(fullConsist[0] instanceof Array)) fullConsist = [ fullConsist ]
+
+    const consist = fullConsist.reduce((acc, e) => acc.concat(e), [])
+
     const type = this.#getType(consist)
     const size = this._vehicle ? this._vehicle.size : this.getMinimumSize(consist, type)
 
     const newVal = {
       size,
       type,
-      consist
+      consist: fullConsist
     }
 
     if (this._vehicle && consist.join('-') === this._vehicle.consist.join('-')) return

@@ -26,7 +26,7 @@ describe('The V/Line Live Timetable', () => {
     timetable.consist = [ 'VL30' ]
 
     expect(timetable.vehicle).to.deep.equal({
-      consist: ['VL30'],
+      consist: [[ 'VL30' ]],
       size: 3,
       type: 'VLocity'
     })
@@ -43,7 +43,7 @@ describe('The V/Line Live Timetable', () => {
 
     timetable.consist = [ 'VL30' ]
     expect(timetable.vehicle).to.deep.equal({
-      consist: ['VL30'],
+      consist: [[ 'VL30' ]],
       size: 6,
       type: 'VLocity'
     })
@@ -55,7 +55,7 @@ describe('The V/Line Live Timetable', () => {
     timetable.consist = [ 'VL999' ]
 
     expect(timetable.vehicle).to.deep.equal({
-      consist: ['VL999'],
+      consist: [[ 'VL999' ]],
       size: 3,
       type: 'VLocity'
     })
@@ -67,7 +67,7 @@ describe('The V/Line Live Timetable', () => {
     timetable.consist = [ '7000' ]
 
     expect(timetable.vehicle).to.deep.equal({
-      consist: ['7000'],
+      consist: [[ '7000' ]],
       size: 1,
       type: 'Sprinter'
     })
@@ -79,7 +79,7 @@ describe('The V/Line Live Timetable', () => {
     timetable.consist = [ 'N450' ]
 
     expect(timetable.vehicle).to.deep.equal({
-      consist: ['N450'],
+      consist: [[ 'N450' ]],
       size: 1,
       type: 'N Class'
     })
@@ -91,7 +91,7 @@ describe('The V/Line Live Timetable', () => {
     timetable.consist = [ 'Train' ]
 
     expect(timetable.vehicle).to.deep.equal({
-      consist: ['Train'],
+      consist: [[ 'Train' ]],
       size: 1,
       type: 'Unknown'
     })

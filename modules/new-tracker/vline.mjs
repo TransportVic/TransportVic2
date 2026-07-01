@@ -43,8 +43,17 @@ async function writeUpdatedTrips(db, tripDB, updatedTrips) {
     }
   })).filter(op => !!op.replaceOne.filter)
 
+  const locationBulkOperations = updatedTrips.map(timetable => timetable.getLocationDatabaseKeyValues().map(({ key, value }) => ({
+    replaceOne: {
+      filter: key,
+      replacement: value,
+      upsert: true
+    }
+  }))).reduce((acc, e) => acc.concat(e), [])
+
   if (tripBulkOperations.length) await db.getCollection('live timetables').bulkWrite(tripBulkOperations)
   if (consistBulkOperations.length && await isPrimary()) await tripDB.getCollection(VLineTripUpdater.getTrackerDB()).bulkWrite(consistBulkOperations)
+  if (locationBulkOperations.length && await isPrimary()) await tripDB.getCollection(VLineTripUpdater.getLocationDB()).bulkWrite(locationBulkOperations, { ordered: false })
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {

@@ -162,7 +162,7 @@ describe('The GPS tracker', () => {
     await updateTrips(() => [positionData], () => ['Metro Trains Melbourne'], database, database)
 
     const td8507 = await timetables.findDocument({ runID: '8507' })
-    expect(td8507.vehicle.consist).to.deep.equal(['S7001'])
+    expect(td8507.vehicle.consist).to.deep.equal([[ 'S7001' ]])
   })
 
   after(TripUpdater.clearCaches)
