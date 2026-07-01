@@ -364,6 +364,13 @@ RestartSec=5s
 [Install]
 WantedBy=multi-user.target''' | sudo tee /etc/systemd/system/cloudflared.service
 
+sudo mkdir /etc/systemd/journald.conf.d/
+printf '''[Journal]
+Storage=persistent
+SystemMaxUse=500M
+SystemMaxFiles=5
+''' $(hostname) | sudo tee /etc/systemd/journald.conf.d/persistent.conf
+
 FSTAB_NVME=$(grep nvme /etc/fstab)
 if [[ -z "$FSTAB_NVME" ]]; then
   echo """/dev/nvme0n1          /TransportVic   xfs     defaults          0       1
