@@ -25,6 +25,10 @@ export default class TripUpdater {
     throw new Error('TripUpdater mode not defined')
   }
 
+  static getLocationDB() {
+    throw new Error('TripUpdater mode not defined')
+  }
+
   static async getTrip(db, runID, date, routeGTFSID) {
     const liveTimetables = db.getCollection('live timetables')
     return await liveTimetables.findDocument({
@@ -166,9 +170,9 @@ export default class TripUpdater {
   }
 
   static async updateTrackerData(db, timetable) {
-    let key = timetable.getTrackerDatabaseKey()
-    let tripsDB = db.getCollection(this.getTrackerDB())
-    if (key) await tripsDB.replaceDocument(key, timetable.toTrackerDatabase(), {
+    const consistKey = timetable.getTrackerDatabaseKey()
+    const tripsDB = db.getCollection(this.getTrackerDB())
+    if (consistKey) await tripsDB.replaceDocument(consistKey, timetable.toTrackerDatabase(), {
       upsert: true
     })
   }

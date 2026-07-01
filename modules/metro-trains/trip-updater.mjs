@@ -5,6 +5,7 @@ export default class MetroTripUpdater extends TripUpdater {
   
   static getMode() { return GTFS_CONSTANTS.TRANSIT_MODES.metroTrain }
   static getTrackerDB() { return 'metro trips' }
+  static getLocationDB() { return 'metro locations' }
 
   static adjustTripInput(timetable, trip) {
     if (timetable.direction === 'Up' && trip.stops && trip.stops.length) {
