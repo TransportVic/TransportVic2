@@ -7,6 +7,7 @@ import fs from 'fs/promises'
 import { fileURLToPath } from 'url'
 import discordIntegration from '../discord-integration.mjs'
 import { hostname } from 'os'
+import _ from '../../init-loggers.mjs'
 
 const { TRANSIT_MODES } = GTFS_CONSTANTS
 
@@ -22,6 +23,8 @@ async function loadOperationalTT(db, operationDay) {
       $ne: '2-RRB'
     }
   }).sort({ departureTime: 1 }).toArray()
+
+  global.loggers.opTT.log('[METRO] Fetched', rawActiveTrips.length, 'trips to process for', opDayFormat)
 
   let activeTrips = rawActiveTrips.map(trip => convertToLive(trip, operationDay))
 
@@ -66,18 +69,16 @@ async function loadOperationalTT(db, operationDay) {
   }))
 
   await liveTimetables.bulkWrite(bulkUpdate)
+
+  global.loggers.opTT.log('[METRO] Processed', bulkUpdate.length, 'trips in total for', opDayFormat)
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  await discordIntegration('taskLogging', `Metro Op TT: ${hostname()} loading`)
-
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 
   await loadOperationalTT(mongoDB, utils.now())
   await loadOperationalTT(mongoDB, utils.now().add(1, 'day'))
-
-  await discordIntegration('taskLogging', `Metro Op TT: ${hostname()} completed loading`)
 
   await mongoDB.close()
 }

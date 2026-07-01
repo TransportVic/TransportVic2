@@ -7,6 +7,7 @@ import fs from 'fs/promises'
 import { fileURLToPath } from 'url'
 import discordIntegration from '../discord-integration.mjs'
 import { hostname } from 'os'
+import _ from '../../init-loggers.mjs'
 
 const { TRANSIT_MODES } = GTFS_CONSTANTS
 
@@ -21,7 +22,7 @@ async function loadOperationalTT(db, operationDay) {
     operationDays: opDayFormat
   }).toArray()
 
-  console.log('Fetched', rawActiveTrips.length, 'trips to process')
+  global.loggers.opTT.log('[OVERLAND] Fetched', rawActiveTrips.length, 'trips to process for', opDayFormat)
 
   let bulkUpdate = rawActiveTrips.map(trip => convertToLive(trip, operationDay)).map(trip => {
     const sss = trip.stopTimings.find(stop => stop.stopName === 'Southern Cross Railway Station')
@@ -43,6 +44,8 @@ async function loadOperationalTT(db, operationDay) {
   if (bulkUpdate.length) {
     await liveTimetables.bulkWrite(bulkUpdate)
   }
+
+  global.loggers.opTT.log('[OVERLAND] Processed', bulkUpdate.length, 'trips in total for', opDayFormat)
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {

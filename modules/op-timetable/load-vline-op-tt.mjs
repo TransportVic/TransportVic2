@@ -12,6 +12,7 @@ import { getDSTMinutesPastMidnight, getNonDSTMinutesPastMidnight, isDSTChange } 
 import fs from 'fs/promises'
 import { getLogPath } from '../../init-loggers.mjs'
 import discordIntegration from '../discord-integration.mjs'
+import _ from '../../init-loggers.mjs'
 
 class PartialStubVLineAPI extends StubVLineAPI {
 
@@ -410,6 +411,7 @@ export default async function loadOperationalTT(db, tripDB, ptvAPI) {
   const gtfsTimetables = db.getCollection('gtfs timetables')
 
   const outputTrips = []
+  const tripData = []
 
   const departures = await ptvAPI.vline.getDepartures('', GetPlatformServicesAPI.BOTH, 1440)
   const arrivals = await ptvAPI.vline.getArrivals('', GetPlatformServicesAPI.BOTH, 1440)
@@ -458,6 +460,7 @@ export default async function loadOperationalTT(db, tripDB, ptvAPI) {
       liveTrip.vehicle = vlineTrip.consist
       newTrips.push({ liveTrip, vlineTrip })
 
+      tripData.push(liveTrip)
       outputTrips.push({
         replaceOne: {
           filter: { mode: GTFS_CONSTANTS.TRANSIT_MODES.regionalTrain, operationDays: opDayFormat, runID: liveTrip.runID },
@@ -479,6 +482,7 @@ export default async function loadOperationalTT(db, tripDB, ptvAPI) {
     }
 
     if (vlineTrip.consist) pattern.forcedVehicle = vlineTrip.consist
+    tripData.push(pattern)
     outputTrips.push({
       replaceOne: {
         filter: pattern.getDBKey(),
@@ -496,6 +500,7 @@ export default async function loadOperationalTT(db, tripDB, ptvAPI) {
       let matchingTrip = await findMatchingTrip(operationDay, opDayFormat, scheduledTDN, vlineTrip, db)
       if (matchingTrip) {
         if (vlineTrip.consist) matchingTrip.forcedVehicle = vlineTrip.consist
+        tripData.push(matchingTrip)
         outputTrips.push({
           replaceOne: {
             filter: matchingTrip.getDBKey(),
@@ -513,7 +518,10 @@ export default async function loadOperationalTT(db, tripDB, ptvAPI) {
   if (outputTrips.length) await liveTimetables.bulkWrite(outputTrips)
   await Promise.all(newTrips.map(({ liveTrip, vlineTrip }) => updateExistingTrip(db, tripDB, liveTrip, vlineTrip)))
 
-  return missingTrips
+  return {
+    trips: tripData,
+    missingTrips
+  }
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
@@ -537,9 +545,7 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
     const tripData = `Missing V/Line trips (${missingTrips.length}):\n` + missingTrips.map(
       ({ vlineTrip }) => `TD${vlineTrip.tdn}: ${vlineTrip.departureTime.toFormat('HH:mm')} ${vlineTrip.origin} - ${vlineTrip.destination}`
     ).join('\n')
-    console.log(tripData)
-
-    await discordIntegration('vlineOpTT', tripData)
+    global.loggers.opTT.log('[VLINE] ' + tripData)
   }
 
   await database.close()

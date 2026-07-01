@@ -7,6 +7,7 @@ import fs from 'fs/promises'
 import { fileURLToPath } from 'url'
 import discordIntegration from '../discord-integration.mjs'
 import { hostname } from 'os'
+import _ from '../../init-loggers.mjs'
 
 const { TRANSIT_MODES } = GTFS_CONSTANTS
 
@@ -15,6 +16,7 @@ async function loadOperationalTT(db, operationDay) {
   let liveTimetables = db.getCollection('live timetables')
 
   const opDayFormat = utils.getYYYYMMDD(operationDay)
+  global.loggers.opTT.log('[REGIONAL-BUS] Fetching trips for', opDayFormat)
 
   let totalSeen = 0
   await gtfsTimetables.batchQuery({
@@ -27,7 +29,7 @@ async function loadOperationalTT(db, operationDay) {
     }]
   }, 1000, async trips => {
     totalSeen += trips.length
-    console.log('Fetched', trips.length, 'trips to process')
+    global.loggers.opTT.log('[REGIONAL-BUS] Fetched', trips.length, 'trips to process')
 
     trips.forEach(trip => trip.runID = trip.tripID)
 
@@ -42,7 +44,7 @@ async function loadOperationalTT(db, operationDay) {
     await liveTimetables.bulkWrite(bulkUpdate)
   })
 
-  console.log('Processed', totalSeen, 'trips in total')
+  global.loggers.opTT.log('[REGIONAL-BUS] Processed', totalSeen, 'trips in total for', opDayFormat)
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {

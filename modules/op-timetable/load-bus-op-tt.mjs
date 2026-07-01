@@ -5,8 +5,8 @@ import convertToLive from '../departures/sch-to-live.mjs'
 import { GTFS_CONSTANTS } from '@transportme/transportvic-utils'
 import fs from 'fs/promises'
 import { fileURLToPath } from 'url'
-import discordIntegration from '../discord-integration.mjs'
 import { hostname } from 'os'
+import _ from '../../init-loggers.mjs'
 
 const { TRANSIT_MODES } = GTFS_CONSTANTS
 
@@ -15,6 +15,7 @@ async function loadOperationalTT(db, operationDay) {
   let liveTimetables = db.getCollection('live timetables')
 
   const opDayFormat = utils.getYYYYMMDD(operationDay)
+  global.loggers.opTT.log('[BUS] Fetching trips for', opDayFormat)
 
   let totalSeen = 0
   await gtfsTimetables.batchQuery({
@@ -23,7 +24,7 @@ async function loadOperationalTT(db, operationDay) {
     operationDays: opDayFormat
   }, 1000, async trips => {
     totalSeen += trips.length
-    console.log('Fetched', trips.length, 'trips to process')
+    global.loggers.opTT.log('[BUS] Fetched', trips.length, 'trips to process')
 
     const bulkUpdate = trips.filter(trip => !trip.gtfsReferenceOnly).map(trip => convertToLive(trip, operationDay)).map(trip => ({
       replaceOne: {
@@ -36,19 +37,15 @@ async function loadOperationalTT(db, operationDay) {
     await liveTimetables.bulkWrite(bulkUpdate)
   })
 
-  console.log('Processed', totalSeen, 'trips in total')
+  global.loggers.opTT.log('[BUS] Processed', totalSeen, 'trips in total for', opDayFormat)
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  await discordIntegration('taskLogging', `Bus Op TT: ${hostname()} loading`)
-
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 
   await loadOperationalTT(mongoDB, utils.now())
   await loadOperationalTT(mongoDB, utils.now().add(1, 'day'))
-
-  await discordIntegration('taskLogging', `Bus Op TT: ${hostname()} completed loading`)
 
   await mongoDB.close()
 }

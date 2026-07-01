@@ -7,6 +7,7 @@ import fs from 'fs/promises'
 import { fileURLToPath } from 'url'
 import discordIntegration from '../discord-integration.mjs'
 import { hostname } from 'os'
+import _ from '../../init-loggers.mjs'
 
 const { TRANSIT_MODES } = GTFS_CONSTANTS
 
@@ -20,7 +21,7 @@ async function loadOperationalTT(db, operationDay) {
     operationDays: opDayFormat
   }).sort({ departureTime: 1, destinationArrivalTime: 1 }).toArray()
 
-  console.log('Fetched', rawActiveTrips.length, 'trips to process')
+  global.loggers.opTT.log('[COACH] Fetched', rawActiveTrips.length, 'trips to process for', opDayFormat)
 
   rawActiveTrips.filter(trip => !trip.isRailReplacementBus).forEach(trip => trip.runID = trip.runID ? `V${trip.runID}` : trip.tripID)
 
@@ -36,18 +37,16 @@ async function loadOperationalTT(db, operationDay) {
   }))
 
   await liveTimetables.bulkWrite(bulkUpdate)
+
+  global.loggers.opTT.log('[COACH] Processed', bulkUpdate.length, 'trips in total for', opDayFormat)
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  await discordIntegration('taskLogging', `Coach Op TT: ${hostname()} loading`)
-
   let mongoDB = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await mongoDB.connect()
 
   await loadOperationalTT(mongoDB, utils.now())
   await loadOperationalTT(mongoDB, utils.now().add(1, 'day'))
-
-  await discordIntegration('taskLogging', `Coach Op TT: ${hostname()} completed loading`)
 
   await mongoDB.close()
 }
