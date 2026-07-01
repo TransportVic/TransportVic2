@@ -36,7 +36,7 @@ export async function getOutdatedTrips(database, existingTrips = {}) {
       $lte: +utils.now().add(-2, 'minutes')
     },
     isRailReplacementBus: false
-  }, { runID: 1, routeName: 1, circular: 1, runID: 1 }).toArray()).filter(trip => {
+  }, { operationDays: 1, runID: 1, routeName: 1, circular: 1, runID: 1 }).toArray()).filter(trip => {
     let { runID, routeName, circular } = trip
     if (runID[0] === '8') {
       if (runID[1] !== '5') return false
