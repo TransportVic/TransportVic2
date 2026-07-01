@@ -7,6 +7,7 @@ import { updateTDNFromPTV } from './metro-ptv-trips.mjs'
 import utils from '../../../utils.mjs'
 import _ from '../../../init-loggers.mjs'
 import fs from 'fs/promises'
+import TripUpdater from '../trip-updater.mjs'
 
 export async function getOutdatedTrips(database, existingTrips = {}) {
   let liveTimetables = await database.getCollection('live timetables')
@@ -41,7 +42,8 @@ export async function getOutdatedTrips(database, existingTrips = {}) {
       if (runID[1] !== '5') return false
       return routeName !== 'Stony Point' && !circular
     }
-    return true
+
+    return !existingTrips[TripUpdater.getTripCacheValue(trip)]
   }).map(trip => trip.runID)
 }
 

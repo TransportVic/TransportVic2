@@ -5,13 +5,14 @@ import cbeC406 from './sample-data/cbe-C406.json' with { type: 'json' }
 import utils from '../../../utils.mjs'
 import { getOutdatedTrips } from '../../../modules/new-tracker/metro/metro-outdated-trips.mjs'
 import steamTD8543 from './sample-data/steam-td8543.mjs'
+import TripUpdater from '../../../modules/new-tracker/trip-updater.mjs'
+import { LiveTimetable } from '../../../modules/schema/live-timetable.mjs'
 
 let clone = o => JSON.parse(JSON.stringify(o))
 
 describe('The Outdated trips tracker', () => {
-  let originalNow
-  before(() => {
-    originalNow = utils.now
+  let originalNow = utils.now
+  beforeEach(() => {
     utils.now = () => utils.parseTime(1749509580000) // 2025-06-09T22:53:00.000Z
   })
 
@@ -80,7 +81,27 @@ describe('The Outdated trips tracker', () => {
     expect(outdatedTDNs).to.have.members(['8543'])
   })
 
-  after(() => {
+  it('Does not pick trips already in existingTrips', async () => {
+    let database = new LokiDatabaseConnection('test-db')
+    let liveTimetables = await database.getCollection('live timetables')
+
+    let existingTrips = {}
+
+    let trip = clone(lil3826)
+    trip.lastUpdated = utils.now() - 1000 * 60 * 7 // Last updated 7 min ago
+    await liveTimetables.createDocument(trip)
+
+    let trip2 = clone(lil3826)
+    trip2.runID = '3828'
+    trip2.lastUpdated = utils.now() - 1000 * 60 * 7 // Last updated 7 min ago
+    await liveTimetables.createDocument(trip2)
+
+    existingTrips[TripUpdater.getTripCacheValue(trip2)] = LiveTimetable.fromDatabase(trip2)
+    let outdatedTDNs = await getOutdatedTrips(database, existingTrips)
+    expect(outdatedTDNs).to.have.members(['3826'])
+  })
+
+  afterEach(() => {
     utils.now = originalNow
   })
 })
