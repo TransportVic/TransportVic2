@@ -543,8 +543,17 @@ export class LiveTimetable {
     }
   }
 
-  getLocationDatabaseKey() {
-    // TODO
+  getLocationDatabaseKeyValues() {
+    if (!this._vehicle || !this.location) return []
+    return this._vehicle.consist.map(veh => ({
+      key: {
+        consist: veh[0]
+      },
+      value: {
+        consist: veh,
+        ...this.location
+      }
+    }))
   }
 
   _getUpdatedOriginDest() {

@@ -1864,7 +1864,7 @@ describe('The trip updater module', () => {
       routeGTFSID: '2-RCE',
       stops: [],
       cancelled: false,
-      consist: [[ '9001', '9101', '9201', '9301', '9701', '9801', '9901' ]],
+      consist: [[ '831M', '2566T', '832M' ], [ '707M', '2504T', '708M' ]],
       location: {
         latitude: -37.811851501464844,
         longitude: 145.25039672851562,
@@ -1873,13 +1873,30 @@ describe('The trip updater module', () => {
       }
     }
 
-    await MetroTripUpdater.updateTrip(database, database, tripUpdate)
-    const positionEntry = await metroLocations.findDocument({ consist: '9001' })
+    const timetable = await MetroTripUpdater.updateTrip(database, database, tripUpdate)
+    expect(timetable.getLocationDatabaseKeyValues().length).to.equal(2)
+    expect(timetable.getLocationDatabaseKeyValues().map(k => k.key)).to.have.deep.members([{
+      consist: '831M'
+    }, {
+      consist: '707M'
+    }])
 
-    expect(positionEntry.consist).to.deep.equal(['9001', '9101', '9201', '9301', '9701', '9801', '9901'])
-    expect(positionEntry.timestamp).to.equal(1775618546000)
-    expect(positionEntry.bearing).to.equal(248.7226104736328)
-    expect(positionEntry.location).to.deep.equal({
+    const positionEntry831 = await metroLocations.findDocument({ consist: '831M' })
+
+    expect(positionEntry831.consist).to.deep.equal([ '831M', '2566T', '832M' ])
+    expect(positionEntry831.timestamp).to.equal(1775618546000)
+    expect(positionEntry831.bearing).to.equal(248.7226104736328)
+    expect(positionEntry831.location).to.deep.equal({
+      type: 'Point',
+      coordinates: [ 145.25039672851562, -37.811851501464844 ]
+    })
+
+    const positionEntry707 = await metroLocations.findDocument({ consist: '707M' })
+
+    expect(positionEntry707.consist).to.deep.equal([ '707M', '2504T', '708M' ])
+    expect(positionEntry707.timestamp).to.equal(1775618546000)
+    expect(positionEntry707.bearing).to.equal(248.7226104736328)
+    expect(positionEntry707.location).to.deep.equal({
       type: 'Point',
       coordinates: [ 145.25039672851562, -37.811851501464844 ]
     })

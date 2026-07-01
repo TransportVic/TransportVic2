@@ -172,9 +172,16 @@ export default class TripUpdater {
   static async updateTrackerData(db, timetable) {
     const consistKey = timetable.getTrackerDatabaseKey()
     const tripsDB = db.getCollection(this.getTrackerDB())
+    const locationDB = db.getCollection(this.getLocationDB())
     if (consistKey) await tripsDB.replaceDocument(consistKey, timetable.toTrackerDatabase(), {
       upsert: true
     })
+
+    for (const { key, value } of timetable.getLocationDatabaseKeyValues()) {
+      await locationDB.replaceDocument(key, value, {
+        upsert: true
+      })
+    }
   }
 
   static setUpTimetable(timetable, trip, deconflictConsist) {
