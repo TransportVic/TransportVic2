@@ -26,13 +26,18 @@ Object.keys(stationCodes).forEach(stationCode => {
 router.post('/', async (req, res) => {
   let liveTimetables = res.db.getCollection('live timetables')
   let metroLocations = res.tripDB.getCollection('metro locations')
+  let vlineLocations = res.tripDB.getCollection('vline locations')
   let metroTrips = res.tripDB.getCollection('metro trips')
 
-  const positions = await metroLocations.findDocuments({
+  const positions = (await metroLocations.findDocuments({
     timestamp: {
       $gte: +utils.now().add(-3, 'minutes')
     }
-  }).toArray()
+  }).toArray()).concat(await vlineLocations.findDocuments({
+    timestamp: {
+      $gte: +utils.now().add(-3, 'minutes')
+    }
+  }).toArray())
 
   const vehicles = Object.values(positions.reduce((acc, vehicle) => ({
     ...acc,

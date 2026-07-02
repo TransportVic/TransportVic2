@@ -2,16 +2,16 @@ div.alamein, div.belgrave, div.lilydale, div.glen-waverley {
   background-color: #152C6B;
 }
 
-div.cranbourne, div.pakenham {
+div.cranbourne, div.pakenham, div.sunbury {
   background-color: #279FD5;
   color: #000000;
 }
 
-div.frankston, div.stony-point, div.werribee, div.williamstown {
+div.frankston, div.stony-point {
   background-color: #028430;
 }
 
-div.craigieburn, div.sunbury, div.upfield {
+div.craigieburn, div.upfield {
   background-color: #FFBE00;
   color: #000000;
 }
@@ -20,7 +20,7 @@ div.hurstbridge, div.mernda {
   background-color: #BC2431;
 }
 
-div.sandringham {
+div.werribee, div.williamstown, div.sandringham {
   background-color: #F178AF;
   color: #000000;
 }
@@ -33,7 +33,7 @@ div.no-line {
   background-color: #95979A;
 }
 
-div.vline {
+div.vline, div.albury, div.ararat, div.bairnsdale, div.ballarat, div.bendigo, div.echuca, div.geelong, div.maryborough, div.seymour, div.shepparton, div.swan-hill, div.traralgon, div.warrnambool {
   background-color: #753F98;
 }
 
@@ -47,17 +47,17 @@ p.alamein, p.belgrave, p.lilydale, p.glen-waverley {
   color: #ffffff;
 }
 
-p.cranbourne, p.pakenham {
+p.cranbourne, p.pakenham, p.sunbury {
   background-color: #279FD5;
   color: #000000;
 }
 
-p.frankston, p.stony-point, p.werribee, p.williamstown {
+p.frankston, p.stony-point {
   background-color: #028430;
   color: #ffffff;
 }
 
-p.craigieburn, p.sunbury, p.upfield {
+p.craigieburn, p.upfield {
   background-color: #FFBE00;
   color: #000000;
 }
@@ -67,7 +67,7 @@ p.hurstbridge, p.mernda {
   color: #ffffff;
 }
 
-p.sandringham {
+p.werribee, p.williamstown, p.sandringham {
   background-color: #F178AF;
   color: #000000;
 }
@@ -82,7 +82,7 @@ p.no-line {
   color: #ffffff;
 }
 
-p.vline {
+p.vline, p.albury, p.ararat, p.bairnsdale, p.ballarat, p.bendigo, p.echuca, p.geelong, p.maryborough, p.seymour, p.shepparton, p.swan-hill, p.traralgon, p.warrnambool {
   background-color: #753F98;
   color: #ffffff;
 }
