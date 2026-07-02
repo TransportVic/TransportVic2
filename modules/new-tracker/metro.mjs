@@ -18,6 +18,7 @@ import fs from 'fs/promises'
 import MetroTripUpdater from '../metro-trains/trip-updater.mjs'
 import { isPrimary } from '../replication.mjs'
 import { fetchGTFSRTrips } from './metro/metro-gtfsr-trips.mjs'
+import utils from '../../utils.mjs'
 
 export async function writeUpdatedTrips(db, tripDB, updatedTrips) {
   const tripBulkOperations = updatedTrips.map(timetable => (timetable.stops.length ? {
@@ -61,6 +62,7 @@ export async function writeUpdatedTrips(db, tripDB, updatedTrips) {
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  const startTime = utils.now()
   let database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
   await database.connect()
 
@@ -73,9 +75,14 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let existingTrips = {}
   //try { await fetchGTFSRTrips(database, tripDatabase, existingTrips) } catch(e) { console.error(e) }
   try { await fetchGTFSRFleet(database, tripDatabase, existingTrips) } catch(e) { console.error(e) }
+  try { await writeUpdatedTrips(database, tripDatabase, Object.values(existingTrips)) } catch(e) { console.error(e) }
+
+  existingTrips = {}
   try { await fetchNotifyAlerts(database, ptvAPI) } catch(e) { console.error(e) }
   try { await fetchMetroSiteDepartures(database, tripDatabase, ptvAPI, existingTrips) } catch(e) { console.error(e) }
+  try { await writeUpdatedTrips(database, tripDatabase, Object.values(existingTrips)) } catch(e) { console.error(e) }
 
+  existingTrips = {}
   try {
     let updatedTrips = await fetchPTVDepartures(database, tripDatabase, ptvAPI, { existingTrips, stationCount: 3 })
     global.loggers.trackers.metro.log('> PTV Departures: Updating TDNs: ' + updatedTrips.map(trip => trip.runID).join(', '))
@@ -84,6 +91,8 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   try {
     await fetchPTVTrips(database, tripDatabase, ptvAPI, { existingTrips, stationCount: 3 })
   } catch(e) { console.error(e) }
+  try { await writeUpdatedTrips(database, tripDatabase, Object.values(existingTrips)) } catch(e) { console.error(e) }
+  existingTrips = {}
 
   try { await fetchNotifyTrips(database, tripDatabase, ptvAPI, existingTrips) } catch(e) { console.error(e) }
   try { await fetchCBDTrips(database, tripDatabase, ptvAPI, existingTrips) } catch(e) { console.error(e) }
@@ -93,6 +102,17 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   try { await writeUpdatedTrips(database, tripDatabase, Object.values(existingTrips)) } catch(e) { console.error(e) }
 
   try { await updateRelatedTrips(database, tripDatabase, Object.values(existingTrips), ptvAPI) } catch(e) { console.error(e) }
+
+  const targetTime = startTime.clone().add(30, 'seconds')
+  const timeDiff = targetTime - utils.now()
+  if (timeDiff > 0) {
+    global.loggers.trackers.metro.log('Waiting', timeDiff, 'ms for second position update')
+    await utils.sleep(timeDiff)
+
+    let existingTrips = {}
+    try { await fetchGTFSRFleet(database, tripDatabase, existingTrips) } catch(e) { console.error(e) }
+    try { await writeUpdatedTrips(database, tripDatabase, Object.values(existingTrips)) } catch(e) { console.error(e) }
+  }
 
   process.exit(0)
 }
