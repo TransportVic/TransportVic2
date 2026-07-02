@@ -1940,12 +1940,9 @@ describe('The trip updater module', () => {
     const positionEntry831 = await metroLocations.findDocument({ consist: '831M' })
 
     expect(positionEntry831.tripData).to.deep.equal({
+      date: '20240224',
       runID: 'R205',
-      destination: 'Showgrounds',
-      line: 'Flemington Racecourse',
-      nextStop: {
-        name: 'Showgrounds', platform: '1'
-      }
+      line: 'Flemington Racecourse'
     })
   })
 })

@@ -858,6 +858,20 @@ export class MetroLiveTimetable extends LiveTimetable {
     this._vehicle = newVal
   }
 
+  getLocationDatabaseKeyValues() {
+    return super.getLocationDatabaseKeyValues().map(({ key, value, trip }) => ({
+      key,
+      value: {
+        ...value,
+        tripData: {
+          date: trip.operationDay,
+          runID: trip.runID,
+          line: trip.routeName
+        }
+      },
+      trip
+    }))
+  }
 }
 
 export class VLineLiveTimetable extends LiveTimetable {

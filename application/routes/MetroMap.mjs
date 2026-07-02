@@ -29,20 +29,24 @@ router.post('/', async (req, res) => {
 
   const positions = await metroLocations.findDocuments({
     timestamp: {
-      $gte: +utils.now().add(-3 * 1400, 'minutes')
+      $gte: +utils.now().add(-3, 'minutes')
     }
   }).toArray()
 
-  const vehicles = positions.map(vehicle => ({
+  const vehicles = Object.values(positions.reduce((acc, vehicle) => ({
+    ...acc,
+    [vehicle.tripData.runID]: (acc[vehicle.tripData.runID] ? {
+      ...vehicle,
+      consist: [...acc[vehicle.tripData.runID].consist, ...vehicle.consist]
+    } : vehicle)
+  }), {})).map(vehicle => ({
     destinationCode: '???',
     destination: '???',
-    runID: '----',
+    runID: vehicle.tripData.runID,
     vehicle: vehicle.consist.join('-'),
-    // vehicle: `${vehicle.consist.length} Car ${vehicleType.type}`,
     // nextStop,
     location: vehicle.location,
-    line: 'pakenham',
-    // line: utils.encodeName(trip.routeName),
+    line: utils.encodeName(vehicle.tripData.line),
     bearing: vehicle.bearing
   }))
 
