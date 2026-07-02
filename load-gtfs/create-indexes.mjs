@@ -330,6 +330,10 @@ async function createLocationsIndex(locations) {
   }, { name: 'consist index', unique: 1 })
 
   await locations.createIndex({
+    timestamp: -1
+  }, { name: 'timestamp index' })
+
+  await locations.createIndex({
     consist: 1,
     timestamp: 1
   }, { name: 'locations index', unique: 1 })

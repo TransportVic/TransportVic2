@@ -27,8 +27,7 @@ let baseIconHTML = `
 function generateName(train) {
   return `Run ${train.runID}
   <br>Dest: ${train.destination}
-  <br>Next: ${train.nextStop.stopName.slice(0, -16)} Plat. ${train.nextStop.platform}
-  <br>Type: ${train.vehicle}` + (train.poorLocation ? '<br>Train has poor location data' : '')
+  <br>Consist: ${train.vehicle}`
 }
 
 function createIcon(train) {
@@ -57,6 +56,7 @@ function updateBody() {
   $.ajax({
     method: 'POST'
   }, (err, status, data) => {
+    data.forEach(v => v.runID = v.vehicle)
     let seen = data.map(train => train.runID)
     Object.keys(markers).forEach(runID => {
       if (!seen.includes(runID)) {

@@ -27,101 +27,122 @@ router.post('/', async (req, res) => {
   let metroLocations = res.tripDB.getCollection('metro locations')
   let metroTrips = res.tripDB.getCollection('metro trips')
 
-  let msNow = +new Date()
-  let days = {
-    $in: [ utils.getYYYYMMDDNow() ]
-  }
-
-  let minutes = utils.getMinutesPastMidnightNow()
-
-  if (minutes > 23 * 60) days.$in.push(utils.getYYYYMMDD(utils.now().add(1, 'day')))
-  if (minutes < 120) days.$in.push(utils.getYYYYMMDD(utils.now().add(-1, 'day')))
-
-  let activeTrips = await liveTimetables.findDocuments({
-    mode: 'metro train',
-    $and: [{
-      operationDays: days
-    }, {
-      'stopTimings.actualDepartureTimeMS': {
-        $gte: msNow - 1000 * 60 * 3,
-        $lte: msNow + 1000 * 60 * 4
-      }
-    }],
-    cancelled: {
-      $ne: true
+  const positions = await metroLocations.findDocuments({
+    timestamp: {
+      $gte: +utils.now().add(-3 * 1400, 'minutes')
     }
   }).toArray()
 
-  let vehicles = []
+  const vehicles = positions.map(vehicle => ({
+    destinationCode: '???',
+    destination: '???',
+    runID: '----',
+    vehicle: vehicle.consist.join('-'),
+    // vehicle: `${vehicle.consist.length} Car ${vehicleType.type}`,
+    // nextStop,
+    location: vehicle.location,
+    line: 'pakenham',
+    // line: utils.encodeName(trip.routeName),
+    bearing: vehicle.bearing
+  }))
 
-  await async.forEach(activeTrips, async trip => {
-    let nextStop = trip.stopTimings.find(stop => stop.actualDepartureTimeMS > msNow + 1000 * 60)
+  return res.json(vehicles)
 
-    let lastStop = trip.stopTimings.slice(-1)[0]
-    let firstStop = trip.stopTimings[0]
+  // let msNow = +new Date()
+  // let days = {
+  //   $in: [ utils.getYYYYMMDDNow() ]
+  // }
 
-    if (!nextStop) nextStop = lastStop
+  // let minutes = utils.getMinutesPastMidnightNow()
 
-    let tripData = await metroTrips.findDocument({
-      date: trip.operationDays,
-      runID: trip.runID
-    })
+  // if (minutes > 23 * 60) days.$in.push(utils.getYYYYMMDD(utils.now().add(1, 'day')))
+  // if (minutes < 120) days.$in.push(utils.getYYYYMMDD(utils.now().add(-1, 'day')))
 
-    let trainLocation = tripData ? await metroLocations.findDocument({
-      consist: tripData.consist[0]
-    }) : null
+  // let activeTrips = await liveTimetables.findDocuments({
+  //   mode: 'metro train',
+  //   $and: [{
+  //     operationDays: days
+  //   }, {
+  //     'stopTimings.actualDepartureTimeMS': {
+  //       $gte: msNow - 1000 * 60 * 3,
+  //       $lte: msNow + 1000 * 60 * 4
+  //     }
+  //   }],
+  //   cancelled: {
+  //     $ne: true
+  //   }
+  // }).toArray()
 
-    if (tripData && trainLocation && (msNow - trainLocation.timestamp) < 1000 * 60 * 2) {
-      let vehicleType = metroTypes[tripData.consist[0]]
+  // let vehicles = []
 
-      vehicles.push({
-        destinationCode: stationCodeLookup[trip.trueDestination.slice(0, -16)],
-        destination: trip.trueDestination.slice(0, -16),
-        runID: trip.runID,
-        vehicle: `${tripData.consist.length} Car ${vehicleType.type}`,
-        nextStop,
-        location: trainLocation.location,
-        line: utils.encodeName(trip.routeName),
-        bearing: trainLocation.bearing
-      })
-    } else {
-      if (nextStop !== lastStop && nextStop !== firstStop) nextStop = trip.stopTimings[trip.stopTimings.indexOf(nextStop) - 1]
+  // await async.forEach(activeTrips, async trip => {
+  //   let nextStop = trip.stopTimings.find(stop => stop.actualDepartureTimeMS > msNow + 1000 * 60)
 
-      if (nextStop === firstStop && nextStop.actualDepartureTimeMS - msNow > 1000 * 30) return
-      if (nextStop === lastStop && nextStop.actualDepartureTimeMS - msNow < -1000 * 30) return
+  //   let lastStop = trip.stopTimings.slice(-1)[0]
+  //   let firstStop = trip.stopTimings[0]
 
-      let platformCentre = platformCentrepoints[nextStop.stopName.slice(0, -16) + nextStop.platform]
+  //   if (!nextStop) nextStop = lastStop
 
-      let bearing = 0
+  //   let tripData = await metroTrips.findDocument({
+  //     date: trip.operationDays,
+  //     runID: trip.runID
+  //   })
 
-      let followingStop = trip.stopTimings[trip.stopTimings.indexOf(nextStop) + 1]
-      if (followingStop) {
-        let followingPlatformCentre = platformCentrepoints[followingStop.stopName.slice(0, -16) + followingStop.platform]
-        if (followingPlatformCentre && platformCentre)
-          bearing = turf.rhumbBearing(platformCentre, followingPlatformCentre)
-      } else {
-        let previousStop = trip.stopTimings[trip.stopTimings.indexOf(nextStop) - 1]
+  //   let trainLocation = tripData ? await metroLocations.findDocument({
+  //     consist: tripData.consist[0]
+  //   }) : null
 
-        let previousPlatformCentre = platformCentrepoints[previousStop.stopName.slice(0, -16) + previousStop.platform]
-        if (previousPlatformCentre && platformCentre)
-          bearing = turf.rhumbBearing(previousPlatformCentre, platformCentre)
-      }
+  //   if (tripData && trainLocation && (msNow - trainLocation.timestamp) < 1000 * 60 * 2) {
+  //     let vehicleType = metroTypes[tripData.consist[0]]
 
-      vehicles.push({
-        destinationCode: stationCodeLookup[trip.trueDestination.slice(0, -16)],
-        destination: trip.trueDestination.slice(0, -16),
-        runID: trip.runID,
-        vehicle: trip.vehicle ? `${trip.vehicle.size} Car ${trip.vehicle.type}` : 'Unknown',
-        nextStop,
-        location: platformCentre,
-        line: utils.encodeName(trip.routeName),
-        bearing,
-        poorLocation: true
-      })
-    }
-  })
+  //     vehicles.push({
+  //       destinationCode: stationCodeLookup[trip.trueDestination.slice(0, -16)],
+  //       destination: trip.trueDestination.slice(0, -16),
+  //       runID: trip.runID,
+  //       vehicle: `${tripData.consist.length} Car ${vehicleType.type}`,
+  //       nextStop,
+  //       location: trainLocation.location,
+  //       line: utils.encodeName(trip.routeName),
+  //       bearing: trainLocation.bearing
+  //     })
+  //   } else {
+  //     if (nextStop !== lastStop && nextStop !== firstStop) nextStop = trip.stopTimings[trip.stopTimings.indexOf(nextStop) - 1]
 
-  res.json(vehicles)
+  //     if (nextStop === firstStop && nextStop.actualDepartureTimeMS - msNow > 1000 * 30) return
+  //     if (nextStop === lastStop && nextStop.actualDepartureTimeMS - msNow < -1000 * 30) return
+
+  //     let platformCentre = platformCentrepoints[nextStop.stopName.slice(0, -16) + nextStop.platform]
+
+  //     let bearing = 0
+
+  //     let followingStop = trip.stopTimings[trip.stopTimings.indexOf(nextStop) + 1]
+  //     if (followingStop) {
+  //       let followingPlatformCentre = platformCentrepoints[followingStop.stopName.slice(0, -16) + followingStop.platform]
+  //       if (followingPlatformCentre && platformCentre)
+  //         bearing = turf.rhumbBearing(platformCentre, followingPlatformCentre)
+  //     } else {
+  //       let previousStop = trip.stopTimings[trip.stopTimings.indexOf(nextStop) - 1]
+
+  //       let previousPlatformCentre = platformCentrepoints[previousStop.stopName.slice(0, -16) + previousStop.platform]
+  //       if (previousPlatformCentre && platformCentre)
+  //         bearing = turf.rhumbBearing(previousPlatformCentre, platformCentre)
+  //     }
+
+  //     vehicles.push({
+  //       destinationCode: stationCodeLookup[trip.trueDestination.slice(0, -16)],
+  //       destination: trip.trueDestination.slice(0, -16),
+  //       runID: trip.runID,
+  //       vehicle: trip.vehicle ? `${trip.vehicle.size} Car ${trip.vehicle.type}` : 'Unknown',
+  //       nextStop,
+  //       location: platformCentre,
+  //       line: utils.encodeName(trip.routeName),
+  //       bearing,
+  //       poorLocation: true
+  //     })
+  //   }
+  // })
+
+  // res.json(vehicles)
 })
 
 router.get('/', async (req, res) => {
