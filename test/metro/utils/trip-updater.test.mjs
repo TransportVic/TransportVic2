@@ -1901,4 +1901,51 @@ describe('The trip updater module', () => {
       coordinates: [ 145.25039672851562, -37.811851501464844 ]
     })
   })
+
+  it('Records the current run alongside the location data', async () => {
+    const database = new LokiDatabaseConnection('test-db')
+    const routes = await database.createCollection('routes')
+    const liveTimetables = await database.createCollection('live timetables')
+    const metroLocations = await database.createCollection('metro locations')
+
+    await routes.createDocument({
+      "mode" : "metro train",
+      "routeName" : "Flemington Racecourse",
+      "cleanName" : "flemington-racecourse",
+      "routeNumber" : null,
+      "routeGTFSID" : "2-RCE",
+      "operators" : [
+        "Metro"
+      ],
+      "cleanName" : "flemington-racecourse"
+    })
+
+    await liveTimetables.createDocument(clone(tdR205))
+    let tripUpdate = {
+      operationDays: '20240224',
+      runID: 'R205',
+      routeGTFSID: '2-RCE',
+      stops: [],
+      cancelled: false,
+      consist: [[ '831M', '2566T', '832M' ], [ '707M', '2504T', '708M' ]],
+      location: {
+        latitude: -37.811851501464844,
+        longitude: 145.25039672851562,
+        bearing: 248.7226104736328,
+        timestamp: 1775618546000,
+      }
+    }
+
+    await MetroTripUpdater.updateTrip(database, database, tripUpdate)
+    const positionEntry831 = await metroLocations.findDocument({ consist: '831M' })
+
+    expect(positionEntry831.tripData).to.deep.equal({
+      runID: 'R205',
+      destination: 'Showgrounds',
+      line: 'Flemington Racecourse',
+      nextStop: {
+        name: 'Showgrounds', platform: '1'
+      }
+    })
+  })
 })

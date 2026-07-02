@@ -555,7 +555,8 @@ export class LiveTimetable {
       value: {
         consist: veh instanceof Array ? veh : [ veh ],
         ...this.location
-      }
+      },
+      trip: this
     }))
   }
 
