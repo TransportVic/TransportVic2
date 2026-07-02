@@ -26,7 +26,7 @@ export async function getFleetData(gtfsrAPI) {
         latitude: trip.vehicle.position.latitude,
         longitude: trip.vehicle.position.longitude,
         bearing: trip.vehicle.position.bearing,
-        timestamp: trip.vehicle.timestamp,
+        timestamp: trip.vehicle.timestamp * 1000,
       }
     }
 

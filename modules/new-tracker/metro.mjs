@@ -92,8 +92,8 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
     await fetchPTVTrips(database, tripDatabase, ptvAPI, { existingTrips, stationCount: 3 })
   } catch(e) { console.error(e) }
   try { await writeUpdatedTrips(database, tripDatabase, Object.values(existingTrips)) } catch(e) { console.error(e) }
-  existingTrips = {}
 
+  existingTrips = {}
   try { await fetchNotifyTrips(database, tripDatabase, ptvAPI, existingTrips) } catch(e) { console.error(e) }
   try { await fetchCBDTrips(database, tripDatabase, ptvAPI, existingTrips) } catch(e) { console.error(e) }
   try { await fetchNotifySuspensions(database, tripDatabase, ptvAPI, existingTrips) } catch(e) { console.error(e) }
