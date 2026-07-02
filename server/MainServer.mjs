@@ -58,8 +58,8 @@ export default class MainServer {
       res.setHeader('Served-By', hostname)
 
       const allowedOrigins = `'self' ${config.staticBase || ''} ${config.pidStaticBase || ''} static.cloudflareinsights.com`
-      res.setHeader('Content-Security-Policy', `script-src ${allowedOrigins} blob:;
-        img-src ${allowedOrigins} api.mapbox.com data:;
+      res.setHeader('Content-Security-Policy', `script-src ${allowedOrigins};
+        img-src ${allowedOrigins} api.mapbox.com;
         frame-src 'self';
       `.replaceAll(/\n +/g, ' ').trim())
 

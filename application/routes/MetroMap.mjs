@@ -5,6 +5,7 @@ import turf from '@turf/turf'
 import stationCodes from '../../additional-data/station-codes.json' with { type: 'json' }
 import platformGeometry from '../../additional-data/station-platform-geometry.json' with { type: 'json' }
 import metroTypes from '../../additional-data/metro-tracker/metro-types.json' with { type: 'json' }
+import config from '../../config.json' with { type: 'json' }
 
 const router = new express.Router()
 
@@ -150,6 +151,12 @@ router.post('/', async (req, res) => {
 })
 
 router.get('/', async (req, res) => {
+  const allowedOrigins = `'self' ${config.staticBase || ''} ${config.pidStaticBase || ''} static.cloudflareinsights.com`
+  res.setHeader('Content-Security-Policy', `script-src ${allowedOrigins} blob:;
+    img-src ${allowedOrigins} api.mapbox.com data:;
+    frame-src 'self';
+  `.replaceAll(/\n +/g, ' ').trim())
+  
   res.render('metro-map')
 })
 
