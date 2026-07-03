@@ -78,9 +78,9 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
   let gtfsTripTrips = await fetchGTFSRTrips(database, tripDatabase, makePBRequest, existingTrips)
   global.loggers.trackers.vline.log('V/Line GTFSR Updater: Updated TDNs:', gtfsTripTrips.map(trip => trip.runID).join(', '))
 
-  global.loggers.trackers.metro.log('GTFSR Fleet Updater: Loading trips')
+  global.loggers.trackers.vline.log('GTFSR Fleet Updater: Loading trips')
   let gtfsFleetTrips = await fetchGTFSRFleet(database, tripDatabase, makePBRequest, existingTrips)
-  global.loggers.trackers.metro.log('GTFSR Fleet Updater: Fetched', gtfsFleetTrips.length, 'trips')
+  global.loggers.trackers.vline.log('GTFSR Fleet Updater: Fetched', gtfsFleetTrips.length, 'trips')
 
   await writeUpdatedTrips(database, tripDatabase, Object.values(existingTrips))
 

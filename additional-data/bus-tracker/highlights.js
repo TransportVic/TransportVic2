@@ -10,7 +10,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'Ventura Specials',
-  track: ['V234', 'V238', 'V250', 'V292', 'V293', 'V344', 'V355', 'V588', 'V591', 'V592', 'V761', 'V765', 'V766', 'V895', 'V1141', 'V8239'],
+  track: ['V234', 'V236', 'V238', 'V250', 'V292', 'V293', 'V344', 'V355', 'V588', 'V591', 'V592', 'V761', 'V765', 'V766', 'V895', 'V1141', 'V8239'],
   routes: [],
   type: 'exclude'
 }, {
@@ -22,6 +22,11 @@ module.exports = [{
   name: 'Kinetic Minibuses',
   track: ['K119', 'K120', 'K129', 'K130', 'K131', 'K132', 'K133', 'K183'],
   routes: ['280', '282', '509'],
+  type: 'exclude'
+}, {
+  name: 'Kinetic O500',
+  track: ['K8257', 'K8258', 'K8259', 'K8260', 'K8261', 'K8262', 'K8263', 'K8264'],
+  routes: [],
   type: 'exclude'
 }, {
   name: 'Kinetic Specials',
