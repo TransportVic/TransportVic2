@@ -26,38 +26,48 @@ async function fetchStop(name, db, tripDB, ptvAPI, maxResults, backwards, tdnsSe
 export async function fetchCBDTrips(db, tripDB, ptvAPI, existingTrips = {}) {
   let tdnsSeen = []
   let updatedTrips = {}
-  await fetchStop('Flinders Street Railway Station', db, tripDB, ptvAPI, 5, false, tdnsSeen, updatedTrips, existingTrips)
-  await fetchStop('Richmond Railway Station', db, tripDB, ptvAPI, 5, false, tdnsSeen, updatedTrips, existingTrips)
-  await fetchStop('Jolimont Railway Station', db, tripDB, ptvAPI, 3, false, tdnsSeen, updatedTrips, existingTrips)
-  await fetchStop('North Melbourne Railway Station', db, tripDB, ptvAPI, 5, false, tdnsSeen, updatedTrips, existingTrips)
-  await fetchStop('Southern Cross Railway Station', db, tripDB, ptvAPI, 5, false, tdnsSeen, updatedTrips, existingTrips)
-  await fetchStop('Anzac Railway Station', db, tripDB, ptvAPI, 5, false, tdnsSeen, updatedTrips, existingTrips)
-  await fetchStop('Arden Railway Station', db, tripDB, ptvAPI, 5, false, tdnsSeen, updatedTrips, existingTrips)
-  
-  await fetchStop('Footscray Railway Station', db, tripDB, ptvAPI, 3, false, tdnsSeen, updatedTrips, existingTrips)
-  await fetchStop('Ringwood Railway Station', db, tripDB, ptvAPI, 3, false, tdnsSeen, updatedTrips, existingTrips)
-  await fetchStop('Dandenong Railway Station', db, tripDB, ptvAPI, 3, false, tdnsSeen, updatedTrips, existingTrips)
-  await fetchStop('Mordialloc Railway Station', db, tripDB, ptvAPI, 3, false, tdnsSeen, updatedTrips, existingTrips)
-  await fetchStop('Greensborough Railway Station', db, tripDB, ptvAPI, 3, false, tdnsSeen, updatedTrips, existingTrips)
-  await fetchStop('Broadmeadows Railway Station', db, tripDB, ptvAPI, 3, false, tdnsSeen, updatedTrips, existingTrips)
-  await fetchStop('Newport Railway Station', db, tripDB, ptvAPI, 3, false, tdnsSeen, updatedTrips, existingTrips)
-  await fetchStop('Watergardens Railway Station', db, tripDB, ptvAPI, 3, false, tdnsSeen, updatedTrips, existingTrips)
 
-  await fetchStop('Richmond Railway Station', db, tripDB, ptvAPI, 3, true, tdnsSeen, updatedTrips, existingTrips)
-  await fetchStop('Jolimont Railway Station', db, tripDB, ptvAPI, 2, true, tdnsSeen, updatedTrips, existingTrips)
-  await fetchStop('North Melbourne Railway Station', db, tripDB, ptvAPI, 3, true, tdnsSeen, updatedTrips, existingTrips)
-  await fetchStop('Southern Cross Railway Station', db, tripDB, ptvAPI, 3, true, tdnsSeen, updatedTrips, existingTrips)
-  await fetchStop('Anzac Railway Station', db, tripDB, ptvAPI, 3, true, tdnsSeen, updatedTrips, existingTrips)
-  await fetchStop('Arden Railway Station', db, tripDB, ptvAPI, 3, true, tdnsSeen, updatedTrips, existingTrips)
-  
-  await fetchStop('Footscray Railway Station', db, tripDB, ptvAPI, 3, true, tdnsSeen, updatedTrips, existingTrips)
-  await fetchStop('Ringwood Railway Station', db, tripDB, ptvAPI, 3, true, tdnsSeen, updatedTrips, existingTrips)
-  await fetchStop('Dandenong Railway Station', db, tripDB, ptvAPI, 3, true, tdnsSeen, updatedTrips, existingTrips)
-  await fetchStop('Mordialloc Railway Station', db, tripDB, ptvAPI, 3, true, tdnsSeen, updatedTrips, existingTrips)
-  await fetchStop('Greensborough Railway Station', db, tripDB, ptvAPI, 3, true, tdnsSeen, updatedTrips, existingTrips)
-  await fetchStop('Broadmeadows Railway Station', db, tripDB, ptvAPI, 3, true, tdnsSeen, updatedTrips, existingTrips)
-  await fetchStop('Newport Railway Station', db, tripDB, ptvAPI, 3, true, tdnsSeen, updatedTrips, existingTrips)
-  await fetchStop('Watergardens Railway Station', db, tripDB, ptvAPI, 3, true, tdnsSeen, updatedTrips, existingTrips)
+  let promises = []
+  promises.push(fetchStop('Flinders Street Railway Station', db, tripDB, ptvAPI, 5, false, tdnsSeen, updatedTrips, existingTrips))
+  promises.push(fetchStop('Richmond Railway Station', db, tripDB, ptvAPI, 5, false, tdnsSeen, updatedTrips, existingTrips))
+  promises.push(fetchStop('Jolimont Railway Station', db, tripDB, ptvAPI, 3, false, tdnsSeen, updatedTrips, existingTrips))
+  promises.push(fetchStop('North Melbourne Railway Station', db, tripDB, ptvAPI, 5, false, tdnsSeen, updatedTrips, existingTrips))
+  promises.push(fetchStop('Southern Cross Railway Station', db, tripDB, ptvAPI, 5, false, tdnsSeen, updatedTrips, existingTrips))
+  promises.push(fetchStop('Anzac Railway Station', db, tripDB, ptvAPI, 5, false, tdnsSeen, updatedTrips, existingTrips))
+  promises.push(fetchStop('Arden Railway Station', db, tripDB, ptvAPI, 5, false, tdnsSeen, updatedTrips, existingTrips))
+  await Promise.all(promises)
+
+  promises = []
+  promises.push(fetchStop('Footscray Railway Station', db, tripDB, ptvAPI, 3, false, tdnsSeen, updatedTrips, existingTrips))
+  promises.push(fetchStop('Ringwood Railway Station', db, tripDB, ptvAPI, 3, false, tdnsSeen, updatedTrips, existingTrips))
+  promises.push(fetchStop('Dandenong Railway Station', db, tripDB, ptvAPI, 3, false, tdnsSeen, updatedTrips, existingTrips))
+  promises.push(fetchStop('Mordialloc Railway Station', db, tripDB, ptvAPI, 3, false, tdnsSeen, updatedTrips, existingTrips))
+  promises.push(fetchStop('Greensborough Railway Station', db, tripDB, ptvAPI, 3, false, tdnsSeen, updatedTrips, existingTrips))
+  promises.push(fetchStop('Broadmeadows Railway Station', db, tripDB, ptvAPI, 3, false, tdnsSeen, updatedTrips, existingTrips))
+  promises.push(fetchStop('Newport Railway Station', db, tripDB, ptvAPI, 3, false, tdnsSeen, updatedTrips, existingTrips))
+  promises.push(fetchStop('Watergardens Railway Station', db, tripDB, ptvAPI, 3, false, tdnsSeen, updatedTrips, existingTrips))
+  await Promise.all(promises)
+
+  promises = []
+  promises.push(fetchStop('Richmond Railway Station', db, tripDB, ptvAPI, 3, true, tdnsSeen, updatedTrips, existingTrips))
+  promises.push(fetchStop('Jolimont Railway Station', db, tripDB, ptvAPI, 2, true, tdnsSeen, updatedTrips, existingTrips))
+  promises.push(fetchStop('North Melbourne Railway Station', db, tripDB, ptvAPI, 3, true, tdnsSeen, updatedTrips, existingTrips))
+  promises.push(fetchStop('Southern Cross Railway Station', db, tripDB, ptvAPI, 3, true, tdnsSeen, updatedTrips, existingTrips))
+  promises.push(fetchStop('Anzac Railway Station', db, tripDB, ptvAPI, 3, true, tdnsSeen, updatedTrips, existingTrips))
+  promises.push(fetchStop('Arden Railway Station', db, tripDB, ptvAPI, 3, true, tdnsSeen, updatedTrips, existingTrips))
+  await Promise.all(promises)
+
+  promises = []
+  promises.push(fetchStop('Footscray Railway Station', db, tripDB, ptvAPI, 3, true, tdnsSeen, updatedTrips, existingTrips))
+  promises.push(fetchStop('Ringwood Railway Station', db, tripDB, ptvAPI, 3, true, tdnsSeen, updatedTrips, existingTrips))
+  promises.push(fetchStop('Dandenong Railway Station', db, tripDB, ptvAPI, 3, true, tdnsSeen, updatedTrips, existingTrips))
+  promises.push(fetchStop('Mordialloc Railway Station', db, tripDB, ptvAPI, 3, true, tdnsSeen, updatedTrips, existingTrips))
+  promises.push(fetchStop('Greensborough Railway Station', db, tripDB, ptvAPI, 3, true, tdnsSeen, updatedTrips, existingTrips))
+  promises.push(fetchStop('Broadmeadows Railway Station', db, tripDB, ptvAPI, 3, true, tdnsSeen, updatedTrips, existingTrips))
+  promises.push(fetchStop('Newport Railway Station', db, tripDB, ptvAPI, 3, true, tdnsSeen, updatedTrips, existingTrips))
+  promises.push(fetchStop('Watergardens Railway Station', db, tripDB, ptvAPI, 3, true, tdnsSeen, updatedTrips, existingTrips))
+
+  await Promise.all(promises)
 }
 
 if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
