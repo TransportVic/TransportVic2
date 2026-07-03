@@ -9,12 +9,14 @@ import { parseConsist } from '../../metro-trains/fleet-parser.mjs'
 import metroConsists from '../../../additional-data/metro-tracker/metro-consists.json' with { type: 'json' }
 import _ from '../../../init-loggers.mjs'
 import fs from 'fs/promises'
+import utils from '../../../utils.mjs'
 
 export async function getFleetData(gtfsrAPI) {
   let tripData = await gtfsrAPI('metro/vehicle-positions')
 
   let trips = {}
 
+  const vehicleTime = +utils.now()
   for (let trip of tripData.entity) {
     let gtfsrTripData = GTFSRTrip.parse(trip.vehicle.trip)
 
@@ -27,7 +29,8 @@ export async function getFleetData(gtfsrAPI) {
         latitude: trip.vehicle.position.latitude,
         longitude: trip.vehicle.position.longitude,
         bearing: trip.vehicle.position.bearing,
-        timestamp: trip.vehicle.timestamp * 1000,
+        timestampFrom: trip.vehicle.timestamp * 1000,
+        timestamp: vehicleTime
       }
     }
 

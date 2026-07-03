@@ -63,32 +63,28 @@
   # Daily from 4am to 10pm. Offset by 1min to allow data to load in on MTM's end. Runs hourly
   1     *     *     *     *     node /home/transportvic/TransportVic/Server/load-gtfs/metro-rail-bus/load.mjs
   # Daily from 4am to 2am. Runs every minute
-  *     4-23  *     *     *     node /home/transportvic/TransportVic/Server/modules/new-tracker/metro-rail-bus/load-rt-updates.mjs
-  *     0-1   *     *     *     node /home/transportvic/TransportVic/Server/modules/new-tracker/metro-rail-bus/load-rt-updates.mjs
+  *     4-23  *     *     *     sleep 5; node /home/transportvic/TransportVic/Server/modules/new-tracker/metro-rail-bus/load-rt-updates.mjs
+  *     0-1   *     *     *     sleep 5; node /home/transportvic/TransportVic/Server/modules/new-tracker/metro-rail-bus/load-rt-updates.mjs
   # Runs 2-4am as well on Saturday and Sunday mornings (from Friday and Saturday's PT day)
-  *     2-3   *     *     6-7   node /home/transportvic/TransportVic/Server/modules/new-tracker/metro-rail-bus/load-rt-updates.mjs
+  *     2-3   *     *     6-7   sleep 5; node /home/transportvic/TransportVic/Server/modules/new-tracker/metro-rail-bus/load-rt-updates.mjs
 
   # V/Line Tracker
   # Regular trips everyday 0400 - 2359
-  *     4-23  *     *     *     node /home/transportvic/TransportVic/Server/modules/new-tracker/vline.mjs
+  *     4-23  *     *     *     sleep 10; node /home/transportvic/TransportVic/Server/modules/new-tracker/vline.mjs
   # And then 0000-0200
-  *     0-1   *     *     *     node /home/transportvic/TransportVic/Server/modules/new-tracker/vline.mjs
+  *     0-1   *     *     *     sleep 10; node /home/transportvic/TransportVic/Server/modules/new-tracker/vline.mjs
 
   # Bus Tracker
   # Regular trips everyday 0400 - 2359
-  *     4-5   *     *     *     node /home/transportvic/TransportVic/Server/modules/new-tracker/bus.mjs
-  *     6-8   *     *     *     node /home/transportvic/TransportVic/Server/modules/new-tracker/bus.mjs
-  *     9-14  *     *     *     node /home/transportvic/TransportVic/Server/modules/new-tracker/bus.mjs
-  *     15-19 *     *     *     node /home/transportvic/TransportVic/Server/modules/new-tracker/bus.mjs
-  *     20-23 *     *     *     node /home/transportvic/TransportVic/Server/modules/new-tracker/bus.mjs
+  *     4-23  *     *     *     sleep 20; node /home/transportvic/TransportVic/Server/modules/new-tracker/bus.mjs
   # Regular weeknights until 2530 (1.30am). This is effectively Tuesday 12-1.30am - Friday 12-1.30am
-  *     0     *     *     2-5   node /home/transportvic/TransportVic/Server/modules/new-tracker/bus.mjs
-  0-30  1     *     *     2-5   node /home/transportvic/TransportVic/Server/modules/new-tracker/bus.mjs
+  *     0     *     *     2-5   sleep 20; node /home/transportvic/TransportVic/Server/modules/new-tracker/bus.mjs
+  0-30  1     *     *     2-5   sleep 20; node /home/transportvic/TransportVic/Server/modules/new-tracker/bus.mjs
   # Fri and Sat all night, noting that it is on the next day so Saturday and Sunday 12am - 4am
-  *     0-2   *     *     6-7   node /home/transportvic/TransportVic/Server/modules/new-tracker/bus.mjs
-  *     3     *     *     6-7   node /home/transportvic/TransportVic/Server/modules/new-tracker/bus.mjs
+  *     0-2   *     *     6-7   sleep 20; node /home/transportvic/TransportVic/Server/modules/new-tracker/bus.mjs
+  *     3     *     *     6-7   sleep 20; node /home/transportvic/TransportVic/Server/modules/new-tracker/bus.mjs
   # Sun up to 2am (Monday 12am-2am)
-  *     0-2   *     *     1     node /home/transportvic/TransportVic/Server/modules/new-tracker/bus.mjs
+  *     0-2   *     *     1     sleep 20; node /home/transportvic/TransportVic/Server/modules/new-tracker/bus.mjs
 
   # Other maintenance scripts
   5     0     *     *     *     sudo reboot

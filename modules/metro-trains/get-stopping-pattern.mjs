@@ -39,7 +39,8 @@ export default async function getTripUpdateData(runID, ptvAPI, { date = new Date
     latitude: trip.runData.position.geometry.coordinates[1],
     longitude: trip.runData.position.geometry.coordinates[0],
     bearing: trip.runData.position.properties.bearing,
-    timestamp: +trip.runData.position.properties.positionTime
+    timestampFrom: +trip.runData.position.properties.positionTime,
+    timestamp: +trip.runData.position.properties.expiry,
   }
 
   let lastStop = tripData.stops[tripData.stops.length - 1]
