@@ -18,6 +18,7 @@ let data = {
   D2: { ac: true, lf: true },
   E1: { ac: true, lf: true },
   E2: { ac: true, lf: true },
+  G: { ac: true, lf: true }
 }
 
 let cache = {}
@@ -49,6 +50,8 @@ function getModel(number) {
 
   if (6001 <= number && number <= 6050) return 'E1'
   if (6051 <= number && number <= 6100) return 'E2'
+
+  if (7001 <= number && number <= 7100) return 'G'
 
   return '?'
 }
