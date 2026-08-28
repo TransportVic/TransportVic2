@@ -76,7 +76,7 @@ export async function trimFromDestination(db, destination, coreRoute, trip, oper
 
   if (cutoffStop && tripDestinationStop !== cutoffStop) {
     let cutoffStopIndex = indexes.indexOf(cutoffStop)
-    if (trip.stopTimings.length - cutoffStopIndex <= 2) return
+    if (trip.stopTimings.length - cutoffStopIndex <= 2) return trip
     let hasSeen = false
 
     trip.stopTimings = trip.stopTimings.filter(stop => {

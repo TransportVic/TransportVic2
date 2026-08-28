@@ -34,6 +34,19 @@ await stops.bulkWrite(Object.keys(baseTTIDs).map(stopGTFSID => ({
   }
 })))
 
+const missingTTIDs_ = await stops.distinct('stopName', {
+  bays: {
+    $elemMatch: {
+      mode: 'tram',
+      tramTrackerID: { $exists: false }
+    }
+  }
+})
+
+if (missingTTIDs_.length) console.log('Tram stops with missing TTID:', missingTTIDs_)
+
+process.exit(0)
+
 let tramServices = await routes.distinct('routeNumber', { mode: 'tram' })
 let count = 0
 
