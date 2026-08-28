@@ -20,7 +20,7 @@
     "@transportme/server-template": "^1.0.10",
     "@transportme/transportvic-utils": "^1.0.5",
     "@transportme/vline-mail-server": "^1.0.5",
-    "@transportme/vline-nsp-reader": "^1.0.14",
+    "@transportme/vline-nsp-reader": "^1.0.15",
     "@turf/turf": "^5.1.6",
     "adm-zip": "^0.6.0",
     "async": "^3.2.3",
