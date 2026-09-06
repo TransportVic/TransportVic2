@@ -184,17 +184,6 @@ TasksAccounting=false
 WantedBy=multi-user.target''' | sudo tee /usr/lib/systemd/system/mongod.service
 
 printf '''[Unit]
-Description=Allow Cloudflare WARP to start and establish the CGNAT IP
-After=warp-svc.service
-Wants=warp-svc.service
-
-[Timer]
-OnBootSec=25sec
-
-[Install]
-WantedBy=timers.target''' | sudo tee /usr/lib/systemd/system/mongod-trip.timer
-
-printf '''[Unit]
 Description=Cloudflare Zero Trust Client Daemon
 After=pre-network.target
 
@@ -376,3 +365,20 @@ if [[ -z "$FSTAB_NVME" ]]; then
   echo """/dev/nvme0n1          /TransportVic   xfs     defaults          0       1
 /dev/nvme0n1          /home/transportvic/TransportVic   xfs     defaults          0       1""" | sudo tee --append /etc/fstab
 fi
+
+echo -n '''sudo apt update
+sudo apt upgrade
+
+printf ''' > /TransportVic/apt-update
+printf "'''" | tee --append /TransportVic/apt-update > /dev/null
+cat /usr/lib/systemd/system/mongod.service | tee --append /TransportVic/apt-update > /dev/null
+printf "''' | sudo tee /usr/lib/systemd/system/mongod.service > /dev/null
+
+printf '''" | tee --append /TransportVic/apt-update > /dev/null
+
+cat /usr/lib/systemd/system/warp-svc.service | tee --append /TransportVic/apt-update > /dev/null
+printf "''' | sudo tee /usr/lib/systemd/system/warp-svc.service > /dev/null
+
+sudo systemctl daemon-reload" | tee --append /TransportVic/apt-update > /dev/null
+
+chmod a+x /TransportVic/apt-update
