@@ -204,6 +204,7 @@ export default class TripUpdater {
       if (mismatch && !deconflictConsist) timetable.consist = trip.consist
     } else if (trip.forcedVehicle) timetable.forcedVehicle = trip.forcedVehicle
     if (trip.location) timetable.location = trip.location
+    if (trip.occupancy) timetable.occupancy = trip.occupancy
 
     timetable.runID = trip.runID
   }
