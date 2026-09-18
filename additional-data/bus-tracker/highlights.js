@@ -55,24 +55,24 @@ module.exports = [{
   type: 'include'
 }, {
   name: 'CDC Tullamarine Specials',
-  track: ['CT26', 'CT52', 'CT53', 'CT55', 'CT56', 'CT147'],
+  track: ['CT26', 'CT52', 'CT53', 'CT55', 'CT56', 'CT147', 'CT149', 'CT151'],
   routes: [],
   type: 'exclude'
 }, {
   name: 'CDC Sunshine Specials',
-  track: ['CW416', 'CW445', 'CW446', 'CW447', 'CW451', 'CW452', 'CW453', 'CW454'],
+  track: ['CW416', 'CW445', 'CW447', 'CW451', 'CW452', 'CW453', 'CW454'],
   routes: [],
   type: 'exclude'
 }, {
   name: 'CDC Wyndham Specials',
-  track: ['CW10', 'CW106', 'CW107', 'CW338', 'CW339', 'CW340', 'CW341',
+  track: ['CW10', 'CW46', 'CW47', 'CW48', 'CW97', 'CW106', 'CW107', 'CW338', 'CW339', 'CW340', 'CW341',
     'CW336', 'CW337', 'CW342', 'CW343'
   ],
   routes: [],
   type: 'exclude'
 }, {
   name: 'CDC Geelong Specials',
-  track: ['CG98', 'CG102', 'CG103', 'CG105', 'CG106', 'CG107', 'CG113', 'CG116', 'CG143', 'CG144', 'CG145'],
+  track: ['CG97', 'CG98', 'CG99', 'CG102', 'CG103', 'CG105', 'CG106', 'CG107', 'CG113', 'CG116', 'CG143', 'CG144', 'CG145'],
   routes: [],
   type: 'exclude'
 }, {
