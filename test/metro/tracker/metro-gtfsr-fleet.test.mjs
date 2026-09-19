@@ -26,4 +26,20 @@ describe('The GTFSR Fleet Tracker module', () => {
       [ '8103', '8203', '8303', '8403', '8503', '8603' ]
     ])
   })
+
+  it('Does not attach occupancy when the feed only reports placeholder zeros', async () => {
+    let tripData = await getFleetData(() => gtfsrFleet)
+    expect(tripData[0].occupancy).to.be.undefined
+  })
+
+  it('Attaches occupancy when the feed reports a load', async () => {
+    let sample = JSON.parse(JSON.stringify(gtfsrFleet))
+    sample.entity[0].vehicle.occupancy_status = 3
+    sample.entity[0].vehicle.occupancy_percentage = 78
+
+    let tripData = await getFleetData(() => sample)
+    expect(tripData[0].occupancy.status).to.equal('standing-room-only')
+    expect(tripData[0].occupancy.percentage).to.equal(78)
+    expect(tripData[0].occupancy.timestamp).to.be.a('number')
+  })
 })
