@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url'
 import { MongoDatabaseConnection } from '@transportme/database'
 import config from '../../../config.json' with { type: 'json' }
 import { GTFSRTrip } from '../gtfsr/GTFSRTrip.mjs'
+import { parseOccupancy } from '../gtfsr/parse-occupancy.mjs'
 import MetroTripUpdater from '../../metro-trains/trip-updater.mjs'
 import { parseConsist } from '../../metro-trains/fleet-parser.mjs'
 import metroConsists from '../../../additional-data/metro-tracker/metro-consists.json' with { type: 'json' }
@@ -33,6 +34,9 @@ export async function getFleetData(gtfsrAPI) {
         timestamp: vehicleTime
       }
     }
+
+    let occupancy = parseOccupancy(trip.vehicle, vehicleTime)
+    if (occupancy) tripData.occupancy = occupancy
 
     trips[tripData.runID] = tripData
   }

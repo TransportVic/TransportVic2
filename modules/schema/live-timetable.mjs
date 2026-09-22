@@ -201,6 +201,7 @@ export class LiveTimetable {
   _vehicleCars
 
   #location
+  #occupancy
 
   #stops = []
 
@@ -356,6 +357,18 @@ export class LiveTimetable {
   }
   get location() { return this.#location }
 
+  set occupancy(occupancy) {
+    if (this.#occupancy && this.#occupancy.timestamp > occupancy.timestamp) return
+
+    this.#occupancy = {
+      timestamp: occupancy.timestamp
+    }
+    if (occupancy.status) this.#occupancy.status = occupancy.status
+    if (typeof occupancy.percentage !== 'undefined') this.#occupancy.percentage = occupancy.percentage
+    if (occupancy.carriages) this.#occupancy.carriages = occupancy.carriages
+  }
+  get occupancy() { return this.#occupancy }
+
   set gtfsDirection(direction) { this.#gtfsDirection = direction }
   set direction(direction) { this.#direction = direction }
   set runID(runID) { this.#runID = runID }
@@ -440,6 +453,7 @@ export class LiveTimetable {
     if (timetable.additional) timetableInstance.#additional = timetable.additional
     if (timetable.circular) timetableInstance.#circular = timetable.circular
     if (timetable.headsign) timetableInstance.#headsign = timetable.headsign
+    if (timetable.occupancy) timetableInstance.#occupancy = timetable.occupancy
     if (timetable.vehicle) {
       timetableInstance._vehicle = timetable.vehicle
       timetableInstance._vehicleForced = timetable.vehicle.forced || false
@@ -531,6 +545,7 @@ export class LiveTimetable {
 
     if (typeof this.#circular !== 'undefined') returnData.circular = this.#circular
     if (typeof this.#headsign !== 'undefined') returnData.headsign = this.#headsign
+    if (this.#occupancy) returnData.occupancy = this.#occupancy
     if (Object.keys(this.#flags).length > 0) returnData.flags = this.#flags
 
     return returnData
@@ -621,6 +636,9 @@ export class LiveTimetable {
       if (this._vehicle.icon) returnData.icon = this._vehicle.icon
       if (this._vehicle.size) returnData.size = this._vehicle.size
     }
+
+    if (this.#occupancy) returnData.occupancy = this.#occupancy
+
     return returnData
   }
 
