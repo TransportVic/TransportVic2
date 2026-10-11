@@ -138,6 +138,7 @@ LimitMEMLOCK=infinity
 TasksMax=infinity
 TasksAccounting=false
 Restart=always
+CPUQuota=280%%
 
 # Recommended limits for mongod as specified in
 # https://docs.mongodb.com/manual/reference/ulimit/#recommended-ulimit-settings
@@ -198,6 +199,7 @@ StateDirectory=cloudflare-warp
 RuntimeDirectory=cloudflare-warp
 LogsDirectory=cloudflare-warp
 Restart=always
+CPUQuota=100%%
 
 [Install]
 WantedBy=multi-user.target''' | sudo tee /usr/lib/systemd/system/warp-svc.service
