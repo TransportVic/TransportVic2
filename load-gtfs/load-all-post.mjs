@@ -9,7 +9,7 @@ await mongoDB.connect()
 let start = new Date()
 console.log('Start', start)
 
-await setRouteStops(mongoDB, directionIDMap, (count, total) => console.log('Updated', count, '/', total, `(${(count / total * 100).toFixed(2)}%)`, 'routes'))
+await setRouteStops(mongoDB, directionIDMap, (count, total) => console.log('Route Stops: Updated', count, '/', total, `(${(count / total * 100).toFixed(2)}%)`, 'routes'))
 
 console.log('\nLoading route stops took', (new Date() - start) / 1000, 'seconds overall')
 console.log('Time now is', new Date())

@@ -5,6 +5,18 @@ import operators from '../../transportvic-data/excel/bus/operators/regional-inte
 
 const database = new MongoDatabaseConnection(config.databaseURL, config.databaseName)
 
+function changeName(name) {
+  if (name === 'Ballarat Central') return 'Ballarat'
+  if (name === 'Wendouree') return 'Ballarat'
+  if (name === 'Narre Warren') return 'Fountain Gate'
+  if (name === 'Ventnor') return 'Cowes'
+  if (name === 'Wodonga') return 'Albury'
+  if (name === 'Tawonga South') return 'Mount Beauty'
+  if (name === 'Corinella') return 'Coronet Bay'
+
+  return name
+}
+
 await database.connect({})
 let routes = database.getCollection('gtfs-routes')
 let busRoutes = await routes.findDocuments({
@@ -22,24 +34,23 @@ let busRoutes = await routes.findDocuments({
 }).toArray()
 
 busRoutes = busRoutes.map(route => {
+  if (!route.directions[0]) {
+    console.log('Route', route.routeGTFSID, route.routeNumber, route.routeName, 'has no directions!')
+    return route
+  }
+
   let stops = route.directions[0].stops
   let originStop = stops[0]
   let destinationStop = stops[stops.length - 1]
 
-  let origin = originStop.suburb.replace(/, .+/, '').replace(/ \([A-Z]+\)$/, '')
-  let destination = destinationStop.suburb.replace(/, .+/, '').replace(/ \([A-Z]+\)$/, '')
-
-  if (origin === 'Wodonga') origin = 'Albury'
-  if (destination === 'Wodonga') destination = 'Albury'
-
-  if (origin === 'Tawonga South') origin = 'Mount Beauty'
-  if (destination === 'Tawonga South') destination = 'Mount Beauty'
+  let origin = changeName(originStop.suburb.replace(/, .+/, '').replace(/ \([A-Z]+\)$/, ''))
+  let destination = changeName(destinationStop.suburb.replace(/, .+/, '').replace(/ \([A-Z]+\)$/, ''))
 
   if (origin === destination) {
     let otherSuburbStops = stops.filter(stop => stop.suburb !== originStop.suburb)
     let centreStop = otherSuburbStops[Math.floor(otherSuburbStops.length / 2)]
     if (centreStop) {
-      destination = centreStop.suburb.replace(/, .+/, '').replace(/ \([A-Z]+\)$/, '')
+      destination = changeName(centreStop.suburb.replace(/, .+/, '').replace(/ \([A-Z]+\)$/, ''))
     }
   }
 
@@ -68,13 +79,6 @@ busRoutes = busRoutes.map(route => {
   if (route.routeGTFSID === '4-WGT') route.routeNameTest = 'West Gippsland Transit'
   if (route.routeNumber === 'South - Schools AM') route.routeNameTest = 'Swan Hill Schools - AM'
   if (route.routeNumber === 'South - Schools PM') route.routeNameTest = 'Swan Hill Schools - PM'
-
-  route.routeNameTest = route.routeNameTest
-    .replace('Ballarat Central', 'Ballarat')
-    .replace('Wendouree', 'Ballarat')
-    .replace('Narre Warren', 'Fountain Gate')
-    .replace('Ventnor', 'Cowes')
-
   if (route.routeNameTest == 'Mulwala - Yarrawonga') route.routeNameTest = 'Mulwala & Yarrawonga Flexiride'
 
   return route
@@ -95,6 +99,8 @@ duplicateNames.forEach(name => {
   if (!routes.length || routes[0].routeGTFSID.startsWith('6-w')) return
 
   routes.forEach(route => {
+    if (!route.directions[0]) return
+
     let stops = route.directions[0].stops
     let originStop = stops[0]
     let destinationStop = stops[stops.length - 1]
@@ -114,7 +120,7 @@ duplicateNames.forEach(name => {
 for (let route of busRoutes) {
   let operator = operators[route.routeNameTest]
   if (!operator) {
-    console.log('Failed to map operator', route.routeNameTest, ': ', route.routeName, route.routeGTFSID)
+    console.log('Failed to map operator', route.routeNameTest, ':', route.routeName, route.routeGTFSID)
     operator = 'Unknown'
   }
 
@@ -127,7 +133,7 @@ for (let route of busRoutes) {
   })
 }
 
-// console.table(busRoutes.map(route => ({ routeGTFSID: route.routeGTFSID, routeNumber: route.routeNumber, routeName: route.routeNameTest })))
+// console.table(busRoutes.map(route => ({ routeGTFSID: route.routeGTFSID, routeNumber: route.routeNumber, routeName: route.routeNameTest, originalRouteName: route.routeName })))
 // console.log(duplicateNames)
 // console.log(busRoutes)
 

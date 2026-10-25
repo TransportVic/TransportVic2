@@ -10,7 +10,7 @@ module.exports = [{
   type: 'exclude'
 }, {
   name: 'Ventura Specials',
-  track: ['V234', 'V236', 'V238', 'V250', 'V292', 'V293', 'V344', 'V355', 'V588', 'V591', 'V592', 'V761', 'V765', 'V766', 'V877', 'V880', 'V883', 'V895', 'V1141', 'V8239'],
+  track: ['V234', 'V236', 'V238', 'V250', 'V292', 'V293', 'V344', 'V355', 'V588', 'V591', 'V592', 'V761', 'V765', 'V766', 'V877', 'V880', 'V883', 'V895', 'V1112', 'V1141', 'V8239'],
   routes: [],
   type: 'exclude'
 }, {
@@ -55,7 +55,7 @@ module.exports = [{
   type: 'include'
 }, {
   name: 'CDC Tullamarine Specials',
-  track: ['CT26', 'CT52', 'CT53', 'CT55', 'CT56', 'CT147', 'CT149', 'CT151'],
+  track: ['CT26', 'CT52', 'CT53', 'CT55', 'CT56', 'CT147', 'CT149', 'CT150', 'CT151'],
   routes: [],
   type: 'exclude'
 }, {

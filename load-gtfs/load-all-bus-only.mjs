@@ -8,9 +8,14 @@ let commands = [
   ['load-ptv-stops.mjs'],
   ['load-all-stops-routes.mjs', '4', '6', '11'],
   ['bus/load-788-stop-numbers.mjs'],
+  ['bus/mildura/load-mildura-routes.mjs'],
+
   ['load-all-trips.mjs', '4', '6', '11'],
 
+  ['restart-database.mjs'],
+
   ['bus/load-flexiride-data.mjs'],
+  ['bus/mildura/cleanup-mildura-routes.mjs'],
 
   ['load-all-post.mjs'],
 

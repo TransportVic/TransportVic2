@@ -137,7 +137,6 @@ LimitMEMLOCK=infinity
 # total threads (user+kernel)
 TasksMax=infinity
 TasksAccounting=false
-Restart=always
 CPUQuota=280%%
 
 # Recommended limits for mongod as specified in
@@ -177,6 +176,7 @@ LimitMEMLOCK=infinity
 # total threads (user+kernel)
 TasksMax=infinity
 TasksAccounting=false
+CPUQuota=250%%
 
 # Recommended limits for mongod as specified in
 # https://docs.mongodb.com/manual/reference/ulimit/#recommended-ulimit-settings
@@ -287,13 +287,14 @@ WantedBy=multi-user.target''' | sudo tee /etc/systemd/system/transportvic.servic
 
 printf '''#! /bin/bash
 IP_ADDR=$(ifconfig | grep -A1 CloudflareWARP | grep -o "100.96.[0-9]*.[0-9]*" | head -n 1)
+WLAN_IP=$(ifconfig | grep -A1 wlan0 | grep -o "192.[0-9]*.[0-9]*.[0-9]*" | head -n 1)
 HOSTNAME=$(hostname)
 cp /etc/mongod-trip.conf /tmp/mongod-trip.conf
 if [[ -z "$IP_ADDR" ]]; then
-  sed -i -E '\''s/bindIp.+/bindIp: 127.0.0.1/'\'' /tmp/mongod-trip.conf
+  sed -i -E '\''s/bindIp.+/bindIp: 127.0.0.1,'\''"$WLAN_IP"'\''/'\'' /tmp/mongod-trip.conf
   echo "Did not find CF IP Address, skipping"
 else
-  sed -i -E '\''s/bindIp.+/bindIp: 127.0.0.1,'\''"$IP_ADDR"'\'','\''"$HOSTNAME"'\''/'\'' /tmp/mongod-trip.conf
+  sed -i -E '\''s/bindIp.+/bindIp: 127.0.0.1,'\''"$WLAN_IP"'\'','\''"$IP_ADDR"'\'','\''"$HOSTNAME"'\''/'\'' /tmp/mongod-trip.conf
   echo "Found CF IP Address, binding"
 fi
 cat /tmp/mongod-trip.conf > /etc/mongod-trip.conf
