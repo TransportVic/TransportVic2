@@ -3,15 +3,12 @@ import fs from 'fs/promises'
 import path from 'path'
 import config from '../../config.json' with { type: 'json' }
 import url from 'url'
-import Pbf from 'pbf'
-import { compile } from 'pbf/compile'
-import schema from 'protocol-buffers-schema'
+import protobuf from 'protocol-buffers'
 
 const __filename = url.fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-const proto = schema.parse(await fs.readFile(path.join(__dirname, 'ptv-gtfsr.proto')))
-const { readFeedMessage } = compile(proto);
+const { FeedMessage } = protobuf(await fs.readFile(path.join(__dirname, 'ptv-gtfsr.proto')))
 
 let { gtfsrKey } = config
 let urlBase = 'https://api.opendata.transport.vic.gov.au/opendata/public-transport/gtfs/realtime/v1/'
@@ -27,11 +24,20 @@ export async function makeRequest(url, options={}) {
   return data
 }
 
-export async function makePBRequest(url) {
-  let rawData = await makeRequest(url, {
+export async function makePBRequest(url, debug = false) {
+  const rawData = await makeRequest(url, {
     raw: true,
     timeout: 12000
   })
 
-  return readFeedMessage(new Pbf(rawData))
+  const message = FeedMessage.decode(rawData)
+
+  if (debug) {
+    return {
+      rawData,
+      message
+    }
+  }
+
+  return message
 }

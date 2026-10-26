@@ -103,16 +103,23 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
 
   try { await updateRelatedTrips(database, tripDatabase, Object.values(existingTrips), ptvAPI) } catch(e) { console.error(e) }
 
-  const targetTime = startTime.clone().add(30, 'seconds')
-  const timeDiff = targetTime - utils.now()
-  if (timeDiff > 0) {
-    global.loggers.trackers.metro.log('Waiting', timeDiff, 'ms for second position update')
-    await utils.sleep(timeDiff)
+  let fetchAgain = async time => {
+    const targetTime = startTime.clone().add(time, 'seconds')
+    const timeDiff = targetTime - utils.now()
+    if (timeDiff > 0) {
+      global.loggers.trackers.metro.log('Waiting', timeDiff, 'ms for next position update')
+      await utils.sleep(timeDiff)
 
-    let existingTrips = {}
-    try { await fetchGTFSRFleet(database, tripDatabase, existingTrips) } catch(e) { console.error(e) }
-    try { await writeUpdatedTrips(database, tripDatabase, Object.values(existingTrips)) } catch(e) { console.error(e) }
+      let existingTrips = {}
+      try { await fetchGTFSRFleet(database, tripDatabase, existingTrips) } catch(e) { console.error(e) }
+      try { await fetchPTVTrips(database, tripDatabase, ptvAPI, { existingTrips, stationCount: 4 }) } catch(e) { console.error(e) }
+      try { await writeUpdatedTrips(database, tripDatabase, Object.values(existingTrips)) } catch(e) { console.error(e) }
+      try { await updateRelatedTrips(database, tripDatabase, Object.values(existingTrips), ptvAPI) } catch(e) { console.error(e) }
+    }
   }
+
+  await fetchAgain(30)
+  await fetchAgain(45)
 
   process.exit(0)
 }

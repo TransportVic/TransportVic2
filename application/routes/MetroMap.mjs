@@ -38,7 +38,7 @@ router.post('/', async (req, res) => {
       $gte: +utils.now().add(-3, 'minutes')
     }
   }).toArray())
-
+console.log(positions)
   const vehicles = Object.values(positions.reduce((acc, vehicle) => ({
     ...acc,
     [vehicle.tripData.runID]: (acc[vehicle.tripData.runID] ? {
