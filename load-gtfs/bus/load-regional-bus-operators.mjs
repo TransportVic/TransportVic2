@@ -13,6 +13,7 @@ function changeName(name) {
   if (name === 'Wodonga') return 'Albury'
   if (name === 'Tawonga South') return 'Mount Beauty'
   if (name === 'Corinella') return 'Coronet Bay'
+  if (name === 'Cheshunt') return 'King Valley'
 
   return name
 }
