@@ -71,16 +71,21 @@ if (await fs.realpath(process.argv[1]) === fileURLToPath(import.meta.url)) {
 
   let existingTrips = {}
 
-  let sssTrips = await fetchSSSPlatforms(utils.getPTYYYYMMDD(utils.now()), database, tripDatabase, ptvAPI, existingTrips)
+  try { let sssTrips = await fetchSSSPlatforms(utils.getPTYYYYMMDD(utils.now()), database, tripDatabase, ptvAPI, existingTrips)
   global.loggers.trackers.vline.log('> SSS Platforms: Updated TDNs:', sssTrips.map(trip => trip.runID).join(', '))
+  } catch (e) { console.log (e) }
 
+  try {
   global.loggers.trackers.vline.log('V/Line GTFSR Updater: Loading trips')
   let gtfsTripTrips = await fetchGTFSRTrips(database, tripDatabase, makePBRequest, existingTrips)
   global.loggers.trackers.vline.log('V/Line GTFSR Updater: Updated TDNs:', gtfsTripTrips.map(trip => trip.runID).join(', '))
+  } catch (e) { console.log (e) }
 
+  try {
   global.loggers.trackers.vline.log('GTFSR Fleet Updater: Loading trips')
   let gtfsFleetTrips = await fetchGTFSRFleet(database, tripDatabase, makePBRequest, existingTrips)
   global.loggers.trackers.vline.log('GTFSR Fleet Updater: Fetched', gtfsFleetTrips.length, 'trips')
+  } catch (e) { console.log (e) }
 
   await writeUpdatedTrips(database, tripDatabase, Object.values(existingTrips))
 
