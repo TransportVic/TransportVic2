@@ -250,8 +250,9 @@ export default class TripUpdater {
       }
 
       let { stopData, platformBay, updatedData } = await this.getBaseStopUpdateData(db, stop)
+
       if (!stopData) {
-        err('Failed to update stop ' + JSON.stringify(trip), stop)
+        err('Failed to update stop ', JSON.stringify(trip, null, 2), stop)
         continue
       }
 
@@ -431,7 +432,7 @@ export default class TripUpdater {
       let { stopData, platformBay, updatedData } = await this.getBaseStopUpdateData(db, stop)
 
       if (!stopData) {
-        console.log('Could not map stop', stop)
+        err('Failed to update stop ', JSON.stringify(trip, null, 2), stop)
         continue
       }
 
