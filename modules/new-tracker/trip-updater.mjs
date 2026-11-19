@@ -138,6 +138,8 @@ export default class TripUpdater {
   static async getBaseStopUpdateData(db, stop) {
     let stopData = stop.stopGTFSID ? await this.getStopByID(db, stop.stopGTFSID) : await this.getStopByName(db, stop.stopName)
 
+    if (!stopData) return {}
+
     let platformBay
     let mode = this.getMode()
 
